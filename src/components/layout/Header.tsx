@@ -12,18 +12,17 @@ import Button from "../atoms/Button";
 const heading = "BLOGGY";
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
-    <header className="theme-primary theme-text2 h-[3.5rem] ">
-      <div className="flex items-center justify-between h-full container">
-        <Link to="/" className="flex items-end">
+    <header className="dark theme-primary theme-text2 h-[3.5rem]">
+      <div className="flex items-center justify-between h-full container relative">
+        <Link to="/" className="flex items-end w-full">
           <img src={logoImg} width={38} alt="Logo" />
           <h2 className="-ml-2 -mb-2 font-medium text-[1.8rem]">{heading}</h2>
         </Link>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 sm:hidden">
           <Button
             size="zero"
-            className="md:hidden"
             label="Toggle navigation menu"
             aria-controls="mobile-menu"
             aria-expanded={isOpen}
@@ -33,7 +32,6 @@ const Header = () => {
           </Button>
           <Button
             size="zero"
-            className="md:hidden"
             label="Toggle navigation menu"
             aria-controls="mobile-menu"
             aria-expanded={isOpen}
@@ -43,7 +41,6 @@ const Header = () => {
           </Button>
           <Button
             size="zero"
-            className="md:hidden"
             label="Toggle navigation menu"
             aria-controls="mobile-menu"
             aria-expanded={isOpen}
@@ -54,7 +51,7 @@ const Header = () => {
             : <IoMenu size={45} />}
           </Button>
         </div>
-        <Navbar />
+        <Navbar isOpen={isOpen} />
       </div>
     </header>
   );
