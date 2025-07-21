@@ -1,1 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@layer base {
+  html {
+    font-family: "Baloo 2", sans-serif;
+  }
+}
+
+.font-b {
+  font-family: "Inter", sans-serif;
+}
+
+@theme {
+  /* LIGHT */
+  --bg: #babdbe;
+  --text1: #1a1a1a;
+  --text2: #fdfdfd;
+  --text3: #2b2f52;
+  --button: #ff8a31;
+  --primary: #2b2f52;
+  --primary-shade: #222642;
+  --primary-tint: #555975;
+  --secondary: #2aa9a1;
+  /* #F39C12 #E67E22 #D4AF37 #A29BFE #9B59B6*/
+  --success: #2ecc71;
+  --warning: #f1c40f;
+  --error: #e74c3c;
+  --info: ##3498db;
+}
+
+.dark {
+  --bg: hsl(233, 32%, 10%);
+  --text1: #fdfdfd;
+  --text2: #fdfdfd;
+  --text3: #2b2f52;
+  --button: #ff8a31;
+  --primary: #2b2f52;
+  --primary-shade: #222642;
+  --primary-tint: #555975;
+  --secondary: #2aa9a1;
+  --success: #2ecc71;
+  --warning: #f1c40f;
+  --error: #e74c3c;
+  --info: ##3498db;
+}
+
+/* Optional utility classes */
+.theme-bg {
+  background-color: var(--bg);
+}
+.theme-text1 {
+  color: var(--text1);
+}
+.theme-text2 {
+  color: var(--text2);
+}
+.theme-text3 {
+  color: var(--text3);
+}
+.theme-primary {
+  background-color: var(--primary);
+}
+.theme-primary-shade {
+  background-color: var(--primary-shade);
+}
+.theme-primary-tint {
+  background-color: var(--primary-tint);
+}
+.theme-secondary {
+  background-color: var(--secondary);
+}
+.theme-success {
+  background-color: var(--success);
+}
+.theme-warning {
+  background-color: var(--warning);
+}
+.theme-error {
+  background-color: var(--error);
+}
+.theme-info {
+  background-color: var(--info);
+}
+
+body {
+  min-height: 100dvh;
+}
+
+@utility container {
+  padding: 10px;
+  margin: auto;
+}
+
+/* @source "/" */
