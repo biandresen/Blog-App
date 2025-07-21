@@ -1,0 +1,63 @@
+import { Link } from "react-router-dom";
+import { IoMenu } from "react-icons/io5";
+import { TbLayoutSidebar } from "react-icons/tb";
+import { TbLayoutSidebarRight } from "react-icons/tb";
+import { RxCross2 } from "react-icons/rx";
+
+import Navbar from "./Navbar";
+
+import logoImg from "../../assets/img/blogIcon.svg";
+import { useState } from "react";
+import Button from "../atoms/Button";
+const heading = "BLOGGY";
+
+const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <header className="theme-primary theme-text2 h-[3.5rem] ">
+      <div className="flex items-center justify-between h-full container">
+        <Link to="/" className="flex items-end">
+          <img src={logoImg} width={38} alt="Logo" />
+          <h2 className="-ml-2 -mb-2 font-medium text-[1.8rem]">{heading}</h2>
+        </Link>
+        <div className="flex items-center gap-4">
+          <Button
+            size="zero"
+            className="md:hidden"
+            label="Toggle navigation menu"
+            aria-controls="mobile-menu"
+            aria-expanded={isOpen}
+            // onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <TbLayoutSidebar size={30} />
+          </Button>
+          <Button
+            size="zero"
+            className="md:hidden"
+            label="Toggle navigation menu"
+            aria-controls="mobile-menu"
+            aria-expanded={isOpen}
+            // onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <TbLayoutSidebarRight size={30} />
+          </Button>
+          <Button
+            size="zero"
+            className="md:hidden"
+            label="Toggle navigation menu"
+            aria-controls="mobile-menu"
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            {isOpen ?
+              <RxCross2 className="ml-2.5" size={35} />
+            : <IoMenu size={45} />}
+          </Button>
+        </div>
+        <Navbar />
+      </div>
+    </header>
+  );
+};
+
+export default Header;
