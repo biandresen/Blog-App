@@ -31,7 +31,7 @@ const Button = ({ children, label, variant = "primary", size = "md", className, 
       type={props.type ?? "button"}
       aria-label={label}
       className={clsx(
-        "rounded-full font-semibold transition-colors duration-200 cursor-pointer",
+        "rounded-full font-semibold transition-colors duration-200",
         variantStyles[variant],
         sizeStyles[size],
         className

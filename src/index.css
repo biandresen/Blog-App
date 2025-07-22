@@ -56,6 +56,11 @@
   h6 {
     font-weight: bold;
   }
+
+  button,
+  link {
+    cursor: pointer;
+  }
 }
 
 @layer utilities {
