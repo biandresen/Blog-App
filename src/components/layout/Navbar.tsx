@@ -19,7 +19,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
         animate-in fade-in duration-400
         sm:block
         sm:static
-        place-items-end
+        sm:place-items-end
       `}
     >
       <ul className="flex flex-col gap-4 ml-8 sm:flex-row sm:items-center sm:gap-6 sm:ml-0">
@@ -53,7 +53,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             Contact
           </NavLink>
         </li>
-        <li className="pb-3 lg:pb-0">
+        <li className="pb-3 sm:pb-0">
           <button
             type="button"
             title="Toggle light/dark theme"

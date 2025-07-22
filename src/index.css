@@ -3,18 +3,8 @@
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
 
-@layer base {
-  html {
-    font-family: "Baloo 2", sans-serif;
-  }
-}
-
-.font-b {
-  font-family: "Inter", sans-serif;
-}
-
-@theme {
-  /* LIGHT */
+/* 🌗 Theme Variables */
+:root {
   --bg: #babdbe;
   --text1: #1a1a1a;
   --text2: #fdfdfd;
@@ -24,11 +14,10 @@
   --primary-shade: #222642;
   --primary-tint: #555975;
   --secondary: #2aa9a1;
-  /* #F39C12 #E67E22 #D4AF37 #A29BFE #9B59B6*/
   --success: #2ecc71;
   --warning: #f1c40f;
   --error: #e74c3c;
-  --info: ##3498db;
+  --info: #3498db;
 }
 
 .dark {
@@ -44,54 +33,83 @@
   --success: #2ecc71;
   --warning: #f1c40f;
   --error: #e74c3c;
-  --info: ##3498db;
+  --info: #3498db;
 }
 
-/* Optional utility classes */
-.theme-bg {
-  background-color: var(--bg);
-}
-.theme-text1 {
-  color: var(--text1);
-}
-.theme-text2 {
-  color: var(--text2);
-}
-.theme-text3 {
-  color: var(--text3);
-}
-.theme-primary {
-  background-color: var(--primary);
-}
-.theme-primary-shade {
-  background-color: var(--primary-shade);
-}
-.theme-primary-tint {
-  background-color: var(--primary-tint);
-}
-.theme-secondary {
-  background-color: var(--secondary);
-}
-.theme-success {
-  background-color: var(--success);
-}
-.theme-warning {
-  background-color: var(--warning);
-}
-.theme-error {
-  background-color: var(--error);
-}
-.theme-info {
-  background-color: var(--info);
+@layer base {
+  html {
+    font-family: "Baloo 2", sans-serif;
+  }
+  body {
+    min-height: 100dvh;
+  }
+
+  p {
+    font-family: "Inter", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: bold;
+  }
 }
 
-body {
-  min-height: 100dvh;
-}
+@layer utilities {
+  /* Theme color utilities */
+  .theme-bg {
+    background-color: var(--bg);
+  }
+  .theme-text1 {
+    color: var(--text1);
+  }
+  .theme-text2 {
+    color: var(--text2);
+  }
+  .theme-text3 {
+    color: var(--text3);
+  }
+  .theme-primary {
+    background-color: var(--primary);
+  }
+  .theme-primary-shade {
+    background-color: var(--primary-shade);
+  }
+  .theme-primary-tint {
+    background-color: var(--primary-tint);
+  }
+  .theme-secondary {
+    background-color: var(--secondary);
+  }
+  .theme-success {
+    background-color: var(--success);
+  }
+  .theme-warning {
+    background-color: var(--warning);
+  }
+  .theme-error {
+    background-color: var(--error);
+  }
+  .theme-info {
+    background-color: var(--info);
+  }
 
-@utility container {
-  padding: 10px;
-  margin: auto;
-}
+  /* Font utilities */
+  .font-b {
+    font-family: "Inter", sans-serif;
+  }
 
-/* @source "/" */
+  /* Custom utility */
+  .heading-theme {
+    @apply font-bold;
+    color: var(--primary);
+  }
+
+  .container {
+    padding: 1rem;
+    margin: 0 auto;
+  }
+}
