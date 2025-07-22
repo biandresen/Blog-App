@@ -24,7 +24,7 @@
   --bg: hsl(233, 32%, 10%);
   --text1: #fdfdfd;
   --text2: #fdfdfd;
-  --text3: #2b2f52;
+  --text3: #a7b2ff;
   --button: #ff8a31;
   --primary: #2b2f52;
   --primary-shade: #222642;
@@ -105,7 +105,7 @@
   /* Custom utility */
   .heading-theme {
     @apply font-bold;
-    color: var(--primary);
+    color: var(--text3);
   }
 
   .container {

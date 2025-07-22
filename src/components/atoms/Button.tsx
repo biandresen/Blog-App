@@ -13,8 +13,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: "theme-primary theme-text2 hover:theme-primary/80",
-  secondary: "theme-primary-tint theme-text2 hover:theme-primary-tint/80",
+  primary: "theme-primary theme-text2 hover:theme-primary/80 hover:bg-[var(--primary-shade)]",
+  secondary: "theme-primary-tint theme-text2 hover:theme-primary-tint/80 hover:bg-[var(--primary-shade)]",
   danger: "bg-red-600 theme-text2 hover:bg-red-700",
 };
 
@@ -31,7 +31,7 @@ const Button = ({ children, label, variant = "primary", size = "md", className, 
       type={props.type ?? "button"}
       aria-label={label}
       className={clsx(
-        "rounded-full font-semibold transition-colors duration-200",
+        "rounded-full font-semibold transition-colors duration-200 cursor-pointer",
         variantStyles[variant],
         sizeStyles[size],
         className
