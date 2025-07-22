@@ -9,10 +9,13 @@ import Navbar from "./Navbar";
 import logoImg from "../../assets/img/blogIcon.svg";
 import { useState } from "react";
 import Button from "../atoms/Button";
+import { useUser } from "../../contexts/UserContext";
 const heading = "BLOGGY";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { user } = useUser();
+
   return (
     <header className="dark theme-primary theme-text2 h-[3.5rem]">
       <div className="flex items-center justify-between h-full container relative">
@@ -20,25 +23,30 @@ const Header = () => {
           <img src={logoImg} width={38} alt="Logo" />
           <h2 className="-ml-2 -mb-2 font-medium text-[1.8rem]">{heading}</h2>
         </Link>
+
         <div className="flex items-center gap-4 sm:hidden">
-          <Button
-            size="zero"
-            label="Toggle navigation menu"
-            aria-controls="mobile-menu"
-            aria-expanded={isOpen}
-            // onClick={() => setIsOpen((prev) => !prev)}
-          >
-            <TbLayoutSidebar size={30} />
-          </Button>
-          <Button
-            size="zero"
-            label="Toggle navigation menu"
-            aria-controls="mobile-menu"
-            aria-expanded={isOpen}
-            // onClick={() => setIsOpen((prev) => !prev)}
-          >
-            <TbLayoutSidebarRight size={30} />
-          </Button>
+          {user && (
+            <>
+              <Button
+                size="zero"
+                label="Toggle navigation menu"
+                aria-controls="mobile-menu"
+                aria-expanded={isOpen}
+                // onClick={() => setIsOpen((prev) => !prev)}
+              >
+                <TbLayoutSidebar size={30} />
+              </Button>
+              <Button
+                size="zero"
+                label="Toggle navigation menu"
+                aria-controls="mobile-menu"
+                aria-expanded={isOpen}
+                // onClick={() => setIsOpen((prev) => !prev)}
+              >
+                <TbLayoutSidebarRight size={30} />
+              </Button>
+            </>
+          )}
           <Button
             size="zero"
             label="Toggle navigation menu"

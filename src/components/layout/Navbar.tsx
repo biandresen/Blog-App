@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { useColorTheme } from "../../contexts/ColorThemeContext";
+import { useUser } from "../../contexts/UserContext";
 
 interface NavbarProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface NavbarProps {
 
 const Navbar = ({ isOpen }: NavbarProps) => {
   const { colorTheme, toggleTheme } = useColorTheme();
+  const { user } = useUser();
 
   return (
     <nav
@@ -33,6 +35,41 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             Posts
           </NavLink>
         </li>
+        {user !== null ?
+          <li>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 lg:ml-0" : ""
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
+        : <>
+            <li>
+              <NavLink
+                to="/register"
+                className={({ isActive }) =>
+                  isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 lg:ml-0" : ""
+                }
+              >
+                Register
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 lg:ml-0" : ""
+                }
+              >
+                Login
+              </NavLink>
+            </li>
+          </>
+        }
+
         <li>
           <NavLink
             to="/about"
