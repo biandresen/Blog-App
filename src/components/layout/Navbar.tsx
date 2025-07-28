@@ -15,10 +15,11 @@ const Navbar = ({ isOpen }: NavbarProps) => {
     <nav
       className={`
         ${isOpen ? "block" : "hidden"}
+        z-50
         absolute top-14 left-0 w-full
         font-medium text-[1.2rem]
         theme-primary
-        animate-in fade-in duration-400
+        animate-in fade-in duration-300
         sm:block
         sm:static
         sm:place-items-end
@@ -29,7 +30,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
           <NavLink
             to="/posts"
             className={({ isActive }) =>
-              isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 sm:ml-0" : ""
+              isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 sm:ml-0" : ""
             }
           >
             Posts
@@ -40,7 +41,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
-                isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 lg:ml-0" : ""
+                isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
               }
             >
               Dashboard
@@ -51,7 +52,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
               <NavLink
                 to="/register"
                 className={({ isActive }) =>
-                  isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 lg:ml-0" : ""
+                  isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
                 }
               >
                 Register
@@ -61,7 +62,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
-                  isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 lg:ml-0" : ""
+                  isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
                 }
               >
                 Login
@@ -74,7 +75,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
           <NavLink
             to="/about"
             className={({ isActive }) =>
-              isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 lg:ml-0" : ""
+              isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
             }
           >
             About
@@ -84,7 +85,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
           <NavLink
             to="/contact"
             className={({ isActive }) =>
-              isActive ? "theme-primary-shade py-2 px-4 rounded-full -ml-4 lg:ml-0" : ""
+              isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
             }
           >
             Contact

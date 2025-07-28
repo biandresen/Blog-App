@@ -6,15 +6,18 @@
 /* 🌗 Theme Variables */
 :root {
   --bg: #babdbe;
+  --bg-input: #fdfdfd;
   --text1: #1a1a1a;
   --text2: #fdfdfd;
   --text3: #2b2f52;
-  --button: #ff8a31;
+  --button1: #2b2f52;
+  --button2: #555975;
+  --button3: #f2523f;
   --primary: #2b2f52;
   --primary-shade: #222642;
   --primary-tint: #555975;
   --secondary: #2aa9a1;
-  --success: #2ecc71;
+  --success: #008b3a;
   --warning: #f1c40f;
   --error: #e74c3c;
   --info: #3498db;
@@ -22,23 +25,27 @@
 
 .dark {
   --bg: hsl(233, 32%, 10%);
+  --bg-input: #555975;
   --text1: #fdfdfd;
   --text2: #fdfdfd;
   --text3: #a7b2ff;
-  --button: #ff8a31;
+  --button1: #2b2f52;
+  --button2: #555975;
+  --button3: #f2523f;
   --primary: #2b2f52;
   --primary-shade: #222642;
   --primary-tint: #555975;
   --secondary: #2aa9a1;
   --success: #2ecc71;
   --warning: #f1c40f;
-  --error: #e74c3c;
+  --error: #fe8577;
   --info: #3498db;
 }
 
 @layer base {
   html {
     font-family: "Baloo 2", sans-serif;
+    color: var(--text2);
   }
   body {
     min-height: 100dvh;

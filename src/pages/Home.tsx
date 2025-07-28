@@ -18,7 +18,7 @@ const Home = () => {
           {body}
         </p>
         <div className="flex mt-[calc(1.3rem+2vw)] gap-3 w-1/1 md:flex-row md:w-full justify-between">
-          <Button className="w-[45%]" label={button1Title}>
+          <Button className="w-[45%]" variant="tertiary" label={button1Title}>
             {button1Title}
           </Button>
           <Button className="w-[45%]" variant="secondary" label={button1Title}>

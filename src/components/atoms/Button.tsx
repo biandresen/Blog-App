@@ -1,28 +1,29 @@
 import { type ReactNode, type ButtonHTMLAttributes } from "react";
 import clsx from "clsx";
 
-type ButtonVariant = "primary" | "secondary" | "danger";
+type ButtonVariant = "primary" | "secondary" | "tertiary" | "error";
 type ButtonSize = "zero" | "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode | string; // allow both React nodes and strings
+  children: ReactNode | string;
   label: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  className?: string; // allow further customization
+  className?: string;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: "theme-primary theme-text2 hover:theme-primary/80 hover:bg-[var(--primary-shade)]",
-  secondary: "theme-primary-tint theme-text2 hover:theme-primary-tint/80 hover:bg-[var(--primary-shade)]",
-  danger: "bg-red-600 theme-text2 hover:bg-red-700",
+  primary: "bg-[var(--button1)] text-[var(--text2)] hover:brightness-120",
+  secondary: "bg-[var(--button2)] text-[var(--text2)] hover:brightness-120",
+  tertiary: "bg-[var(--button3)] text-[var(--text2)] hover:brightness-120",
+  error: "bg-[var(--error)] text-[var(--text2)] hover:brightness-120",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
   zero: "",
-  sm: "px-3 py-1 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-6 py-3 text-lg",
+  sm: "px-3 py-1 text-sm md:text-lg",
+  md: "px-4 py-2 text-lg md:text-2xl",
+  lg: "px-6 py-3 text-xl md:text-3xl",
 };
 
 const Button = ({ children, label, variant = "primary", size = "md", className, ...props }: ButtonProps) => {

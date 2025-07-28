@@ -28,6 +28,7 @@ const Header = () => {
           {user && (
             <>
               <Button
+                className="bg-transparent"
                 size="zero"
                 label="Toggle navigation menu"
                 aria-controls="mobile-menu"
@@ -37,6 +38,7 @@ const Header = () => {
                 <TbLayoutSidebar size={30} />
               </Button>
               <Button
+                className="bg-transparent"
                 size="zero"
                 label="Toggle navigation menu"
                 aria-controls="mobile-menu"
@@ -48,6 +50,7 @@ const Header = () => {
             </>
           )}
           <Button
+            className="bg-transparent"
             size="zero"
             label="Toggle navigation menu"
             aria-controls="mobile-menu"
