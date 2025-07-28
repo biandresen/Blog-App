@@ -21,10 +21,10 @@ const Header = () => {
       <div className="flex items-center justify-between h-full container relative">
         <Link to="/" className="flex items-end w-full">
           <img src={logoImg} width={38} alt="Logo" />
-          <h2 className="-ml-2 -mb-2 font-medium text-[1.8rem]">{heading}</h2>
+          <h2 className="-ml-2 -mb-2 pr-1 font-medium text-[1.8rem]">{heading}</h2>
         </Link>
 
-        <div className="flex items-center gap-4 sm:hidden">
+        <div className="flex items-center gap-4 md:hidden">
           {user && (
             <>
               <Button

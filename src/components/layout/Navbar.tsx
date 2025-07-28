@@ -20,17 +20,19 @@ const Navbar = ({ isOpen }: NavbarProps) => {
         font-medium text-[1.2rem]
         theme-primary
         animate-in fade-in duration-300
-        sm:block
-        sm:static
-        sm:place-items-end
+        md:block
+        md:static
+        md:place-items-end
       `}
     >
-      <ul className="flex flex-col gap-4 ml-8 sm:flex-row sm:items-center sm:gap-6 sm:ml-0">
-        <li className="pt-3 sm:pt-0">
+      <ul className="flex flex-col gap-4 ml-8 md:flex-row md:items-center md:gap-6 md:ml-0">
+        <li className="pt-3 md:pt-0">
           <NavLink
             to="/posts"
             className={({ isActive }) =>
-              isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 sm:ml-0" : ""
+              isActive ?
+                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+              : "bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
             Posts
@@ -41,7 +43,9 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
-                isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
+                isActive ?
+                  "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+                : "bg-transparent py-1 px-4 rounded-full -ml-4"
               }
             >
               Dashboard
@@ -52,7 +56,9 @@ const Navbar = ({ isOpen }: NavbarProps) => {
               <NavLink
                 to="/register"
                 className={({ isActive }) =>
-                  isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
+                  isActive ?
+                    "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+                  : "bg-transparent py-1 px-4 rounded-full -ml-4"
                 }
               >
                 Register
@@ -62,7 +68,9 @@ const Navbar = ({ isOpen }: NavbarProps) => {
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
-                  isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
+                  isActive ?
+                    "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+                  : "bg-transparent py-1 px-4 rounded-full -ml-4"
                 }
               >
                 Login
@@ -75,7 +83,9 @@ const Navbar = ({ isOpen }: NavbarProps) => {
           <NavLink
             to="/about"
             className={({ isActive }) =>
-              isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
+              isActive ?
+                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+              : "bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
             About
@@ -85,13 +95,15 @@ const Navbar = ({ isOpen }: NavbarProps) => {
           <NavLink
             to="/contact"
             className={({ isActive }) =>
-              isActive ? "theme-primary-shade py-1 px-4 rounded-full -ml-4 lg:ml-0" : ""
+              isActive ?
+                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+              : "bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
             Contact
           </NavLink>
         </li>
-        <li className="pb-3 sm:pb-0">
+        <li className="pb-3 md:pb-0">
           <button
             type="button"
             title="Toggle light/dark theme"

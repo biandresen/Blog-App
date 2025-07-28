@@ -65,8 +65,9 @@
   }
 
   button,
-  link {
+  a {
     cursor: pointer;
+    display: inline-block;
   }
 }
 

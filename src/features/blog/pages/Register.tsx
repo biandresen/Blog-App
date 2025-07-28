@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   // Values
@@ -34,6 +35,9 @@ const Register = () => {
   const inputHeading = "REGISTER";
   const buttonLabel = "REGISTER";
 
+  const goToLogin = "Already have an account?";
+  const login = "Login";
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     //TODO Here you would typically handle the registration logic, e.g., API call
@@ -41,10 +45,14 @@ const Register = () => {
   };
 
   return (
-    <div data-label="inputInfo-container" className="container flex flex-col-reverse gap-6">
+    <div
+      data-label="inputInfo-container"
+      className="container flex flex-col-reverse gap-6 sm:flex-row sm:gap-0 sm:mt-20!"
+    >
+      {/* //TODO Fix boarders on sm+ */}
       <div data-label="info-container">
-        <div data-label="info" className="bg-[var(--primary)] p-4 rounded-xl">
-          <h2 className="text-2xl mb-5">{infoHeading}</h2>
+        <div data-label="info" className="bg-[var(--primary)] px-4 py-6 rounded-xl sm:h-full sm:px-6 sm:py-8">
+          <h2 className="text-2xl my-3">{infoHeading}</h2>
           <div>
             <h3 className="font-medium text-xl">{infoListHeading}</h3>
             <hr className="mb-2" />
@@ -58,8 +66,9 @@ const Register = () => {
           </div>
         </div>
       </div>
-      <div data-label="input-container" className="bg-[var(--bg-input)] p-4 rounded-xl">
-        <h2 className="text-[var(--text1)] text-3xl text-center m-3">{inputHeading}</h2>
+      {/* //TODO Fix boarders on sm+ */}
+      <div data-label="input-container" className="bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6 sm:py-8">
+        <h2 className="text-[var(--text1)] text-3xl text-center my-3">{inputHeading}</h2>
         <form action="">
           <Input
             id="username"
@@ -135,6 +144,11 @@ const Register = () => {
           <Button type="submit" onClick={handleSubmit} className="w-full mt-7" label={buttonLabel}>
             {buttonLabel}
           </Button>
+          <div className="text-center">
+            <Link to="/login" className="text-[var(--text1)] mt-3">
+              {goToLogin} <span className="font-bold">{login}</span>
+            </Link>
+          </div>
         </form>
       </div>
     </div>

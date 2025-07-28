@@ -7,9 +7,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const footerLink = "https://github.com/biandresen/Blog-App";
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[var(--bg)]">
       <Header />
-      <main className="theme-bg flex-100 flex flex-col">{children}</main>
+      <main className="flex-100 flex flex-col mx-auto">{children}</main>
       <footer className="theme-primary py-2.5 grid place-items-center">
         <div className="flex items-center gap-2">
           <a title="github link" target="_blank" rel="noopener noreferrer" href={footerLink}>
