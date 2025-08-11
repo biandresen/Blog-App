@@ -34,11 +34,14 @@ const Login = () => {
   return (
     <div
       data-label="inputInfo-container"
-      className="container flex flex-col-reverse gap-6 sm:flex-row sm:gap-0 sm:mt-20!"
+      className="container flex flex-col-reverse gap-6 sm:flex-row sm:justify-center sm:gap-0 sm:mt-20!"
     >
       {/* //TODO Fix boarders on sm+ */}
       <div data-label="info-container">
-        <div data-label="info" className="bg-[var(--primary)] px-4 py-6 rounded-xl sm:h-full sm:px-6 sm:py-8">
+        <div
+          data-label="info"
+          className="bg-[var(--primary)] px-4 py-6 rounded-xl sm:h-full sm:px-6 sm:py-8 sm:rounded-tr-none sm:rounded-br-none"
+        >
           <h2 className="text-2xl my-3">{infoHeading}</h2>
           <div>
             <h3 className="font-medium text-xl">{infoListHeading}</h3>
@@ -54,7 +57,10 @@ const Login = () => {
         </div>
       </div>
       {/* //TODO Fix boarders on sm+ */}
-      <div data-label="input-container" className="bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6 sm:py-8">
+      <div
+        data-label="input-container"
+        className="bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6 sm:py-8 sm:rounded-tl-none sm:rounded-bl-none"
+      >
         <h2 className="text-[var(--text1)] text-3xl text-center my-3">{inputHeading}</h2>
         <form action="">
           <Input

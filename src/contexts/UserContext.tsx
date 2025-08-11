@@ -19,11 +19,21 @@ interface UserContextType {
   setUser: (user: User | null) => void;
 }
 
+const user1: User = {
+  id: "1",
+  username: "John",
+  email: "john@gmail.com",
+  avatar: ".jpg",
+  role: "USER",
+  createdAt: "201192",
+  updatedAt: "051225",
+};
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(user1);
 
   //TODO Check if user is logged in on initial load
   // This could be done by checking a token in localStorage or making an API call

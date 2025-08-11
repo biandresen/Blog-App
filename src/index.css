@@ -21,6 +21,12 @@
   --warning: #f1c40f;
   --error: #e74c3c;
   --info: #3498db;
+
+  --space-s: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 3rem;
 }
 
 .dark {

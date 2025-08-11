@@ -18,7 +18,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
         z-50
         absolute top-14 left-0 w-full
         font-medium text-[1.2rem]
-        theme-primary
+        bg-[var(--primary)]
         animate-in fade-in duration-300
         md:block
         md:static

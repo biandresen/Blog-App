@@ -17,8 +17,8 @@ const Header = () => {
   const { user } = useUser();
 
   return (
-    <header className="dark theme-primary theme-text2 h-[3.5rem]">
-      <div className="flex items-center justify-between h-full container relative">
+    <header className="bg-[var(--primary)] h-[3.8rem]">
+      <div className="flex items-center justify-between h-full px-[var(--space-s)] lg:px-[var(--space-lg)] relative">
         <Link to="/" className="flex items-end w-full">
           <img src={logoImg} width={38} alt="Logo" />
           <h2 className="-ml-2 -mb-2 pr-1 font-medium text-[1.8rem]">{heading}</h2>
