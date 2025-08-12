@@ -5,7 +5,7 @@ import { type ChangeEvent } from "react";
 interface InputProps {
   id: string;
   label: string;
-  type?: "text" | "email" | "password" | "number";
+  type?: "text" | "email" | "password" | "number" | "file";
   value?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   inputValid?: boolean;
@@ -13,6 +13,7 @@ interface InputProps {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
 const Input = ({
@@ -26,12 +27,16 @@ const Input = ({
   placeholder,
   required = false,
   disabled = false,
+  className,
 }: InputProps) => {
   const hasValue = value?.trim().length !== 0;
 
   return (
     <div className={`flex flex-col ${errorMsg && hasValue ? "-mb-1.5" : "mb-3"}`}>
-      <label htmlFor={id} className="text-[var(--text1)] text-lg font-semibold">
+      <label
+        htmlFor={id}
+        className={`${className ? className : "text-[var(--text1)]"} text-lg font-semibold`}
+      >
         {label}
         {/* {required && <span className="ml-1">*</span>} */}
       </label>
@@ -46,9 +51,10 @@ const Input = ({
           disabled={disabled}
           // aria-invalid={!inputValid}
           className={`bg-[var(--bg)] text-[var(--text1)] font-semibold rounded-full w-full text-lg px-3 py-0.5 pr-9
-            placeholder:text-gray-500 outline-none border
+            outline-none border
             ${inputValid === false && hasValue ? "border-[var(--error)]" : "border-transparent"}
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+            ${className?.includes("text-[var(--text2)]") ? `${className} text-[var(--text1)]!` : className}
           `}
         />
 

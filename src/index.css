@@ -44,7 +44,7 @@
   --secondary: #2aa9a1;
   --success: #2ecc71;
   --warning: #f1c40f;
-  --error: #fe8577;
+  --error: #e74c3c;
   --info: #3498db;
 }
 
@@ -73,6 +73,9 @@
   button,
   a {
     cursor: pointer;
+    display: inline-block;
+  }
+  label {
     display: inline-block;
   }
 }

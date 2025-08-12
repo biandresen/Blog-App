@@ -36,7 +36,6 @@ const Login = () => {
       data-label="inputInfo-container"
       className="container flex flex-col-reverse gap-6 sm:flex-row sm:justify-center sm:gap-0 sm:mt-20!"
     >
-      {/* //TODO Fix boarders on sm+ */}
       <div data-label="info-container">
         <div
           data-label="info"
@@ -56,7 +55,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      {/* //TODO Fix boarders on sm+ */}
+
       <div
         data-label="input-container"
         className="bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6 sm:py-8 sm:rounded-tl-none sm:rounded-bl-none"
