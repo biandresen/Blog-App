@@ -27,7 +27,7 @@ const Profile = () => {
   const [errorMsg4, setErrorMsg4] = useState<string>("");
 
   const infoHeading = "PROFILE DATA";
-  const infoListItems = ["Username: ", "Email: ", "Number of active posts: ", "Number of drafts: "];
+  const infoListItems = ["Username: ", "Email: ", "Active posts: ", "Drafts: "];
   const infoListItemsVariables = [user?.username, user?.email, 5, 2];
 
   const inputHeading = "UPDATE PROFILE";
@@ -45,19 +45,19 @@ const Profile = () => {
       data-label="inputInfo-container"
       className="container flex flex-col-reverse gap-6 sm:flex-row sm:justify-center sm:gap-0 sm:mt-20!"
     >
-      <div data-label="info-container" className="">
+      <div data-label="info-container">
         <div
           data-label="info"
           className="bg-[var(--primary)] px-4 py-6 rounded-xl sm:h-full sm:px-6 sm:rounded-tr-none sm:py-8 sm:rounded-br-none flex flex-col"
         >
-          <div className="flex">
-            <h2 className="text-2xl my-3">{infoHeading}</h2>
-            <CgProfile size={70} className="ml-10 md:ml-30" />
+          <div className="flex flex-col-reverse md:flex-row">
+            <h2 className="text-2xl md:text-4xl my-3">{infoHeading}</h2>
+            <CgProfile size={60} className="lg:ml-30" />
           </div>
-          <div>
+          <div className="mb-10 md:mb-0">
             <ul>
               {infoListItems.map((list, index) => (
-                <li className="text-lg mt-2" key={list}>
+                <li className="text-xl md:text-2xl mt-2" key={list}>
                   {list} <span className="font-bold">{infoListItemsVariables[index]}</span>
                 </li>
               ))}
@@ -89,7 +89,7 @@ const Profile = () => {
         data-label="input-container"
         className="bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6 sm:py-8 sm:rounded-tl-none sm:rounded-bl-none"
       >
-        <h2 className="text-[var(--text1)] text-3xl text-center my-3">{inputHeading}</h2>
+        <h2 className="text-[var(--text1)] text-2xl md:text-4xl text-center mt-3 mb-5">{inputHeading}</h2>
         <form action="">
           <Input
             id="username"

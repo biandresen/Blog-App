@@ -13,12 +13,9 @@ const Drafts = () => {
   ];
 
   return (
-    <div data-name="post-grid-container">
-      <h2 className="text-6xl text-[var(--text1)] mb-5">{heading}</h2>
-      <div
-        data-name="post-grid"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8"
-      >
+    <div data-name="post-grid-container" className="flex flex-col items-center md:items-start p-5 md:p-10">
+      <h2 className="text-5xl md:text-6xl text-[var(--text1)] mb-8">{heading}</h2>
+      <div data-name="post-grid" className="grid grid-cols-[repeat(auto-fit,minmax(210px,1fr))] gap-8 w-full">
         {false && (
           <div data-name="no-post-card">
             <h3 className="text-2xl font-bold">No drafts available</h3>

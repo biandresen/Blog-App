@@ -16,7 +16,7 @@ const DraftCard = ({ id, draftTitle }: DraftCardProps) => {
   return (
     <div
       data-name="post-card"
-      className="bg-[var(--primary)] p-4 rounded-2xl shadow-md w-55 h-55 flex flex-col"
+      className="bg-[var(--primary)] p-4 rounded-2xl shadow-md w-55 h-55 flex flex-col justify-self-center"
     >
       <h3 className="text-2xl font-bold">{id + ". " + draftTitle}</h3>
       <Button

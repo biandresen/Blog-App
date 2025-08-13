@@ -35,7 +35,7 @@ const Input = ({
     <div className={`flex flex-col ${errorMsg && hasValue ? "-mb-1.5" : "mb-3"}`}>
       <label
         htmlFor={id}
-        className={`${className ? className : "text-[var(--text1)]"} text-lg font-semibold`}
+        className={`${className ? className : "text-[var(--text1)]"} text-lg font-semibold md:text-2xl my-1 `}
       >
         {label}
         {/* {required && <span className="ml-1">*</span>} */}
@@ -50,7 +50,7 @@ const Input = ({
           required={required}
           disabled={disabled}
           // aria-invalid={!inputValid}
-          className={`bg-[var(--bg)] text-[var(--text1)] font-semibold rounded-full w-full text-lg px-3 py-0.5 pr-9
+          className={`bg-[var(--bg)] text-[var(--text1)] font-semibold rounded-full w-full text-lg md:text-xl px-3 py-0.5 pr-9
             outline-none border
             ${inputValid === false && hasValue ? "border-[var(--error)]" : "border-transparent"}
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}

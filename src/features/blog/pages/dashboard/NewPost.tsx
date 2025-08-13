@@ -32,11 +32,11 @@ const NewPost = () => {
   const buttonText2 = "PUBLISH POST";
 
   return (
-    <div className="bg-[var(--primary)] p-3 md:p-8 rounded-2xl w-1/2 mx-auto md:mt-10">
-      <h2 className="text-5xl text-center my-5">{newPostTitle}</h2>
+    <div className="bg-[var(--primary)] p-3 md:p-8 rounded-2xl max-w-120 md:min-w-1/2 mx-auto md:mt-10">
+      <h2 className="text-3xl md:text-5xl text-center my-5">{newPostTitle}</h2>
       <form className="">
         <Input
-          className="text-[var(--text2)] rounded-xl text-2xl! mb-2"
+          className="text-[var(--text2)] rounded-xl md:text-2xl! mb-2"
           id="postTitle"
           label="Heading"
           type="text"
@@ -47,11 +47,11 @@ const NewPost = () => {
           placeholder="Post title"
           required
         />
-        <label htmlFor="content" className="text-[var(--text2)] text-2xl font-bold md:my-2">
+        <label htmlFor="content" className="text-[var(--text2)] md:text-2xl font-bold md:my-2">
           Content
         </label>
         <textarea
-          className="text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] indent-3 font-normal md:h-50 py-2 mb-4"
+          className="md:text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] px-3 font-normal md:h-50 py-2 mb-3"
           title="content"
           value={content}
           onChange={(e) => {
@@ -62,7 +62,7 @@ const NewPost = () => {
           id="content"
         ></textarea>
         <Input
-          className="text-[var(--text2)] rounded-xl text-2xl! mb-2"
+          className="text-[var(--text2)] rounded-xl md:text-2xl! mb-2"
           id="tags"
           label="Tags"
           type="text"
@@ -72,11 +72,11 @@ const NewPost = () => {
           }}
           placeholder="Add tags (comma separated)"
         />
-        <div className="flex justify-space-between md:gap-10 md:my-4">
+        <div className="flex flex-col pb-3 md:flex-row justify-space-between md:gap-10 md:my-4">
           <Button
             onClick={handleSaveDraft}
             type="submit"
-            variant="shade"
+            variant="secondary"
             className="w-full mt-4"
             label={buttonText1}
           >
@@ -85,7 +85,7 @@ const NewPost = () => {
           <Button
             onClick={handlePublishPost}
             type="submit"
-            variant="secondary"
+            variant="tertiary"
             className="w-full mt-4"
             label={buttonText2}
           >

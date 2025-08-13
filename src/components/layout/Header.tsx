@@ -12,8 +12,13 @@ import Button from "../atoms/Button";
 import { useUser } from "../../contexts/UserContext";
 const heading = "BLOGGY";
 
-const Header = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+interface HeaderProps {
+  setLeftBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setRightBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Header = ({ setLeftBarIsOpen, setRightBarIsOpen }: HeaderProps) => {
+  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
   const { user } = useUser();
 
   return (
@@ -32,8 +37,13 @@ const Header = () => {
                 size="zero"
                 label="Toggle navigation menu"
                 aria-controls="mobile-menu"
-                aria-expanded={isOpen}
-                // onClick={() => setIsOpen((prev) => !prev)}
+                onClick={() => {
+                  setLeftBarIsOpen((prev) => {
+                    const newState = !prev;
+                    if (newState) setRightBarIsOpen(false); // close other
+                    return newState;
+                  });
+                }}
               >
                 <TbLayoutSidebar size={30} />
               </Button>
@@ -42,8 +52,13 @@ const Header = () => {
                 size="zero"
                 label="Toggle navigation menu"
                 aria-controls="mobile-menu"
-                aria-expanded={isOpen}
-                // onClick={() => setIsOpen((prev) => !prev)}
+                onClick={() => {
+                  setRightBarIsOpen((prev) => {
+                    const newState = !prev;
+                    if (newState) setLeftBarIsOpen(false); // close other
+                    return newState;
+                  });
+                }}
               >
                 <TbLayoutSidebarRight size={30} />
               </Button>
@@ -54,15 +69,15 @@ const Header = () => {
             size="zero"
             label="Toggle navigation menu"
             aria-controls="mobile-menu"
-            aria-expanded={isOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
+            aria-expanded={menuIsOpen}
+            onClick={() => setMenuIsOpen((prev) => !prev)}
           >
-            {isOpen ?
+            {menuIsOpen ?
               <RxCross2 className="ml-2.5" size={35} />
             : <IoMenu size={45} />}
           </Button>
         </div>
-        <Navbar isOpen={isOpen} />
+        <Navbar isOpen={menuIsOpen} />
       </div>
     </header>
   );

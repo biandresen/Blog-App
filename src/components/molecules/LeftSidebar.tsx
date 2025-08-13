@@ -7,11 +7,17 @@ const linkName1: string = "New post";
 const linkName2: string = "Drafts";
 const linkName3: string = "Profile";
 
-const Sidebar = () => {
+const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
+  const handleLinkClick = () => {
+    if (window.innerWidth < 768) {
+      setLeftBarIsOpen(false);
+    }
+  };
+
   return (
-    <div className="bg-[var(--primary-shade)] absolute left-0 w-full h-full md:h-auto md:max-w-55 md:static">
+    <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-full md:h-auto md:max-w-45 md:static z-100">
       <div className="ml-8 mt-5">
-        <ul className="flex flex-col gap-3">
+        <ul onClick={handleLinkClick} className="flex flex-col gap-3">
           <NavLink
             to="/dashboard/new-post"
             className={({ isActive }) =>
@@ -47,8 +53,8 @@ const Sidebar = () => {
           </NavLink>
         </ul>
       </div>
-    </div>
+    </aside>
   );
 };
 
-export default Sidebar;
+export default LeftSidebar;
