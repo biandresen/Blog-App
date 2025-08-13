@@ -5,6 +5,8 @@ import Layout from "./components/layout/Layout";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./features/blog/pages/Login"));
 const Register = lazy(() => import("./features/blog/pages/Register"));
+const About = lazy(() => import("./features/blog/pages/About"));
+const Contact = lazy(() => import("./features/blog/pages/Contact"));
 const DashboardLayout = lazy(() => import("./features/blog/pages/DashboardLayout"));
 const NewPost = lazy(() => import("./features/blog/pages/dashboard/NewPost"));
 const Drafts = lazy(() => import("./features/blog/pages/dashboard/Drafts"));
@@ -22,6 +24,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
 
           {/* Dashboard and nested routes */}
           <Route
