@@ -13,9 +13,9 @@ const Drafts = () => {
   ];
 
   return (
-    <div data-name="post-grid-container" className="flex flex-col items-center md:items-start p-5 md:p-10">
-      <h2 className="text-5xl md:text-6xl text-[var(--text1)] mb-8">{heading}</h2>
-      <div data-name="post-grid" className="grid grid-cols-[repeat(auto-fit,minmax(210px,1fr))] gap-8 w-full">
+    <div data-name="post-grid-container" className="md:mt-8">
+      <h2 className="text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10">DRAFTS</h2>
+      <section className="flex flex-wrap gap-4 mt-10 justify-center mx-auto w-full xl:w-[90%]">
         {false && (
           <div data-name="no-post-card">
             <h3 className="text-2xl font-bold">No drafts available</h3>
@@ -25,7 +25,7 @@ const Drafts = () => {
         {drafts.map((draft) => (
           <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />
         ))}
-      </div>
+      </section>
     </div>
   );
 };

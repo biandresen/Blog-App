@@ -28,7 +28,7 @@ const LeftSidebar2 = ({ setLeftBarIsOpen }: LeftSidebar2Props) => {
             to="/posts/search"
             className={({ isActive }) =>
               isActive ?
-                "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
@@ -39,7 +39,7 @@ const LeftSidebar2 = ({ setLeftBarIsOpen }: LeftSidebar2Props) => {
             to="/posts/all-posts"
             className={({ isActive }) =>
               isActive ?
-                "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
@@ -50,7 +50,7 @@ const LeftSidebar2 = ({ setLeftBarIsOpen }: LeftSidebar2Props) => {
             to="/posts/popular"
             className={({ isActive }) =>
               isActive ?
-                "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
@@ -61,7 +61,7 @@ const LeftSidebar2 = ({ setLeftBarIsOpen }: LeftSidebar2Props) => {
             to="/posts/my-posts"
             className={({ isActive }) =>
               isActive ?
-                "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >

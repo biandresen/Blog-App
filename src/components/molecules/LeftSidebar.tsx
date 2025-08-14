@@ -22,7 +22,7 @@ const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
             to="/dashboard/new-post"
             className={({ isActive }) =>
               isActive ?
-                "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
@@ -33,7 +33,7 @@ const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
             to="/dashboard/drafts"
             className={({ isActive }) =>
               isActive ?
-                "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+                "flex gap-2 items-center bg-[var(--primary)] py-1 px-4 mr-3 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
@@ -44,7 +44,7 @@ const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
             to="/dashboard/profile"
             className={({ isActive }) =>
               isActive ?
-                "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+                "flex gap-2 items-center bg-[var(--primary)] py-1 px-4 mr-3 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
