@@ -10,9 +10,9 @@ interface PostsLayoutProps {
 
 const PostsLayout = ({ setLeftBarIsOpen, leftBarIsOpen, rightBarIsOpen }: PostsLayoutProps) => {
   return (
-    <div className="flex min-h-screen relative">
+    <div className="flex relative h-[calc(100vh-3.8rem)]">
       {leftBarIsOpen && <LeftSidebar2 setLeftBarIsOpen={setLeftBarIsOpen} />}
-      <div data-name="main-content" className="flex-1 p-6">
+      <div data-name="main-content" className="flex-1 p-6 overflow-y-auto">
         <Outlet />
       </div>
       {rightBarIsOpen && <RightSidebar />}

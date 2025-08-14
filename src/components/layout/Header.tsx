@@ -34,7 +34,7 @@ const Header = ({ setLeftBarIsOpen, setRightBarIsOpen }: HeaderProps) => {
           <h2 className="-ml-2 -mb-2 pr-1 font-medium text-[1.8rem]">{heading}</h2>
         </Link>
 
-        <div className="flex items-center gap-4 mr-4">
+        <div className="flex items-center gap-1 mr-4">
           {showLeftSidebarBtn && (
             <Button
               className="p-1.5 md:absolute md:top-18 md:left-6 z-200 text-[var(--text2)]!"

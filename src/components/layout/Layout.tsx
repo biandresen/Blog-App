@@ -34,7 +34,7 @@ const Layout = ({ setLeftBarIsOpen, setRightBarIsOpen, children }: LayoutProps) 
     <div className="flex flex-col min-h-screen bg-[var(--bg)]">
       <Header setLeftBarIsOpen={setLeftBarIsOpen} setRightBarIsOpen={setRightBarIsOpen} />
       <main className="flex flex-col mx-auto relative w-full flex-100">{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

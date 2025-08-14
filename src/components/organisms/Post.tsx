@@ -18,7 +18,7 @@ const Post = () => {
         "I’ve tried many games in the VR universe, but the one game I always come back to without hesitation is Beat Saber. It fits so many different moods for me. I can even sit while doing it if I’m tired. The feeling of hitting the blocks to the beat of the music is so satisfying.My favorite music to play it with is the Metallica pack. It gives so much energy and satisfaction. The learning curve is there, but the fact that you can set the difficulty makes it possible to play for most people. Maybe with the exception of people who are totally “rhythm deaf”...? Anyways! I highly recommend trying it out!",
     },
   ];
-  const buttonText = "OPEN COMMENTS";
+  const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
   const tags = "javascript, react, blog, web development";
   const username = "Birando";
   const date = "05.02.2025";
