@@ -1,11 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { MdNoteAdd } from "react-icons/md";
-import { GrNotes } from "react-icons/gr";
+import { GrNotes, GrUser } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
+import { GrUserAdmin } from "react-icons/gr";
 
 const linkName1: string = "New post";
 const linkName2: string = "Drafts";
 const linkName3: string = "Profile";
+const linkName4: string = "Admin";
 
 const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
   const handleLinkClick = () => {
@@ -51,6 +53,19 @@ const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
             <CgProfile size={30} />
             <span className="text-xl font-medium">{linkName3}</span>
           </NavLink>
+          {true && (
+            <NavLink
+              to="/dashboard/admin"
+              className={({ isActive }) =>
+                isActive ?
+                  "flex gap-2 items-center bg-[var(--primary)] py-1 px-4 mr-3 rounded-full -ml-4"
+                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
+              }
+            >
+              <GrUserAdmin size={30} />
+              <span className="text-xl font-medium">{linkName4}</span>
+            </NavLink>
+          )}
         </ul>
       </div>
     </aside>

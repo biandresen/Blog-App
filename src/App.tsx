@@ -7,10 +7,13 @@ const Login = lazy(() => import("./features/blog/pages/Login"));
 const Register = lazy(() => import("./features/blog/pages/Register"));
 const About = lazy(() => import("./features/blog/pages/About"));
 const Contact = lazy(() => import("./features/blog/pages/Contact"));
+
 const DashboardLayout = lazy(() => import("./features/blog/pages/DashboardLayout"));
 const NewPost = lazy(() => import("./features/blog/pages/dashboard/NewPost"));
 const Drafts = lazy(() => import("./features/blog/pages/dashboard/Drafts"));
 const Profile = lazy(() => import("./features/blog/pages/dashboard/Profile"));
+const Admin = lazy(() => import("./features/blog/pages/dashboard/Admin"));
+
 const PostsLayout = lazy(() => import("./features/blog/pages/PostsLayout"));
 const AllPosts = lazy(() => import("./features/blog/pages/posts/AllPosts"));
 const MyPosts = lazy(() => import("./features/blog/pages/posts/MyPosts"));
@@ -41,6 +44,7 @@ const App = () => {
             <Route path="new-post" element={<NewPost />} />
             <Route path="drafts" element={<Drafts />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="admin" element={<Admin />} />
           </Route>
           <Route
             path="/posts"

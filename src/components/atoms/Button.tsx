@@ -1,7 +1,7 @@
 import { type ReactNode, type ButtonHTMLAttributes } from "react";
 import clsx from "clsx";
 
-type ButtonVariant = "shade" | "primary" | "secondary" | "tertiary" | "error";
+type ButtonVariant = "shade" | "primary" | "secondary" | "tertiary" | "success" | "error";
 type ButtonSize = "zero" | "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -17,6 +17,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   primary: "bg-[var(--button1)] text-[var(--text2)] hover:brightness-120",
   secondary: "bg-[var(--button2)] text-[var(--text2)] hover:brightness-120",
   tertiary: "bg-[var(--button3)] text-[var(--text2)] hover:brightness-120",
+  success: "bg-[var(--success)] text-[var(--text2)] hover:brightness-120",
   error: "bg-[var(--error)] text-[var(--text2)] hover:brightness-120",
 };
 
