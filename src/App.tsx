@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, useState } from "react";
 import Layout from "./components/layout/Layout";
 
+const NotFound = lazy(() => import("./pages/NotFound"));
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./features/blog/pages/Login"));
 const Register = lazy(() => import("./features/blog/pages/Register"));
@@ -62,6 +63,7 @@ const App = () => {
             <Route path="popular" element={<Popular />} />
             <Route path="my-posts" element={<MyPosts />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </BrowserRouter>
