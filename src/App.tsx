@@ -15,6 +15,7 @@ const PostsLayout = lazy(() => import("./features/blog/pages/PostsLayout"));
 const AllPosts = lazy(() => import("./features/blog/pages/posts/AllPosts"));
 const MyPosts = lazy(() => import("./features/blog/pages/posts/MyPosts"));
 const Popular = lazy(() => import("./features/blog/pages/posts/Popular"));
+const Search = lazy(() => import("./features/blog/pages/posts/Search"));
 
 const App = () => {
   const [leftBarIsOpen, setLeftBarIsOpen] = useState<boolean>(false);
@@ -52,6 +53,7 @@ const App = () => {
             }
           >
             <Route index element={<AllPosts />} /> {/* Default route */}
+            <Route path="search" element={<Search />} />
             <Route path="all-posts" element={<AllPosts />} />
             <Route path="popular" element={<Popular />} />
             <Route path="my-posts" element={<MyPosts />} />

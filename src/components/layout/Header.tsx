@@ -23,8 +23,8 @@ const Header = ({ setLeftBarIsOpen, setRightBarIsOpen }: HeaderProps) => {
   const { user } = useUser();
 
   const location = useLocation();
-  const showLeftSidebarBtn = location.pathname === "/posts" || location.pathname === "/dashboard";
-  const showRightSidebarBtn = location.pathname === "/posts";
+  const showLeftSidebarBtn = location.pathname.includes("/posts") || location.pathname.includes("/dashboard");
+  const showRightSidebarBtn = location.pathname.includes("/posts");
 
   return (
     <header className="bg-[var(--primary)] h-[3.8rem]">

@@ -9,7 +9,11 @@ const linkName2: string = "All posts";
 const linkName3: string = "Popular";
 const linkName4: string = "My posts";
 
-const LeftSidebar2 = ({ setLeftBarIsOpen }: any) => {
+interface LeftSidebar2Props {
+  setLeftBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const LeftSidebar2 = ({ setLeftBarIsOpen }: LeftSidebar2Props) => {
   const handleLinkClick = () => {
     if (window.innerWidth < 768) {
       setLeftBarIsOpen(false);
