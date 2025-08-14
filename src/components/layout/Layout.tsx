@@ -15,7 +15,7 @@ const Layout = ({ setLeftBarIsOpen, setRightBarIsOpen, children }: LayoutProps) 
       if (window.innerWidth >= 768) {
         // Force both open
         setLeftBarIsOpen(true);
-        // setRightBarIsOpen(true);
+        setRightBarIsOpen(true);
       } else {
         // Force both closed
         setLeftBarIsOpen(false);

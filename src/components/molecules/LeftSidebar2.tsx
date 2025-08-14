@@ -1,13 +1,15 @@
 import { NavLink } from "react-router-dom";
-import { MdNoteAdd } from "react-icons/md";
-import { GrNotes } from "react-icons/gr";
+import { ImSearch } from "react-icons/im";
+import { CgNotes } from "react-icons/cg";
+import { TbChartBarPopular } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 
-const linkName1: string = "New post";
-const linkName2: string = "Drafts";
-const linkName3: string = "Profile";
+const linkName1: string = "Search";
+const linkName2: string = "All posts";
+const linkName3: string = "Popular";
+const linkName4: string = "My posts";
 
-const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
+const LeftSidebar2 = ({ setLeftBarIsOpen }: any) => {
   const handleLinkClick = () => {
     if (window.innerWidth < 768) {
       setLeftBarIsOpen(false);
@@ -19,29 +21,40 @@ const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
       <div className="ml-8 mt-16">
         <ul onClick={handleLinkClick} className="flex flex-col gap-3">
           <NavLink
-            to="/dashboard/new-post"
+            to="/posts/search"
             className={({ isActive }) =>
               isActive ?
                 "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
-            <MdNoteAdd size={30} />
+            <ImSearch size={30} />
             <span className="text-xl font-medium">{linkName1}</span>
           </NavLink>
           <NavLink
-            to="/dashboard/drafts"
+            to="/posts/all-posts"
             className={({ isActive }) =>
               isActive ?
                 "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
               : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
-            <GrNotes size={30} />
+            <CgNotes size={30} />
             <span className="text-xl font-medium">{linkName2}</span>
           </NavLink>{" "}
           <NavLink
-            to="/dashboard/profile"
+            to="/posts/popular"
+            className={({ isActive }) =>
+              isActive ?
+                "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
+              : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
+            }
+          >
+            <TbChartBarPopular size={30} />
+            <span className="text-xl font-medium">{linkName3}</span>
+          </NavLink>
+          <NavLink
+            to="/posts/my-posts"
             className={({ isActive }) =>
               isActive ?
                 "flex gap-2 items-center bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
@@ -49,7 +62,7 @@ const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
             }
           >
             <CgProfile size={30} />
-            <span className="text-xl font-medium">{linkName3}</span>
+            <span className="text-xl font-medium">{linkName4}</span>
           </NavLink>
         </ul>
       </div>
@@ -57,4 +70,4 @@ const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
   );
 };
 
-export default LeftSidebar;
+export default LeftSidebar2;

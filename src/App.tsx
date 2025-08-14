@@ -11,6 +11,10 @@ const DashboardLayout = lazy(() => import("./features/blog/pages/DashboardLayout
 const NewPost = lazy(() => import("./features/blog/pages/dashboard/NewPost"));
 const Drafts = lazy(() => import("./features/blog/pages/dashboard/Drafts"));
 const Profile = lazy(() => import("./features/blog/pages/dashboard/Profile"));
+const PostsLayout = lazy(() => import("./features/blog/pages/PostsLayout"));
+const AllPosts = lazy(() => import("./features/blog/pages/posts/AllPosts"));
+const MyPosts = lazy(() => import("./features/blog/pages/posts/MyPosts"));
+const Popular = lazy(() => import("./features/blog/pages/posts/Popular"));
 
 const App = () => {
   const [leftBarIsOpen, setLeftBarIsOpen] = useState<boolean>(false);
@@ -30,18 +34,27 @@ const App = () => {
           {/* Dashboard and nested routes */}
           <Route
             path="/dashboard"
+            element={<DashboardLayout setLeftBarIsOpen={setLeftBarIsOpen} leftBarIsOpen={leftBarIsOpen} />}
+          >
+            <Route index element={<NewPost />} /> {/* Default route */}
+            <Route path="new-post" element={<NewPost />} />
+            <Route path="drafts" element={<Drafts />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+          <Route
+            path="/posts"
             element={
-              <DashboardLayout
+              <PostsLayout
                 setLeftBarIsOpen={setLeftBarIsOpen}
                 leftBarIsOpen={leftBarIsOpen}
                 rightBarIsOpen={rightBarIsOpen}
               />
             }
           >
-            <Route index element={<NewPost />} /> {/* Default route */}
-            <Route path="new-post" element={<NewPost />} />
-            <Route path="drafts" element={<Drafts />} />
-            <Route path="profile" element={<Profile />} />
+            <Route index element={<AllPosts />} /> {/* Default route */}
+            <Route path="all-posts" element={<AllPosts />} />
+            <Route path="popular" element={<Popular />} />
+            <Route path="my-posts" element={<MyPosts />} />
           </Route>
         </Routes>
       </Layout>
