@@ -10,13 +10,18 @@ const linkName3: string = "Popular";
 const linkName4: string = "My posts";
 
 interface LeftSidebar2Props {
-  setLeftBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSidebars: React.Dispatch<
+    React.SetStateAction<{
+      left: boolean;
+      right: boolean;
+    }>
+  >;
 }
 
-const LeftSidebar2 = ({ setLeftBarIsOpen }: LeftSidebar2Props) => {
+const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
   const handleLinkClick = () => {
     if (window.innerWidth < 768) {
-      setLeftBarIsOpen(false);
+      setSidebars((prev) => ({ ...prev, right: false }));
     }
   };
 

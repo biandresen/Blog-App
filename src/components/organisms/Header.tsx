@@ -13,11 +13,15 @@ import { useUser } from "../../contexts/UserContext";
 const heading = "BLOGGY";
 
 interface HeaderProps {
-  setLeftBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setRightBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSidebars: React.Dispatch<
+    React.SetStateAction<{
+      left: boolean;
+      right: boolean;
+    }>
+  >;
 }
 
-const Header = ({ setLeftBarIsOpen, setRightBarIsOpen }: HeaderProps) => {
+const Header = ({ setSidebars }: HeaderProps) => {
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
 
   const { user } = useUser();
@@ -42,7 +46,7 @@ const Header = ({ setLeftBarIsOpen, setRightBarIsOpen }: HeaderProps) => {
               label="Toggle navigation menu"
               aria-controls="mobile-menu"
               onClick={() => {
-                setLeftBarIsOpen((prev) => !prev);
+                setSidebars((prev) => ({ ...prev, left: !prev.left }));
               }}
             >
               <TbLayoutSidebar size={30} />
@@ -55,7 +59,7 @@ const Header = ({ setLeftBarIsOpen, setRightBarIsOpen }: HeaderProps) => {
               label="Toggle navigation menu"
               aria-controls="mobile-menu"
               onClick={() => {
-                setRightBarIsOpen((prev) => !prev);
+                setSidebars((prev) => ({ ...prev, right: !prev.right }));
               }}
             >
               <TbLayoutSidebarRight size={30} />

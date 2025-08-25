@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { MdNoteAdd } from "react-icons/md";
-import { GrNotes, GrUser } from "react-icons/gr";
+import { GrNotes } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
 import { GrUserAdmin } from "react-icons/gr";
 
@@ -9,10 +9,19 @@ const linkName2: string = "Drafts";
 const linkName3: string = "Profile";
 const linkName4: string = "Admin";
 
-const LeftSidebar = ({ setLeftBarIsOpen }: any) => {
+interface LeftSidebarProps {
+  setSidebars: React.Dispatch<
+    React.SetStateAction<{
+      left: boolean;
+      right: boolean;
+    }>
+  >;
+}
+
+const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
   const handleLinkClick = () => {
     if (window.innerWidth < 768) {
-      setLeftBarIsOpen(false);
+      setSidebars((prev) => ({ ...prev, right: false }));
     }
   };
 

@@ -23,8 +23,10 @@ const Popular = lazy(() => import("./routes/pages/posts/Popular"));
 const Search = lazy(() => import("./routes/pages/posts/Search"));
 
 const App = () => {
-  const [leftBarIsOpen, setLeftBarIsOpen] = useState<boolean>(false);
-  const [rightBarIsOpen, setRightBarIsOpen] = useState<boolean>(false);
+  const [sidebars, setSidebars] = useState({
+    left: false,
+    right: false,
+  });
 
   const override: CSSProperties = {
     color: "var(--text1)",
@@ -32,7 +34,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Layout setLeftBarIsOpen={setLeftBarIsOpen} setRightBarIsOpen={setRightBarIsOpen}>
+      <Layout setSidebars={setSidebars}>
         <Suspense
           fallback={
             <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
@@ -57,7 +59,7 @@ const App = () => {
             {/* Dashboard and nested routes */}
             <Route
               path="/dashboard"
-              element={<DashboardLayout setLeftBarIsOpen={setLeftBarIsOpen} leftBarIsOpen={leftBarIsOpen} />}
+              element={<DashboardLayout sidebars={sidebars} setSidebars={setSidebars} />}
             >
               <Route index element={<NewPost />} /> {/* Default route */}
               <Route path="new-post" element={<NewPost />} />
@@ -67,16 +69,7 @@ const App = () => {
             </Route>
 
             {/* Posts and nested routes */}
-            <Route
-              path="/posts"
-              element={
-                <PostsLayout
-                  setLeftBarIsOpen={setLeftBarIsOpen}
-                  leftBarIsOpen={leftBarIsOpen}
-                  rightBarIsOpen={rightBarIsOpen}
-                />
-              }
-            >
+            <Route path="/posts" element={<PostsLayout sidebars={sidebars} setSidebars={setSidebars} />}>
               <Route index element={<AllPosts />} /> {/* Default route */}
               <Route path="search" element={<Search />} />
               <Route path="all-posts" element={<AllPosts />} />

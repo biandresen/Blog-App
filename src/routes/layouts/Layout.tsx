@@ -4,21 +4,23 @@ import { useEffect } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
-  setLeftBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setRightBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSidebars: React.Dispatch<
+    React.SetStateAction<{
+      left: boolean;
+      right: boolean;
+    }>
+  >;
 }
 
-const Layout = ({ setLeftBarIsOpen, setRightBarIsOpen, children }: LayoutProps) => {
+const Layout = ({ setSidebars, children }: LayoutProps) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         // Force both open
-        setLeftBarIsOpen(true);
-        setRightBarIsOpen(true);
+        setSidebars({ left: true, right: true });
       } else {
         // Force both closed
-        setLeftBarIsOpen(false);
-        setRightBarIsOpen(false);
+        setSidebars({ left: true, right: true });
       }
     };
 
@@ -27,11 +29,11 @@ const Layout = ({ setLeftBarIsOpen, setRightBarIsOpen, children }: LayoutProps) 
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [setLeftBarIsOpen, setRightBarIsOpen]);
+  }, [setSidebars]);
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--bg)]">
-      <Header setLeftBarIsOpen={setLeftBarIsOpen} setRightBarIsOpen={setRightBarIsOpen} />
+      <Header setSidebars={setSidebars} />
       <main className="flex flex-col mx-auto relative w-full flex-100">{children}</main>
       {/* <Footer /> */}
     </div>
