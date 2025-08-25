@@ -1,4 +1,4 @@
-import Post from "../../../../components/organisms/Post";
+import Post from "../../../components/organisms/Post";
 
 const AllPosts = () => {
   return (

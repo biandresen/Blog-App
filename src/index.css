@@ -83,44 +83,6 @@
 }
 
 @layer utilities {
-  /* Theme color utilities */
-  .theme-bg {
-    background-color: var(--bg);
-  }
-  .theme-text1 {
-    color: var(--text1);
-  }
-  .theme-text2 {
-    color: var(--text2);
-  }
-  .theme-text3 {
-    color: var(--text3);
-  }
-  .theme-primary {
-    background-color: var(--primary);
-  }
-  .theme-primary-shade {
-    background-color: var(--primary-shade);
-  }
-  .theme-primary-tint {
-    background-color: var(--primary-tint);
-  }
-  .theme-secondary {
-    background-color: var(--secondary);
-  }
-  .theme-success {
-    background-color: var(--success);
-  }
-  .theme-warning {
-    background-color: var(--warning);
-  }
-  .theme-error {
-    background-color: var(--error);
-  }
-  .theme-info {
-    background-color: var(--info);
-  }
-
   /* Font utilities */
   .font-b {
     font-family: "Inter", sans-serif;

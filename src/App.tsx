@@ -1,70 +1,91 @@
+import { ClipLoader } from "react-spinners";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, useState } from "react";
-import Layout from "./components/layout/Layout";
+import { lazy, useState, Suspense, type CSSProperties } from "react";
+import Layout from "./routes/layouts/Layout";
 
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Home = lazy(() => import("./pages/Home"));
-const Login = lazy(() => import("./features/blog/pages/Login"));
-const Register = lazy(() => import("./features/blog/pages/Register"));
-const About = lazy(() => import("./features/blog/pages/About"));
-const Contact = lazy(() => import("./features/blog/pages/Contact"));
+const NotFound = lazy(() => import("./routes/pages/NotFound"));
+const Home = lazy(() => import("./routes/pages/Home"));
+const Login = lazy(() => import("./routes/pages/Login"));
+const Register = lazy(() => import("./routes/pages/Register"));
+const About = lazy(() => import("./routes/pages/About"));
+const Contact = lazy(() => import("./routes/pages/Contact"));
 
-const DashboardLayout = lazy(() => import("./features/blog/pages/DashboardLayout"));
-const NewPost = lazy(() => import("./features/blog/pages/dashboard/NewPost"));
-const Drafts = lazy(() => import("./features/blog/pages/dashboard/Drafts"));
-const Profile = lazy(() => import("./features/blog/pages/dashboard/Profile"));
-const Admin = lazy(() => import("./features/blog/pages/dashboard/Admin"));
+const DashboardLayout = lazy(() => import("./routes/layouts/DashboardLayout"));
+const NewPost = lazy(() => import("./routes/pages/dashboard/NewPost"));
+const Drafts = lazy(() => import("./routes/pages/dashboard/Drafts"));
+const Profile = lazy(() => import("./routes/pages/dashboard/Profile"));
+const Admin = lazy(() => import("./routes/pages/dashboard/Admin"));
 
-const PostsLayout = lazy(() => import("./features/blog/pages/PostsLayout"));
-const AllPosts = lazy(() => import("./features/blog/pages/posts/AllPosts"));
-const MyPosts = lazy(() => import("./features/blog/pages/posts/MyPosts"));
-const Popular = lazy(() => import("./features/blog/pages/posts/Popular"));
-const Search = lazy(() => import("./features/blog/pages/posts/Search"));
+const PostsLayout = lazy(() => import("./routes/layouts/PostsLayout"));
+const AllPosts = lazy(() => import("./routes/pages/posts/AllPosts"));
+const MyPosts = lazy(() => import("./routes/pages/posts/MyPosts"));
+const Popular = lazy(() => import("./routes/pages/posts/Popular"));
+const Search = lazy(() => import("./routes/pages/posts/Search"));
 
 const App = () => {
   const [leftBarIsOpen, setLeftBarIsOpen] = useState<boolean>(false);
   const [rightBarIsOpen, setRightBarIsOpen] = useState<boolean>(false);
 
+  const override: CSSProperties = {
+    color: "var(--text1)",
+  };
+
   return (
     <BrowserRouter>
       <Layout setLeftBarIsOpen={setLeftBarIsOpen} setRightBarIsOpen={setRightBarIsOpen}>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-
-          {/* Dashboard and nested routes */}
-          <Route
-            path="/dashboard"
-            element={<DashboardLayout setLeftBarIsOpen={setLeftBarIsOpen} leftBarIsOpen={leftBarIsOpen} />}
-          >
-            <Route index element={<NewPost />} /> {/* Default route */}
-            <Route path="new-post" element={<NewPost />} />
-            <Route path="drafts" element={<Drafts />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="admin" element={<Admin />} />
-          </Route>
-          <Route
-            path="/posts"
-            element={
-              <PostsLayout
-                setLeftBarIsOpen={setLeftBarIsOpen}
-                leftBarIsOpen={leftBarIsOpen}
-                rightBarIsOpen={rightBarIsOpen}
+        <Suspense
+          fallback={
+            <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+              <ClipLoader
+                color={override.color}
+                cssOverride={override}
+                size={150}
+                aria-label="Loading Spinner"
+                data-testid="loader"
               />
-            }
-          >
-            <Route index element={<AllPosts />} /> {/* Default route */}
-            <Route path="search" element={<Search />} />
-            <Route path="all-posts" element={<AllPosts />} />
-            <Route path="popular" element={<Popular />} />
-            <Route path="my-posts" element={<MyPosts />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            </div>
+          }
+        >
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+
+            {/* Dashboard and nested routes */}
+            <Route
+              path="/dashboard"
+              element={<DashboardLayout setLeftBarIsOpen={setLeftBarIsOpen} leftBarIsOpen={leftBarIsOpen} />}
+            >
+              <Route index element={<NewPost />} /> {/* Default route */}
+              <Route path="new-post" element={<NewPost />} />
+              <Route path="drafts" element={<Drafts />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="admin" element={<Admin />} />
+            </Route>
+
+            {/* Posts and nested routes */}
+            <Route
+              path="/posts"
+              element={
+                <PostsLayout
+                  setLeftBarIsOpen={setLeftBarIsOpen}
+                  leftBarIsOpen={leftBarIsOpen}
+                  rightBarIsOpen={rightBarIsOpen}
+                />
+              }
+            >
+              <Route index element={<AllPosts />} /> {/* Default route */}
+              <Route path="search" element={<Search />} />
+              <Route path="all-posts" element={<AllPosts />} />
+              <Route path="popular" element={<Popular />} />
+              <Route path="my-posts" element={<MyPosts />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </Layout>
     </BrowserRouter>
   );

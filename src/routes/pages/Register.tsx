@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Input from "../../../components/atoms/Input";
-import Button from "../../../components/atoms/Button";
+import Input from "../../components/atoms/Input";
+import Button from "../../components/atoms/Button";
 import { Link } from "react-router-dom";
 
 const Register = () => {
@@ -145,7 +145,13 @@ const Register = () => {
               setErrorMsg4(isValid ? "" : "Passwords do not match");
             }}
           />
-          <Button type="submit" onClick={handleSubmit} className="w-full mt-7" label={buttonLabel}>
+          <Button
+            type="submit"
+            variant="tertiary"
+            onClick={handleSubmit}
+            className="w-full mt-7"
+            label={buttonLabel}
+          >
             {buttonLabel}
           </Button>
           <div className="text-center">

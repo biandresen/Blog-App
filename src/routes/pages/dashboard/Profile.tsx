@@ -1,8 +1,8 @@
 import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
-import Input from "../../../../components/atoms/Input";
-import Button from "../../../../components/atoms/Button";
-import { useUser } from "../../../../contexts/UserContext";
+import Input from "../../../components/atoms/Input";
+import Button from "../../../components/atoms/Button";
+import { useUser } from "../../../contexts/UserContext";
 
 const Profile = () => {
   const { user } = useUser();

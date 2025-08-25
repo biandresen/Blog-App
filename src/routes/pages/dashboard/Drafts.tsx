@@ -1,4 +1,4 @@
-import DraftCard from "../../../../components/molecules/DraftCard";
+import DraftCard from "../../../components/molecules/DraftCard";
 
 const Drafts = () => {
   const heading = "DRAFTS";

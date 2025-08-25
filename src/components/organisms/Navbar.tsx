@@ -44,7 +44,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
               to="/dashboard"
               className={({ isActive }) =>
                 isActive ?
-                  "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+                  "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
                 : "bg-transparent py-1 px-4 rounded-full -ml-4"
               }
             >
@@ -57,7 +57,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
                 to="/register"
                 className={({ isActive }) =>
                   isActive ?
-                    "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+                    "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
                   : "bg-transparent py-1 px-4 rounded-full -ml-4"
                 }
               >
@@ -69,7 +69,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
                 to="/login"
                 className={({ isActive }) =>
                   isActive ?
-                    "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+                    "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
                   : "bg-transparent py-1 px-4 rounded-full -ml-4"
                 }
               >
@@ -84,7 +84,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             to="/about"
             className={({ isActive }) =>
               isActive ?
-                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
               : "bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
@@ -96,7 +96,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             to="/contact"
             className={({ isActive }) =>
               isActive ?
-                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:ml-0"
+                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
               : "bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >

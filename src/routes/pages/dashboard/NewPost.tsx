@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Button from "../../../../components/atoms/Button";
-import Input from "../../../../components/atoms/Input";
+import Button from "../../../components/atoms/Button";
+import Input from "../../../components/atoms/Input";
 
 const NewPost = () => {
   const [title, setTitle] = useState<string>("");

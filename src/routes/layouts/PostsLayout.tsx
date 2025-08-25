@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import LeftSidebar2 from "../../../components/molecules/LeftSidebar2";
-import RightSidebar from "../../../components/molecules/RightSidebar";
+import LeftSidebar2 from "../../components/molecules/LeftSidebar2";
+import RightSidebar from "../../components/molecules/RightSidebar";
 
 interface PostsLayoutProps {
   setLeftBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;

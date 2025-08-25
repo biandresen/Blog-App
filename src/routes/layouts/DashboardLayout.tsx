@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import LeftSidebar from "../../../components/molecules/LeftSidebar";
+import LeftSidebar from "../../components/molecules/LeftSidebar";
 
 interface DashboardLayoutProps {
   setLeftBarIsOpen: React.Dispatch<React.SetStateAction<boolean>>;

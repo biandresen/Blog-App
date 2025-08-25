@@ -1,9 +1,9 @@
-import PostCard from "../../../../components/molecules/PostCard";
+import PostCard from "../../../components/molecules/PostCard";
 
-const Popular = () => {
+const MyPosts = () => {
   return (
     <div className="md:mt-8">
-      <h2 className="text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10">POPULAR POSTS</h2>
+      <h2 className="text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10">MY POSTS</h2>
       <section className="flex flex-wrap gap-4 mt-10 justify-center mx-auto w-full xl:w-[80%]">
         {false && (
           <div data-name="no-post-card">
@@ -29,4 +29,4 @@ const Popular = () => {
   );
 };
 
-export default Popular;
+export default MyPosts;

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Input from "../../../components/atoms/Input";
-import Button from "../../../components/atoms/Button";
+import Input from "../../components/atoms/Input";
+import Button from "../../components/atoms/Button";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -97,7 +97,13 @@ const Login = () => {
               setErrorMsg2(isValid ? "" : "Password must be at least 6 characters long");
             }}
           />
-          <Button type="submit" onClick={handleSubmit} className="w-full mt-7" label={buttonLabel}>
+          <Button
+            type="submit"
+            variant="tertiary"
+            onClick={handleSubmit}
+            className="w-full mt-7"
+            label={buttonLabel}
+          >
             {buttonLabel}
           </Button>
           <div className="text-center">

@@ -1,14 +1,9 @@
-import PostCard from "../../../../components/molecules/PostCard";
-import Searchbar from "../../../../components/molecules/Searchbar";
+import PostCard from "../../../components/molecules/PostCard";
 
-const Search = () => {
-  const handleSearch = () => {
-    // Logic to handle search
-  };
-
+const Popular = () => {
   return (
-    <div className="">
-      <Searchbar handleSearch={handleSearch} />
+    <div className="md:mt-8">
+      <h2 className="text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10">POPULAR POSTS</h2>
       <section className="flex flex-wrap gap-4 mt-10 justify-center mx-auto w-full xl:w-[80%]">
         {false && (
           <div data-name="no-post-card">
@@ -34,4 +29,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default Popular;
