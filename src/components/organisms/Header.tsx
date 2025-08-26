@@ -7,7 +7,7 @@ import { RxCross2 } from "react-icons/rx";
 import Navbar from "./Navbar";
 
 import logoImg from "../../assets/img/blogIcon.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../atoms/Button";
 import { useUser } from "../../contexts/UserContext";
 const heading = "BLOGGY";
@@ -30,6 +30,31 @@ const Header = ({ setSidebars }: HeaderProps) => {
   const showLeftSidebarBtn = location.pathname.includes("/posts") || location.pathname.includes("/dashboard");
   const showRightSidebarBtn = location.pathname.includes("/posts");
 
+  const handleLeftSidebar = () => {
+    setSidebars((prev) => {
+      if (window.innerWidth >= 768) return { ...prev, left: !prev.left };
+      // If the left sidebar is being opened, close the right sidebar
+      if (!prev.left && prev.right) {
+        return { left: true, right: false };
+      }
+      // Otherwise, just toggle the left sidebar
+      return { ...prev, left: !prev.left };
+    });
+  };
+
+  const handleRightSidebar = () => {
+    setSidebars((prev) => {
+      if (window.innerWidth >= 768) return { ...prev, right: !prev.right };
+      // If the right sidebar is being opened, close the left sidebar
+      if (!prev.right && prev.left) {
+        return { left: false, right: true };
+      } else {
+        // Otherwise, just toggle the right sidebar
+        return { ...prev, right: !prev.right };
+      }
+    });
+  };
+
   return (
     <header className="bg-[var(--primary)] h-[3.8rem]">
       <div className="flex items-center justify-between h-full px-[var(--space-s)] lg:px-[var(--space-lg)] relative">
@@ -46,7 +71,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
               label="Toggle navigation menu"
               aria-controls="mobile-menu"
               onClick={() => {
-                setSidebars((prev) => ({ ...prev, left: !prev.left }));
+                handleLeftSidebar();
               }}
             >
               <TbLayoutSidebar size={30} />
@@ -59,7 +84,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
               label="Toggle navigation menu"
               aria-controls="mobile-menu"
               onClick={() => {
-                setSidebars((prev) => ({ ...prev, right: !prev.right }));
+                handleRightSidebar();
               }}
             >
               <TbLayoutSidebarRight size={30} />

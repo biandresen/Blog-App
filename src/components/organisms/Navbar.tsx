@@ -15,7 +15,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
     <nav
       className={`
         ${isOpen ? "block" : "hidden"}
-        z-50
+        z-500
         absolute top-14 left-0 w-full
         font-medium text-[1.2rem]
         bg-[var(--primary)]

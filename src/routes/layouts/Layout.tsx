@@ -20,7 +20,7 @@ const Layout = ({ setSidebars, children }: LayoutProps) => {
         setSidebars({ left: true, right: true });
       } else {
         // Force both closed
-        setSidebars({ left: true, right: true });
+        setSidebars({ left: false, right: false });
       }
     };
 

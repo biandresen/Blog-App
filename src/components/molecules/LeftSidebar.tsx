@@ -27,7 +27,7 @@ const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
 
   return (
     <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-[calc(100vh-3.8rem)] md:max-w-45 md:static z-100">
-      <div className="ml-8 mt-16">
+      <div className="ml-8 mt-5 md:mt-16">
         <ul onClick={handleLinkClick} className="flex flex-col gap-3">
           <NavLink
             to="/dashboard/new-post"
