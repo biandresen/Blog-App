@@ -1,24 +1,8 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 
-type UserRole = "USER" | "ADMIN";
+import { type User, type UserContextType } from "../types/context.types";
 
-type User = {
-  id: string;
-  username: string;
-  email: string;
-  avatar: string | null;
-  role: UserRole;
-  createdAt: string;
-  updatedAt: string;
-};
-
-interface UserContextType {
-  loggedIn: boolean;
-  setLoggedIn: (loggedIn: boolean) => void;
-  user: User | null;
-  setUser: (user: User | null) => void;
-}
-
+// Dummy user for testing purposes
 const user1: User = {
   id: "1",
   username: "John",

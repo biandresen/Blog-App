@@ -1,25 +1,16 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
 import { TbLayoutSidebar } from "react-icons/tb";
 import { TbLayoutSidebarRight } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
-
 import Navbar from "./Navbar";
-
 import logoImg from "../../assets/img/blogIcon.svg";
-import { useEffect, useState } from "react";
 import Button from "../atoms/Button";
 import { useUser } from "../../contexts/UserContext";
-const heading = "BLOGGY";
+import { type HeaderProps } from "../../types/components.types";
 
-interface HeaderProps {
-  setSidebars: React.Dispatch<
-    React.SetStateAction<{
-      left: boolean;
-      right: boolean;
-    }>
-  >;
-}
+const heading = "BLOGGY";
 
 const Header = ({ setSidebars }: HeaderProps) => {
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
@@ -57,7 +48,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
 
   return (
     <header className="bg-[var(--primary)] h-[3.8rem]">
-      <div className="flex items-center justify-between h-full px-[var(--space-s)] lg:px-[var(--space-lg)] relative">
+      <section className="flex items-center justify-between h-full px-[var(--space-s)] lg:px-[var(--space-lg)] relative">
         <Link to="/" className="flex items-end w-full">
           <img src={logoImg} width={38} alt="Logo" />
           <h2 className="-ml-2 -mb-2 pr-1 font-medium text-[1.8rem]">{heading}</h2>
@@ -107,7 +98,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
           </Button>
         </div>
         <Navbar isOpen={menuIsOpen} />
-      </div>
+      </section>
     </header>
   );
 };

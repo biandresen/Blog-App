@@ -1,24 +1,14 @@
-import { type ReactNode, type ButtonHTMLAttributes } from "react";
 import clsx from "clsx";
 
-type ButtonVariant = "shade" | "primary" | "secondary" | "tertiary" | "success" | "error";
-type ButtonSize = "zero" | "sm" | "md" | "lg";
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode | string;
-  label: string;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  className?: string;
-}
+import { type ButtonProps, type ButtonVariant, type ButtonSize } from "../../types/components.types";
 
 const variantStyles: Record<ButtonVariant, string> = {
   shade: "bg-[var(--primary-shade)] text-[var(--text2)] hover:brightness-90",
-  primary: "bg-[var(--button1)] text-[var(--text2)] hover:brightness-120",
-  secondary: "bg-[var(--button2)] text-[var(--text2)] hover:brightness-120",
-  tertiary: "bg-[var(--button3)] text-[var(--text2)] hover:brightness-120",
-  success: "bg-[var(--success)] text-[var(--text2)] hover:brightness-120",
-  error: "bg-[var(--error)] text-[var(--text2)] hover:brightness-120",
+  primary: "bg-[var(--button1)] button-style",
+  secondary: "bg-[var(--button2)] button-style",
+  tertiary: "bg-[var(--button3)] button-style",
+  success: "bg-[var(--success)] button-style",
+  error: "bg-[var(--error)] button-style",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

@@ -3,9 +3,7 @@ import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { useColorTheme } from "../../contexts/ColorThemeContext";
 import { useUser } from "../../contexts/UserContext";
 
-interface NavbarProps {
-  isOpen: boolean;
-}
+import { type NavbarProps } from "../../types/components.types";
 
 const Navbar = ({ isOpen }: NavbarProps) => {
   const { colorTheme, toggleTheme } = useColorTheme();
@@ -29,11 +27,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
         <li className="pt-3 md:pt-0">
           <NavLink
             to="/posts"
-            className={({ isActive }) =>
-              isActive ?
-                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4"
-              : "bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
+            className={({ isActive }) => (isActive ? "navbar-link-active" : "navbar-link-inactive")}
           >
             Posts
           </NavLink>
@@ -42,11 +36,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
           <li>
             <NavLink
               to="/dashboard"
-              className={({ isActive }) =>
-                isActive ?
-                  "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
-                : "bg-transparent py-1 px-4 rounded-full -ml-4"
-              }
+              className={({ isActive }) => (isActive ? "navbar-link-active" : "navbar-link-inactive")}
             >
               Dashboard
             </NavLink>
@@ -55,11 +45,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             <li>
               <NavLink
                 to="/register"
-                className={({ isActive }) =>
-                  isActive ?
-                    "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
-                  : "bg-transparent py-1 px-4 rounded-full -ml-4"
-                }
+                className={({ isActive }) => (isActive ? "navbar-link-active" : "navbar-link-inactive")}
               >
                 Register
               </NavLink>
@@ -67,11 +53,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             <li>
               <NavLink
                 to="/login"
-                className={({ isActive }) =>
-                  isActive ?
-                    "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
-                  : "bg-transparent py-1 px-4 rounded-full -ml-4"
-                }
+                className={({ isActive }) => (isActive ? "navbar-link-active" : "navbar-link-inactive")}
               >
                 Login
               </NavLink>
@@ -82,11 +64,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
         <li>
           <NavLink
             to="/about"
-            className={({ isActive }) =>
-              isActive ?
-                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
-              : "bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
+            className={({ isActive }) => (isActive ? "navbar-link-active" : "navbar-link-inactive")}
           >
             About
           </NavLink>
@@ -94,11 +72,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
         <li>
           <NavLink
             to="/contact"
-            className={({ isActive }) =>
-              isActive ?
-                "bg-[var(--primary-shade)] py-1 px-4 rounded-full -ml-4 lg:-ml-4"
-              : "bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
+            className={({ isActive }) => (isActive ? "navbar-link-active" : "navbar-link-inactive")}
           >
             Contact
           </NavLink>

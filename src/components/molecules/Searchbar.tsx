@@ -2,9 +2,7 @@ import { RxCross2 } from "react-icons/rx";
 import { ImSearch } from "react-icons/im";
 import { useState } from "react";
 
-interface SearchbarProps {
-  handleSearch: () => void;
-}
+import { type SearchbarProps } from "../../types/components.types";
 
 const Searchbar = ({ handleSearch }: SearchbarProps) => {
   const [searchInput, setSearchInput] = useState<string>("");
@@ -16,7 +14,7 @@ const Searchbar = ({ handleSearch }: SearchbarProps) => {
 
   return (
     <div className="flex items-center bg-[var(--primary)] p-4 rounded-full max-w-[90%] xl:w-1/2 mx-auto">
-      <div className="flex items-center bg-[var(--primary-shade)] p-4 rounded-full w-full justify-between">
+      <section className="flex items-center bg-[var(--primary-shade)] p-4 rounded-full w-full justify-between">
         <div className="flex">
           <button
             onClick={handleSearch}
@@ -42,7 +40,7 @@ const Searchbar = ({ handleSearch }: SearchbarProps) => {
         >
           <RxCross2 size={30} />
         </button>
-      </div>
+      </section>
     </div>
   );
 };

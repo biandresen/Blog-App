@@ -1,12 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-type ColorTheme = "light" | "dark";
-
-interface ColorThemeContextType {
-  colorTheme: ColorTheme;
-  setColorTheme: (theme: ColorTheme) => void;
-  toggleTheme: () => void;
-}
+import { type ColorTheme, type ColorThemeContextType } from "../types/context.types";
 
 const ColorThemeContext = createContext<ColorThemeContextType | undefined>(undefined);
 

@@ -1,11 +1,7 @@
 import { CgProfile } from "react-icons/cg";
 import { MdDelete, MdEdit } from "react-icons/md";
 
-interface CommentProps {
-  username: string;
-  date: string;
-  comment: string;
-}
+import { type CommentProps } from "../../types/components.types";
 
 const Comment = ({ username, date, comment }: CommentProps) => {
   return (

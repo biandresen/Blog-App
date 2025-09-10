@@ -3,9 +3,11 @@ import { useState } from "react";
 import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
 import { useUser } from "../../../contexts/UserContext";
+import profileContent from "../../../text-content/profile-page";
 
 const Profile = () => {
   const { user } = useUser();
+  const infoListItemsVariables = [user?.username, user?.email, 5, 2];
 
   // Values
   const [username, setUsername] = useState<string>("");
@@ -26,37 +28,22 @@ const Profile = () => {
   const [input4Valid, setInput4Valid] = useState<boolean>(true);
   const [errorMsg4, setErrorMsg4] = useState<string>("");
 
-  const infoHeading = "PROFILE DATA";
-  const infoListItems = ["Username: ", "Email: ", "Active posts: ", "Drafts: "];
-  const infoListItemsVariables = [user?.username, user?.email, 5, 2];
-
-  const inputHeading = "UPDATE PROFILE";
-  const buttonLabel1 = "UPDATE";
-  const buttonLabel2 = "LOGOUT";
-  const buttonLabel3 = "DELETE PROFILE";
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     //TODO Here you would typically handle the registration logic, e.g., API call
     console.log("Form submitted with:", { username, email, password, avatar });
   };
   return (
-    <div
-      data-label="inputInfo-container"
-      className="container flex flex-col-reverse gap-6 sm:flex-row sm:justify-center sm:gap-0 sm:mt-20!"
-    >
-      <div data-label="info-container">
-        <div
-          data-label="info"
-          className="bg-[var(--primary)] px-4 py-6 rounded-xl sm:h-full sm:px-6 sm:rounded-tr-none sm:py-8 sm:rounded-br-none flex flex-col"
-        >
+    <div className="container inputInfo-container">
+      <div>
+        <div className="info-container flex flex-col">
           <div className="flex flex-col-reverse md:flex-row">
-            <h2 className="text-2xl md:text-4xl my-3">{infoHeading}</h2>
+            <h2 className="text-2xl md:text-4xl my-3">{profileContent.infoHeading}</h2>
             <CgProfile size={60} className="lg:ml-30" />
           </div>
           <div className="mb-10 md:mb-0">
             <ul>
-              {infoListItems.map((list, index) => (
+              {profileContent.infoListItems.map((list, index) => (
                 <li className="text-xl md:text-2xl mt-2" key={list}>
                   {list} <span className="font-bold">{infoListItemsVariables[index]}</span>
                 </li>
@@ -69,27 +56,24 @@ const Profile = () => {
               variant="secondary"
               onClick={handleSubmit}
               className="w-full"
-              label={buttonLabel2}
+              label={profileContent.button2}
             >
-              {buttonLabel2}
+              {profileContent.button2}
             </Button>
             <Button
               type="button"
               variant="error"
               onClick={handleSubmit}
               className="w-full"
-              label={buttonLabel3}
+              label={profileContent.button3}
             >
-              {buttonLabel3}
+              {profileContent.button3}
             </Button>
           </div>
         </div>
       </div>
-      <div
-        data-label="input-container"
-        className="bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6 sm:py-8 sm:rounded-tl-none sm:rounded-bl-none"
-      >
-        <h2 className="text-[var(--text1)] text-2xl md:text-4xl text-center mt-3 mb-5">{inputHeading}</h2>
+      <div className="input-container">
+        <h2 className="input-heading">{profileContent.inputHeading}</h2>
         <form action="">
           <Input
             id="username"
@@ -161,8 +145,8 @@ const Profile = () => {
               setErrorMsg4(isValid ? "" : "Avatar must be a valid image file");
             }}
           />
-          <Button type="submit" onClick={handleSubmit} className="w-full mt-7" label={buttonLabel1}>
-            {buttonLabel1}
+          <Button type="submit" onClick={handleSubmit} className="w-full mt-7" label={profileContent.button1}>
+            {profileContent.button1}
           </Button>
         </form>
       </div>

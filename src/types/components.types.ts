@@ -1,0 +1,64 @@
+import { type ButtonHTMLAttributes, type ReactNode } from "react";
+import { type ChangeEvent } from "react";
+
+export type ButtonVariant = "shade" | "primary" | "secondary" | "tertiary" | "success" | "error";
+export type ButtonSize = "zero" | "sm" | "md" | "lg";
+
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode | string;
+  label: string;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  className?: string;
+}
+//--------------------------------------------------------
+export interface InputProps {
+  id: string;
+  label: string;
+  type?: "text" | "email" | "password" | "number" | "file";
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  inputValid?: boolean;
+  errorMsg?: string;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+  className?: string;
+}
+
+export interface CommentProps {
+  username: string;
+  date: string;
+  comment: string;
+}
+
+export interface LeftSidebarProps {
+  setSidebars: React.Dispatch<
+    React.SetStateAction<{
+      left: boolean;
+      right: boolean;
+    }>
+  >;
+}
+
+export interface PostCardProps {
+  id: number;
+  draftTitle: string;
+}
+
+export interface SearchbarProps {
+  handleSearch: () => void;
+}
+
+export interface HeaderProps {
+  setSidebars: React.Dispatch<
+    React.SetStateAction<{
+      left: boolean;
+      right: boolean;
+    }>
+  >;
+}
+
+export interface NavbarProps {
+  isOpen: boolean;
+}

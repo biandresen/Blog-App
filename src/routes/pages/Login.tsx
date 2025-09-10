@@ -1,29 +1,19 @@
 import { useState } from "react";
-import Input from "../../components/atoms/Input";
-import Button from "../../components/atoms/Button";
 import { Link } from "react-router-dom";
 
+import Input from "../../components/atoms/Input";
+import Button from "../../components/atoms/Button";
+import loginContent from "../../text-content/login-page";
+
 const Login = () => {
-  // Values
   const [userInput, setUserInput] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  // Validation states
   const [input1Valid, setInput1Valid] = useState<boolean>(true);
   const [errorMsg1, setErrorMsg1] = useState<string>("");
 
   const [input2Valid, setInput2Valid] = useState<boolean>(true);
   const [errorMsg2, setErrorMsg2] = useState<string>("");
-
-  const infoHeading = "Login to read blogs!";
-  const infoListHeading = "News and updates:";
-  const infoListItems = ["No news at the moment", "No updates at the moment"];
-
-  const inputHeading = "LOGIN";
-  const buttonLabel = "LOGIN";
-
-  const goToRegister = "Don't have an account?";
-  const register = "Register";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,35 +22,26 @@ const Login = () => {
   };
 
   return (
-    <div
-      data-label="inputInfo-container"
-      className="container flex flex-col-reverse gap-6 sm:flex-row sm:justify-center sm:gap-0 sm:mt-20!"
-    >
-      <div data-label="info-container">
-        <div
-          data-label="info"
-          className="bg-[var(--primary)] px-4 py-6 rounded-xl sm:h-full sm:px-6 sm:py-8 sm:rounded-tr-none sm:rounded-br-none"
-        >
-          <h2 className="text-2xl my-3">{infoHeading}</h2>
+    <div className="inputInfo-container container">
+      <div>
+        <section className="info-container">
+          <h2 className="text-2xl my-3">{loginContent.infoHeading}</h2>
           <div>
-            <h3 className="font-medium text-xl">{infoListHeading}</h3>
+            <h3 className="font-medium text-xl">{loginContent.infoListHeading}</h3>
             <hr className="mb-2" />
             <ul>
-              {infoListItems.map((list) => (
+              {loginContent.infoListItems.map((list) => (
                 <li className="list-disc ml-4 text-lg" key={list}>
                   {list}
                 </li>
               ))}
             </ul>
           </div>
-        </div>
+        </section>
       </div>
 
-      <div
-        data-label="input-container"
-        className="bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6 sm:py-8 sm:rounded-tl-none sm:rounded-bl-none"
-      >
-        <h2 className="text-[var(--text1)] text-3xl text-center my-3">{inputHeading}</h2>
+      <div className="input-container">
+        <h2 className="input-heading">{loginContent.inputHeading}</h2>
         <form action="">
           <Input
             id="userInput"
@@ -102,13 +83,13 @@ const Login = () => {
             variant="tertiary"
             onClick={handleSubmit}
             className="w-full mt-7"
-            label={buttonLabel}
+            label={loginContent.button}
           >
-            {buttonLabel}
+            {loginContent.button}
           </Button>
           <div className="text-center">
             <Link to="/register" className="text-[var(--text1)] mt-3">
-              {goToRegister} <span className="font-bold">{register}</span>
+              {loginContent.goToRegister} <span className="font-bold">{loginContent.link}</span>
             </Link>
           </div>
         </form>

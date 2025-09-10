@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
+import newPostContent from "../../../text-content/newPost-page";
 
 const NewPost = () => {
   const [title, setTitle] = useState<string>("");
@@ -27,13 +28,9 @@ const NewPost = () => {
     resetForm();
   };
 
-  const newPostTitle = "NEW POST";
-  const buttonText1 = "SAVE AS DRAFT";
-  const buttonText2 = "PUBLISH POST";
-
   return (
     <div className="bg-[var(--primary)] p-3 md:p-8 rounded-2xl max-w-120 md:min-w-1/2 mx-auto md:mt-10">
-      <h2 className="text-3xl md:text-5xl text-center my-5">{newPostTitle}</h2>
+      <h2 className="text-3xl md:text-5xl text-center my-5">{newPostContent.heading}</h2>
       <form className="">
         <Input
           className="text-[var(--text2)] rounded-xl md:text-2xl! mb-2"
@@ -78,18 +75,18 @@ const NewPost = () => {
             type="submit"
             variant="secondary"
             className="w-full mt-4"
-            label={buttonText1}
+            label={newPostContent.button1}
           >
-            {buttonText1}
+            {newPostContent.button1}
           </Button>
           <Button
             onClick={handlePublishPost}
             type="submit"
             variant="tertiary"
             className="w-full mt-4"
-            label={buttonText2}
+            label={newPostContent.button2}
           >
-            {buttonText2}
+            {newPostContent.button2}
           </Button>
         </div>
       </form>

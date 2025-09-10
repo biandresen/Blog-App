@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import Button from "../../components/atoms/Button";
-import { useState } from "react";
 import Comment from "../molecules/Comment";
 
 const Post = () => {

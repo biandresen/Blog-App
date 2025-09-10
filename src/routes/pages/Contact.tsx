@@ -1,16 +1,14 @@
-const Contact = () => {
-  const contactHeading = "CONTACT US";
+import contactContent from "../../text-content/contact-page";
 
+const Contact = () => {
   return (
     <div className="container max-w-180">
-      <h2 className="text-[var(--text1)] text-3xl md:text-4xl text-center mt-3 mb-5">{contactHeading}</h2>
-      <p className="text-[var(--text1)] text-lg md:text-xl mb-4">
-        Contact us for any inquiries, feedback, or support related to our blog platform. We value your input
-        and are here to assist you.
-      </p>
-      <p className="text-[var(--text1)] text-lg md:text-xl mb-4">
-        You can reach us via email at <span className="underline">info@bloggy.com</span> or through our social
-        media channels. We strive to respond to all messages within 24-48 hours.
+      <h2 className="about-heading">{contactContent.heading}</h2>
+      <p className="about-paragraph">{contactContent.paragraph1}</p>
+      <p className="about-paragraph">
+        {contactContent.paragraph2a}
+        <span className="underline">{contactContent.paragraph2Span}</span>
+        {contactContent.paragraph2b}
       </p>
     </div>
   );

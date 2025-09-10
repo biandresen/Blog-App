@@ -1,20 +1,6 @@
 import { FaRegCheckCircle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
-import { type ChangeEvent } from "react";
-
-interface InputProps {
-  id: string;
-  label: string;
-  type?: "text" | "email" | "password" | "number" | "file";
-  value?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  inputValid?: boolean;
-  errorMsg?: string;
-  placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
-  className?: string;
-}
+import { type InputProps } from "../../types/components.types";
 
 const Input = ({
   id,

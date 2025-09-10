@@ -1,24 +1,13 @@
 import { Outlet } from "react-router-dom";
-import LeftSidebar from "../../components/molecules/LeftSidebar";
 
-interface DashboardLayoutProps {
-  sidebars: {
-    left: boolean;
-    right: boolean;
-  };
-  setSidebars: React.Dispatch<
-    React.SetStateAction<{
-      left: boolean;
-      right: boolean;
-    }>
-  >;
-}
+import LeftSidebar from "../../components/molecules/LeftSidebar";
+import { type DashboardLayoutProps } from "../../types/layout.types";
 
 const DashboardLayout = ({ setSidebars, sidebars }: DashboardLayoutProps) => {
   return (
-    <div className="flex h-[calc(100vh-3.8rem)] relative">
+    <div className="layout-container">
       {sidebars.left && <LeftSidebar setSidebars={setSidebars} />}
-      <div data-name="main-content" className="flex-1 p-6 overflow-y-auto">
+      <div className="outlet-container">
         <Outlet />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { ClipLoader } from "react-spinners";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, useState, Suspense, type CSSProperties } from "react";
+
 import Layout from "./routes/layouts/Layout";
 
 const NotFound = lazy(() => import("./routes/pages/NotFound"));
@@ -37,7 +38,7 @@ const App = () => {
       <Layout setSidebars={setSidebars}>
         <Suspense
           fallback={
-            <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+            <div className="spinner-position">
               <ClipLoader
                 color={override.color}
                 cssOverride={override}

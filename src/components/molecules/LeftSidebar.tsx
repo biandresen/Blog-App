@@ -4,19 +4,12 @@ import { GrNotes } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
 import { GrUserAdmin } from "react-icons/gr";
 
+import { type LeftSidebarProps } from "../../types/components.types";
+
 const linkName1: string = "New post";
 const linkName2: string = "Drafts";
 const linkName3: string = "Profile";
 const linkName4: string = "Admin";
-
-interface LeftSidebarProps {
-  setSidebars: React.Dispatch<
-    React.SetStateAction<{
-      left: boolean;
-      right: boolean;
-    }>
-  >;
-}
 
 const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
   const handleLinkClick = () => {
