@@ -32,7 +32,7 @@
 
 .dark {
   --bg: hsl(233, 32%, 10%);
-  --bg-input: #555975;
+  --bg-input: hsl(233, 32%, 3%);
   --text1: #fdfdfd;
   --text2: #fdfdfd;
   --text3: #a7b2ff;
@@ -46,7 +46,7 @@
   --secondary: #2aa9a1;
   --success: #2ecc71;
   --warning: #f1c40f;
-  --error: #e74c3c;
+  --error: #f2523f;
   --info: #3498db;
 }
 

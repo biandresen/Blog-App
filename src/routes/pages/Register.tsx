@@ -1,15 +1,28 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
 import registerContent from "../../text-content/register-page";
+import { usernameValidator, emailValidator, passwordValidator } from "../../validators/register-user";
+
+import { registerUser } from "../../lib/axios";
 
 const Register = () => {
+  // Client-side messages = catch obvious things early (length, format, matching passwords).
+  // API messages = catch business rules and uniqueness constraints.
+
+  useEffect(() => {
+    toast.info("Welcome! Please register to create an account.");
+  }, []);
+
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const [input1Valid, setInput1Valid] = useState<boolean>(true);
   const [errorMsg1, setErrorMsg1] = useState<string>("");
@@ -18,15 +31,60 @@ const Register = () => {
   const [errorMsg2, setErrorMsg2] = useState<string>("");
 
   const [input3Valid, setInput3Valid] = useState<boolean>(true);
-  const [errorMsg3, setErrorMsg3] = useState<string>("");
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   const [input4Valid, setInput4Valid] = useState<boolean>(true);
   const [errorMsg4, setErrorMsg4] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const invalidForm =
+    !input1Valid ||
+    !input2Valid ||
+    !input3Valid ||
+    !input4Valid ||
+    !username ||
+    !email ||
+    !password ||
+    !passwordConfirmation;
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    //TODO Here you would typically handle the registration logic, e.g., API call
-    console.log("Form submitted with:", { username, email, password, confirmPassword });
+    if (invalidForm) return;
+    try {
+      const res = await registerUser({ username, email, password, passwordConfirmation });
+      console.log(res);
+      if (res.statusCode !== 201) {
+        toast.error(res.message);
+        throw new Error("Registration failed");
+      }
+      toast.success(res.message);
+      navigate("/login");
+    } catch (errors: any) {
+      toast.error("Correct the errors and try again.");
+      if (errors) {
+        errors.forEach((error: { field: string; message: string }) => {
+          switch (error.field) {
+            case "username":
+              setInput1Valid(false);
+              setErrorMsg1(error.message); // API overrides UI
+              break;
+            case "email":
+              setInput2Valid(false);
+              setErrorMsg2(error.message);
+              break;
+            case "password":
+              setInput3Valid(false);
+              setPasswordErrors([error.message]);
+              break;
+            case "passwordConfirmation":
+              setInput4Valid(false);
+              setErrorMsg4(error.message);
+              break;
+          }
+        });
+      }
+    }
   };
 
   return (
@@ -61,10 +119,9 @@ const Register = () => {
             onChange={(e) => {
               const value = e.target.value;
               setUsername(value);
-              const isValid = value.length >= 2;
-              //TODO Make an usernameIsValid helper function
-              setInput1Valid(isValid);
-              setErrorMsg1(isValid ? "" : "Username must be at least 2 characters long");
+              const validationResult = usernameValidator(value);
+              setInput1Valid(!validationResult);
+              setErrorMsg1(validationResult);
             }}
           />
           <Input
@@ -79,44 +136,63 @@ const Register = () => {
             onChange={(e) => {
               const value = e.target.value;
               setEmail(value);
-              const isValid = value.includes("@") && value.includes(".");
-              //TODO Make an emailIsValid helper function
-              setInput2Valid(isValid);
-              setErrorMsg2(isValid ? "" : "Please enter a valid email address");
+              const validationResult = emailValidator(value);
+              setInput2Valid(!validationResult);
+              setErrorMsg2(validationResult);
             }}
           />
+          <div className="flex relative">
+            <Input
+              id="password"
+              type={!showPassword ? "password" : "text"}
+              label="Password"
+              value={password}
+              placeholder="********"
+              required
+              inputValid={passwordErrors.length === 0}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+                setPasswordErrors(passwordValidator(value));
+              }}
+            />
+            <Button
+              aria-label="Show/Hide password"
+              label="Show/Hide password"
+              size="zero"
+              className="bg-transparent absolute left-27 top-2"
+            >
+              {showPassword ?
+                <FaEye onClick={() => setShowPassword((s) => !s)} size={20} className="text-[var(--text1)]" />
+              : <FaEyeSlash
+                  onClick={() => setShowPassword((s) => !s)}
+                  size={20}
+                  className="text-[var(--text1)]"
+                />
+              }
+            </Button>
+          </div>
+
+          {passwordErrors.length > 0 && (
+            <ul className="text-[0.9rem] text-[var(--error)] my-2">
+              {passwordErrors.map((err) => (
+                <li key={err}>• {err}</li>
+              ))}
+            </ul>
+          )}
           <Input
-            id="password"
-            type="password"
-            label="Password"
-            value={password}
-            errorMsg={errorMsg3}
-            placeholder="********"
-            required
-            inputValid={input3Valid}
-            onChange={(e) => {
-              const value = e.target.value;
-              setPassword(value);
-              const isValid = value.length >= 6;
-              //TODO Make an passwordIsValid helper function
-              setInput3Valid(isValid);
-              setErrorMsg3(isValid ? "" : "Password must be at least 6 characters long");
-            }}
-          />
-          <Input
-            id="confirmPassword"
+            id="passwordConfirmation"
             type="password"
             label="Confirm Password"
-            value={confirmPassword}
+            value={passwordConfirmation}
             errorMsg={errorMsg4}
             placeholder="********"
             required
             inputValid={input4Valid}
             onChange={(e) => {
               const value = e.target.value;
-              setConfirmPassword(value);
-              const isValid = value === password && value.length >= 6;
-              //TODO Make an confirmPasswordIsValid helper function
+              setPasswordConfirmation(value);
+              const isValid = value === password;
               setInput4Valid(isValid);
               setErrorMsg4(isValid ? "" : "Passwords do not match");
             }}
@@ -126,6 +202,7 @@ const Register = () => {
             variant="tertiary"
             onClick={handleSubmit}
             className="w-full mt-7"
+            disabled={invalidForm}
             label={registerContent.button}
           >
             {registerContent.button}

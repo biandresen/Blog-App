@@ -52,7 +52,7 @@ const Input = ({
         : null}
       </div>
       {errorMsg && hasValue ?
-        <p className="text-[var(--error)] place-self-end -mt-1 text-[1rem]" role="alert">
+        <p className="text-[0.9rem] text-[var(--error)] mb-2" role="alert">
           {errorMsg}
         </p>
       : null}

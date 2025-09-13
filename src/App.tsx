@@ -1,6 +1,7 @@
 import { ClipLoader } from "react-spinners";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, useState, Suspense, type CSSProperties } from "react";
+import { ToastContainer } from "react-toastify";
 
 import Layout from "./routes/layouts/Layout";
 
@@ -79,6 +80,7 @@ const App = () => {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <ToastContainer />
         </Suspense>
       </Layout>
     </BrowserRouter>
