@@ -1,0 +1,1 @@
+const storeToken = (token: string) => {};

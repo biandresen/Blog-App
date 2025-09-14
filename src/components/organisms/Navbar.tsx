@@ -7,7 +7,7 @@ import { type NavbarProps } from "../../types/components.types";
 
 const Navbar = ({ isOpen }: NavbarProps) => {
   const { colorTheme, toggleTheme } = useColorTheme();
-  const { user } = useUser();
+  const { loggedIn } = useUser();
 
   return (
     <nav
@@ -32,7 +32,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
             Posts
           </NavLink>
         </li>
-        {user !== null ?
+        {loggedIn ?
           <li>
             <NavLink
               to="/dashboard"

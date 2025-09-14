@@ -3,15 +3,18 @@ import { createRoot } from "react-dom/client";
 
 import { ColorThemeProvider } from "./contexts/ColorThemeContext.tsx";
 import { UserProvider } from "./contexts/UserContext.tsx";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
 import "./index.css";
 import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ColorThemeProvider>
-      <UserProvider>
-        <App />
-      </UserProvider>
+      <AuthProvider>
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </AuthProvider>
     </ColorThemeProvider>
   </StrictMode>
 );

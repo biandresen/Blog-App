@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
 import registerContent from "../../text-content/register-page";
-import { usernameValidator, emailValidator, passwordValidator } from "../../validators/register-user";
+import { usernameValidator, emailValidator, passwordValidator } from "../../validators/auth";
 
 import { registerUser } from "../../lib/axios";
 
@@ -53,7 +53,6 @@ const Register = () => {
     if (invalidForm) return;
     try {
       const res = await registerUser({ username, email, password, passwordConfirmation });
-      console.log(res);
       if (res.statusCode !== 201) {
         toast.error(res.message);
         throw new Error("Registration failed");

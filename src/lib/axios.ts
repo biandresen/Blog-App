@@ -8,6 +8,11 @@ type RegisterUser = {
   passwordConfirmation: string;
 };
 
+type LoginUser = {
+  userInput: string;
+  password: string;
+};
+
 export const registerUser = async ({ username, email, password, passwordConfirmation }: RegisterUser) => {
   try {
     const res = await axios.post(BLOG_API.BASE + BLOG_API.REGISTER, {
@@ -21,6 +26,24 @@ export const registerUser = async ({ username, email, password, passwordConfirma
     if (err.response) {
       // Server responded with 400+
       return Promise.reject(err.response.data.errors);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const loginUser = async ({ userInput, password }: LoginUser) => {
+  try {
+    const res = await axios.post(BLOG_API.BASE + BLOG_API.LOGIN, {
+      userInput,
+      password,
+    });
+    return res.data; // success case
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
     } else {
       // Network or unknown error
       return Promise.reject({ message: err.message || "Something went wrong" });

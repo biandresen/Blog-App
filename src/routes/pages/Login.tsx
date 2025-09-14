@@ -1,13 +1,22 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { jwtDecode } from "jwt-decode";
+import { type User } from "../../types/context.types";
 
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
 import loginContent from "../../text-content/login-page";
+import { loginUser } from "../../lib/axios";
+import { userInputValidator, loginPasswordValidator } from "../../validators/auth";
+import { useAuth } from "../../contexts/AuthContext";
+import { useUser } from "../../contexts/UserContext";
 
 const Login = () => {
   const [userInput, setUserInput] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const [input1Valid, setInput1Valid] = useState<boolean>(true);
   const [errorMsg1, setErrorMsg1] = useState<string>("");
@@ -15,10 +24,50 @@ const Login = () => {
   const [input2Valid, setInput2Valid] = useState<boolean>(true);
   const [errorMsg2, setErrorMsg2] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const invalidForm = !input1Valid || !input2Valid || !userInput || !password;
+
+  const { setAccessToken } = useAuth();
+  const { setUser, setLoggedIn } = useUser();
+
+  useEffect(() => {
+    toast.info("Welcome! Please login to your account.");
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    //TODO Here you would typically handle the registration logic, e.g., API call
-    console.log("Form submitted with:", { userInput, password });
+    if (invalidForm) return;
+    try {
+      const res = await loginUser({ userInput, password });
+      if (res.statusCode !== 200) {
+        toast.error(res.message);
+        throw new Error("Login failed");
+      }
+
+      // Save access token
+      setAccessToken(res.data);
+
+      // OPTION 1: Decode token
+      const payload: User = jwtDecode(res.data);
+      setUser({
+        id: payload.id,
+        username: payload.username,
+        email: payload.email,
+        avatar: payload.avatar,
+        role: payload.role,
+        createdAt: payload.createdAt,
+        updatedAt: payload.updatedAt,
+      });
+
+      setLoggedIn(true);
+      toast.success(`Welcome back, ${payload.username}!`);
+      setTimeout(() => {
+        navigate("/posts");
+      }, 0);
+    } catch (err: any) {
+      toast.error("Correct the error(s) and try again.");
+      setErrorMsg2(err.message || "Login failed");
+    }
   };
 
   return (
@@ -54,30 +103,46 @@ const Login = () => {
             onChange={(e) => {
               const value = e.target.value;
               setUserInput(value);
-              const isValid = value.length >= 2;
-              //TODO Make an userInputIsValid helper function
-              setInput1Valid(isValid);
-              setErrorMsg1(isValid ? "" : "UserInput must be at least 2 characters long");
+              const validationResult = userInputValidator(value);
+              setInput1Valid(!validationResult);
+              setErrorMsg1(validationResult);
             }}
           />
-          <Input
-            id="password"
-            type="password"
-            label="Password"
-            value={password}
-            errorMsg={errorMsg2}
-            placeholder="********"
-            required
-            inputValid={input2Valid}
-            onChange={(e) => {
-              const value = e.target.value;
-              setPassword(value);
-              const isValid = value.length >= 6;
-              //TODO Make an passwordIsValid helper function
-              setInput2Valid(isValid);
-              setErrorMsg2(isValid ? "" : "Password must be at least 6 characters long");
-            }}
-          />
+          <div className="flex relative">
+            <Input
+              id="password"
+              type={!showPassword ? "password" : "text"}
+              label="Password"
+              value={password}
+              errorMsg={errorMsg2}
+              placeholder="********"
+              required
+              inputValid={input2Valid}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+                const validationResult = loginPasswordValidator(value);
+                setInput2Valid(!validationResult);
+                setErrorMsg2(validationResult);
+              }}
+            />
+            <Button
+              aria-label="Show/Hide password"
+              label="Show/Hide password"
+              size="zero"
+              className="bg-transparent absolute left-27 top-2"
+            >
+              {showPassword ?
+                <FaEye onClick={() => setShowPassword((s) => !s)} size={20} className="text-[var(--text1)]" />
+              : <FaEyeSlash
+                  onClick={() => setShowPassword((s) => !s)}
+                  size={20}
+                  className="text-[var(--text1)]"
+                />
+              }
+            </Button>
+          </div>
+
           <Button
             type="submit"
             variant="tertiary"

@@ -25,3 +25,8 @@ export interface UserContextType {
   setUser: (user: User | null) => void;
 }
 //--------------------------------------------
+
+export interface AuthContextType {
+  accessToken: string | null;
+  setAccessToken: (token: string) => void;
+}

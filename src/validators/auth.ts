@@ -37,3 +37,17 @@ export const passwordValidator = (input: string): string[] => {
 
   return errors;
 };
+
+export const userInputValidator = (input: string) => {
+  const value = (input ?? "").trim();
+  if (value.length < 3 || value.length > 32) return "Must be a valid username or email";
+
+  return "";
+};
+
+export const loginPasswordValidator = (input: string) => {
+  const value = (input ?? "").trim();
+  if (value.length < 8) return "Password must be at least 8 characters long";
+
+  return "";
+};
