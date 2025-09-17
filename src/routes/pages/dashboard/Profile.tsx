@@ -7,7 +7,7 @@ import profileContent from "../../../text-content/profile-page";
 
 const Profile = () => {
   const { user } = useUser();
-  const infoListItemsVariables = [user?.username, user?.email, 5, 2];
+  const infoListItemsVariables = [user?.username, user?.email];
 
   // Values
   const [username, setUsername] = useState<string>("");

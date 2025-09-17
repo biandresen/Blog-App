@@ -4,6 +4,7 @@ import { lazy, useState, Suspense, type CSSProperties } from "react";
 import { ToastContainer } from "react-toastify";
 
 import Layout from "./routes/layouts/Layout";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 const NotFound = lazy(() => import("./routes/pages/NotFound"));
 const Home = lazy(() => import("./routes/pages/Home"));
@@ -61,7 +62,11 @@ const App = () => {
             {/* Dashboard and nested routes */}
             <Route
               path="/dashboard"
-              element={<DashboardLayout sidebars={sidebars} setSidebars={setSidebars} />}
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout sidebars={sidebars} setSidebars={setSidebars} />
+                </ProtectedRoute>
+              }
             >
               <Route index element={<NewPost />} /> {/* Default route */}
               <Route path="new-post" element={<NewPost />} />

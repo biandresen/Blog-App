@@ -50,3 +50,25 @@ export const loginUser = async ({ userInput, password }: LoginUser) => {
     }
   }
 };
+
+export const getCurrentUserDrafts = async (accessToken: string, page: number, limit: number) => {
+  try {
+    const res = await axios.get(
+      BLOG_API.BASE + BLOG_API.GCU_DRAFTS + `?page=${page}&limit=${limit}&sort=desc`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};

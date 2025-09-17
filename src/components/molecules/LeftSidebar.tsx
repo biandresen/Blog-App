@@ -5,6 +5,7 @@ import { CgProfile } from "react-icons/cg";
 import { GrUserAdmin } from "react-icons/gr";
 
 import { type LeftSidebarProps } from "../../types/components.types";
+import { useUser } from "../../contexts/UserContext";
 
 const linkName1: string = "New post";
 const linkName2: string = "Drafts";
@@ -12,6 +13,8 @@ const linkName3: string = "Profile";
 const linkName4: string = "Admin";
 
 const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
+  const { user } = useUser();
+
   const handleLinkClick = () => {
     if (window.innerWidth < 768) {
       setSidebars((prev) => ({ ...prev, right: false }));
@@ -55,7 +58,7 @@ const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
             <CgProfile size={30} />
             <span className="text-xl font-medium">{linkName3}</span>
           </NavLink>
-          {true && (
+          {user && user.role === "ADMIN" && (
             <NavLink
               to="/dashboard/admin"
               className={({ isActive }) =>

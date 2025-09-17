@@ -7,15 +7,12 @@ import { RxCross2 } from "react-icons/rx";
 import Navbar from "./Navbar";
 import logoImg from "../../assets/img/blogIcon.svg";
 import Button from "../atoms/Button";
-import { useUser } from "../../contexts/UserContext";
 import { type HeaderProps } from "../../types/components.types";
 
 const heading = "BLOGGY";
 
 const Header = ({ setSidebars }: HeaderProps) => {
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
-
-  const { user } = useUser();
 
   const location = useLocation();
   const showLeftSidebarBtn = location.pathname.includes("/posts") || location.pathname.includes("/dashboard");
