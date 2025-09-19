@@ -1,5 +1,6 @@
 import axios from "axios";
 import BLOG_API from "../api/blog-api";
+import type { token } from "../types/context.types";
 
 type RegisterUser = {
   username: string;
@@ -51,7 +52,7 @@ export const loginUser = async ({ userInput, password }: LoginUser) => {
   }
 };
 
-export const getCurrentUserDrafts = async (accessToken: string, page: number, limit: number) => {
+export const getCurrentUserDrafts = async (accessToken: token, page: number, limit: number) => {
   try {
     const res = await axios.get(
       BLOG_API.BASE + BLOG_API.GCU_DRAFTS + `?page=${page}&limit=${limit}&sort=desc`,
@@ -61,6 +62,25 @@ export const getCurrentUserDrafts = async (accessToken: string, page: number, li
         },
       }
     );
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const deleteUser = async (accessToken: token, id: number | string) => {
+  try {
+    const res = await axios.delete(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return res.data;
   } catch (err: any) {
     if (err.response) {

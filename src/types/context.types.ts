@@ -26,7 +26,9 @@ export interface UserContextType {
 }
 //--------------------------------------------
 
+export type token = string | null;
+
 export interface AuthContextType {
-  accessToken: string | null;
-  setAccessToken: (token: string) => void;
+  accessToken: token;
+  setAccessToken: (token: token) => void;
 }

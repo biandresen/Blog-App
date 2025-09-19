@@ -1,12 +1,16 @@
 import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
-import { useUser } from "../../../contexts/UserContext";
 import profileContent from "../../../text-content/profile-page";
+import { useUser } from "../../../contexts/UserContext";
+import { useAuth } from "../../../contexts/AuthContext";
+import { deleteUser } from "../../../lib/axios";
 
 const Profile = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+  const { accessToken, setAccessToken } = useAuth();
   const infoListItemsVariables = [user?.username, user?.email];
 
   // Values
@@ -27,6 +31,29 @@ const Profile = () => {
 
   const [input4Valid, setInput4Valid] = useState<boolean>(true);
   const [errorMsg4, setErrorMsg4] = useState<string>("");
+
+  const handleLogout = () => {
+    setUser(null);
+    setAccessToken(null);
+    toast.info("You have been logged out.");
+    console.log("User logged out");
+  };
+
+  const handleDeleteProfile = async () => {
+    try {
+      console.log(user?.id);
+      const res = await deleteUser(accessToken, Number(user?.id));
+      if (res.statusCode !== 200) {
+        toast.error(res.message);
+        throw new Error("Registration failed");
+      }
+      toast.success("Your profile has been deleted.");
+      setUser(null);
+    } catch (error) {
+      console.error("Failed to delete profile", error);
+    }
+    setAccessToken(null);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +81,7 @@ const Profile = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={handleSubmit}
+              onClick={handleLogout}
               className="w-full"
               label={profileContent.button2}
             >
@@ -63,7 +90,7 @@ const Profile = () => {
             <Button
               type="button"
               variant="error"
-              onClick={handleSubmit}
+              onClick={handleDeleteProfile}
               className="w-full"
               label={profileContent.button3}
             >

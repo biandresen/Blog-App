@@ -1,10 +1,10 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { type AuthContextType } from "../types/context.types";
+import { type AuthContextType, type token } from "../types/context.types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<token>(null);
 
   const value = { accessToken, setAccessToken };
 

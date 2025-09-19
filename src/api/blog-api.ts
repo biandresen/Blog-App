@@ -3,6 +3,7 @@ const BLOG_API = {
   REGISTER: "/auth/register",
   LOGIN: "/auth/login",
   GCU_DRAFTS: "/posts/drafts", //Get Current User Drafts
+  USER: "/user",
 };
 
 export default BLOG_API;
