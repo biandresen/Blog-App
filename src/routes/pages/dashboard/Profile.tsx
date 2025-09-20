@@ -6,7 +6,10 @@ import Button from "../../../components/atoms/Button";
 import profileContent from "../../../text-content/profile-page";
 import { useUser } from "../../../contexts/UserContext";
 import { useAuth } from "../../../contexts/AuthContext";
-import { deleteUser } from "../../../lib/axios";
+import { deleteUser, updateUser } from "../../../lib/axios";
+import type { UserUpdates } from "../../../types/general.types";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { passwordValidator, userInputValidator, usernameValidator } from "../../../validators/auth";
 
 const Profile = () => {
   const { user, setUser } = useUser();
@@ -14,10 +17,12 @@ const Profile = () => {
   const infoListItemsVariables = [user?.username, user?.email];
 
   // Values
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [avatar, setAvatar] = useState<string>("");
+  const [username, setUsername] = useState<string>(user?.username || "");
+  const [email, setEmail] = useState<string>(user?.email || "");
+  const [password, setPassword] = useState<string>();
+  const [avatar, setAvatar] = useState<string>(user?.avatar || "");
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // Validation states
   const [input1Valid, setInput1Valid] = useState<boolean>(true);
@@ -26,8 +31,7 @@ const Profile = () => {
   const [input2Valid, setInput2Valid] = useState<boolean>(true);
   const [errorMsg2, setErrorMsg2] = useState<string>("");
 
-  const [input3Valid, setInput3Valid] = useState<boolean>(true);
-  const [errorMsg3, setErrorMsg3] = useState<string>("");
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   const [input4Valid, setInput4Valid] = useState<boolean>(true);
   const [errorMsg4, setErrorMsg4] = useState<string>("");
@@ -55,10 +59,23 @@ const Profile = () => {
     setAccessToken(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleUpdateUser = (e: React.FormEvent) => {
     e.preventDefault();
-    //TODO Here you would typically handle the registration logic, e.g., API call
-    console.log("Form submitted with:", { username, email, password, avatar });
+    updateUser(accessToken, Number(user?.id), { username, email, password, avatar } as UserUpdates)
+      .then((res) => {
+        if (res.statusCode !== 200) {
+          toast.error(res.message);
+          throw new Error("Update failed");
+        }
+        toast.success("Profile updated successfully!");
+        const { password, ...updatedUser } = res.data; // Exclude password from user context
+        setUser({ id: user?.id, ...updatedUser });
+      })
+      .catch((err) => {
+        console.error("Failed to update profile", err);
+        toast.error("Failed to update profile");
+      });
+    console.log("Form submitted with:", { username, email, avatar });
   };
   return (
     <div className="container inputInfo-container">
@@ -107,17 +124,15 @@ const Profile = () => {
             label="Username"
             value={username}
             errorMsg={errorMsg1}
-            //TODO Add exisiting username as placeholder
             placeholder={""}
             required
             inputValid={input1Valid}
             onChange={(e) => {
               const value = e.target.value;
               setUsername(value);
-              const isValid = value.length >= 2;
-              //TODO Make an usernameIsValid helper function
-              setInput1Valid(isValid);
-              setErrorMsg1(isValid ? "" : "Username must be at least 2 characters long");
+              const validationResult = usernameValidator(value);
+              setInput1Valid(!validationResult);
+              setErrorMsg1(validationResult);
             }}
           />
           <Input
@@ -126,36 +141,54 @@ const Profile = () => {
             label="Email"
             value={email}
             errorMsg={errorMsg2}
-            //TODO Add exisiting email as placeholder
             placeholder={""}
             required
             inputValid={input2Valid}
             onChange={(e) => {
               const value = e.target.value;
               setEmail(value);
-              const isValid = value.includes("@") && value.includes(".");
-              //TODO Make an emailIsValid helper function
-              setInput2Valid(isValid);
-              setErrorMsg2(isValid ? "" : "Please enter a valid email address");
+              const validationResult = userInputValidator(value);
+              setInput2Valid(!validationResult);
+              setErrorMsg2(validationResult);
             }}
           />
-          <Input
-            id="password"
-            type="password"
-            label="Password"
-            value={password}
-            errorMsg={errorMsg3}
-            required
-            inputValid={input3Valid}
-            onChange={(e) => {
-              const value = e.target.value;
-              setPassword(value);
-              const isValid = value.length >= 6;
-              //TODO Make an passwordIsValid helper function
-              setInput3Valid(isValid);
-              setErrorMsg3(isValid ? "" : "Password must be at least 6 characters long");
-            }}
-          />
+          <div className="flex relative">
+            <Input
+              id="password"
+              type={!showPassword ? "password" : "text"}
+              label="Password"
+              value={password}
+              required
+              inputValid={passwordErrors.length === 0}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+                setPasswordErrors(passwordValidator(value));
+              }}
+            />
+            <Button
+              aria-label="Show/Hide password"
+              label="Show/Hide password"
+              size="zero"
+              className="bg-transparent absolute left-27 top-2"
+            >
+              {showPassword ?
+                <FaEye onClick={() => setShowPassword((s) => !s)} size={20} className="text-[var(--text1)]" />
+              : <FaEyeSlash
+                  onClick={() => setShowPassword((s) => !s)}
+                  size={20}
+                  className="text-[var(--text1)]"
+                />
+              }
+            </Button>
+          </div>
+          {passwordErrors.length > 0 && (
+            <ul className="text-[0.9rem] text-[var(--error)] my-2">
+              {passwordErrors.map((err) => (
+                <li key={err}>• {err}</li>
+              ))}
+            </ul>
+          )}
           <Input
             id="avatar"
             type="file"
@@ -167,12 +200,16 @@ const Profile = () => {
               const value = e.target.value;
               setAvatar(value);
               const isValid = value === password && value.length >= 6;
-              //TODO Make an avatarIsValid helper function
               setInput4Valid(isValid);
               setErrorMsg4(isValid ? "" : "Avatar must be a valid image file");
             }}
           />
-          <Button type="submit" onClick={handleSubmit} className="w-full mt-7" label={profileContent.button1}>
+          <Button
+            type="submit"
+            onClick={handleUpdateUser}
+            className="w-full mt-7"
+            label={profileContent.button1}
+          >
             {profileContent.button1}
           </Button>
         </form>

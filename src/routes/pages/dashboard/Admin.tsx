@@ -1,26 +1,78 @@
 import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
 
-import { useUser } from "../../../contexts/UserContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
 import adminContent from "../../../text-content/admin-page";
+import { deactivateUser, getUserByNameOrEmail, reactivateUser } from "../../../lib/axios";
+import { toast } from "react-toastify";
+import { type User } from "../../../types/context.types";
+
+type FetchedUser = User & {
+  active: boolean;
+};
 
 const Admin = () => {
-  const { user } = useUser();
-
   // Values
-  const [username, setUsername] = useState<string>("Birando");
+  const [userInput, setUserInput] = useState<string>("");
+  const [fetchedUser, setFetchedUser] = useState<FetchedUser | null>(null);
 
-  // Validation states
-  const [input1Valid, setInput1Valid] = useState<boolean>(true);
-  const [errorMsg1, setErrorMsg1] = useState<string>("");
+  const { accessToken } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    //TODO Here you would typically handle the registration logic, e.g., API call
-    console.log("Form submitted with:", { username });
+  const handleRemoveFetchedUser = () => {
+    setFetchedUser(null);
   };
+
+  const handleFetchUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await getUserByNameOrEmail(accessToken, userInput);
+      if (res.statusCode !== 200) {
+        toast.error(res.message);
+        throw new Error("Request failed");
+      }
+      toast.success("User found!");
+      setFetchedUser(res.data);
+    } catch (error) {
+      console.error("Failed to fetch user", error);
+      toast.error("Failed to fetch user");
+    }
+    console.log("Form submitted with:", { userInput });
+  };
+
+  const handleReactivateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await reactivateUser(accessToken, Number(fetchedUser?.id));
+      if (res.statusCode !== 200) {
+        toast.error(res.message);
+        throw new Error("Request failed");
+      }
+      setFetchedUser(res.data);
+      toast.success(`User ${fetchedUser?.username} activated!`);
+    } catch (error) {
+      console.error("Failed to activate user", error);
+      toast.error("Failed to activate user");
+    }
+  };
+
+  const handleDeactivateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await deactivateUser(accessToken, Number(fetchedUser?.id));
+      if (res.statusCode !== 200) {
+        toast.error(res.message);
+        throw new Error("Request failed");
+      }
+      setFetchedUser(res.data);
+      toast.success(`User ${fetchedUser?.username} deactivated!`);
+    } catch (error) {
+      console.error("Failed to deactivate user", error);
+      toast.error("Failed to deactivate user");
+    }
+  };
+
   return (
     <div className="container inputInfo-container">
       <div>
@@ -43,36 +95,43 @@ const Admin = () => {
         <h2 className="input-heading">{adminContent.inputHeading}</h2>
         <form action="">
           <Input
-            id="username"
-            label="Username"
-            value={username}
-            errorMsg={errorMsg1}
-            //TODO Add exisiting username as placeholder
+            id="userInput"
+            label="Username/Email"
+            value={userInput}
             placeholder={""}
             required
-            inputValid={input1Valid}
             onChange={(e) => {
               const value = e.target.value;
-              setUsername(value);
-              const isValid = value.length >= 2;
-              //TODO Make an usernameIsValid helper function
-              setInput1Valid(isValid);
-              setErrorMsg1(isValid ? "" : "Username must be at least 2 characters long");
+              setUserInput(value);
             }}
           />
-          <div className="grid place-items-center mt-8 mb-3 xl:mb-0 md:ml-auto text-[var(--text1)]">
-            <CgProfile size={40} />
-            <p className="font-bold">{username}</p>
-            <p className="">{"Status: Active"}</p>
-          </div>
+          {fetchedUser && (
+            <div className="relative grid place-items-center mt-8 mb-3 xl:mb-0 md:ml-auto text-[var(--text1)]">
+              <Button
+                onClick={handleRemoveFetchedUser}
+                className="absolute top-0 right-0 py-0! px-1! text-xs!"
+                label="remove fetched user"
+              >
+                X
+              </Button>
+              <CgProfile size={40} />
+              <p className="font-bold">{fetchedUser?.username}</p>
+              <p className="">{`Status: ${fetchedUser?.active ? "Active" : "Inactive"}`}</p>
+            </div>
+          )}
           <div className="flex flex-col gap-4 mt-6">
-            <Button type="submit" onClick={handleSubmit} className="w-full mt-7" label={adminContent.button1}>
+            <Button
+              type="submit"
+              onClick={handleFetchUser}
+              className="w-full mt-7"
+              label={adminContent.button1}
+            >
               {adminContent.button1}
             </Button>
             <Button
               type="submit"
               variant="success"
-              onClick={handleSubmit}
+              onClick={handleReactivateUser}
               className="w-full"
               label={adminContent.button2}
             >
@@ -81,7 +140,7 @@ const Admin = () => {
             <Button
               type="submit"
               variant="error"
-              onClick={handleSubmit}
+              onClick={handleDeactivateUser}
               className="w-full"
               label={adminContent.button3}
             >

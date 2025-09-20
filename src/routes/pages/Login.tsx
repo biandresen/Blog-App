@@ -63,7 +63,7 @@ const Login = () => {
       toast.success(`Welcome back, ${payload.username}!`);
       setTimeout(() => {
         navigate("/posts");
-      }, 50);
+      }, 200);
     } catch (err: any) {
       toast.error("Correct the error(s) and try again.");
       setErrorMsg2(err.message || "Login failed");
