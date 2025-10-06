@@ -1,12 +1,12 @@
 import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 import { useAuth } from "../../../contexts/AuthContext";
 import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
 import adminContent from "../../../text-content/admin-page";
 import { deactivateUser, getUserByNameOrEmail, reactivateUser } from "../../../lib/axios";
-import { toast } from "react-toastify";
 import { type User } from "../../../types/context.types";
 
 type FetchedUser = User & {
@@ -22,10 +22,15 @@ const Admin = () => {
 
   const handleRemoveFetchedUser = () => {
     setFetchedUser(null);
+    setUserInput("");
   };
 
   const handleFetchUser = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!accessToken) {
+      toast.error("You must be logged in to fetch a user.");
+      return;
+    }
     try {
       const res = await getUserByNameOrEmail(accessToken, userInput);
       if (res.statusCode !== 200) {
@@ -43,6 +48,10 @@ const Admin = () => {
 
   const handleReactivateUser = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!accessToken) {
+      toast.error("You must be logged in to reactivate a user.");
+      return;
+    }
     try {
       const res = await reactivateUser(accessToken, Number(fetchedUser?.id));
       if (res.statusCode !== 200) {
@@ -59,6 +68,10 @@ const Admin = () => {
 
   const handleDeactivateUser = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!accessToken) {
+      toast.error("You must be logged in to deactivate a user.");
+      return;
+    }
     try {
       const res = await deactivateUser(accessToken, Number(fetchedUser?.id));
       if (res.statusCode !== 200) {

@@ -2,11 +2,18 @@ import { useState } from "react";
 import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
 import newPostContent from "../../../text-content/newPost-page";
+import { publishPost, saveDraft } from "../../../lib/axios";
+import { useAuth } from "../../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const NewPost = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [tags, setTags] = useState<string>("");
+
+  const formError = title === "" || content === "";
+
+  const { accessToken } = useAuth();
 
   const resetForm = () => {
     setTitle("");
@@ -14,18 +21,68 @@ const NewPost = () => {
     setTags("");
   };
 
-  const handleSaveDraft = (e: React.FormEvent) => {
+  const handleSaveDraft = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Logic to handle post draft
-    console.log("Post saved as draft:", { title, content });
-    resetForm();
+    if (!accessToken) {
+      toast.error("You must be logged in to save a draft.");
+      return;
+    }
+    if (formError) {
+      toast.error("Title and content are required.");
+      return;
+    }
+    try {
+      const res = await saveDraft(
+        accessToken,
+        title,
+        content,
+        tags.split(",").map((tag) => tag.trim())
+      );
+      if (res.statusCode !== 200) {
+        toast.error(res.message);
+        throw new Error("Request failed");
+      }
+      toast.success("Draft saved!");
+      console.log("Draft saved successfully:", res.data);
+      resetForm();
+    } catch (err: any) {
+      if (err.message.includes("token")) {
+        toast.error("Your session has expired. Please log in again.");
+      }
+      console.error("Failed to save draft", err);
+    }
   };
 
-  const handlePublishPost = (e: React.FormEvent) => {
+  const handlePublishPost = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Logic to handle post submission
-    console.log("Post published:", { title, content });
-    resetForm();
+    if (!accessToken) {
+      toast.error("You must be logged in to publish a post.");
+      return;
+    }
+    if (formError) {
+      toast.error("Title and content are required.");
+      return;
+    }
+    try {
+      const res = await publishPost(
+        accessToken,
+        title,
+        content,
+        tags.split(",").map((tag) => tag.trim())
+      );
+      if (res.statusCode !== 200) {
+        toast.error(res.message);
+        throw new Error("Request failed");
+      }
+      toast.success("Post published!");
+      console.log("Post published successfully:", res.data);
+      resetForm();
+    } catch (err: any) {
+      if (err.message.includes("token")) {
+        toast.error("Your session has expired. Please log in again.");
+      }
+      console.error("Failed to publish post", err);
+    }
   };
 
   return (

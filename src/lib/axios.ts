@@ -56,7 +56,7 @@ export const loginUser = async ({ userInput, password }: LoginUser) => {
 export const getCurrentUserDrafts = async (accessToken: token, page: number, limit: number) => {
   try {
     const res = await axios.get(
-      BLOG_API.BASE + BLOG_API.GCU_DRAFTS + `?page=${page}&limit=${limit}&sort=desc`,
+      BLOG_API.BASE + BLOG_API.GCU_DRAFTS + `?page=${page}&limit=${limit}&sort=asc`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -162,6 +162,62 @@ export const deactivateUser = async (accessToken: token, id: number | string) =>
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const saveDraft = async (accessToken: token, title: string, body: string, tags: string[]) => {
+  try {
+    const res = await axios.post(
+      BLOG_API.BASE + BLOG_API.POSTS,
+      {
+        title,
+        body,
+        published: false,
+        tags,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const publishPost = async (accessToken: token, title: string, body: string, tags: string[]) => {
+  try {
+    const res = await axios.post(
+      BLOG_API.BASE + BLOG_API.POSTS,
+      {
+        title,
+        body,
+        published: true,
+        tags,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return res.data;
   } catch (err: any) {
     if (err.response) {
