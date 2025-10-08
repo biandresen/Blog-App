@@ -3,9 +3,9 @@ import { MdDelete, MdEdit } from "react-icons/md";
 
 import { type CommentProps } from "../../types/components.types";
 
-const Comment = ({ username, date, comment }: CommentProps) => {
+const Comment = ({ username, avatar, date, comment }: CommentProps) => {
   return (
-    <div className="px-0 xl:px-10 pb-10">
+    <div className="px-0 xl:px-10 pb-6">
       <div className="text-[var(--text1)]">
         <div className="flex bg-[var(--bg)] w-full px-3 pt-2 xl:w-fit rounded-tl-3xl rounded-tr-3xl">
           <CgProfile size={40} />
@@ -13,7 +13,6 @@ const Comment = ({ username, date, comment }: CommentProps) => {
             <p className="font-bold">{username}</p>
             <p className="text-xs">{date}</p>
           </div>
-          {/* //TODO Only show for admins and comment author */}
           <div className="ml-auto xl:ml-3 flex gap-2">
             <button
               type="button"

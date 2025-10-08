@@ -6,6 +6,7 @@ const BLOG_API = {
   USER: "/user",
   USERINPUT: "/user/input",
   POSTS: "/posts",
+  COMMENTS: "/comments",
 };
 
 export default BLOG_API;

@@ -1,5 +1,6 @@
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
 import { type ChangeEvent } from "react";
+import type { CommentType } from "./post.types";
 
 export type ButtonVariant = "shade" | "primary" | "secondary" | "tertiary" | "success" | "error";
 export type ButtonSize = "zero" | "sm" | "md" | "lg";
@@ -28,6 +29,7 @@ export interface InputProps {
 
 export interface CommentProps {
   username: string;
+  avatar: string | null;
   date: string;
   comment: string;
 }
@@ -61,4 +63,9 @@ export interface HeaderProps {
 
 export interface NavbarProps {
   isOpen: boolean;
+}
+
+export interface CommentFormProps {
+  postId: number;
+  onCommentAdded: (comment: CommentType) => void;
 }
