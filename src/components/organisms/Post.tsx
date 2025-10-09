@@ -4,14 +4,59 @@ import { CgProfile } from "react-icons/cg";
 import { type CommentType, type PostType } from "../../types/post.types";
 import Button from "../../components/atoms/Button";
 import Comment from "../molecules/Comment";
-import { formatDate } from "../../lib/utils";
 import CommentForm from "../molecules/CommentForm";
+import { formatDate } from "../../lib/utils";
+import { useUser } from "../../contexts/UserContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { deleteComment, editComment } from "../../lib/axios";
+import { toast } from "react-toastify";
 
 const Post = ({ post }: { post: PostType }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
   const [comments, setComments] = useState(post.comments);
 
+  const { user } = useUser();
+  const { accessToken } = useAuth();
+
   const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
+
+  const handleEditComment = async (commentId: number, newBody: string) => {
+    try {
+      if (!accessToken) return;
+      if (commentId === null) return;
+
+      const res = await editComment(accessToken, commentId, newBody);
+      if (res.statusCode !== 200) {
+        throw new Error("Request failed");
+      }
+      setComments((prev) =>
+        prev.map((comment) => (comment.id === commentId ? { ...comment, body: newBody } : comment))
+      );
+      toast.success("Comment edited!");
+      console.log("Comment edited successfully");
+    } catch (err: any) {
+      toast.error("Failed to edit comment");
+      console.error("Failed to edit comment", err.message);
+    }
+  };
+
+  const handleDeleteComment = async (authorId: number, commentId: number) => {
+    try {
+      if (!accessToken) return;
+      if (authorId === null) return;
+
+      const res = await deleteComment(accessToken, commentId);
+      if (res.statusCode !== 200) {
+        throw new Error("Request failed");
+      }
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+      toast.success("Comment deleted!");
+      console.log("Comment deleted successfully");
+    } catch (err: any) {
+      toast.error("Failed to delete comment");
+      console.error("Failed to delete comment", err.message);
+    }
+  };
 
   const toggleComments = () => {
     setCommentsIsOpen(!commentsIsOpen);
@@ -19,12 +64,10 @@ const Post = ({ post }: { post: PostType }) => {
 
   const addNewComment = (newComment: CommentType) => {
     // Ensure the new comment has a user object
-    console.log("new comment", newComment);
     const normalizedComment = {
       ...newComment,
-      user: newComment.user || { username: "You", avatar: null },
+      user: newComment.user || { id: user?.id, username: user?.username, avatar: user?.avatar },
     };
-    console.log("normalized comment", normalizedComment);
     setComments((prev) => [...prev, normalizedComment]);
   };
 
@@ -57,10 +100,14 @@ const Post = ({ post }: { post: PostType }) => {
             comments.map((comment) => (
               <Comment
                 key={comment.id}
+                commentId={comment.id}
                 username={comment.user?.username || "Unknown"}
+                authorId={comment.user?.id || null}
                 avatar={comment.user?.avatar || null}
                 date={formatDate(comment.createdAt)}
                 comment={comment.body}
+                onEdit={handleEditComment}
+                onDelete={handleDeleteComment}
               />
             ))}
           <CommentForm postId={post.id} onCommentAdded={addNewComment} />

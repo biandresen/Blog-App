@@ -28,10 +28,14 @@ export interface InputProps {
 }
 
 export interface CommentProps {
+  commentId: number;
   username: string;
+  authorId: number | null;
   avatar: string | null;
   date: string;
   comment: string;
+  onEdit: (commentId: number, newBody: string) => void;
+  onDelete: (authorId: number, commentId: number) => void;
 }
 
 export interface LeftSidebarProps {

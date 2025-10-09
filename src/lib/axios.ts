@@ -269,3 +269,47 @@ export const addComment = async (accessToken: token, authorId: number, comment: 
     }
   }
 };
+
+export const editComment = async (accessToken: token, commentId: number, comment: string) => {
+  try {
+    const res = await axios.patch(
+      BLOG_API.BASE + BLOG_API.COMMENTS + `/${commentId}`,
+      {
+        comment,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data; // success case
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const deleteComment = async (accessToken: token, commentId: number) => {
+  try {
+    const res = await axios.delete(BLOG_API.BASE + BLOG_API.COMMENTS + `/${commentId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res.data; // success case
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
