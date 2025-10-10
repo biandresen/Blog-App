@@ -313,3 +313,57 @@ export const deleteComment = async (accessToken: token, commentId: number) => {
     }
   }
 };
+
+export const editPost = async (
+  accessToken: token,
+  postId: number,
+  title: string,
+  body: string,
+  published: boolean,
+  tags: string[]
+) => {
+  try {
+    const res = await axios.patch(
+      BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`,
+      {
+        title,
+        body,
+        published,
+        tags,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data; // success case
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const deletePost = async (accessToken: token, postId: number) => {
+  try {
+    const res = await axios.delete(BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res.data; // success case
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};

@@ -27,6 +27,14 @@ const AllPosts = () => {
     fetchPosts();
   }, []);
 
+  const handlePostUpdated = (updatedPost: PostType) => {
+    setPosts((prev) => prev.map((post) => (post.id === updatedPost.id ? updatedPost : post)));
+  };
+
+  const handlePostDeleted = (postId: number) => {
+    setPosts((prev) => prev.filter((post) => post.id !== postId));
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -40,7 +48,16 @@ const AllPosts = () => {
       <h2 className="posts-heading">ALL POSTS</h2>
       <section>
         {posts && posts.length === 0 && <h3 className="posts-section-heading">No posts found</h3>}
-        {posts && posts.length !== 0 && posts.map((post) => <Post key={post.id} post={post} />)}
+        {posts &&
+          posts.length !== 0 &&
+          posts.map((post) => (
+            <Post
+              key={post.id}
+              post={post}
+              onPostUpdated={handlePostUpdated}
+              onPostDeleted={handlePostDeleted}
+            />
+          ))}
       </section>
     </div>
   );
