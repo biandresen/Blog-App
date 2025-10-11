@@ -10,7 +10,6 @@ const DraftCard = ({ id, draftTitle }: DraftCardProps) => {
 
   const handleOpenDraft = () => {
     // Logic to open the draft
-    console.log("Draft opened");
   };
 
   return (

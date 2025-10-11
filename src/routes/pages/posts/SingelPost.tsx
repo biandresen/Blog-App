@@ -1,40 +1,63 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { useParams } from "react-router-dom";
-import Post from "../../../components/organisms/Post";
-import type { PostType } from "../../../types/post.types";
 import { ClipLoader } from "react-spinners";
-import { getPost } from "../../../lib/axios";
 import { toast } from "react-toastify";
 
-const SingelPost = () => {
-  const [post, setPost] = useState<PostType | null>(null);
+import { getPost } from "../../../lib/axios";
+import Post from "../../../components/organisms/Post";
+import { usePosts } from "../../../contexts/PostsContext";
+import { type PostType } from "../../../types/post.types";
 
+const SinglePost = () => {
   const { id: postId } = useParams<{ id: string }>();
+  const { posts, updatePost, deletePost } = usePosts();
+  const [post, setPost] = useState<PostType | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await getPost(Number(postId));
-        if (res.statusCode !== 200) {
-          toast.error("Failed to fetch post");
-          throw new Error("Failed to fetch post");
+    // First try to find the post in context (instant render)
+    const contextPost = posts.find((p) => p.id === Number(postId));
+
+    if (contextPost) {
+      setPost(contextPost);
+      setLoading(false);
+    } else {
+      // Fallback: fetch from server if not found in context
+      const fetchPost = async () => {
+        try {
+          const res = await getPost(Number(postId));
+          console.log(res);
+          if (res.statusCode !== 200) {
+            toast.error("No post found");
+            throw new Error("No post found");
+          }
+          setPost(res.data);
+        } catch (err: any) {
+          toast.error(err.message);
+          console.error("Error fetching post:", err);
+        } finally {
+          setLoading(false);
         }
-        setPost(res.data);
-      } catch (error) {
-        console.error("Error fetching post:", error);
-      }
-    };
+      };
 
-    fetchPost();
+      fetchPost();
+    }
+  }, [posts, postId]);
 
-    return () => {};
-  }, []);
+  const handlePostUpdated = (updatedPost: PostType) => {
+    updatePost(updatedPost);
+    setPost(updatedPost);
+  };
+
+  const handlePostDeleted = (postId: number) => {
+    deletePost(postId);
+  };
 
   const override: CSSProperties = {
     color: "var(--text1)",
   };
 
-  if (!post) {
+  if (loading) {
     return (
       <div className="spinner-position">
         <ClipLoader
@@ -50,17 +73,20 @@ const SingelPost = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">ALL POSTS</h2>
+      <h2 className="posts-heading">POST DETAILS</h2>
       <section>
-        <Post
-          key={post.id}
-          post={post}
-          onPostUpdated={(id) => console.log(id)}
-          onPostDeleted={(id) => console.log(id)}
-        />
+        {!post ?
+          <h3 className="posts-section-heading text-[var(--text1)]">Post not found</h3>
+        : <Post
+            key={post.id}
+            post={post}
+            onPostUpdated={handlePostUpdated}
+            onPostDeleted={handlePostDeleted}
+          />
+        }
       </section>
     </div>
   );
 };
 
-export default SingelPost;
+export default SinglePost;

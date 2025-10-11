@@ -1,63 +1,36 @@
-import { useEffect, useState } from "react";
-import { getAllPosts } from "../../../lib/axios";
-import { type PostType } from "../../../types/post.types";
+import { usePosts } from "../../../contexts/PostsContext";
 import Post from "../../../components/organisms/Post";
+import { type PostType } from "../../../types/post.types";
 
 const AllPosts = () => {
-  const [posts, setPosts] = useState<PostType[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await getAllPosts(1, 10);
-        if (res.statusCode !== 200) {
-          setError(res.message);
-          throw new Error("Request failed");
-        }
-        setPosts(res.data);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch posts");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
+  const { posts, loading, error, updatePost, deletePost } = usePosts();
 
   const handlePostUpdated = (updatedPost: PostType) => {
-    setPosts((prev) => prev.map((post) => (post.id === updatedPost.id ? updatedPost : post)));
+    updatePost(updatedPost);
   };
 
   const handlePostDeleted = (postId: number) => {
-    setPosts((prev) => prev.filter((post) => post.id !== postId));
+    deletePost(postId);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div className="text-[var(--error)]">Error: {error}</div>;
 
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">ALL POSTS</h2>
       <section>
-        {posts && posts.length === 0 && <h3 className="posts-section-heading">No posts found</h3>}
-        {posts &&
-          posts.length !== 0 &&
-          posts.map((post) => (
+        {posts.length === 0 ?
+          <h3 className="posts-section-heading">No posts found</h3>
+        : posts.map((post) => (
             <Post
               key={post.id}
               post={post}
               onPostUpdated={handlePostUpdated}
               onPostDeleted={handlePostDeleted}
             />
-          ))}
+          ))
+        }
       </section>
     </div>
   );
