@@ -1,26 +1,29 @@
 import { RxCross2 } from "react-icons/rx";
 import { ImSearch } from "react-icons/im";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useDebounce from "../../hooks/useDebounce";
 
-import { type SearchbarProps } from "../../types/components.types";
-
-const Searchbar = ({ handleSearch }: SearchbarProps) => {
+const Searchbar = ({ handleSearch }: { handleSearch: (input: string) => void }) => {
   const [searchInput, setSearchInput] = useState<string>("");
+  const debouncedSearch = useDebounce(searchInput, 300);
+
+  // Automatically call search when user stops typing
+  useEffect(() => {
+    handleSearch(debouncedSearch);
+  }, [debouncedSearch, handleSearch]);
 
   const resetSearch = () => {
     setSearchInput("");
-    handleSearch();
   };
-
   return (
     <div className="flex items-center bg-[var(--primary)] p-4 rounded-full max-w-[90%] xl:w-1/2 mx-auto">
       <section className="flex items-center bg-[var(--primary-shade)] p-4 rounded-full w-full justify-between">
         <div className="flex">
           <button
-            onClick={handleSearch}
+            onClick={() => handleSearch(searchInput)}
             type="button"
             className="text-[var(--text2)]"
-            aria-label="Close search bar"
+            aria-label="Search posts"
           >
             <ImSearch size={30} />
           </button>

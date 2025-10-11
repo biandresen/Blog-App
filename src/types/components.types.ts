@@ -52,10 +52,6 @@ export interface PostCardProps {
   title: string;
 }
 
-export interface SearchbarProps {
-  handleSearch: () => void;
-}
-
 export interface HeaderProps {
   setSidebars: React.Dispatch<
     React.SetStateAction<{

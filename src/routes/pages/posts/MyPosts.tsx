@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import PostCard from "../../../components/molecules/PostCard";
 import { getAllUserPosts } from "../../../lib/axios";
 import type { PostType } from "../../../types/post.types";
 import { useUser } from "../../../contexts/UserContext";
+import { ClipLoader } from "react-spinners";
 
 const MyPosts = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const { user } = useUser();
 
@@ -18,10 +21,14 @@ const MyPosts = () => {
         if (res.statusCode !== 200) {
           throw new Error(res.message);
         }
+        setLoading(false);
+        setError(null);
         setPosts(res.data);
       } catch (err: any) {
         console.error("Failed to fetch user posts:", err.message || err);
+        setError(err.message || "An error occurred while fetching posts.");
       }
+      setLoading(false);
     };
 
     fetchUserPosts();
@@ -30,6 +37,28 @@ const MyPosts = () => {
       setPosts([]); // Cleanup on unmount
     };
   }, []);
+
+  const override: CSSProperties = {
+    color: "var(--text1)",
+  };
+
+  if (loading) {
+    return (
+      <div className="spinner-position">
+        <ClipLoader
+          color={override.color}
+          cssOverride={override}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-[var(--error)]">No posts found</div>;
+  }
 
   return (
     <div className="md:mt-8">
