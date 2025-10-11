@@ -24,6 +24,7 @@ const AllPosts = lazy(() => import("./routes/pages/posts/AllPosts"));
 const MyPosts = lazy(() => import("./routes/pages/posts/MyPosts"));
 const Popular = lazy(() => import("./routes/pages/posts/Popular"));
 const Search = lazy(() => import("./routes/pages/posts/Search"));
+const SingelPost = lazy(() => import("./routes/pages/posts/SingelPost"));
 
 const App = () => {
   const [sidebars, setSidebars] = useState({
@@ -82,6 +83,7 @@ const App = () => {
               <Route path="all-posts" element={<AllPosts />} />
               <Route path="popular" element={<Popular />} />
               <Route path="my-posts" element={<MyPosts />} />
+              <Route path=":id" element={<SingelPost />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

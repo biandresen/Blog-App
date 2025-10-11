@@ -36,7 +36,7 @@ const MyPosts = () => {
       <h2 className="posts-heading">MY POSTS</h2>
       <section className="posts-section">
         {posts.length > 0 ?
-          posts.map((post) => <PostCard key={post.id} id={post.id} draftTitle={post.title} />)
+          posts.map((post) => <PostCard key={post.id} id={post.id} title={post.title} />)
         : <div>
             <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>
           </div>

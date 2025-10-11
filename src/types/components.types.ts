@@ -49,7 +49,7 @@ export interface LeftSidebarProps {
 
 export interface PostCardProps {
   id: number;
-  draftTitle: string;
+  title: string;
 }
 
 export interface SearchbarProps {
