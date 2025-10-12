@@ -18,6 +18,7 @@ export const PostsProvider = ({ children }: { children: React.ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchPosts = async () => {
+    console.log("Fetching posts...");
     try {
       setLoading(true);
       const res = await getAllPosts(1, 10);
@@ -33,10 +34,6 @@ export const PostsProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     fetchPosts();
   }, []);
-
-  useEffect(() => {
-    console.log("Posts updated:", posts);
-  }, [posts]);
 
   const addPost = (newPost: PostType) => {
     setPosts((prev) => [newPost, ...prev]);

@@ -5,10 +5,9 @@ import { type User, type UserContextType } from "../types/context.types";
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
-  const value = { loggedIn, setLoggedIn, user, setUser };
+  const value = { user, setUser };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

@@ -48,7 +48,7 @@ const Post = ({ post }: { post: PostType }) => {
         throw new Error("Request failed");
       }
       setIsEditing(false);
-      await refreshPosts();
+      // await refreshPosts();
       toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
       console.log("Post edited successfully");
     } catch (err: any) {

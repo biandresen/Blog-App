@@ -5,6 +5,7 @@ import newPostContent from "../../../text-content/newPost-page";
 import { publishPost, saveDraft } from "../../../lib/axios";
 import { useAuth } from "../../../contexts/AuthContext";
 import { toast } from "react-toastify";
+import { usePosts } from "../../../contexts/PostsContext";
 
 const NewPost = () => {
   const [title, setTitle] = useState<string>("");
@@ -14,6 +15,7 @@ const NewPost = () => {
   const formError = title === "" || content === "";
 
   const { accessToken } = useAuth();
+  const { refreshPosts } = usePosts();
 
   const resetForm = () => {
     setTitle("");
@@ -44,6 +46,7 @@ const NewPost = () => {
       }
       toast.success("Draft saved!");
       console.log("Draft saved successfully:", res.data);
+      await refreshPosts();
       resetForm();
     } catch (err: any) {
       if (err.message.includes("token")) {

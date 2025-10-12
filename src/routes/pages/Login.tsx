@@ -28,7 +28,7 @@ const Login = () => {
   const invalidForm = !input1Valid || !input2Valid || !userInput || !password;
 
   const { setAccessToken } = useAuth();
-  const { setUser, setLoggedIn } = useUser();
+  const { setUser } = useUser();
 
   useEffect(() => {
     toast.info("Welcome! Please login to your account.");
@@ -58,8 +58,6 @@ const Login = () => {
         createdAt: payload.createdAt,
         updatedAt: payload.updatedAt,
       });
-
-      setLoggedIn(true);
       toast.success(`Welcome back, ${payload.username}!`);
       setTimeout(() => {
         navigate("/posts");

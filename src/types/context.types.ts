@@ -19,8 +19,6 @@ export type User = {
 };
 
 export interface UserContextType {
-  loggedIn: boolean;
-  setLoggedIn: (loggedIn: boolean) => void;
   user: User | null;
   setUser: (user: User | null) => void;
 }

@@ -1,5 +1,5 @@
 const loginContent = {
-  infoHeading: "Login to read blogs!",
+  infoHeading: "Log in to read blogs!",
   infoListHeading: "News and updates:",
   infoListItems: ["No news at the moment", "No updates at the moment"],
   inputHeading: "LOGIN",

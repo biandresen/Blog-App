@@ -5,6 +5,8 @@ import Spinner from "../../../components/atoms/Spinner";
 const AllPosts = () => {
   const { posts, loading, error } = usePosts();
 
+  console.log("Navigating to AllPosts", posts);
+
   if (loading) return <Spinner />;
 
   if (error) {
