@@ -5,12 +5,13 @@ import { getCurrentUserDrafts } from "../../../lib/axios";
 import { useAuth } from "../../../contexts/AuthContext";
 import Button from "../../../components/atoms/Button";
 import { toast } from "react-toastify";
+import Spinner from "../../../components/atoms/Spinner";
 
 const Drafts = () => {
   const [drafts, setDrafts] = useState<any[]>([]);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { accessToken } = useAuth();
 
@@ -26,15 +27,13 @@ const Drafts = () => {
     }
     try {
       const res = await getCurrentUserDrafts(accessToken, page, 3);
-      console.log(res);
       if (res.statusCode === 200) {
         if (page === 1) {
           setDrafts(res.data); // replace on first page
         } else {
           setDrafts((prev) => [...prev, ...res.data]); // append on next pages
         }
-        // infer hasMore
-        setHasMore(res.count === 3);
+        setError(null);
       }
     } catch (err: any) {
       if (err.message.includes("token")) {
@@ -50,6 +49,10 @@ const Drafts = () => {
     fetchDrafts();
   }, [page]);
 
+  if (loading) return <Spinner />;
+
+  if (error) return <div className="text-[var(--text1)]">No posts found</div>;
+
   return (
     <div className="md:mt-8">
       <h2 className="text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10">
@@ -59,7 +62,7 @@ const Drafts = () => {
       <section className="flex flex-wrap gap-4 mt-10 justify-center mx-auto w-full xl:w-[90%]">
         {drafts.length === 0 && !loading && (
           <div>
-            <h3 className="text-2xl font-bold text-[var(--text1)]">{draftsContent.heading2}</h3>
+            <h3 className="text-2xl font-bold text-[var(--text1)] text-center">{draftsContent.heading2}</h3>
             <p className="text-lg text-[var(--text1)]">{draftsContent.paragraph}</p>
           </div>
         )}
@@ -68,17 +71,6 @@ const Drafts = () => {
           <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />
         ))}
       </section>
-
-      {hasMore && (
-        <Button
-          label="Load more drafts"
-          disabled={loading}
-          onClick={() => setPage((p) => p + 1)}
-          className="mt-6 px-6 py-2 bg-[var(--primary)] text-white rounded-lg"
-        >
-          {loading ? "Loading..." : "Load more drafts"}
-        </Button>
-      )}
     </div>
   );
 };

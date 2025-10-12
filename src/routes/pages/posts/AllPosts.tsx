@@ -1,40 +1,14 @@
 import { usePosts } from "../../../contexts/PostsContext";
 import Post from "../../../components/organisms/Post";
-import { type PostType } from "../../../types/post.types";
-import { ClipLoader } from "react-spinners";
-import type { CSSProperties } from "react";
+import Spinner from "../../../components/atoms/Spinner";
 
 const AllPosts = () => {
-  const { posts, loading, error, updatePost, deletePost } = usePosts();
+  const { posts, loading, error } = usePosts();
 
-  const handlePostUpdated = (updatedPost: PostType) => {
-    updatePost(updatedPost);
-  };
-
-  const handlePostDeleted = (postId: number) => {
-    deletePost(postId);
-  };
-
-  const override: CSSProperties = {
-    color: "var(--text1)",
-  };
-
-  if (loading) {
-    return (
-      <div className="spinner-position">
-        <ClipLoader
-          color={override.color}
-          cssOverride={override}
-          size={150}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-      </div>
-    );
-  }
+  if (loading) return <Spinner />;
 
   if (error) {
-    return <div className="text-[var(--error)]">No posts found</div>;
+    return <div className="text-[var(--text1)] text-center">No posts found</div>;
   }
 
   return (
@@ -42,16 +16,8 @@ const AllPosts = () => {
       <h2 className="posts-heading">ALL POSTS</h2>
       <section>
         {posts.length === 0 ?
-          <h3 className="posts-section-heading">No posts found</h3>
-        : posts.map((post) => (
-            <Post
-              key={post.id}
-              post={post}
-              onPostUpdated={handlePostUpdated}
-              onPostDeleted={handlePostDeleted}
-            />
-          ))
-        }
+          <h3 className="posts-section-heading text-[var(--text1)] text-center">No posts founds</h3>
+        : posts.map((post) => <Post key={post.id} post={post} />)}
       </section>
     </div>
   );

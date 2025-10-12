@@ -404,6 +404,21 @@ export const getPost = async (postId: number) => {
   }
 };
 
+export const refreshToken = async (postId: number) => {
+  try {
+    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`);
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
 // export const getPopularPosts = async (page: number, limit: number) => {
 //   try {
 //     const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=asc`);

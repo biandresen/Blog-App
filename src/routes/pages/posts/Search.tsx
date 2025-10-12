@@ -77,7 +77,6 @@ const Search = () => {
 
   return (
     <div>
-      {/* 🔍 Filter checkboxes */}
       <div className="flex justify-center gap-2 md:gap-4 my-4 flex-wrap text-[var(--text1)]">
         <b>Filters:</b>
         {Object.keys(filters).map((filter) => (

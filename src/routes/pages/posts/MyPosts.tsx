@@ -3,7 +3,7 @@ import PostCard from "../../../components/molecules/PostCard";
 import { getAllUserPosts } from "../../../lib/axios";
 import type { PostType } from "../../../types/post.types";
 import { useUser } from "../../../contexts/UserContext";
-import { ClipLoader } from "react-spinners";
+import Spinner from "../../../components/atoms/Spinner";
 
 const MyPosts = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -38,27 +38,9 @@ const MyPosts = () => {
     };
   }, []);
 
-  const override: CSSProperties = {
-    color: "var(--text1)",
-  };
+  if (loading) return <Spinner />;
 
-  if (loading) {
-    return (
-      <div className="spinner-position">
-        <ClipLoader
-          color={override.color}
-          cssOverride={override}
-          size={150}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div className="text-[var(--error)]">No posts found</div>;
-  }
+  if (error) return <div className="text-[var(--text1)]">No posts found</div>;
 
   return (
     <div className="md:mt-8">

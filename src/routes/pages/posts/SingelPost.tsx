@@ -1,18 +1,22 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 import { getPost } from "../../../lib/axios";
 import Post from "../../../components/organisms/Post";
 import { usePosts } from "../../../contexts/PostsContext";
 import { type PostType } from "../../../types/post.types";
+import Spinner from "../../../components/atoms/Spinner";
+import { useUser } from "../../../contexts/UserContext";
 
 const SinglePost = () => {
   const { id: postId } = useParams<{ id: string }>();
   const { posts, updatePost, deletePost } = usePosts();
   const [post, setPost] = useState<PostType | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const isAuthor = post?.authorId?.toString() === useUser().user?.id.toString();
+  const isDraft = post?.published === false;
 
   useEffect(() => {
     // First try to find the post in context (instant render)
@@ -53,37 +57,24 @@ const SinglePost = () => {
     deletePost(postId);
   };
 
-  const override: CSSProperties = {
-    color: "var(--text1)",
-  };
-
-  if (loading) {
-    return (
-      <div className="spinner-position">
-        <ClipLoader
-          color={override.color}
-          cssOverride={override}
-          size={150}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-      </div>
-    );
-  }
+  if (loading) return <Spinner />;
 
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">POST DETAILS</h2>
       <section>
-        {!post ?
-          <h3 className="posts-section-heading text-[var(--text1)]">Post not found</h3>
-        : <Post
+        {!post && <h3 className="posts-section-heading text-[var(--text1)]">Post not found</h3>}
+        {post && isDraft && !isAuthor && (
+          <h3 className="posts-section-heading text-[var(--text1)]">This draft is private</h3>
+        )}
+        {post && (!isDraft || isAuthor) && (
+          <Post
             key={post.id}
             post={post}
             onPostUpdated={handlePostUpdated}
             onPostDeleted={handlePostDeleted}
           />
-        }
+        )}
       </section>
     </div>
   );

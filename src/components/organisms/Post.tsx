@@ -12,23 +12,20 @@ import { deleteComment, deletePost, editComment, editPost } from "../../lib/axio
 import { toast } from "react-toastify";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
+import { usePosts } from "../../contexts/PostsContext";
 
-interface PostProps {
-  post: PostType;
-  onPostUpdated: (updatedPost: PostType) => void;
-  onPostDeleted: (postId: number) => void;
-}
-
-const Post = ({ post, onPostUpdated, onPostDeleted }: PostProps) => {
+const Post = ({ post }: { post: PostType }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
   const [comments, setComments] = useState(post.comments);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(post.title);
   const [editedBody, setEditedBody] = useState(post.body);
   const [editedTags, setEditedTags] = useState(post.tags.map((tag) => tag.name).join(", "));
+  const [published, setPublished] = useState(post.published);
 
   const { user } = useUser();
   const { accessToken } = useAuth();
+  const { refreshPosts } = usePosts();
 
   const isAuthor = post.authorId?.toString() === user?.id.toString();
   const isAdmin = user?.role.toString() === "ADMIN";
@@ -46,21 +43,13 @@ const Post = ({ post, onPostUpdated, onPostDeleted }: PostProps) => {
     try {
       if (!accessToken) return;
 
-      const res = await editPost(accessToken, postId, newTitle, newBody, true, editedTags);
+      const res = await editPost(accessToken, postId, newTitle, newBody, published, editedTags);
       if (res.statusCode !== 200) {
         throw new Error("Request failed");
       }
-      const updatedPost = {
-        ...res.data, // whatever backend returns
-        user: {
-          id: user?.id || null,
-          username: user?.username || "You",
-          avatar: user?.avatar || "",
-        },
-      };
       setIsEditing(false);
-      onPostUpdated(updatedPost);
-      toast.success("Post edited!");
+      await refreshPosts();
+      toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
       console.log("Post edited successfully");
     } catch (err: any) {
       toast.error("Failed to edit post");
@@ -76,7 +65,7 @@ const Post = ({ post, onPostUpdated, onPostDeleted }: PostProps) => {
       if (res.statusCode !== 200) {
         throw new Error("Request failed");
       }
-      onPostDeleted(postId);
+      await refreshPosts();
       toast.success("Post deleted!");
       console.log("Post deleted successfully");
     } catch (err: any) {
@@ -196,12 +185,29 @@ const Post = ({ post, onPostUpdated, onPostDeleted }: PostProps) => {
             title="Edit post tags"
             value={editedTags}
             onChange={(e) => setEditedTags(e.target.value)}
-            className="w-full text-sm md:text-xl p-3 mr-5 border border-[var(--text1)]-300 rounded-2xl"
+            className="w-full text-sm md:text-xl p-3 mb-8 mr-5 border border-[var(--text1)]-300 r/Unpublishounded-2xl"
           />
         : <p className="bg-[var(--primary)] text-[var(--text2)] text-xs md:text-xl font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto">
             {post.tags.map((tag) => `#${tag.name.toLocaleLowerCase()} `)}
           </p>
         }
+
+        {isEditing && (
+          <div className="flex items-center absolute bottom-3.5 right-15">
+            <label htmlFor="publish/unpublish" className="mr-2">
+              <b>Publish</b>
+            </label>
+            <input
+              className="w-4 h-4 cursor-pointer accent-[var(--primary)]"
+              onChange={() => setPublished((prev) => !prev)}
+              id="publish/unpublish"
+              aria-label="Publish/Unpublish"
+              type="checkbox"
+              checked={published}
+            />
+          </div>
+        )}
+
         {isEditing ?
           <button
             type="button"

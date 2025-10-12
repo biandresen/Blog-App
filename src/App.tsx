@@ -1,10 +1,11 @@
-import { ClipLoader } from "react-spinners";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, useState, Suspense, type CSSProperties } from "react";
+import { lazy, useState, Suspense } from "react";
 import { ToastContainer } from "react-toastify";
+import { useColorTheme } from "./contexts/ColorThemeContext";
 
 import Layout from "./routes/layouts/Layout";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Spinner from "./components/atoms/Spinner";
 
 const NotFound = lazy(() => import("./routes/pages/NotFound"));
 const Home = lazy(() => import("./routes/pages/Home"));
@@ -32,26 +33,12 @@ const App = () => {
     right: false,
   });
 
-  const override: CSSProperties = {
-    color: "var(--text1)",
-  };
+  const { colorTheme } = useColorTheme();
 
   return (
     <BrowserRouter>
       <Layout setSidebars={setSidebars}>
-        <Suspense
-          fallback={
-            <div className="spinner-position">
-              <ClipLoader
-                color={override.color}
-                cssOverride={override}
-                size={150}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-            </div>
-          }
-        >
+        <Suspense fallback={<Spinner />}>
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
@@ -87,7 +74,7 @@ const App = () => {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <ToastContainer />
+          <ToastContainer position="bottom-right" theme={colorTheme} />
         </Suspense>
       </Layout>
     </BrowserRouter>

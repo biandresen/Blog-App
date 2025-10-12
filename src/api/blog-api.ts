@@ -7,6 +7,7 @@ const BLOG_API = {
   USERINPUT: "/user/input",
   POSTS: "/posts",
   COMMENTS: "/comments",
+  PUBLISH: "/publish",
 };
 
 export default BLOG_API;

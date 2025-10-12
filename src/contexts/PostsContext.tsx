@@ -8,8 +8,6 @@ interface PostsContextType {
   error: string | null;
   refreshPosts: () => Promise<void>;
   addPost: (newPost: PostType) => void;
-  updatePost: (updatedPost: PostType) => void;
-  deletePost: (postId: number) => void;
 }
 
 const PostsContext = createContext<PostsContextType | undefined>(undefined);
@@ -36,22 +34,16 @@ export const PostsProvider = ({ children }: { children: React.ReactNode }) => {
     fetchPosts();
   }, []);
 
+  useEffect(() => {
+    console.log("Posts updated:", posts);
+  }, [posts]);
+
   const addPost = (newPost: PostType) => {
     setPosts((prev) => [newPost, ...prev]);
   };
 
-  const updatePost = (updatedPost: PostType) => {
-    setPosts((prev) => prev.map((post) => (post.id === updatedPost.id ? updatedPost : post)));
-  };
-
-  const deletePost = (postId: number) => {
-    setPosts((prev) => prev.filter((post) => post.id !== postId));
-  };
-
   return (
-    <PostsContext.Provider
-      value={{ posts, loading, error, refreshPosts: fetchPosts, addPost, updatePost, deletePost }}
-    >
+    <PostsContext.Provider value={{ posts, loading, error, refreshPosts: fetchPosts, addPost }}>
       {children}
     </PostsContext.Provider>
   );
