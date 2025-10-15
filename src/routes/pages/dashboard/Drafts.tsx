@@ -3,13 +3,11 @@ import DraftCard from "../../../components/molecules/DraftCard";
 import draftsContent from "../../../text-content/drafts-page";
 import { getCurrentUserDrafts } from "../../../lib/axios";
 import { useAuth } from "../../../contexts/AuthContext";
-import Button from "../../../components/atoms/Button";
 import { toast } from "react-toastify";
 import Spinner from "../../../components/atoms/Spinner";
 
 const Drafts = () => {
   const [drafts, setDrafts] = useState<any[]>([]);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,13 +24,9 @@ const Drafts = () => {
       return;
     }
     try {
-      const res = await getCurrentUserDrafts(accessToken, page, 3);
+      const res = await getCurrentUserDrafts(accessToken, 1, 10);
       if (res.statusCode === 200) {
-        if (page === 1) {
-          setDrafts(res.data); // replace on first page
-        } else {
-          setDrafts((prev) => [...prev, ...res.data]); // append on next pages
-        }
+        setDrafts(res.data);
         setError(null);
       }
     } catch (err: any) {
@@ -47,7 +41,7 @@ const Drafts = () => {
 
   useEffect(() => {
     fetchDrafts();
-  }, [page]);
+  }, []);
 
   if (loading) return <Spinner />;
 

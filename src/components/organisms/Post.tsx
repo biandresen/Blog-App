@@ -48,7 +48,7 @@ const Post = ({ post }: { post: PostType }) => {
         throw new Error("Request failed");
       }
       setIsEditing(false);
-      // await refreshPosts();
+      await refreshPosts();
       toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
       console.log("Post edited successfully");
     } catch (err: any) {
@@ -127,7 +127,14 @@ const Post = ({ post }: { post: PostType }) => {
   };
 
   return (
-    <div className="relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10">
+    <div
+      className={`relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10 ${
+        post.published ? "" : "opacity-80"
+      }`}
+    >
+      {post.published ? null : (
+        <div className="absolute top-1 left-1 text-[var(--text1)] text-sm rounded-full px-1">DRAFT</div>
+      )}
       <div className="ml-auto flex flex-col-reverse absolute top-1 right-1">
         {isAuthor && (
           <button
@@ -151,7 +158,7 @@ const Post = ({ post }: { post: PostType }) => {
         )}
       </div>
       <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-6 pb-4">
-        {isEditing ?
+        {isEditing ? (
           <input
             title="Edit post title"
             type="text"
@@ -159,7 +166,9 @@ const Post = ({ post }: { post: PostType }) => {
             onChange={(e) => setEditedTitle(e.target.value)}
             className="w-full text-xl xl:text-4xl md:text-3xl/8 font-bold mr-5 p-5 border border-[var(--text1)]-300 rounded-2xl"
           />
-        : <h3 className="text-xl xl:text-4xl md:text-3xl/8">{post.title}</h3>}
+        ) : (
+          <h3 className="text-xl xl:text-4xl md:text-3xl/8">{post.title}</h3>
+        )}
         <div className="grid place-items-center mb-5 xl:mb-0 md:ml-auto">
           <CgProfile size={40} />
           <p className="font-bold">{post.user.username}</p>
@@ -167,7 +176,7 @@ const Post = ({ post }: { post: PostType }) => {
         </div>
       </div>
       <hr className="text-[var(--text1)] opacity-20" />
-      {isEditing ?
+      {isEditing ? (
         <textarea
           aria-label="Edit post body"
           title="Edit post body"
@@ -175,10 +184,12 @@ const Post = ({ post }: { post: PostType }) => {
           onChange={(e) => setEditedBody(e.target.value)}
           className="w-full text-sm md:text-xl p-5 border border-[var(--text1)]-300 rounded-2xl"
         />
-      : <p className="px-5 xl:px-10 py-4 text-sm md:text-xl/7 xl:text-xl">{post.body}</p>}
+      ) : (
+        <p className="px-5 xl:px-10 py-4 text-sm md:text-xl/7 xl:text-xl">{post.body}</p>
+      )}
       <hr className="text-[var(--text1)] opacity-20" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between items-center px-5 xl:px-10 py-5">
-        {isEditing ?
+        {isEditing ? (
           <input
             type="text"
             aria-label="Edit post tags"
@@ -187,10 +198,11 @@ const Post = ({ post }: { post: PostType }) => {
             onChange={(e) => setEditedTags(e.target.value)}
             className="w-full text-sm md:text-xl p-3 mb-8 mr-5 border border-[var(--text1)]-300 r/Unpublishounded-2xl"
           />
-        : <p className="bg-[var(--primary)] text-[var(--text2)] text-xs md:text-xl font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto">
+        ) : (
+          <p className="bg-[var(--primary)] text-[var(--text2)] text-xs md:text-xl font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto">
             {post.tags.map((tag) => `#${tag.name.toLocaleLowerCase()} `)}
           </p>
-        }
+        )}
 
         {isEditing && (
           <div className="flex items-center absolute bottom-3.5 right-15">
@@ -208,7 +220,7 @@ const Post = ({ post }: { post: PostType }) => {
           </div>
         )}
 
-        {isEditing ?
+        {isEditing ? (
           <button
             type="button"
             aria-label="Edit Message"
@@ -224,7 +236,8 @@ const Post = ({ post }: { post: PostType }) => {
           >
             <IoSend size={20} />
           </button>
-        : <Button
+        ) : (
+          <Button
             className="w-full xl:w-auto xl:min-w-[180px]"
             onClick={toggleComments}
             size="sm"
@@ -234,7 +247,7 @@ const Post = ({ post }: { post: PostType }) => {
           >
             {buttonText}
           </Button>
-        }
+        )}
       </div>
       {commentsIsOpen && (
         <div className="bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl">

@@ -1,7 +1,6 @@
 import axios from "axios";
 import BLOG_API from "../api/blog-api";
 import { type token } from "../types/context.types";
-import { toast } from "react-toastify";
 
 // The setter function type (you pass it from useAuth)
 type SetAccessToken = (token: token) => void;
@@ -9,9 +8,15 @@ type SetAccessToken = (token: token) => void;
 // Refresh the access token using the refresh token cookie
 export async function refreshAccessToken(setAccessToken: SetAccessToken) {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}/auth/refresh`, {
-      withCredentials: true, // required to send refresh cookie
-    });
+    const res = await axios.post(
+      `${BLOG_API.BASE}/auth/refresh`,
+      {},
+      {
+        withCredentials: true, // required to send refresh cookie
+      }
+    );
+
+    console.log("RES:", res);
 
     if (res.data.statusCode === 200) {
       const newAccessToken = res.data.data; // backend sends access token here
@@ -41,7 +46,6 @@ export async function safeRequest<T>(
     if (err?.response?.status === 401) {
       const newToken = await refreshAccessToken(setAccessToken);
       if (!newToken) {
-        toast.warning("Session expired. You must log in again.");
         console.warn("Token refresh failed. User must log in again.");
         throw new Error("Session expired. Please log in again.");
       }

@@ -389,16 +389,21 @@ export const getAllUserPosts = async (authorId: number, page: number, limit: num
   }
 };
 
-export const getPost = async (postId: number) => {
+// 🧩 Accept accessToken as first argument (used by safeRequest)
+export const getPost = async (accessToken: token, postId: number) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`);
+    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      withCredentials: true, // send cookies if needed
+    });
+
     return res.data;
   } catch (err: any) {
     if (err.response) {
-      // Server responded with 400+
       return Promise.reject(err.response.data);
     } else {
-      // Network or unknown error
       return Promise.reject({ message: err.message || "Something went wrong" });
     }
   }

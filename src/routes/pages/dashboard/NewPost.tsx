@@ -79,6 +79,7 @@ const NewPost = () => {
       }
       toast.success("Post published!");
       console.log("Post published successfully:", res.data);
+      await refreshPosts();
       resetForm();
     } catch (err: any) {
       if (err.message.includes("token")) {

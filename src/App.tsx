@@ -6,6 +6,7 @@ import { useColorTheme } from "./contexts/ColorThemeContext";
 import Layout from "./routes/layouts/Layout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Spinner from "./components/atoms/Spinner";
+import { useAuthInitializer } from "./hooks/useAuthInitializer";
 
 const NotFound = lazy(() => import("./routes/pages/NotFound"));
 const Home = lazy(() => import("./routes/pages/Home"));
@@ -28,6 +29,8 @@ const Search = lazy(() => import("./routes/pages/posts/Search"));
 const SingelPost = lazy(() => import("./routes/pages/posts/SingelPost"));
 
 const App = () => {
+  useAuthInitializer(); // Initialize auth on app load
+
   const [sidebars, setSidebars] = useState({
     left: false,
     right: false,
