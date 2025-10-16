@@ -2,11 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, useState, Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import { useColorTheme } from "./contexts/ColorThemeContext";
+import { useAuth } from "./contexts/AuthContext";
+import { useAuthInitializer } from "./hooks/useAuthInitializer";
+import Spinner from "./components/atoms/Spinner";
 
 import Layout from "./routes/layouts/Layout";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import Spinner from "./components/atoms/Spinner";
-import { useAuthInitializer } from "./hooks/useAuthInitializer";
 
 const NotFound = lazy(() => import("./routes/pages/NotFound"));
 const Home = lazy(() => import("./routes/pages/Home"));
@@ -29,14 +30,23 @@ const Search = lazy(() => import("./routes/pages/posts/Search"));
 const SingelPost = lazy(() => import("./routes/pages/posts/SingelPost"));
 
 const App = () => {
-  useAuthInitializer(); // Initialize auth on app load
+  useAuthInitializer();
+  const { colorTheme } = useColorTheme();
+  const { loading } = useAuth();
 
   const [sidebars, setSidebars] = useState({
     left: false,
     right: false,
   });
 
-  const { colorTheme } = useColorTheme();
+  // Wait for refresh check to finish
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
@@ -50,7 +60,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
 
-            {/* Dashboard and nested routes */}
+            {/* Protected dashboard */}
             <Route
               path="/dashboard"
               element={
@@ -59,22 +69,23 @@ const App = () => {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<NewPost />} /> {/* Default route */}
+              <Route index element={<NewPost />} />
               <Route path="new-post" element={<NewPost />} />
               <Route path="drafts" element={<Drafts />} />
               <Route path="profile" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
             </Route>
 
-            {/* Posts and nested routes */}
+            {/* Posts */}
             <Route path="/posts" element={<PostsLayout sidebars={sidebars} setSidebars={setSidebars} />}>
-              <Route index element={<AllPosts />} /> {/* Default route */}
+              <Route index element={<AllPosts />} />
               <Route path="search" element={<Search />} />
               <Route path="all-posts" element={<AllPosts />} />
               <Route path="popular" element={<Popular />} />
               <Route path="my-posts" element={<MyPosts />} />
               <Route path=":id" element={<SingelPost />} />
             </Route>
+
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ToastContainer position="bottom-right" theme={colorTheme} />

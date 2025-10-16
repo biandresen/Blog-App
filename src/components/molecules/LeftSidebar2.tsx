@@ -3,6 +3,7 @@ import { ImSearch } from "react-icons/im";
 import { CgNotes } from "react-icons/cg";
 import { TbChartBarPopular } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
+import { useUser } from "../../contexts/UserContext";
 
 const linkName1: string = "Search";
 const linkName2: string = "All posts";
@@ -19,6 +20,8 @@ interface LeftSidebar2Props {
 }
 
 const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
+  const { user } = useUser();
+
   const handleLinkClick = () => {
     if (window.innerWidth < 768) {
       setSidebars((prev) => ({ ...prev, right: false }));
@@ -32,9 +35,9 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
           <NavLink
             to="/posts/search"
             className={({ isActive }) =>
-              isActive ?
-                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
-              : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
+              isActive
+                ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
+                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
             <ImSearch size={30} />
@@ -43,9 +46,9 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
           <NavLink
             to="/posts/all-posts"
             className={({ isActive }) =>
-              isActive ?
-                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
-              : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
+              isActive
+                ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
+                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
             <CgNotes size={30} />
@@ -54,25 +57,27 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
           <NavLink
             to="/posts/popular"
             className={({ isActive }) =>
-              isActive ?
-                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
-              : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
+              isActive
+                ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
+                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
             <TbChartBarPopular size={30} />
             <span className="text-xl font-medium">{linkName3}</span>
           </NavLink>
-          <NavLink
-            to="/posts/my-posts"
-            className={({ isActive }) =>
-              isActive ?
-                "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
-              : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <CgProfile size={30} />
-            <span className="text-xl font-medium">{linkName4}</span>
-          </NavLink>
+          {user && (
+            <NavLink
+              to="/posts/my-posts"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
+                  : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
+              }
+            >
+              <CgProfile size={30} />
+              <span className="text-xl font-medium">{linkName4}</span>
+            </NavLink>
+          )}
         </ul>
       </div>
     </aside>

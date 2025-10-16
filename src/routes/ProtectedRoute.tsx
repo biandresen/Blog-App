@@ -1,16 +1,12 @@
-// components/ProtectedRoute.tsx
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const { accessToken } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
-  if (!accessToken || accessToken === null || accessToken === "") {
-    // not logged in → redirect to login
-    return <Navigate to="/login" replace />;
-  }
-
+  if (loading) return null; // App.tsx already shows a spinner
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
   return children;
 };
 

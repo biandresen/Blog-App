@@ -2,8 +2,11 @@ import { NavLink } from "react-router-dom";
 
 import homeImg from "../../assets/img/home-img.png";
 import homeContent from "../../text-content/home-page";
+import { useUser } from "../../contexts/UserContext";
 
 const Home = () => {
+  const { user } = useUser();
+
   return (
     <div className="container md:my-auto! md:flex md:flex-row md:justify-center md:items-center sm:gap-5">
       <img
@@ -20,9 +23,15 @@ const Home = () => {
           {homeContent.paragraph}
         </p>
         <div className="flex mt-[calc(1.3rem+2vw)] gap-3 w-full md:flex-row md:w-full justify-between">
-          <NavLink to="/register" className={"bg-[var(--button3)] nav-link"}>
-            {homeContent.button1}
-          </NavLink>
+          {user ? (
+            <NavLink to="/dashboard" className={"bg-[var(--button3)] nav-link"}>
+              {homeContent.button0}
+            </NavLink>
+          ) : (
+            <NavLink to="/login" className={"bg-[var(--button3)] nav-link"}>
+              {homeContent.button1}
+            </NavLink>
+          )}
 
           <NavLink to="/posts" className={"bg-[var(--button2)] nav-link"}>
             {homeContent.button2}

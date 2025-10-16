@@ -37,10 +37,12 @@ export const registerUser = async ({ username, email, password, passwordConfirma
 
 export const loginUser = async ({ userInput, password }: LoginUser) => {
   try {
-    const res = await axios.post(BLOG_API.BASE + BLOG_API.LOGIN, {
-      userInput,
-      password,
-    });
+    const res = await axios.post(
+      BLOG_API.BASE + BLOG_API.LOGIN,
+      { userInput, password },
+      { withCredentials: true } // required for receiving cookie
+    );
+
     return res.data; // success case
   } catch (err: any) {
     if (err.response) {

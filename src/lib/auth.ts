@@ -1,32 +1,37 @@
 import axios from "axios";
 import BLOG_API from "../api/blog-api";
-import { type token } from "../types/context.types";
+import { jwtDecode } from "jwt-decode";
+import { type token, type User } from "../types/context.types";
 
-// The setter function type (you pass it from useAuth)
-type SetAccessToken = (token: token) => void;
+type SetAccessToken = (token: token | null) => void;
+type SetUser = (user: User | null) => void;
 
-// Refresh the access token using the refresh token cookie
-export async function refreshAccessToken(setAccessToken: SetAccessToken) {
+export async function refreshAccessToken(setAccessToken: SetAccessToken, setUser?: SetUser) {
   try {
     const res = await axios.post(
       `${BLOG_API.BASE}/auth/refresh`,
       {},
-      {
-        withCredentials: true, // required to send refresh cookie
-      }
+      { withCredentials: true } // Important for sending refresh cookie
     );
 
-    console.log("RES:", res);
-
     if (res.data.statusCode === 200) {
-      const newAccessToken = res.data.data; // backend sends access token here
+      const newAccessToken = res.data.data;
       setAccessToken(newAccessToken);
+
+      // Optionally decode and set the user
+      if (setUser) {
+        const decoded: User = jwtDecode(newAccessToken);
+        setUser(decoded);
+      }
+
       return newAccessToken;
     }
 
-    return null; // fallback
+    return null;
   } catch (err) {
-    console.error("Failed to refresh token", err);
+    console.error("❌ Failed to refresh token:", err);
+    setAccessToken(null);
+    if (setUser) setUser(null);
     return null;
   }
 }
@@ -46,11 +51,11 @@ export async function safeRequest<T>(
     if (err?.response?.status === 401) {
       const newToken = await refreshAccessToken(setAccessToken);
       if (!newToken) {
-        console.warn("Token refresh failed. User must log in again.");
+        // Optionally clear auth state
+        setAccessToken(null);
         throw new Error("Session expired. Please log in again.");
       }
 
-      // 3️⃣ Retry original request with the new token
       return await apiFunc(newToken, ...args);
     }
 
