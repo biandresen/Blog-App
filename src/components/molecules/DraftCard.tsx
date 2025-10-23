@@ -11,7 +11,7 @@ const DraftCard = ({ id, draftTitle }: DraftCardProps) => {
 
   return (
     <div className="bg-[var(--primary)] p-4 rounded-2xl shadow-md w-55 h-55 flex flex-col justify-self-center">
-      <h3 className="text-2xl font-bold">{id + ". " + draftTitle}</h3>
+      <h3 className="text-2xl font-bold">{draftTitle}</h3>
       <Link to={`/posts/${id}`} className="w-full mt-auto">
         <Button variant="secondary" className="w-full mt-auto mb-3" label={buttonText}>
           {buttonText}

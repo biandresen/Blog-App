@@ -18,9 +18,9 @@ export const PostsProvider = ({ children }: { children: React.ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchPosts = async () => {
-    console.log("Fetching posts...");
     try {
       setLoading(true);
+      console.log("Fetching fresh posts");
       const res = await getAllPosts(1, 10);
       if (res.statusCode !== 200) throw new Error(res.message);
       setPosts(res.data);

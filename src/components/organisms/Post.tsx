@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import { usePosts } from "../../contexts/PostsContext";
+import { safeRequest } from "../../lib/auth";
 
 const Post = ({ post }: { post: PostType }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
@@ -24,7 +25,7 @@ const Post = ({ post }: { post: PostType }) => {
   const [published, setPublished] = useState(post.published);
 
   const { user } = useUser();
-  const { accessToken } = useAuth();
+  const { accessToken, setAccessToken } = useAuth();
   const { refreshPosts } = usePosts();
 
   const isAuthor = post.authorId?.toString() === user?.id.toString();
@@ -33,6 +34,7 @@ const Post = ({ post }: { post: PostType }) => {
   const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
 
   const handleEditInput = () => {
+    setCommentsIsOpen(false);
     setIsEditing(!isEditing);
     setEditedBody(post.body);
     setEditedTitle(post.title);
@@ -43,14 +45,22 @@ const Post = ({ post }: { post: PostType }) => {
     try {
       if (!accessToken) return;
 
-      const res = await editPost(accessToken, postId, newTitle, newBody, published, editedTags);
-      if (res.statusCode !== 200) {
-        throw new Error("Request failed");
-      }
+      const res = await safeRequest(
+        editPost,
+        accessToken,
+        setAccessToken,
+        postId,
+        newTitle,
+        newBody,
+        published,
+        editedTags
+      );
+
+      if (res.statusCode !== 200) throw new Error("Request failed");
+
       setIsEditing(false);
       await refreshPosts();
       toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
-      console.log("Post edited successfully");
     } catch (err: any) {
       toast.error("Failed to edit post");
       console.error("Failed to edit post", err.message);
@@ -61,13 +71,11 @@ const Post = ({ post }: { post: PostType }) => {
     try {
       if (!accessToken) return;
 
-      const res = await deletePost(accessToken, postId);
-      if (res.statusCode !== 200) {
-        throw new Error("Request failed");
-      }
+      const res = await safeRequest(deletePost, accessToken, setAccessToken, postId);
+      if (res.statusCode !== 200) throw new Error("Request failed");
+
       await refreshPosts();
       toast.success("Post deleted!");
-      console.log("Post deleted successfully");
     } catch (err: any) {
       toast.error("Failed to delete post");
       console.error("Failed to delete post", err.message);
@@ -79,15 +87,14 @@ const Post = ({ post }: { post: PostType }) => {
       if (!accessToken) return;
       if (commentId === null) return;
 
-      const res = await editComment(accessToken, commentId, newBody);
-      if (res.statusCode !== 200) {
-        throw new Error("Request failed");
-      }
+      const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody);
+      if (res.statusCode !== 200) throw new Error("Request failed");
+
       setComments((prev) =>
         prev.map((comment) => (comment.id === commentId ? { ...comment, body: newBody } : comment))
       );
+
       toast.success("Comment edited!");
-      console.log("Comment edited successfully");
       setIsEditing(false);
     } catch (err: any) {
       toast.error("Failed to edit comment");
@@ -100,13 +107,11 @@ const Post = ({ post }: { post: PostType }) => {
       if (!accessToken) return;
       if (authorId === null) return;
 
-      const res = await deleteComment(accessToken, commentId);
-      if (res.statusCode !== 200) {
-        throw new Error("Request failed");
-      }
+      const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId);
+      if (res.statusCode !== 200) throw new Error("Request failed");
+
       setComments((prev) => prev.filter((comment) => comment.id !== commentId));
       toast.success("Comment deleted!");
-      console.log("Comment deleted successfully");
     } catch (err: any) {
       toast.error("Failed to delete comment");
       console.error("Failed to delete comment", err.message);
@@ -164,7 +169,7 @@ const Post = ({ post }: { post: PostType }) => {
             type="text"
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
-            className="w-full text-xl xl:text-4xl md:text-3xl/8 font-bold mr-5 p-5 border border-[var(--text1)]-300 rounded-2xl"
+            className="w-full text-xl xl:text-4xl md:text-3xl/8 font-bold mr-5 p-5 border-b"
           />
         ) : (
           <h3 className="text-xl xl:text-4xl md:text-3xl/8">{post.title}</h3>
@@ -182,7 +187,7 @@ const Post = ({ post }: { post: PostType }) => {
           title="Edit post body"
           value={editedBody}
           onChange={(e) => setEditedBody(e.target.value)}
-          className="w-full text-sm md:text-xl p-5 border border-[var(--text1)]-300 rounded-2xl"
+          className="text-sm md:text-xl p-5 border-b w-[90%] ml-10 mt-2"
         />
       ) : (
         <p className="px-5 xl:px-10 py-4 text-sm md:text-xl/7 xl:text-xl">{post.body}</p>
@@ -196,7 +201,7 @@ const Post = ({ post }: { post: PostType }) => {
             title="Edit post tags"
             value={editedTags}
             onChange={(e) => setEditedTags(e.target.value)}
-            className="w-full text-sm md:text-xl p-3 mb-8 mr-5 border border-[var(--text1)]-300 r/Unpublishounded-2xl"
+            className="w-full text-sm md:text-xl p-3 mb-8 mr-5 border-b"
           />
         ) : (
           <p className="bg-[var(--primary)] text-[var(--text2)] text-xs md:text-xl font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto">

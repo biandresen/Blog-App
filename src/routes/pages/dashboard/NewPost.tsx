@@ -3,6 +3,7 @@ import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
 import newPostContent from "../../../text-content/newPost-page";
 import { publishPost, saveDraft } from "../../../lib/axios";
+import { safeRequest } from "../../../lib/auth";
 import { useAuth } from "../../../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { usePosts } from "../../../contexts/PostsContext";
@@ -14,7 +15,7 @@ const NewPost = () => {
 
   const formError = title === "" || content === "";
 
-  const { accessToken } = useAuth();
+  const { accessToken, setAccessToken } = useAuth();
   const { refreshPosts } = usePosts();
 
   const resetForm = () => {
@@ -34,11 +35,13 @@ const NewPost = () => {
       return;
     }
     try {
-      const res = await saveDraft(
+      const res = await safeRequest(
+        saveDraft,
         accessToken,
+        setAccessToken,
         title,
         content,
-        tags.split(",").map((tag) => tag.trim())
+        tags?.split(",").map((tag) => tag.trim())
       );
       if (res.statusCode !== 200) {
         toast.error(res.message);
@@ -67,8 +70,10 @@ const NewPost = () => {
       return;
     }
     try {
-      const res = await publishPost(
+      const res = await safeRequest(
+        publishPost,
         accessToken,
+        setAccessToken,
         title,
         content,
         tags.split(",").map((tag) => tag.trim())

@@ -5,13 +5,14 @@ import { getCurrentUserDrafts } from "../../../lib/axios";
 import { useAuth } from "../../../contexts/AuthContext";
 import { toast } from "react-toastify";
 import Spinner from "../../../components/atoms/Spinner";
+import { safeRequest } from "../../../lib/auth";
 
 const Drafts = () => {
   const [drafts, setDrafts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { accessToken } = useAuth();
+  const { accessToken, setAccessToken } = useAuth();
 
   if (!accessToken) {
     return <p className="text-center mt-10 text-[var(--text1)]">Please log in to view your drafts.</p>;
@@ -19,20 +20,29 @@ const Drafts = () => {
 
   const fetchDrafts = async () => {
     setLoading(true);
+
     if (!accessToken) {
       toast.error("You must be logged in to fetch drafts.");
+      setLoading(false);
       return;
     }
+
     try {
-      const res = await getCurrentUserDrafts(accessToken, 1, 10);
+      // Use safeRequest to auto-refresh token if expired
+      const res = await safeRequest(
+        getCurrentUserDrafts, // your API function
+        accessToken,
+        setAccessToken, // your state updater
+        1, // page
+        10 // limit
+      );
+
       if (res.statusCode === 200) {
         setDrafts(res.data);
         setError(null);
       }
     } catch (err: any) {
-      if (err.message.includes("token")) {
-        toast.error("Your session has expired. Please log in again.");
-      }
+      toast.error(err.message || "Failed to fetch drafts.");
       console.error("Failed to fetch drafts", err);
     } finally {
       setLoading(false);

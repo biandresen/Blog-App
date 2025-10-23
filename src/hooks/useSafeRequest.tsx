@@ -31,8 +31,8 @@ export function useSafeRequest<T>(
       setLoading(true);
       setError(null);
       try {
-        const result = await safeRequest(apiFunc, accessToken, setAccessToken, ...args);
-        setData(result);
+        const res = await safeRequest(apiFunc, accessToken, setAccessToken, ...args);
+        setData(res);
       } catch (err: any) {
         setError(err.message || "Something went wrong");
       } finally {

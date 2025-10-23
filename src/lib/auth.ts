@@ -11,7 +11,7 @@ export async function refreshAccessToken(setAccessToken: SetAccessToken, setUser
     const res = await axios.post(
       `${BLOG_API.BASE}/auth/refresh`,
       {},
-      { withCredentials: true } // Important for sending refresh cookie
+      { withCredentials: true } // For sending refresh cookie
     );
 
     if (res.data.statusCode === 200) {

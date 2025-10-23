@@ -27,7 +27,7 @@ const Login = () => {
   const navigate = useNavigate();
   const invalidForm = !input1Valid || !input2Valid || !userInput || !password;
 
-  const { setAccessToken } = useAuth();
+  const { setAccessToken, setIsAuthenticated } = useAuth();
   const { setUser } = useUser();
 
   useEffect(() => {
@@ -46,6 +46,7 @@ const Login = () => {
 
       // Save access token
       setAccessToken(res.data);
+      setIsAuthenticated(true);
 
       // OPTION 1: Decode token
       const payload: User = jwtDecode(res.data);
@@ -130,14 +131,15 @@ const Login = () => {
               size="zero"
               className="bg-transparent absolute left-27 top-2"
             >
-              {showPassword ?
+              {showPassword ? (
                 <FaEye onClick={() => setShowPassword((s) => !s)} size={20} className="text-[var(--text1)]" />
-              : <FaEyeSlash
+              ) : (
+                <FaEyeSlash
                   onClick={() => setShowPassword((s) => !s)}
                   size={20}
                   className="text-[var(--text1)]"
                 />
-              }
+              )}
             </Button>
           </div>
 

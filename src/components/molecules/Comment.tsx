@@ -1,10 +1,10 @@
+import { useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 
 import { type CommentProps } from "../../types/components.types";
 import { useUser } from "../../contexts/UserContext";
-import { useRef, useState } from "react";
 
 const Comment = ({
   commentId,
@@ -66,7 +66,7 @@ const Comment = ({
           </div>
         </div>
         <div className="flex bg-[var(--bg)] px-4 py-3 rounded-2xl rounded-tr-none xl:rounded-tr-2xl rounded-tl-none w-full relative">
-          {isEditing ?
+          {isEditing ? (
             <textarea
               ref={textRef}
               aria-label="Edit comment"
@@ -74,7 +74,9 @@ const Comment = ({
               value={editedComment}
               onChange={(e) => handleEditInput(e.target.value)}
             />
-          : <p className="text-wrap text-xs md:text-lg/6">{comment}</p>}
+          ) : (
+            <p className="text-wrap text-xs md:text-lg/6">{comment}</p>
+          )}
           {isEditing && (
             <button
               type="button"

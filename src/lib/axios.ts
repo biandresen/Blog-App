@@ -67,70 +67,40 @@ export const getCurrentUserDrafts = async (accessToken: token, page: number, lim
     );
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
 export const deleteUser = async (accessToken: token, id: number | string) => {
   try {
     const res = await axios.delete(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
 export const updateUser = async (accessToken: token, id: number | string, ...updates: UserUpdates[]) => {
   try {
     const res = await axios.patch(BLOG_API.BASE + BLOG_API.USER + `/${id}`, ...updates, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
 export const getUserByNameOrEmail = async (accessToken: token, userInput: string) => {
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.USERINPUT + `/${userInput}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
@@ -138,41 +108,23 @@ export const reactivateUser = async (accessToken: token, id: number | string) =>
   try {
     const res = await axios.patch(
       BLOG_API.BASE + BLOG_API.USER + `/${id}/reactivate`,
-      {}, //Empty patch body
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      {},
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
 export const deactivateUser = async (accessToken: token, id: number | string) => {
   try {
     const res = await axios.delete(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
@@ -180,27 +132,12 @@ export const saveDraft = async (accessToken: token, title: string, body: string,
   try {
     const res = await axios.post(
       BLOG_API.BASE + BLOG_API.POSTS,
-      {
-        title,
-        body,
-        published: false,
-        tags,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      { title, body, published: false, tags },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
@@ -208,33 +145,18 @@ export const publishPost = async (accessToken: token, title: string, body: strin
   try {
     const res = await axios.post(
       BLOG_API.BASE + BLOG_API.POSTS,
-      {
-        title,
-        body,
-        published: true,
-        tags,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      { title, body, published: true, tags },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
 export const getAllPosts = async (page: number, limit: number) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=asc`);
+    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=desc`);
     return res.data;
   } catch (err: any) {
     if (err.response) {
@@ -251,24 +173,12 @@ export const addComment = async (accessToken: token, authorId: number, comment: 
   try {
     const res = await axios.post(
       BLOG_API.BASE + BLOG_API.POSTS + `/${authorId}` + BLOG_API.COMMENTS,
-      {
-        comment,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      { comment },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    return res.data; // success case
+    return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
@@ -276,43 +186,23 @@ export const editComment = async (accessToken: token, commentId: number, comment
   try {
     const res = await axios.patch(
       BLOG_API.BASE + BLOG_API.COMMENTS + `/${commentId}`,
-      {
-        comment,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      { comment },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    return res.data; // success case
+    return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
 export const deleteComment = async (accessToken: token, commentId: number) => {
   try {
     const res = await axios.delete(BLOG_API.BASE + BLOG_API.COMMENTS + `/${commentId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
-    return res.data; // success case
+    return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
@@ -327,46 +217,23 @@ export const editPost = async (
   try {
     const res = await axios.patch(
       BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`,
-      {
-        title,
-        body,
-        published,
-        tags,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      { title, body, published, tags },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    return res.data; // success case
+    return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
 export const deletePost = async (accessToken: token, postId: number) => {
   try {
     const res = await axios.delete(BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
-    return res.data; // success case
+    return res.data;
   } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 
@@ -391,23 +258,15 @@ export const getAllUserPosts = async (authorId: number, page: number, limit: num
   }
 };
 
-// 🧩 Accept accessToken as first argument (used by safeRequest)
 export const getPost = async (accessToken: token, postId: number) => {
   try {
     const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}/${postId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      withCredentials: true, // send cookies if needed
+      headers: { Authorization: `Bearer ${accessToken}` },
+      withCredentials: true,
     });
-
     return res.data;
   } catch (err: any) {
-    if (err.response) {
-      return Promise.reject(err.response.data);
-    } else {
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+    throw err;
   }
 };
 

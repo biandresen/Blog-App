@@ -7,6 +7,7 @@ import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
 import adminContent from "../../../text-content/admin-page";
 import { deactivateUser, getUserByNameOrEmail, reactivateUser } from "../../../lib/axios";
+import { safeRequest } from "../../../lib/auth";
 import { type User } from "../../../types/context.types";
 
 type FetchedUser = User & {
@@ -14,11 +15,10 @@ type FetchedUser = User & {
 };
 
 const Admin = () => {
-  // Values
   const [userInput, setUserInput] = useState<string>("");
   const [fetchedUser, setFetchedUser] = useState<FetchedUser | null>(null);
 
-  const { accessToken } = useAuth();
+  const { accessToken, setAccessToken } = useAuth();
 
   const handleRemoveFetchedUser = () => {
     setFetchedUser(null);
@@ -32,7 +32,7 @@ const Admin = () => {
       return;
     }
     try {
-      const res = await getUserByNameOrEmail(accessToken, userInput);
+      const res = await safeRequest(getUserByNameOrEmail, accessToken, setAccessToken, userInput);
       if (res.statusCode !== 200) {
         toast.error(res.message);
         throw new Error("Request failed");
@@ -48,18 +48,18 @@ const Admin = () => {
 
   const handleReactivateUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!accessToken) {
+    if (!accessToken || !fetchedUser) {
       toast.error("You must be logged in to reactivate a user.");
       return;
     }
     try {
-      const res = await reactivateUser(accessToken, Number(fetchedUser?.id));
+      const res = await safeRequest(reactivateUser, accessToken, setAccessToken, Number(fetchedUser.id));
       if (res.statusCode !== 200) {
         toast.error(res.message);
         throw new Error("Request failed");
       }
       setFetchedUser(res.data);
-      toast.success(`User ${fetchedUser?.username} activated!`);
+      toast.success(`User ${fetchedUser.username} activated!`);
     } catch (error) {
       console.error("Failed to activate user", error);
       toast.error("Failed to activate user");
@@ -68,18 +68,18 @@ const Admin = () => {
 
   const handleDeactivateUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!accessToken) {
+    if (!accessToken || !fetchedUser) {
       toast.error("You must be logged in to deactivate a user.");
       return;
     }
     try {
-      const res = await deactivateUser(accessToken, Number(fetchedUser?.id));
+      const res = await safeRequest(deactivateUser, accessToken, setAccessToken, Number(fetchedUser.id));
       if (res.statusCode !== 200) {
         toast.error(res.message);
         throw new Error("Request failed");
       }
       setFetchedUser(res.data);
-      toast.success(`User ${fetchedUser?.username} deactivated!`);
+      toast.success(`User ${fetchedUser.username} deactivated!`);
     } catch (error) {
       console.error("Failed to deactivate user", error);
       toast.error("Failed to deactivate user");

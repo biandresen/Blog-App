@@ -10,6 +10,9 @@ import { deleteUser, updateUser } from "../../../lib/axios";
 import type { UserUpdates } from "../../../types/general.types";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { passwordValidator, userInputValidator, usernameValidator } from "../../../validators/auth";
+import { useNavigate } from "react-router-dom";
+import { safeRequest } from "../../../lib/auth";
+import Modal from "../../../components/molecules/Modal";
 
 const Profile = () => {
   const { user, setUser } = useUser();
@@ -17,6 +20,8 @@ const Profile = () => {
   const infoListItemsVariables = [user?.username, user?.email];
 
   // Values
+  const [showModal, setShowModal] = useState(false);
+
   const [username, setUsername] = useState<string>(user?.username || "");
   const [email, setEmail] = useState<string>(user?.email || "");
   const [password, setPassword] = useState<string>();
@@ -36,49 +41,78 @@ const Profile = () => {
   const [input4Valid, setInput4Valid] = useState<boolean>(true);
   const [errorMsg4, setErrorMsg4] = useState<string>("");
 
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     setUser(null);
     setAccessToken(null);
+    navigate("/login");
     toast.info("You have been logged out.");
     console.log("User logged out");
   };
 
   const handleDeleteProfile = async () => {
     try {
-      console.log(user?.id);
-      const res = await deleteUser(accessToken, Number(user?.id));
+      const res = await safeRequest(deleteUser, accessToken, setAccessToken, Number(user?.id));
+
       if (res.statusCode !== 200) {
         toast.error(res.message);
-        throw new Error("Registration failed");
+        throw new Error("Deletion failed");
       }
+
       toast.success("Your profile has been deleted.");
       setUser(null);
+      setAccessToken(null);
+      navigate("/login");
     } catch (error) {
       console.error("Failed to delete profile", error);
+      toast.error("Failed to delete profile");
     }
-    setAccessToken(null);
+    setShowModal(false);
   };
 
-  const handleUpdateUser = (e: React.FormEvent) => {
+  const handleDeleteButton = () => {
+    setShowModal(true);
+  };
+
+  const handleUpdateUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateUser(accessToken, Number(user?.id), { username, email, password, avatar } as UserUpdates)
-      .then((res) => {
-        if (res.statusCode !== 200) {
-          toast.error(res.message);
-          throw new Error("Update failed");
-        }
-        toast.success("Profile updated successfully!");
-        const { password, ...updatedUser } = res.data; // Exclude password from user context
-        setUser({ id: user?.id, ...updatedUser });
-      })
-      .catch((err) => {
-        console.error("Failed to update profile", err);
-        toast.error("Failed to update profile");
-      });
+
+    try {
+      const res = await safeRequest(updateUser, accessToken, setAccessToken, Number(user?.id), {
+        username,
+        email,
+        password,
+        avatar,
+      } as UserUpdates);
+
+      if (res.statusCode !== 200) {
+        toast.error(res.message);
+        throw new Error("Update failed");
+      }
+
+      toast.success("Profile updated successfully!");
+      const { password: _, ...updatedUser } = res.data; // exclude password
+      setUser({ id: user?.id, ...updatedUser });
+    } catch (err) {
+      console.error("Failed to update profile", err);
+      toast.error("Failed to update profile");
+    }
+
     console.log("Form submitted with:", { username, email, avatar });
   };
+
   return (
     <div className="container inputInfo-container">
+      <Modal
+        isOpen={showModal}
+        title="Delete Post"
+        message="Are you sure you want to delete this user? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteProfile}
+        onCancel={() => setShowModal(false)}
+      />
       <div>
         <div className="info-container flex flex-col">
           <div className="flex flex-col-reverse md:flex-row">
@@ -107,7 +141,7 @@ const Profile = () => {
             <Button
               type="button"
               variant="error"
-              onClick={handleDeleteProfile}
+              onClick={handleDeleteButton}
               className="w-full"
               label={profileContent.button3}
             >
@@ -172,14 +206,15 @@ const Profile = () => {
               size="zero"
               className="bg-transparent absolute left-27 top-2"
             >
-              {showPassword ?
+              {showPassword ? (
                 <FaEye onClick={() => setShowPassword((s) => !s)} size={20} className="text-[var(--text1)]" />
-              : <FaEyeSlash
+              ) : (
+                <FaEyeSlash
                   onClick={() => setShowPassword((s) => !s)}
                   size={20}
                   className="text-[var(--text1)]"
                 />
-              }
+              )}
             </Button>
           </div>
           {passwordErrors.length > 0 && (

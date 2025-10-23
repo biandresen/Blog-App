@@ -9,15 +9,15 @@ import App from "./App.tsx";
 import { PostsProvider } from "./contexts/PostsContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <ColorThemeProvider>
-      <AuthProvider>
-        <UserProvider>
-          <PostsProvider>
-            <App />
-          </PostsProvider>
-        </UserProvider>
-      </AuthProvider>
-    </ColorThemeProvider>
-  </StrictMode>
+  // <StrictMode>
+  <ColorThemeProvider>
+    <AuthProvider>
+      <UserProvider>
+        <PostsProvider>
+          <App />
+        </PostsProvider>
+      </UserProvider>
+    </AuthProvider>
+  </ColorThemeProvider>
+  // </StrictMode>
 );

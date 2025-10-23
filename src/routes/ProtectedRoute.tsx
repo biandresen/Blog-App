@@ -5,7 +5,7 @@ import { type ReactNode } from "react";
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
 
-  if (loading) return null; // App.tsx already shows a spinner
+  if (loading) return null;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   return children;
 };

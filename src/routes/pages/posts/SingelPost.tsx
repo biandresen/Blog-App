@@ -12,25 +12,25 @@ const SinglePost = () => {
   const { posts } = usePosts();
   const { user } = useUser();
 
-  // Step 1️⃣ Try to find post in context for instant display
+  // Try to find post in context for instant display
   const contextPost = posts.find((p) => p.id === Number(postId));
 
-  // Step 2️⃣ Fetch post safely if not found in context
+  // Fetch post safely if not found in context
   const { data: fetchedPost, error, loading } = useSafeRequest(getPost, Number(postId));
 
-  // Step 3️⃣ Choose which post to show (context or fetched)
-  const post = contextPost ?? fetchedPost;
+  // Choose which post to show (context or fetched)
+  const post = contextPost ?? fetchedPost?.data;
   const isAuthor = post?.authorId?.toString() === user?.id.toString();
   const isDraft = post?.published === false;
 
-  // Step 4️⃣ Handle errors and loading
+  // Handle errors and loading
   if (loading) return <Spinner />;
   if (error) {
     toast.error(error);
     return <h3 className="text-center text-[var(--error)]">Failed to load post</h3>;
   }
 
-  // Step 5️⃣ Render post
+  // Render post
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">POST DETAILS</h2>
