@@ -14,6 +14,8 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import { usePosts } from "../../contexts/PostsContext";
 import { safeRequest } from "../../lib/auth";
+import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
+import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 
 const Post = ({ post }: { post: PostType }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
@@ -32,6 +34,35 @@ const Post = ({ post }: { post: PostType }) => {
   const isAdmin = user?.role.toString() === "ADMIN";
 
   const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
+
+  const { ref: textRef, handleInput } = useAutoResizeTextarea(editedBody, isEditing);
+
+  const handleTitleEnter = useSubmitOnEnter(() =>
+    handleEditPost(
+      post.id,
+      editedTitle,
+      editedBody,
+      editedTags.split(",").map((t) => t.trim())
+    )
+  );
+
+  const handleBodyEnter = useSubmitOnEnter(() =>
+    handleEditPost(
+      post.id,
+      editedTitle,
+      editedBody,
+      editedTags.split(",").map((t) => t.trim())
+    )
+  );
+
+  const handleTagsEnter = useSubmitOnEnter(() =>
+    handleEditPost(
+      post.id,
+      editedTitle,
+      editedBody,
+      editedTags.split(",").map((t) => t.trim())
+    )
+  );
 
   const handleEditInput = () => {
     setCommentsIsOpen(false);
@@ -168,11 +199,12 @@ const Post = ({ post }: { post: PostType }) => {
             title="Edit post title"
             type="text"
             value={editedTitle}
+            onKeyDown={handleTitleEnter}
             onChange={(e) => setEditedTitle(e.target.value)}
             className="w-full text-xl xl:text-4xl md:text-3xl/8 font-bold mr-5 p-5 border-b"
           />
         ) : (
-          <h3 className="text-xl xl:text-4xl md:text-3xl/8">{post.title}</h3>
+          <h3 className="text-xl xl:text-4xl md:text-3xl/8 mt-auto">{post.title}</h3>
         )}
         <div className="grid place-items-center mb-5 xl:mb-0 md:ml-auto">
           <CgProfile size={40} />
@@ -183,14 +215,19 @@ const Post = ({ post }: { post: PostType }) => {
       <hr className="text-[var(--text1)] opacity-20" />
       {isEditing ? (
         <textarea
+          ref={textRef}
           aria-label="Edit post body"
           title="Edit post body"
           value={editedBody}
-          onChange={(e) => setEditedBody(e.target.value)}
-          className="text-sm md:text-xl p-5 border-b w-[90%] ml-10 mt-2"
+          onKeyDown={handleBodyEnter}
+          onChange={(e) => {
+            setEditedBody(e.target.value);
+            handleInput();
+          }}
+          className="text-sm md:text-xl p-5 border-b w-[90%] ml-10 mt-2 resize-none overflow-hidden"
         />
       ) : (
-        <p className="px-5 xl:px-10 py-4 text-sm md:text-xl/7 xl:text-xl">{post.body}</p>
+        <p className="px-5 xl:px-10 py-4 text-sm md:text-xl/7 xl:text-xl whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
       )}
       <hr className="text-[var(--text1)] opacity-20" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between items-center px-5 xl:px-10 py-5">
@@ -200,6 +237,7 @@ const Post = ({ post }: { post: PostType }) => {
             aria-label="Edit post tags"
             title="Edit post tags"
             value={editedTags}
+            onKeyDown={handleTagsEnter}
             onChange={(e) => setEditedTags(e.target.value)}
             className="w-full text-sm md:text-xl p-3 mb-8 mr-5 border-b"
           />

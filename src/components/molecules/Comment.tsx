@@ -1,10 +1,12 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 
 import { type CommentProps } from "../../types/components.types";
 import { useUser } from "../../contexts/UserContext";
+import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
+import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 
 const Comment = ({
   commentId,
@@ -18,20 +20,24 @@ const Comment = ({
 }: CommentProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editedComment, setEditedComment] = useState<string>(comment);
-  const textRef = useRef(null);
 
   const { user } = useUser();
+
+  const { ref: textRef, handleInput } = useAutoResizeTextarea(editedComment, isEditing);
 
   const isAuthor = authorId?.toString() === user?.id.toString();
   const isAdmin = user?.role.toString() === "ADMIN";
 
-  const handleEditInput = (input: string) => {
-    if (!textRef.current) return;
-    const el = textRef.current as HTMLTextAreaElement;
-    el.style.height = "auto"; // reset
-    el.style.height = `${el.scrollHeight}px`; // grow
-    setEditedComment(input);
+  const handleSubmit = () => {
+    if (comment === editedComment) {
+      setIsEditing(false);
+      return;
+    }
+    onEdit(commentId, editedComment);
+    setIsEditing(false);
   };
+
+  const handleKeyDown = useSubmitOnEnter(handleSubmit);
 
   return (
     <div className="px-0 xl:px-10 pb-6">
@@ -72,10 +78,14 @@ const Comment = ({
               aria-label="Edit comment"
               className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-xl"
               value={editedComment}
-              onChange={(e) => handleEditInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => {
+                setEditedComment(e.target.value);
+                handleInput();
+              }}
             />
           ) : (
-            <p className="text-wrap text-xs md:text-lg/6">{comment}</p>
+            <p className="text-wrap text-xs md:text-lg/6 whitespace-break-spaces">{comment}</p>
           )}
           {isEditing && (
             <button
