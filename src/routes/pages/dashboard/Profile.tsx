@@ -1,18 +1,20 @@
 import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
 import profileContent from "../../../text-content/profile-page";
 import { useUser } from "../../../contexts/UserContext";
 import { useAuth } from "../../../contexts/AuthContext";
 import { deleteUser, updateUser } from "../../../lib/axios";
-import type { UserUpdates } from "../../../types/general.types";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { passwordValidator, userInputValidator, usernameValidator } from "../../../validators/auth";
 import { useNavigate } from "react-router-dom";
 import { safeRequest } from "../../../lib/auth";
 import Modal from "../../../components/molecules/Modal";
+
+const MAX_AVATAR_SIZE = 2 * 1024 * 1024; // 2MB
 
 const Profile = () => {
   const { user, setUser } = useUser();
@@ -25,7 +27,7 @@ const Profile = () => {
   const [username, setUsername] = useState<string>(user?.username || "");
   const [email, setEmail] = useState<string>(user?.email || "");
   const [password, setPassword] = useState<string>();
-  const [avatar, setAvatar] = useState<string>(user?.avatar || "");
+  const [avatar, setAvatar] = useState<File | null>(null);
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -38,8 +40,8 @@ const Profile = () => {
 
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
-  const [input4Valid, setInput4Valid] = useState<boolean>(true);
-  const [errorMsg4, setErrorMsg4] = useState<string>("");
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -78,28 +80,25 @@ const Profile = () => {
   const handleUpdateUser = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const res = await safeRequest(updateUser, accessToken, setAccessToken, Number(user?.id), {
-        username,
-        email,
-        password,
-        avatar,
-      } as UserUpdates);
+    const updates: any = { username, email, password };
+    if (avatar) updates.avatar = avatar;
 
-      if (res.statusCode !== 200) {
-        toast.error(res.message);
-        throw new Error("Update failed");
-      }
+    try {
+      const res = await safeRequest(updateUser, accessToken, setAccessToken, Number(user?.id), updates);
+
+      if (res.statusCode !== 200) throw new Error(res.message);
 
       toast.success("Profile updated successfully!");
-      const { password: _, ...updatedUser } = res.data; // exclude password
+      const { password: _, ...updatedUser } = res.data;
       setUser({ id: user?.id, ...updatedUser });
-    } catch (err) {
+    } catch (err: any) {
+      if (err?.response?.data.message === "File too large") {
+        toast.error("Avatar file size exceeds the limit. Max size is 2MB.");
+        return;
+      }
       console.error("Failed to update profile", err);
       toast.error("Failed to update profile");
     }
-
-    console.log("Form submitted with:", { username, email, avatar });
   };
 
   return (
@@ -228,22 +227,43 @@ const Profile = () => {
             id="avatar"
             type="file"
             label="Avatar"
-            value={avatar}
-            errorMsg={errorMsg4}
-            inputValid={input4Valid}
+            accept="image/*"
             onChange={(e) => {
-              const value = e.target.value;
-              setAvatar(value);
-              const isValid = value === password && value.length >= 6;
-              setInput4Valid(isValid);
-              setErrorMsg4(isValid ? "" : "Avatar must be a valid image file");
+              const file = e.target.files?.[0];
+
+              if (!file) {
+                setAvatar(null);
+                setAvatarPreview(null);
+                setAvatarError("");
+                return;
+              }
+
+              if (file.size > MAX_AVATAR_SIZE) {
+                setAvatar(null);
+                setAvatarPreview(null);
+                setAvatarError("Avatar file size exceeds 2MB. Choose a smaller file.");
+                return;
+              }
+
+              setAvatar(file);
+              setAvatarError("");
+              // create a temporary preview URL
+              setAvatarPreview(URL.createObjectURL(file));
             }}
           />
+
+          {/* Preview */}
+          {avatarPreview && (
+            <img src={avatarPreview} alt="Avatar Preview" className="rounded-full w-20 h-20 object-cover" />
+          )}
+          {avatarError && <p className="text-red-500">{avatarError}</p>}
+
           <Button
             type="submit"
             onClick={handleUpdateUser}
             className="w-full mt-7"
             label={profileContent.button1}
+            disabled={!!avatarError} // disable if avatar too big
           >
             {profileContent.button1}
           </Button>

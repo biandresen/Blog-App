@@ -82,9 +82,34 @@ export const deleteUser = async (accessToken: token, id: number | string) => {
   }
 };
 
-export const updateUser = async (accessToken: token, id: number | string, ...updates: UserUpdates[]) => {
+// export const updateUser = async (accessToken: token, id: number | string, ...updates: UserUpdates[]) => {
+//   try {
+//     const res = await axios.patch(BLOG_API.BASE + BLOG_API.USER + `/${id}`, ...updates, {
+//       headers: { Authorization: `Bearer ${accessToken}` },
+//     });
+//     return res.data;
+//   } catch (err: any) {
+//     throw err;
+//   }
+// };
+
+export const updateUser = async (
+  accessToken: string | null,
+  id: number | string,
+  updates: Record<string, any>
+) => {
+  if (!accessToken) throw new Error("No access token provided");
+
+  const formData = new FormData();
+
+  Object.entries(updates).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      formData.append(key, value);
+    }
+  });
+
   try {
-    const res = await axios.patch(BLOG_API.BASE + BLOG_API.USER + `/${id}`, ...updates, {
+    const res = await axios.patch(`${BLOG_API.BASE}${BLOG_API.USER}/${id}`, formData, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;

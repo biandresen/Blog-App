@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { addComment } from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { safeRequest } from "../../lib/auth";
+import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 
 const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const [body, setBody] = useState("");
@@ -52,6 +53,8 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
     }
   };
 
+  const handleKeyDown = useSubmitOnEnter(() => handleSubmit(new Event("submit") as any));
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -61,6 +64,7 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder="Write a comment..."
+        onKeyDown={handleKeyDown}
         className="rounded-2xl p-3 w-full bg-[var(--bg)] mb-3"
       />
       <Button variant="tertiary" label="Post comment" type="submit" disabled={loading}>

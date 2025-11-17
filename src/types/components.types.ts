@@ -16,6 +16,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export interface InputProps {
   id: string;
   label: string;
+  accept?: string;
   type?: "text" | "email" | "password" | "number" | "file";
   value?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;

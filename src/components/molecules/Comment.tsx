@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { CgProfile } from "react-icons/cg";
+
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
-
+import Avatar from "../atoms/Avatar";
+import { CgProfile } from "react-icons/cg";
 import { type CommentProps } from "../../types/components.types";
 import { useUser } from "../../contexts/UserContext";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
@@ -43,7 +44,7 @@ const Comment = ({
     <div className="px-0 xl:px-10 pb-6">
       <div className="text-[var(--text1)]">
         <div className="flex bg-[var(--bg)] w-full px-3 pt-2 xl:w-fit rounded-tl-3xl rounded-tr-3xl">
-          <CgProfile size={40} />
+          {avatar ? <Avatar size={40} avatarUrl={avatar} /> : <CgProfile size={40} />}
           <div className="ml-1">
             <p className="font-bold">{username}</p>
             <p className="text-xs">{date}</p>

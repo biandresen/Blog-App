@@ -16,6 +16,7 @@ import { usePosts } from "../../contexts/PostsContext";
 import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
+import Avatar from "../atoms/Avatar";
 
 const Post = ({ post }: { post: PostType }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
@@ -207,7 +208,7 @@ const Post = ({ post }: { post: PostType }) => {
           <h3 className="text-xl xl:text-4xl md:text-3xl/8 mt-auto">{post.title}</h3>
         )}
         <div className="grid place-items-center mb-5 xl:mb-0 md:ml-auto">
-          <CgProfile size={40} />
+          <Avatar avatarUrl={post.user.avatar} size={40} />
           <p className="font-bold">{post.user.username}</p>
           <p className="text-xs">{formatDate(post.createdAt)}</p>
         </div>

@@ -6,6 +6,7 @@ const Input = ({
   id,
   label,
   type = "text",
+  accept,
   value,
   onChange,
   inputValid,
@@ -35,6 +36,7 @@ const Input = ({
           placeholder={placeholder}
           required={required}
           disabled={disabled}
+          accept={accept}
           // aria-invalid={!inputValid}
           className={`bg-[var(--bg)] text-[var(--text1)] font-semibold rounded-full w-full text-lg md:text-xl px-3 py-0.5 pr-9
             outline-none border
@@ -44,18 +46,18 @@ const Input = ({
           `}
         />
 
-        {inputValid === true && hasValue ?
+        {inputValid === true && hasValue ? (
           <FaRegCheckCircle size={22} className="absolute right-2 text-[var(--success)]" aria-hidden />
-        : null}
-        {inputValid === false && hasValue ?
+        ) : null}
+        {inputValid === false && hasValue ? (
           <RxCrossCircled size={22} className="absolute right-2 text-[var(--error)]" aria-hidden />
-        : null}
+        ) : null}
       </div>
-      {errorMsg && hasValue ?
+      {errorMsg && hasValue ? (
         <p className="text-[0.9rem] text-[var(--error)] mb-2" role="alert">
           {errorMsg}
         </p>
-      : null}
+      ) : null}
     </div>
   );
 };
