@@ -8,7 +8,7 @@ import Button from "../../../components/atoms/Button";
 import profileContent from "../../../text-content/profile-page";
 import { useUser } from "../../../contexts/UserContext";
 import { useAuth } from "../../../contexts/AuthContext";
-import { deleteUser, updateUser } from "../../../lib/axios";
+import { deleteUser, logoutUser, updateUser } from "../../../lib/axios";
 import { passwordValidator, userInputValidator, usernameValidator } from "../../../validators/auth";
 import { useNavigate } from "react-router-dom";
 import { safeRequest } from "../../../lib/auth";
@@ -48,6 +48,7 @@ const Profile = () => {
   const handleLogout = () => {
     setUser(null);
     setAccessToken(null);
+    logoutUser();
     navigate("/login");
     toast.info("You have been logged out.");
     console.log("User logged out");

@@ -1,7 +1,6 @@
 import axios from "axios";
 import BLOG_API from "../api/blog-api";
 import type { token } from "../types/context.types";
-import type { UserUpdates } from "../types/general.types";
 
 type RegisterUser = {
   username: string;
@@ -40,6 +39,26 @@ export const loginUser = async ({ userInput, password }: LoginUser) => {
     const res = await axios.post(
       BLOG_API.BASE + BLOG_API.LOGIN,
       { userInput, password },
+      { withCredentials: true } // required for receiving cookie
+    );
+
+    return res.data; // success case
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    const res = await axios.post(
+      BLOG_API.BASE + BLOG_API.LOGOUT,
+      {},
       { withCredentials: true } // required for receiving cookie
     );
 
