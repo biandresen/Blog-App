@@ -13,6 +13,7 @@ import { passwordValidator, userInputValidator, usernameValidator } from "../../
 import { useNavigate } from "react-router-dom";
 import { safeRequest } from "../../../lib/auth";
 import Modal from "../../../components/molecules/Modal";
+import Avatar from "../../../components/atoms/Avatar";
 
 const MAX_AVATAR_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -102,6 +103,8 @@ const Profile = () => {
     }
   };
 
+  console.log(user);
+
   return (
     <div className="container inputInfo-container">
       <Modal
@@ -115,9 +118,9 @@ const Profile = () => {
       />
       <div>
         <div className="info-container flex flex-col">
-          <div className="flex flex-col-reverse md:flex-row">
-            <h2 className="text-2xl md:text-4xl my-3">{profileContent.infoHeading}</h2>
-            <CgProfile size={60} className="lg:ml-30" />
+          <div className="flex flex-col-reverse md:flex-row ">
+            <h2 className="text-2xl md:text-4xl my-3 lg:mr-10">{profileContent.infoHeading}</h2>
+            {user?.avatar ? <Avatar size={80} avatarUrl={user?.avatar} /> : <CgProfile size={60} />}
           </div>
           <div className="mb-10 md:mb-0">
             <ul>

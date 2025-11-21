@@ -20,14 +20,3 @@ export const useUser = () => {
   }
   return context;
 };
-
-// Dummy user for testing purposes
-// const user1: User = {
-//   id: "1",
-//   username: "John",
-//   email: "john@gmail.com",
-//   avatar: ".jpg",
-//   role: "USER",
-//   createdAt: "201192",
-//   updatedAt: "051225",
-// };

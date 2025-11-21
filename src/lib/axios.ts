@@ -1,6 +1,6 @@
 import axios from "axios";
 import BLOG_API from "../api/blog-api";
-import type { token } from "../types/context.types";
+import type { token, User } from "../types/context.types";
 
 type RegisterUser = {
   username: string;
@@ -140,6 +140,17 @@ export const updateUser = async (
 export const getUserByNameOrEmail = async (accessToken: token, userInput: string) => {
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.USERINPUT + `/${userInput}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getUserById = async (accessToken: token, id: number) => {
+  try {
+    const res = await axios.get(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
