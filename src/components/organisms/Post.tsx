@@ -208,7 +208,7 @@ const Post = ({ post }: { post: PostType }) => {
           <h3 className="text-xl xl:text-4xl md:text-3xl/8 mt-auto">{post.title}</h3>
         )}
         <div className="grid place-items-center mb-5 xl:mb-0 md:ml-auto">
-          {post.user.avatar ? <Avatar avatarUrl={post.user.avatar} size={40} /> : <CgProfile size={40} />}
+          {user?.avatar ? <Avatar avatarUrl={user.avatar} size={40} /> : <CgProfile size={40} />}
           <p className="font-bold">{post.user.username}</p>
           <p className="text-xs">{formatDate(post.createdAt)}</p>
         </div>
