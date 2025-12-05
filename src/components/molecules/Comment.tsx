@@ -45,7 +45,7 @@ const Comment = ({
       <div className="text-[var(--text1)]">
         <div className="flex bg-[var(--bg)] w-full px-3 pt-2 xl:w-fit rounded-tl-3xl rounded-tr-3xl">
           {avatar ? <Avatar size={40} avatarUrl={avatar} /> : <CgProfile size={40} />}
-          <div className="ml-1">
+          <div className="ml-2">
             <p className="font-bold">{username}</p>
             <p className="text-xs">{date}</p>
           </div>
@@ -55,9 +55,9 @@ const Comment = ({
                 onClick={() => setIsEditing(!isEditing)}
                 type="button"
                 title="Edit comment"
-                className="hover:bg-[var(--primary)] rounded-full px-1"
+                className="hover:bg-[var(--primary-tint)] rounded-full px-1"
               >
-                <MdEdit size={20} color="var(--button3)" />
+                <MdEdit size={20} color="text-[var(--button3)]" />
               </button>
             )}
             {(isAuthor || isAdmin) && (
@@ -65,9 +65,9 @@ const Comment = ({
                 onClick={() => onDelete(authorId || 0, commentId)}
                 type="button"
                 title="Delete comment"
-                className="hover:bg-[var(--primary)] rounded-full px-1"
+                className="hover:bg-[var(--primary-tint)] rounded-full px-1"
               >
-                <MdDelete size={20} color="var(--button3)" />
+                <MdDelete size={20} color="text-[var(--button3)]" />
               </button>
             )}
           </div>

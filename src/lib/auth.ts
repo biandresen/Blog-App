@@ -36,6 +36,8 @@ export async function refreshAccessToken(setAccessToken: SetAccessToken, setUser
   }
 }
 
+// const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
+
 // Generic API call wrapper that safely refreshes if 401 is returned
 export async function safeRequest<T>(
   apiFunc: (accessToken: token, ...args: any[]) => Promise<T>,
