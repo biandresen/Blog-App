@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 
 import { type CommentType, type PostType } from "../../types/post.types";
@@ -8,15 +8,17 @@ import CommentForm from "../molecules/CommentForm";
 import { formatDate } from "../../lib/utils";
 import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
-import { deleteComment, deletePost, editComment, editPost } from "../../lib/axios";
+import { deleteComment, deletePost, editComment, editPost, toggleLike } from "../../lib/axios";
 import { toast } from "react-toastify";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoSend } from "react-icons/io5";
 import { usePosts } from "../../contexts/PostsContext";
 import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import Avatar from "../atoms/Avatar";
+2;
 
 const Post = ({ post }: { post: PostType }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
@@ -26,10 +28,20 @@ const Post = ({ post }: { post: PostType }) => {
   const [editedBody, setEditedBody] = useState(post.body);
   const [editedTags, setEditedTags] = useState(post.tags.map((tag) => tag.name).join(", "));
   const [published, setPublished] = useState(post.published);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [likedList, setLikedList] = useState<string[]>([]);
 
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
   const { refreshPosts } = usePosts();
+
+  useEffect(() => {
+    if (!post || !user) return;
+
+    const liked = post.likes.some((like) => like.userId === Number(user.id));
+    setLikedList(post.likes.map((like) => like.user.username));
+    setHasLiked(liked);
+  }, [post, user]);
 
   const isAuthor = post.authorId?.toString() === user?.id.toString();
   const isAdmin = user?.role.toString() === "ADMIN";
@@ -71,6 +83,32 @@ const Post = ({ post }: { post: PostType }) => {
     setEditedBody(post.body);
     setEditedTitle(post.title);
     setEditedTags(post.tags.map((tag) => tag.name).join(", "));
+  };
+
+  //TODO FIX correct avatar of the person who made the post/comment show up.
+  const handleToggleLike = async () => {
+    try {
+      if (!accessToken) return;
+
+      const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
+      if (res.statusCode === 200 || res.statusCode === 201) {
+        setLikedList((prev) => {
+          if (hasLiked) {
+            return prev.filter((username) => username !== user?.username);
+          } else {
+            return [...prev, user?.username || "Unknown"];
+          }
+        });
+        setHasLiked((prev) => !prev);
+      } else {
+        throw new Error();
+      }
+
+      // await refreshPosts();
+    } catch (err: any) {
+      toast.error("Failed to toggle like");
+      console.error("Failed to toggle like", err.message);
+    }
   };
 
   const handleEditPost = async (postId: number, newTitle: string, newBody: string, editedTags: string[]) => {
@@ -194,6 +232,40 @@ const Post = ({ post }: { post: PostType }) => {
           </button>
         )}
       </div>
+
+      <div className="relative group inline-block">
+        <button
+          type="button"
+          onClick={handleToggleLike}
+          className="absolute flex top-5 left-5 xl:left-10 cursor-pointer opacity-80 border rounded-2xl px-2 pt-0.5"
+          style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
+        >
+          {hasLiked ? <AiFillLike /> : <AiOutlineLike className="mt-0.5" />}
+          <span className="ml-1 font-bold">
+            {likedList?.length > 0 ? likedList?.length : hasLiked ? 1 : 0}
+          </span>
+        </button>
+
+        {likedList?.length > 0 && (
+          <div
+            className="
+        absolute left-5 xl:left-10 top-14 max-h-300 overflow-y-auto
+        w-40 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
+        opacity-0 pointer-events-none
+        group-hover:opacity-100 group-hover:pointer-events-auto
+        transition-opacity duration-150
+        z-50
+      "
+          >
+            {likedList.map((username, index) => (
+              <div key={index + username} className="text-sm border-b last:border-b-0 py-1">
+                {username}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-6 pb-4">
         {isEditing ? (
           <input

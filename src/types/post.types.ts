@@ -29,7 +29,17 @@ export interface PostType {
   createdAt: string;
   id: number;
   published: boolean;
+  likes: PostLike[];
   comments: CommentType[];
   tags: TagType[];
   user: UserType;
+}
+
+export interface PostLike {
+  postId: number;
+  userId: number;
+  user: {
+    id: number;
+    username: string;
+  };
 }

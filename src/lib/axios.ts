@@ -101,17 +101,6 @@ export const deleteUser = async (accessToken: token, id: number | string) => {
   }
 };
 
-// export const updateUser = async (accessToken: token, id: number | string, ...updates: UserUpdates[]) => {
-//   try {
-//     const res = await axios.patch(BLOG_API.BASE + BLOG_API.USER + `/${id}`, ...updates, {
-//       headers: { Authorization: `Bearer ${accessToken}` },
-//     });
-//     return res.data;
-//   } catch (err: any) {
-//     throw err;
-//   }
-// };
-
 export const updateUser = async (
   accessToken: string | null,
   id: number | string,
@@ -328,6 +317,28 @@ export const getPost = async (accessToken: token, postId: number) => {
 export const refreshToken = async (postId: number) => {
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`);
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const toggleLike = async (accessToken: token, postId: number) => {
+  try {
+    const res = await axios.post(
+      BLOG_API.BASE + BLOG_API.POSTS + `/${postId}/like`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        withCredentials: true,
+      }
+    );
     return res.data;
   } catch (err: any) {
     if (err.response) {
