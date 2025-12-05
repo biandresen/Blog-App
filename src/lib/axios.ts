@@ -351,17 +351,18 @@ export const toggleLike = async (accessToken: token, postId: number) => {
   }
 };
 
-// export const getPopularPosts = async (page: number, limit: number) => {
-//   try {
-//     const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=asc`);
-//     return res.data;
-//   } catch (err: any) {
-//     if (err.response) {
-//       // Server responded with 400+
-//       return Promise.reject(err.response.data);
-//     } else {
-//       // Network or unknown error
-//       return Promise.reject({ message: err.message || "Something went wrong" });
-//     }
-//   }
-// };
+export const getPopularPosts = async () => {
+  try {
+    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.POPULAR);
+    console.log(res.data);
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};

@@ -9,6 +9,7 @@ const BLOG_API = {
   POSTS: "/posts",
   COMMENTS: "/comments",
   PUBLISH: "/publish",
+  POPULAR: "/popular",
 };
 
 export default BLOG_API;

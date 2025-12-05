@@ -51,6 +51,7 @@ export interface LeftSidebarProps {
 export interface PostCardProps {
   id: number;
   title: string;
+  likes?: number;
 }
 
 export interface HeaderProps {
