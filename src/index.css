@@ -5,6 +5,52 @@
 
 /* 🌗 Theme Variables */
 :root {
+  --bg: #b8bad6;
+  --bg-input: #fdfdfd;
+  --text1: #1a1a1a;
+  --text2: #fdfdfd;
+  --text3: #2b2f52;
+  --button1: #2b2f52;
+  --button2: #555975;
+  --button3: #f2523f;
+  --button4: #1a1a1a;
+  --primary: #2b2f52;
+  --primary-shade: #222642;
+  --primary-tint: #555975;
+  --secondary: #2aa9a1;
+  --success: #008b3a;
+  --warning: #f1c40f;
+  --error: #e74c3c;
+  --info: #3498db;
+
+  --space-s: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 3rem;
+}
+
+.dark {
+  --bg: hsl(230, 38%, 6%);
+  --bg-input: #222642;
+  --text1: #c1cffa;
+  --text2: #c1cffa;
+  --text3: #a7b2ff;
+  --button1: #2b2f52;
+  --button2: #555975;
+  --button3: #f2523f;
+  --button4: #fdfdfd;
+  --primary: #2b2f52;
+  --primary-shade: #222642;
+  --primary-tint: #555975;
+  --secondary: #2aa9a1;
+  --success: #2ecc71;
+  --warning: #f1c40f;
+  --error: #f2523f;
+  --info: #3498db;
+}
+
+/* :root {
   --bg: #babdbe;
   --bg-input: #fdfdfd;
   --text1: #1a1a1a;
@@ -48,7 +94,7 @@
   --warning: #f1c40f;
   --error: #f2523f;
   --info: #3498db;
-}
+} */
 
 @layer base {
   html {

@@ -315,7 +315,7 @@ const Post = ({ post }: { post: PostType }) => {
             className="w-full text-sm md:text-xl p-3 mb-8 mr-5 border-b"
           />
         ) : (
-          <p className="bg-[var(--primary)] text-[var(--text2)] text-xs md:text-xl font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto">
+          <p className="bg-[var(--primary)] text-[var(--text2)] text-xs md:text-l font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto">
             {post.tags.map((tag) => `#${tag.name.toLocaleLowerCase()} `)}
           </p>
         )}
