@@ -1,6 +1,6 @@
 import axios from "axios";
 import BLOG_API from "../api/blog-api";
-import type { token, User } from "../types/context.types";
+import type { token } from "../types/context.types";
 
 type RegisterUser = {
   username: string;
@@ -12,6 +12,40 @@ type RegisterUser = {
 type LoginUser = {
   userInput: string;
   password: string;
+};
+export const resetPassword = async ({ email }: { email: string }) => {
+  try {
+    const res = await axios.post(BLOG_API.BASE + BLOG_API.RESETPASSWORD, {
+      email,
+    });
+    return res.data; // success case
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data.errors);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const newPassword = async (token: token | undefined, password: string) => {
+  try {
+    const res = await axios.post(BLOG_API.BASE + BLOG_API.NEWPASSWORD, {
+      token,
+      password,
+    });
+    return res.data; // success case
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
 };
 
 export const registerUser = async ({ username, email, password, passwordConfirmation }: RegisterUser) => {

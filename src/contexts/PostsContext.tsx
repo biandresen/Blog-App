@@ -21,7 +21,7 @@ export const PostsProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoading(true);
       console.log("Fetching fresh posts");
-      const res = await getAllPosts(1, 10);
+      const res = await getAllPosts(1, 50);
       if (res.statusCode !== 200) throw new Error(res.message);
       setPosts(res.data);
     } catch (err: any) {

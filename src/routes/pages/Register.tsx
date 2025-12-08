@@ -11,9 +11,6 @@ import { usernameValidator, emailValidator, passwordValidator } from "../../vali
 import { registerUser } from "../../lib/axios";
 
 const Register = () => {
-  // Client-side messages = catch obvious things early (length, format, matching passwords).
-  // API messages = catch business rules and uniqueness constraints.
-
   useEffect(() => {
     toast.info("Welcome! Please register to create an account.");
   }, []);
@@ -161,14 +158,15 @@ const Register = () => {
               size="zero"
               className="bg-transparent absolute left-27 top-2"
             >
-              {showPassword ?
+              {showPassword ? (
                 <FaEye onClick={() => setShowPassword((s) => !s)} size={20} className="text-[var(--text1)]" />
-              : <FaEyeSlash
+              ) : (
+                <FaEyeSlash
                   onClick={() => setShowPassword((s) => !s)}
                   size={20}
                   className="text-[var(--text1)]"
                 />
-              }
+              )}
             </Button>
           </div>
 

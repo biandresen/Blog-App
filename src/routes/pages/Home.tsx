@@ -28,7 +28,7 @@ const Home = () => {
               {homeContent.button0}
             </NavLink>
           ) : (
-            <NavLink to="/login" className={"bg-[var(--button3)] nav-link"}>
+            <NavLink to="/register" className={"bg-[var(--button3)] nav-link"}>
               {homeContent.button1}
             </NavLink>
           )}

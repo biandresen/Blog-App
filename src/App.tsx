@@ -13,6 +13,8 @@ const NotFound = lazy(() => import("./routes/pages/NotFound"));
 const Home = lazy(() => import("./routes/pages/Home"));
 const Login = lazy(() => import("./routes/pages/Login"));
 const Register = lazy(() => import("./routes/pages/Register"));
+const ForgotPassword = lazy(() => import("./routes/pages/ForgotPassord"));
+const ResetPassword = lazy(() => import("./routes/pages/ResetPassword"));
 const About = lazy(() => import("./routes/pages/About"));
 const Contact = lazy(() => import("./routes/pages/Contact"));
 
@@ -57,6 +59,8 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
 

@@ -152,9 +152,12 @@ const Login = () => {
           >
             {loginContent.button}
           </Button>
-          <div className="text-center">
+          <div className="text-center flex flex-col">
             <Link to="/register" className="text-[var(--text1)] mt-3">
               {loginContent.goToRegister} <span className="font-bold">{loginContent.link}</span>
+            </Link>
+            <Link to="/forgotPassword" className="text-[var(--text1)] mt-3">
+              {loginContent.forgotPassword} <span className="font-bold">{loginContent.link2}</span>
             </Link>
           </div>
         </form>

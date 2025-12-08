@@ -9,6 +9,7 @@ import adminContent from "../../../text-content/admin-page";
 import { deactivateUser, getUserByNameOrEmail, reactivateUser } from "../../../lib/axios";
 import { safeRequest } from "../../../lib/auth";
 import { type User } from "../../../types/context.types";
+import Avatar from "../../../components/atoms/Avatar";
 
 type FetchedUser = User & {
   active: boolean;
@@ -127,7 +128,7 @@ const Admin = () => {
               >
                 X
               </Button>
-              <CgProfile size={40} />
+              <Avatar size={40} avatarUrl={fetchedUser?.avatar} />
               <p className="font-bold">{fetchedUser?.username}</p>
               <p className="">{`Status: ${fetchedUser?.active ? "Active" : "Inactive"}`}</p>
             </div>

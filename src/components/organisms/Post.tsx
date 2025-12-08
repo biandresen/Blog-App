@@ -85,7 +85,6 @@ const Post = ({ post }: { post: PostType }) => {
     setEditedTags(post.tags.map((tag) => tag.name).join(", "));
   };
 
-  //TODO FIX correct avatar of the person who made the post/comment show up.
   const handleToggleLike = async () => {
     try {
       if (!accessToken) return;
@@ -203,7 +202,7 @@ const Post = ({ post }: { post: PostType }) => {
 
   return (
     <div
-      className={`relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10 ${
+      className={`relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] w-full xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10 ${
         post.published ? "" : "opacity-80"
       }`}
     >
@@ -237,7 +236,7 @@ const Post = ({ post }: { post: PostType }) => {
         <button
           type="button"
           onClick={handleToggleLike}
-          className="absolute flex top-5 left-5 xl:left-10 cursor-pointer opacity-80 border rounded-2xl px-2 pt-0.5"
+          className="absolute flex top-0 left-5 xl:left-10 cursor-pointer opacity-80 border rounded-2xl px-2 pt-0.5"
           style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
         >
           {hasLiked ? <AiFillLike /> : <AiOutlineLike className="mt-0.5" />}
@@ -249,7 +248,7 @@ const Post = ({ post }: { post: PostType }) => {
         {likedList?.length > 0 && (
           <div
             className="
-        absolute left-5 xl:left-10 top-14 max-h-300 overflow-y-auto
+        absolute left-5 xl:left-10 top-7 border max-h-300 overflow-y-auto
         w-40 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
         opacity-0 pointer-events-none
         group-hover:opacity-100 group-hover:pointer-events-auto
