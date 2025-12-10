@@ -128,8 +128,8 @@ const Admin = () => {
               >
                 X
               </Button>
-              <Avatar size={40} avatarUrl={fetchedUser?.avatar} />
-              <p className="font-bold">{fetchedUser?.username}</p>
+              <Avatar size={60} avatarUrl={fetchedUser?.avatar} />
+              <p className="mt-2 font-bold">{fetchedUser?.username}</p>
               <p className="">{`Status: ${fetchedUser?.active ? "Active" : "Inactive"}`}</p>
             </div>
           )}

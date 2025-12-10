@@ -12,8 +12,9 @@ const AllPosts = () => {
 
   if (loading) return <Spinner />;
 
+  console.log("before error: ", posts);
   if (error) {
-    return <div className="text-[var(--text1)] text-center">No posts found</div>;
+    return <div className="text-[var(--text1)] text-center">No posts found, error</div>;
   }
 
   return (

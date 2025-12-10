@@ -103,13 +103,11 @@ const Profile = () => {
     }
   };
 
-  console.log(user);
-
   return (
     <div className="container inputInfo-container">
       <Modal
         isOpen={showModal}
-        title="Delete Post"
+        title="Delete user"
         message="Are you sure you want to delete this user? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

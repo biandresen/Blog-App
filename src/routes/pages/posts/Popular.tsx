@@ -17,7 +17,6 @@ const Popular = () => {
       // Fetch popular posts from the API
       try {
         const res = await getPopularPosts();
-        console.log(res.data);
         setPosts(res.data);
       } catch (err: any) {
         console.error("Error fetching popular posts:", err);
@@ -34,7 +33,9 @@ const Popular = () => {
 
   return (
     <div className="md:mt-8">
+      <h2 className="posts-heading">POPULAR POSTS</h2>
       <Button
+        className="block mx-auto"
         onClick={handleTogglePresentation}
         type="button"
         size="md"
@@ -43,7 +44,6 @@ const Popular = () => {
       >
         {postPresentation}
       </Button>
-      <h2 className="posts-heading">POPULAR POSTS</h2>
       <section className="posts-section">
         {!posts.length && (
           <div>
@@ -52,7 +52,14 @@ const Popular = () => {
         )}
         {showMiniPosts
           ? posts &&
-            posts.map((post) => <PostCard id={post.id} title={post.title} likes={post.likes.length} />)
+            posts.map((post) => (
+              <PostCard
+                key={post.id + post.title}
+                id={post.id}
+                title={post.title}
+                likes={post.likes.length}
+              />
+            ))
           : posts && posts.map((post) => <Post key={post.id} post={post} />)}
       </section>
     </div>

@@ -4,11 +4,16 @@ import { getAllUserPosts } from "../../../lib/axios";
 import type { PostType } from "../../../types/post.types";
 import { useUser } from "../../../contexts/UserContext";
 import Spinner from "../../../components/atoms/Spinner";
+import Button from "../../../components/atoms/Button";
+import Post from "../../../components/organisms/Post";
 
 const MyPosts = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showMiniPosts, setShowMiniPosts] = useState<boolean>(true);
+
+  const postPresentation = showMiniPosts ? "Show full posts" : "Show mini posts";
 
   const { user } = useUser();
 
@@ -45,17 +50,35 @@ const MyPosts = () => {
 
   if (error) return <div className="text-center posts-section-heading text-[var(--text1)]">{error}</div>;
 
+  const handleTogglePresentation = () => {
+    setShowMiniPosts((prev) => !prev);
+  };
+
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">MY POSTS</h2>
+      <Button
+        className="block mx-auto"
+        onClick={handleTogglePresentation}
+        type="button"
+        size="md"
+        variant="primary"
+        label="toggle post presentation"
+      >
+        {postPresentation}
+      </Button>
       <section className="posts-section">
-        {posts.length > 0 ? (
-          posts.map((post) => <PostCard key={post.id} id={post.id} title={post.title} />)
-        ) : (
-          <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>
-          </div>
-        )}
+        {showMiniPosts
+          ? posts &&
+            posts.map((post) => (
+              <PostCard
+                key={post.id + post.title}
+                id={post.id}
+                title={post.title}
+                likes={post.likes.length}
+              />
+            ))
+          : posts && posts.map((post) => <Post key={post.id} post={post} />)}
       </section>
     </div>
   );

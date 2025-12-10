@@ -21,13 +21,12 @@ const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showPassword2, setShowPassword2] = useState<boolean>(false);
 
-  const [input1Valid, setInput1Valid] = useState<boolean>(true);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   const [input2Valid, setInput2Valid] = useState<boolean>(true);
   const [errorMsg2, setErrorMsg2] = useState<string>("");
 
-  const invalidForm = !input1Valid || !input2Valid || !password || !passwordConfirmation;
+  const invalidForm = !input2Valid || !password || !passwordConfirmation;
 
   const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
@@ -47,7 +46,7 @@ const ResetPassword = () => {
         throw new Error("Password reset failed");
       }
       console.log(res);
-      toast.success(res.message);
+      toast.success(res.message + " .Check spam folder if you don't see the email.");
       navigate("/login");
     } catch (err: any) {
       toast.error(err.message || "Something went wrong. Try again later");

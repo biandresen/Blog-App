@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
 import newPostContent from "../../../text-content/newPost-page";
@@ -14,6 +15,7 @@ const NewPost = () => {
   const [tags, setTags] = useState<string>("");
 
   const formError = title === "" || content === "";
+  const navigate = useNavigate();
 
   const { accessToken, setAccessToken } = useAuth();
   const { refreshPosts } = usePosts();
@@ -48,7 +50,6 @@ const NewPost = () => {
         throw new Error("Request failed");
       }
       toast.success("Draft saved!");
-      console.log("Draft saved successfully:", res.data);
       await refreshPosts();
       resetForm();
     } catch (err: any) {
@@ -83,9 +84,9 @@ const NewPost = () => {
         throw new Error("Request failed");
       }
       toast.success("Post published!");
-      console.log("Post published successfully:", res.data);
       await refreshPosts();
       resetForm();
+      navigate("/posts");
     } catch (err: any) {
       if (err.message.includes("token")) {
         toast.error("Your session has expired. Please log in again.");

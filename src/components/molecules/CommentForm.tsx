@@ -1,11 +1,13 @@
 import { useState } from "react";
-import Button from "../../components/atoms/Button";
-import { type CommentFormProps } from "../../types/components.types";
 import { toast } from "react-toastify";
+import { IoSend } from "react-icons/io5";
+
+import { type CommentFormProps } from "../../types/components.types";
 import { addComment } from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { safeRequest } from "../../lib/auth";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
+import Button from "../../components/atoms/Button";
 
 const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const [body, setBody] = useState("");
@@ -67,9 +69,18 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
         onKeyDown={handleKeyDown}
         className="rounded-2xl p-3 w-full bg-[var(--bg)] mb-3"
       />
-      <Button variant="tertiary" label="Post comment" type="submit" disabled={loading}>
+      <button
+        title="Post comment"
+        type="submit"
+        disabled={loading}
+        className="ml-auto text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)] text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100"
+      >
+        {loading ? "Posting..." : "Add Comment"}{" "}
+        <IoSend className="text-[var(--button3)] mt-0.5 lg:mt-1 ml-2" />
+      </button>
+      {/* <Button variant="tertiary" label="Post comment" type="submit" disabled={loading}>
         {loading ? "Posting..." : "Add Comment"}
-      </Button>
+      </Button> */}
     </form>
   );
 };

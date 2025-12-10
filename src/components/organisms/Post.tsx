@@ -18,6 +18,8 @@ import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import Avatar from "../atoms/Avatar";
+import { NavLink } from "react-router-dom";
+import Modal from "../molecules/Modal";
 2;
 
 const Post = ({ post }: { post: PostType }) => {
@@ -30,6 +32,7 @@ const Post = ({ post }: { post: PostType }) => {
   const [published, setPublished] = useState(post.published);
   const [hasLiked, setHasLiked] = useState(false);
   const [likedList, setLikedList] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
@@ -132,7 +135,7 @@ const Post = ({ post }: { post: PostType }) => {
       toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
     } catch (err: any) {
       toast.error("Failed to edit post");
-      console.error("Failed to edit post", err.message);
+      console.error("Failed to edit post", err.response.data.errors || err.message);
     }
   };
 
@@ -206,10 +209,20 @@ const Post = ({ post }: { post: PostType }) => {
         post.published ? "" : "opacity-80"
       }`}
     >
+      <Modal
+        isOpen={showModal}
+        title="Delete post"
+        message="Are you sure you want to delete this post? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={() => handleDeletePost(post.id)}
+        onCancel={() => setShowModal(false)}
+      />
+
       {post.published ? null : (
         <div className="absolute top-1 left-1 text-[var(--text1)] text-sm rounded-full px-1">DRAFT</div>
       )}
-      <div className="ml-auto flex flex-col-reverse absolute top-1 right-1">
+      <div className="ml-auto flex flex-col-reverse absolute top-3 right-1">
         {isAuthor && (
           <button
             onClick={handleEditInput}
@@ -222,7 +235,7 @@ const Post = ({ post }: { post: PostType }) => {
         )}
         {(isAuthor || isAdmin) && (
           <button
-            onClick={() => handleDeletePost(post.id)}
+            onClick={() => setShowModal(true)}
             type="button"
             title="Delete post"
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
@@ -231,23 +244,23 @@ const Post = ({ post }: { post: PostType }) => {
           </button>
         )}
       </div>
+      {!post.published ? null : (
+        <div className="relative group inline-block">
+          <button
+            type="button"
+            onClick={handleToggleLike}
+            className="absolute flex top-0 left-5 xl:left-10 cursor-pointer opacity-80 border rounded-2xl px-2 pt-0.5"
+            style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
+          >
+            {hasLiked ? <AiFillLike /> : <AiOutlineLike className="mt-0.5" />}
+            <span className="ml-1 font-bold">
+              {likedList?.length > 0 ? likedList?.length : hasLiked ? 1 : 0}
+            </span>
+          </button>
 
-      <div className="relative group inline-block">
-        <button
-          type="button"
-          onClick={handleToggleLike}
-          className="absolute flex top-0 left-5 xl:left-10 cursor-pointer opacity-80 border rounded-2xl px-2 pt-0.5"
-          style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
-        >
-          {hasLiked ? <AiFillLike /> : <AiOutlineLike className="mt-0.5" />}
-          <span className="ml-1 font-bold">
-            {likedList?.length > 0 ? likedList?.length : hasLiked ? 1 : 0}
-          </span>
-        </button>
-
-        {likedList?.length > 0 && (
-          <div
-            className="
+          {likedList?.length > 0 && (
+            <div
+              className="
         absolute left-5 xl:left-10 top-7 border max-h-300 overflow-y-auto
         w-40 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
         opacity-0 pointer-events-none
@@ -255,34 +268,41 @@ const Post = ({ post }: { post: PostType }) => {
         transition-opacity duration-150
         z-50
       "
-          >
-            {likedList.map((username, index) => (
-              <div key={index + username} className="text-sm border-b last:border-b-0 py-1">
-                {username}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            >
+              {likedList.map((username, index) => (
+                <div key={index + username} className="text-sm border-b last:border-b-0 py-1">
+                  {username}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
-      <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-6 pb-4">
+      <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-6 pb-4 mt-5">
         {isEditing ? (
           <input
             title="Edit post title"
             type="text"
             value={editedTitle}
             onKeyDown={handleTitleEnter}
-            onChange={(e) => setEditedTitle(e.target.value)}
-            className="w-full text-xl xl:text-4xl md:text-3xl/8 font-bold mr-5 p-5 border-b"
+            onChange={(e) => {
+              if (e.target.value.length <= 64) setEditedTitle(e.target.value);
+            }}
+            className="w-full text-xl xl:text-3xl md:text-3xl/8 font-bold mr-5 p-5 border-b"
           />
         ) : (
-          <h3 className="text-xl xl:text-4xl md:text-3xl/8 mt-auto">{post.title}</h3>
+          <NavLink to={`/posts/${post.id}`}>
+            <h3 className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22">{post.title}</h3>
+          </NavLink>
         )}
-        <div className="grid place-items-center mb-5 xl:mb-0 md:ml-auto">
-          {post.user?.avatar ? <Avatar avatarUrl={post.user?.avatar} size={40} /> : <CgProfile size={40} />}
-          <p className="font-bold">{post.user.username}</p>
-          <p className="text-xs">{formatDate(post.createdAt)}</p>
-        </div>
+        {isEditing ? null : (
+          <div className="grid place-items-center mb-5 xl:mb-0 md:ml-auto absolute top-4 right-10">
+            {post.user?.avatar ? <Avatar avatarUrl={post.user?.avatar} size={40} /> : <CgProfile size={40} />}
+            <p className="font-bold">{post.user.username}</p>
+            <p className="text-xs">{formatDate(post.createdAt)}</p>
+          </div>
+        )}
       </div>
       <hr className="text-[var(--text1)] opacity-20" />
       {isEditing ? (
@@ -293,13 +313,13 @@ const Post = ({ post }: { post: PostType }) => {
           value={editedBody}
           onKeyDown={handleBodyEnter}
           onChange={(e) => {
-            setEditedBody(e.target.value);
+            if (e.target.value.length <= 2000) setEditedBody(e.target.value);
             handleInput();
           }}
-          className="text-sm md:text-xl p-5 border-b w-[90%] ml-10 mt-2 resize-none overflow-hidden"
+          className="text-sm md:text-lg p-5 border-b w-[90%] ml-10 mt-2 resize-none overflow-hidden"
         />
       ) : (
-        <p className="px-5 xl:px-10 py-4 text-sm md:text-xl/7 xl:text-xl whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
+        <p className="px-5 xl:px-10 py-4 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
       )}
       <hr className="text-[var(--text1)] opacity-20" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between items-center px-5 xl:px-10 py-5">
@@ -356,7 +376,7 @@ const Post = ({ post }: { post: PostType }) => {
             className="w-full xl:w-auto xl:min-w-[180px]"
             onClick={toggleComments}
             size="sm"
-            variant="tertiary"
+            variant="outline"
             title="Toggle comments"
             label={buttonText}
           >
