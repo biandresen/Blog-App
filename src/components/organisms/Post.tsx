@@ -220,7 +220,7 @@ const Post = ({ post }: { post: PostType }) => {
       />
 
       {post.published ? null : (
-        <div className="absolute top-1 left-1 text-[var(--text1)] text-sm rounded-full px-1">DRAFT</div>
+        <div className="text-[var(--text1)] text-sm rounded-full px-10 pt-4">DRAFT</div>
       )}
       <div className="ml-auto flex flex-col-reverse absolute top-3 right-1">
         {isAuthor && (

@@ -8,6 +8,7 @@ type SetUser = (user: User | null) => void;
 
 export async function refreshAccessToken(setAccessToken: SetAccessToken, setUser?: SetUser) {
   try {
+    console.log("Refreshing token");
     const res = await axios.post(
       `${BLOG_API.BASE}/auth/refresh`,
       {},

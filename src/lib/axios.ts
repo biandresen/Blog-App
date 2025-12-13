@@ -32,10 +32,18 @@ export const resetPassword = async ({ email }: { email: string }) => {
 
 export const newPassword = async (token: token | undefined, password: string) => {
   try {
-    const res = await axios.post(BLOG_API.BASE + BLOG_API.NEWPASSWORD, {
-      token,
-      password,
-    });
+    const res = await axios.post(
+      BLOG_API.BASE + BLOG_API.NEWPASSWORD,
+      {
+        token,
+        password,
+      },
+      {
+        headers: {
+          "x-frontend-url": window.location.origin,
+        },
+      }
+    );
     return res.data; // success case
   } catch (err: any) {
     if (err.response) {
