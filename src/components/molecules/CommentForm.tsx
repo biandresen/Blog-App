@@ -7,7 +7,6 @@ import { addComment } from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { safeRequest } from "../../lib/auth";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
-import Button from "../../components/atoms/Button";
 
 const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const [body, setBody] = useState("");

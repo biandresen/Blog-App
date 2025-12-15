@@ -6,11 +6,16 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { toast } from "react-toastify";
 import Spinner from "../../../components/atoms/Spinner";
 import { safeRequest } from "../../../lib/auth";
+import Button from "../../../components/atoms/Button";
+import Post from "../../../components/organisms/Post";
 
 const Drafts = () => {
   const [drafts, setDrafts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showMiniPosts, setShowMiniPosts] = useState<boolean>(true);
+
+  const postPresentation = showMiniPosts ? "Show full drafts" : "Show mini drafts";
 
   const { accessToken, setAccessToken } = useAuth();
 
@@ -49,6 +54,10 @@ const Drafts = () => {
     }
   };
 
+    const handleTogglePresentation = () => {
+    setShowMiniPosts((prev) => !prev);
+  };
+
   useEffect(() => {
     fetchDrafts();
   }, []);
@@ -63,17 +72,32 @@ const Drafts = () => {
         {draftsContent.heading1}
       </h2>
 
-      <section className="flex flex-wrap gap-4 mt-10 justify-center mx-auto w-full xl:w-[90%]">
-        {drafts.length === 0 && !loading && (
+      <Button
+        className="block mx-auto"
+        onClick={handleTogglePresentation}
+        type="button"
+        size="md"
+        variant="primary"
+        label="toggle post presentation"
+      >
+        {postPresentation}
+      </Button>
+        <section className="posts-section">
+        {!drafts.length && (
           <div>
-            <h3 className="text-2xl font-bold text-[var(--text1)] text-center">{draftsContent.heading2}</h3>
-            <p className="text-lg text-[var(--text1)]">{draftsContent.paragraph}</p>
+            <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>
           </div>
         )}
-
-        {drafts.map((draft) => (
-          <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />
-        ))}
+        {showMiniPosts
+          ? drafts &&
+            drafts.map((draft) => (
+              <DraftCard key={draft.id + draft.title} id={draft.id} draftTitle={draft.title} />)
+              )
+          : drafts && drafts.map((draft) => <Post
+                key={draft.id + draft.title}
+                post={draft}
+              />
+            )}
       </section>
     </div>
   );

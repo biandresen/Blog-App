@@ -1,4 +1,3 @@
-import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
 import { toast } from "react-toastify";
 

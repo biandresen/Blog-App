@@ -86,7 +86,7 @@ const Comment = ({
               }}
             />
           ) : (
-            <p className="text-wrap text-xs md:text-lg/6 whitespace-break-spaces">{comment}</p>
+            <p className="text-wrap text-sm md:text-lg/6 whitespace-break-spaces">{comment}</p>
           )}
           {isEditing && (
             <button

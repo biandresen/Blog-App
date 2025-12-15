@@ -52,6 +52,7 @@ const NewPost = () => {
       toast.success("Draft saved!");
       await refreshPosts();
       resetForm();
+      navigate("/dashboard/drafts");
     } catch (err: any) {
       if (err.message.includes("token")) {
         toast.error("Your session has expired. Please log in again.");

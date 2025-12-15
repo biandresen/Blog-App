@@ -220,9 +220,9 @@ const Post = ({ post }: { post: PostType }) => {
       />
 
       {post.published ? null : (
-        <div className="text-[var(--text1)] text-sm rounded-full px-10 pt-4">DRAFT</div>
+        <div className="text-[var(--text1)] text-sm rounded-full px-5 xl:px-10 pt-4">DRAFT</div>
       )}
-      <div className="ml-auto flex flex-col-reverse absolute top-3 right-1">
+      <div className="ml-auto flex flex-col-reverse absolute top-3 right-3">
         {isAuthor && (
           <button
             onClick={handleEditInput}
@@ -298,7 +298,7 @@ const Post = ({ post }: { post: PostType }) => {
         )}
         {isEditing ? null : (
           <div className="grid place-items-center mb-5 xl:mb-0 md:ml-auto absolute top-4 right-10">
-            {post.user?.avatar ? <Avatar avatarUrl={post.user?.avatar} size={40} /> : <CgProfile size={40} />}
+            {post.user?.avatar ? <Avatar avatarUrl={post.user?.avatar} size={50} /> : <CgProfile size={50} />}
             <p className="font-bold">{post.user.username}</p>
             <p className="text-xs">{formatDate(post.createdAt)}</p>
           </div>
@@ -386,8 +386,8 @@ const Post = ({ post }: { post: PostType }) => {
       </div>
       {commentsIsOpen && (
         <div className="bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl">
-          <h3 className="text-2xl mb-4">Comments</h3>
-          {comments.length === 0 && <p>No comments yet. Be the first to comment!</p>}
+          <h3 className="text-2xl mb-0">Comments</h3>
+          {comments.length === 0 && <p className="text-sm">No comments yet. Be the first to comment!</p>}
           {comments.length > 0 &&
             comments.map((comment) => (
               <Comment
