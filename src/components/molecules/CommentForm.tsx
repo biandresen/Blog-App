@@ -72,16 +72,18 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
         title="Post comment"
         type="submit"
         disabled={loading}
-        className="ml-auto text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)] text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100"
+        className="ml-auto text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)]/20 text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100"
       >
         {loading ? "Posting..." : "Add Comment"}{" "}
         <IoSend className="text-[var(--button3)] mt-0.5 lg:mt-1 ml-2" />
       </button>
-      {/* <Button variant="tertiary" label="Post comment" type="submit" disabled={loading}>
-        {loading ? "Posting..." : "Add Comment"}
-      </Button> */}
+
     </form>
   );
 };
 
 export default CommentForm;
+
+   {/* <Button variant="tertiary" label="Post comment" type="submit" disabled={loading}>
+        {loading ? "Posting..." : "Add Comment"}
+      </Button> */}

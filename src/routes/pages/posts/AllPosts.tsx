@@ -18,7 +18,7 @@ const AllPosts = () => {
     setShowMiniPosts((prev) => !prev);
   };
 
-  const postPresentation = showMiniPosts ? "Show full posts" : "Show mini posts";
+  const postPresentation = showMiniPosts ? "Show mini posts" : "Show full posts";
 
   if (loading) return <Spinner />;
 
@@ -42,7 +42,8 @@ const AllPosts = () => {
           </div>
         )}
         {showMiniPosts
-          ? posts &&
+          ? posts && posts.map((post) => <Post key={post.id} post={post} />)
+          : posts &&
             posts.map((post) => (
               <PostCard
                 key={post.id + post.title}
@@ -50,8 +51,7 @@ const AllPosts = () => {
                 title={post.title}
                 likes={post.likes.length}
               />
-            ))
-          : posts && posts.map((post) => <Post key={post.id} post={post} />)}
+            ))}
       </section>
     </div>
   );

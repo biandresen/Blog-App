@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CgProfile } from "react-icons/cg";
 
 import { type CommentType, type PostType } from "../../types/post.types";
@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoSend } from "react-icons/io5";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { usePosts } from "../../contexts/PostsContext";
 import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
@@ -20,6 +21,7 @@ import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import Avatar from "../atoms/Avatar";
 import { NavLink } from "react-router-dom";
 import Modal from "../molecules/Modal";
+import { useColorTheme } from "../../contexts/ColorThemeContext";
 2;
 
 const Post = ({ post }: { post: PostType }) => {
@@ -33,10 +35,17 @@ const Post = ({ post }: { post: PostType }) => {
   const [hasLiked, setHasLiked] = useState(false);
   const [likedList, setLikedList] = useState<string[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showEditMenu, setShowEditMenu] = useState<boolean>(false);
 
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
   const { refreshPosts } = usePosts();
+  const {colorTheme} = useColorTheme();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const maxCharTitle = 64;
+  const maxCharBody = 2000;
 
   useEffect(() => {
     if (!post || !user) return;
@@ -46,8 +55,15 @@ const Post = ({ post }: { post: PostType }) => {
     setHasLiked(liked);
   }, [post, user]);
 
+  useEffect(() => {
+  if (isEditing) {
+    inputRef.current?.focus();
+  }
+}, [isEditing]);
+
   const isAuthor = post.authorId?.toString() === user?.id.toString();
   const isAdmin = user?.role.toString() === "ADMIN";
+  const canEdit = isAuthor || isAdmin;
 
   const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
 
@@ -87,6 +103,10 @@ const Post = ({ post }: { post: PostType }) => {
     setEditedTitle(post.title);
     setEditedTags(post.tags.map((tag) => tag.name).join(", "));
   };
+
+  const handleOpenEditMenu = () => {
+    setShowEditMenu(!showEditMenu);
+  }
 
   const handleToggleLike = async () => {
     try {
@@ -206,8 +226,7 @@ const Post = ({ post }: { post: PostType }) => {
   return (
     <div
       className={`relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] w-full xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10 ${
-        post.published ? "" : "opacity-80"
-      }`}
+        post.published ? "" : "opacity-80"}`}
     >
       <Modal
         isOpen={showModal}
@@ -222,7 +241,17 @@ const Post = ({ post }: { post: PostType }) => {
       {post.published ? null : (
         <div className="text-[var(--text1)] text-sm rounded-full px-5 xl:px-10 pt-4">DRAFT</div>
       )}
-      <div className="ml-auto flex flex-col-reverse absolute top-3 right-3">
+      <div className="flex absolute gap-2 top-4 right-5 xl:right-10">
+        {canEdit && <button
+            onClick={handleOpenEditMenu}
+            type="button"
+            title="Edit post"
+            className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
+          >
+           <BsThreeDotsVertical size={20} color="var(--text3)" />
+          </button>}
+        {showEditMenu && (
+          <div className="absolute flex top-10 right-0 bg-[var(--bg-input)] border-1 rounded-full px-1 py-0.5 z-50 opacity-80 ">
         {isAuthor && (
           <button
             onClick={handleEditInput}
@@ -230,7 +259,7 @@ const Post = ({ post }: { post: PostType }) => {
             title="Edit post"
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
           >
-            <MdEdit size={20} color="var(--text3)" />
+            <MdEdit size={15} color="var(--text3)" />
           </button>
         )}
         {(isAuthor || isAdmin) && (
@@ -240,16 +269,18 @@ const Post = ({ post }: { post: PostType }) => {
             title="Delete post"
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
           >
-            <MdDelete size={20} color="var(--text3)" />
+            <MdDelete size={15} color="var(--text3)" />
           </button>
-        )}
-      </div>
+        )}</div>
+      )}
       {!post.published ? null : (
-        <div className="relative group inline-block">
+        <div className="group">
           <button
+            aria-label="Like post"
+            title="Like post"
             type="button"
             onClick={handleToggleLike}
-            className="absolute flex top-0 left-5 xl:left-10 cursor-pointer opacity-80 border rounded-2xl px-2 pt-0.5"
+            className="flex cursor-pointer opacity-80 border rounded-full px-2.5 pt-1 min-w-14"
             style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
           >
             {hasLiked ? <AiFillLike /> : <AiOutlineLike className="mt-0.5" />}
@@ -261,13 +292,12 @@ const Post = ({ post }: { post: PostType }) => {
           {likedList?.length > 0 && (
             <div
               className="
-        absolute left-5 xl:left-10 top-7 border max-h-300 overflow-y-auto
-        w-40 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
-        opacity-0 pointer-events-none
-        group-hover:opacity-100 group-hover:pointer-events-auto
-        transition-opacity duration-150
-        z-50
-      "
+              absolute left-0 xl:left-0 top-0 border max-h-300 overflow-y-auto
+              w-25 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
+              opacity-0 pointer-events-none
+              group-hover:opacity-100 group-hover:pointer-events-auto
+              transition-opacity duration-150
+              z-50"
             >
               {likedList.map((username, index) => (
                 <div key={index + username} className="text-sm border-b last:border-b-0 py-1">
@@ -278,66 +308,72 @@ const Post = ({ post }: { post: PostType }) => {
           )}
         </div>
       )}
+      </div>
 
-      <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-6 pb-4 mt-5">
+      <div className="grid mb-5 xl:mb-0 md:ml-auto absolute top-4 left-5 xl:left-10">
+        {post.user?.avatar ? <Avatar avatarUrl={post.user?.avatar} size={45} /> : <CgProfile size={45} />}
+        <p className="font-bold text-[0.8rem] md:text-[1rem]">{post.user.username}</p>
+        <p className="text-[0.5rem] md:text-[0.7rem] mt-[-0.2rem] opacity-80">{formatDate(post.createdAt)}</p>
+      </div>
+      <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-6 pb-4 mt-25">
         {isEditing ? (
-          <input
-            title="Edit post title"
-            type="text"
-            value={editedTitle}
-            onKeyDown={handleTitleEnter}
-            onChange={(e) => {
-              if (e.target.value.length <= 64) setEditedTitle(e.target.value);
-            }}
-            className="w-full text-xl xl:text-3xl md:text-3xl/8 font-bold mr-5 p-5 border-b"
-          />
+          <div className="bg-[var(--bg)] rounded-lg p-1 w-full">
+            <input
+              ref={inputRef}
+              title="Edit post title"
+              type="text"
+              value={editedTitle}
+              onKeyDown={handleTitleEnter}
+              onChange={(e) => {
+                if (e.target.value.length <= maxCharTitle) setEditedTitle(e.target.value);
+              }}
+              className="w-full text-xl xl:text-3xl md:text-3xl/8 p-4 bg-transparent outline-none"
+            />
+          </div>
         ) : (
           <NavLink to={`/posts/${post.id}`}>
             <h3 className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22">{post.title}</h3>
           </NavLink>
         )}
-        {isEditing ? null : (
-          <div className="grid place-items-center mb-5 xl:mb-0 md:ml-auto absolute top-4 right-10">
-            {post.user?.avatar ? <Avatar avatarUrl={post.user?.avatar} size={50} /> : <CgProfile size={50} />}
-            <p className="font-bold">{post.user.username}</p>
-            <p className="text-xs">{formatDate(post.createdAt)}</p>
-          </div>
-        )}
       </div>
       <hr className="text-[var(--text1)] opacity-20" />
       {isEditing ? (
-        <textarea
-          ref={textRef}
-          aria-label="Edit post body"
-          title="Edit post body"
-          value={editedBody}
-          onKeyDown={handleBodyEnter}
-          onChange={(e) => {
-            if (e.target.value.length <= 2000) setEditedBody(e.target.value);
-            handleInput();
-          }}
-          className="text-sm md:text-lg p-5 border-b w-[90%] ml-10 mt-2 resize-none overflow-hidden"
-        />
+        <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg">
+          <textarea
+            ref={textRef}
+            aria-label="Edit post body"
+            title="Edit post body"
+            value={editedBody}
+            onKeyDown={handleBodyEnter}
+            onChange={(e) => {
+              if (e.target.value.length <= maxCharBody) setEditedBody(e.target.value);
+              handleInput();
+            }}
+            className="text-sm md:text-lg p-5 resize-none w-full overflow-hidden outline-none"
+          />
+        </div>
       ) : (
         <p className="px-5 xl:px-10 py-4 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
       )}
       <hr className="text-[var(--text1)] opacity-20" />
-      <div className="flex flex-col gap-3 xl:flex-row justify-between items-center px-5 xl:px-10 py-5">
+      <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-5">
         {isEditing ? (
-          <input
+          <div className="mb-8 w-full bg-[var(--bg)] rounded-lg">
+            <input
             type="text"
             aria-label="Edit post tags"
             title="Edit post tags"
             value={editedTags}
             onKeyDown={handleTagsEnter}
             onChange={(e) => setEditedTags(e.target.value)}
-            className="w-full text-sm md:text-xl p-3 mb-8 mr-5 border-b"
-          />
-        ) : (
-          <p className="bg-[var(--primary)] text-[var(--text2)] text-xs md:text-l font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto">
-            {post.tags.map((tag) => `#${tag.name.toLocaleLowerCase()} `)}
+            className="w-full text-sm md:text-lg p-5"
+            />
+          </div>
+        ) : post.tags[0].name.length >= 1 ? (
+          <p className={`${colorTheme === "light" ? "bg-white text-[var(--text1)]" : "bg-[var(--primary)] text-[var(--text2)]"} text-xs md:text-l font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto opacity-70`}>
+            {post.tags.map((tag) => `#${tag.name.toLowerCase()} `)}
           </p>
-        )}
+        ) : <p className="opacity-0 mb-[-10px]"></p>}
 
         {isEditing && (
           <div className="flex items-center absolute bottom-3.5 right-15">
@@ -354,7 +390,6 @@ const Post = ({ post }: { post: PostType }) => {
             />
           </div>
         )}
-
         {isEditing ? (
           <button
             type="button"
@@ -385,9 +420,9 @@ const Post = ({ post }: { post: PostType }) => {
         )}
       </div>
       {commentsIsOpen && (
-        <div className="bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl">
-          <h3 className="text-2xl mb-0">Comments</h3>
-          {comments.length === 0 && <p className="text-sm">No comments yet. Be the first to comment!</p>}
+        <div className={`bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl`}>
+          <h3 className="text-2xl mb-0">COMMENTS</h3>
+          {comments.length === 0 && <p className="text-sm opacity-70">No comments yet. Be the first to comment!</p>}
           {comments.length > 0 &&
             comments.map((comment) => (
               <Comment
@@ -402,7 +437,7 @@ const Post = ({ post }: { post: PostType }) => {
                 onDelete={handleDeleteComment}
               />
             ))}
-          <CommentForm postId={post.id} onCommentAdded={addNewComment} />
+            {user ? (<CommentForm postId={post.id} onCommentAdded={addNewComment} />) : (null)}
         </div>
       )}
     </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState} from "react";
 
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
@@ -29,6 +29,12 @@ const Comment = ({
   const isAuthor = authorId?.toString() === user?.id.toString();
   const isAdmin = user?.role.toString() === "ADMIN";
 
+    useEffect(() => {
+    if (isEditing) {
+      textRef.current?.focus();
+    }
+  }, [isEditing]);
+
   const handleSubmit = () => {
     if (comment === editedComment) {
       setIsEditing(false);
@@ -41,13 +47,13 @@ const Comment = ({
   const handleKeyDown = useSubmitOnEnter(handleSubmit);
 
   return (
-    <div className="px-0 xl:px-10 pb-6">
+    <div className="px-0 pb-6 mt-3">
       <div className="text-[var(--text1)]">
         <div className="flex bg-[var(--bg)] w-full px-3 pt-2 xl:w-fit rounded-tl-3xl rounded-tr-3xl">
           {avatar ? <Avatar size={40} avatarUrl={avatar} /> : <CgProfile size={40} />}
           <div className="ml-2">
-            <p className="font-bold">{username}</p>
-            <p className="text-xs">{date}</p>
+            <p className="font-bold text-[0.9rem] md:text-[1rem]">{username}</p>
+            <p className="text-[0.6rem] md:text-[0.7rem] opacity-80">{date}</p>
           </div>
           <div className="ml-auto xl:ml-3 flex gap-2">
             {isAuthor && (
@@ -57,7 +63,7 @@ const Comment = ({
                 title="Edit comment"
                 className="hover:bg-[var(--primary-tint)] rounded-full px-1"
               >
-                <MdEdit size={20} color="text-[var(--button3)]" />
+                <MdEdit size={18} color="text-[var(--button3)]" />
               </button>
             )}
             {(isAuthor || isAdmin) && (
@@ -67,7 +73,7 @@ const Comment = ({
                 title="Delete comment"
                 className="hover:bg-[var(--primary-tint)] rounded-full px-1"
               >
-                <MdDelete size={20} color="text-[var(--button3)]" />
+                <MdDelete size={18} color="text-[var(--button3)]" />
               </button>
             )}
           </div>

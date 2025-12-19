@@ -8,7 +8,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   secondary: "bg-[var(--button2)] button-style",
   tertiary: "bg-[var(--button3)] button-style",
   outline:
-    "bg-transparent border-1 border-[var(--text1)] text-[var(--text1)] hover:bg-[var(--button1)] hover:text-[var(--text2)] transition-colors duration-100",
+    "bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text1)] hover:bg-[var(--button1)] hover:text-[var(--text2)] transition-colors duration-100",
   success: "bg-[var(--success)] button-style",
   error: "bg-[var(--error)] button-style",
 };
