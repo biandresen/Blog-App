@@ -1,0 +1,7 @@
+export const MAX_CHARS = {
+  TITLE: 64,
+  BODY: 10000,
+  TAGS: 200,
+  COMMENT: 3000,
+  SEARCH: 100
+}

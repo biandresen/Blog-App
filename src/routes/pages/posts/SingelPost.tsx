@@ -34,7 +34,7 @@ const SinglePost = () => {
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">POST DETAILS</h2>
-      <section>
+      <section className="posts-section">
         {!post && <h3 className="posts-section-heading text-[var(--text1)]">Post not found</h3>}
         {post && isDraft && !isAuthor && (
           <h3 className="posts-section-heading text-[var(--text1)]">This draft is private</h3>

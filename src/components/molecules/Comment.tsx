@@ -8,6 +8,8 @@ import { type CommentProps } from "../../types/components.types";
 import { useUser } from "../../contexts/UserContext";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
+import { getCharactersLeft } from "../../lib/utils";
+import { MAX_CHARS } from "../../lib/constants";
 
 const Comment = ({
   commentId,
@@ -80,17 +82,20 @@ const Comment = ({
         </div>
         <div className="flex bg-[var(--bg)] px-4 py-3 rounded-2xl rounded-tr-none xl:rounded-tr-2xl rounded-tl-none w-full relative">
           {isEditing ? (
-            <textarea
-              ref={textRef}
-              aria-label="Edit comment"
-              className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-xl"
-              value={editedComment}
-              onKeyDown={handleKeyDown}
-              onChange={(e) => {
-                setEditedComment(e.target.value);
-                handleInput();
-              }}
-            />
+            <div className="relative w-full">
+              <textarea
+                ref={textRef}
+                aria-label="Edit comment"
+                className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-xl"
+                value={editedComment}
+                onKeyDown={handleKeyDown}
+                onChange={(e) => {
+                  if (e.target.value.length <= MAX_CHARS.COMMENT) setEditedComment(e.target.value);
+                  handleInput();
+                }}
+              />
+              <span className="absolute bottom-5 left-0 opacity-80 text-xs text-[var(--text1)]">{getCharactersLeft(editedComment, MAX_CHARS.COMMENT)}</span>
+            </div>
           ) : (
             <p className="text-wrap text-sm md:text-lg/6 whitespace-break-spaces">{comment}</p>
           )}

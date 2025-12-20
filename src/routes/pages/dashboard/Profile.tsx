@@ -124,7 +124,7 @@ const Profile = () => {
             <ul>
               {profileContent.infoListItems.map((list, index) => (
                 <li className="text-xl md:text-2xl mt-2" key={list}>
-                  {list} <span className="font-bold">{infoListItemsVariables[index]}</span>
+                  {list} <span className="font-bold break-all">{infoListItemsVariables[index]}</span>
                 </li>
               ))}
             </ul>
@@ -187,7 +187,7 @@ const Profile = () => {
               setErrorMsg2(validationResult);
             }}
           />
-          <div className="flex relative">
+          <div className="flex flex-col relative">
             <Input
               id="password"
               type={!showPassword ? "password" : "text"}

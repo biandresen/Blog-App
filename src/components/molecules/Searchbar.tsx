@@ -2,6 +2,7 @@ import { RxCross2 } from "react-icons/rx";
 import { ImSearch } from "react-icons/im";
 import { useEffect, useState } from "react";
 import useDebounce from "../../hooks/useDebounce";
+import { MAX_CHARS } from "../../lib/constants";
 
 const Searchbar = ({ handleSearch }: { handleSearch: (input: string) => void }) => {
   const [searchInput, setSearchInput] = useState<string>("");
@@ -29,7 +30,7 @@ const Searchbar = ({ handleSearch }: { handleSearch: (input: string) => void }) 
           </button>
           <input
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => {if (e.target.value.length <= MAX_CHARS.SEARCH) setSearchInput(e.target.value)}}
             type="text"
             placeholder="Search posts..."
             className="bg-transparent outline-none text-[var(--text2)] w-full ml-4 text-xl lg:text-2xl"

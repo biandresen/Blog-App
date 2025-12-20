@@ -14,6 +14,7 @@ const Input = ({
   placeholder,
   required = false,
   disabled = false,
+  maxLength,
   className,
 }: InputProps) => {
   const hasValue = value?.trim().length !== 0;
@@ -37,8 +38,9 @@ const Input = ({
           required={required}
           disabled={disabled}
           accept={accept}
+          maxLength={maxLength}
           // aria-invalid={!inputValid}
-          className={`bg-[var(--bg)] text-[var(--text1)] font-semibold rounded-full w-full text-lg md:text-xl px-3 py-0.5 pr-9
+          className={`bg-[var(--bg)] text-[var(--text1)] font-semibold rounded-full w-full text-lg md:text-xl px-3 py-0.5 pr-13
             outline-none border
             ${inputValid === false && hasValue ? "border-[var(--error)]" : "border-transparent"}
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}

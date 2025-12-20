@@ -26,6 +26,7 @@ export interface InputProps {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  maxLength?: number;
 }
 
 export interface CommentProps {

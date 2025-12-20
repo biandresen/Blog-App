@@ -7,6 +7,8 @@ import { addComment } from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { safeRequest } from "../../lib/auth";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
+import { getCharactersLeft } from "../../lib/utils";
+import { MAX_CHARS } from "../../lib/constants";
 
 const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const [body, setBody] = useState("");
@@ -61,13 +63,16 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
       onSubmit={handleSubmit}
       className="mt-4 flex flex-col gap-2 rounded-2xl text-[var(--text1)] text-xl"
     >
-      <textarea
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        placeholder="Write a comment..."
-        onKeyDown={handleKeyDown}
-        className="rounded-2xl p-3 w-full bg-[var(--bg)] mb-3"
-      />
+      <div className="relative">
+        <textarea
+          value={body}
+          onChange={(e) => {if (e.target.value.length <= MAX_CHARS.BODY) setBody(e.target.value)}}
+          placeholder="Write a comment..."
+          onKeyDown={handleKeyDown}
+          className="rounded-2xl p-3 w-full bg-[var(--bg)] mb-3"
+        />
+        <span className="absolute bottom-5 right-5 opacity-80 text-xs text-[var(--text1)]">{getCharactersLeft(body, MAX_CHARS.BODY)}</span>
+      </div>
       <button
         title="Post comment"
         type="submit"

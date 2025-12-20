@@ -5,7 +5,7 @@ import { type CommentType, type PostType } from "../../types/post.types";
 import Button from "../../components/atoms/Button";
 import Comment from "../molecules/Comment";
 import CommentForm from "../molecules/CommentForm";
-import { formatDate } from "../../lib/utils";
+import { formatDate, getCharactersLeft } from "../../lib/utils";
 import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { deleteComment, deletePost, editComment, editPost, toggleLike } from "../../lib/axios";
@@ -23,6 +23,7 @@ import { NavLink } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { useColorTheme } from "../../contexts/ColorThemeContext";
 2;
+import { MAX_CHARS } from "../../lib/constants";
 
 const Post = ({ post }: { post: PostType }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
@@ -40,12 +41,9 @@ const Post = ({ post }: { post: PostType }) => {
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
   const { refreshPosts } = usePosts();
-  const {colorTheme} = useColorTheme();
+  const { colorTheme } = useColorTheme();
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const maxCharTitle = 64;
-  const maxCharBody = 2000;
 
   useEffect(() => {
     if (!post || !user) return;
@@ -292,11 +290,11 @@ const Post = ({ post }: { post: PostType }) => {
           {likedList?.length > 0 && (
             <div
               className="
-              absolute left-0 xl:left-0 top-0 border max-h-300 overflow-y-auto
+              absolute right-0 xl:right-0 top-8 border max-h-300 overflow-y-auto
               w-25 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
               opacity-0 pointer-events-none
               group-hover:opacity-100 group-hover:pointer-events-auto
-              transition-opacity duration-150
+              transition-opacity duration-200
               z-50"
             >
               {likedList.map((username, index) => (
@@ -315,62 +313,70 @@ const Post = ({ post }: { post: PostType }) => {
         <p className="font-bold text-[0.8rem] md:text-[1rem]">{post.user.username}</p>
         <p className="text-[0.5rem] md:text-[0.7rem] mt-[-0.2rem] opacity-80">{formatDate(post.createdAt)}</p>
       </div>
-      <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-6 pb-4 mt-25">
+      <hr className="text-[var(--text1)] opacity-10 mt-28" />
+      <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-4">
         {isEditing ? (
-          <div className="bg-[var(--bg)] rounded-lg p-1 w-full">
+          <div className="bg-[var(--bg)] rounded-lg p-1 w-full relative">
             <input
               ref={inputRef}
               title="Edit post title"
               type="text"
               value={editedTitle}
+              maxLength={MAX_CHARS.TITLE}
               onKeyDown={handleTitleEnter}
               onChange={(e) => {
-                if (e.target.value.length <= maxCharTitle) setEditedTitle(e.target.value);
+                if (e.target.value.length <= MAX_CHARS.TITLE) setEditedTitle(e.target.value);
               }}
               className="w-full text-xl xl:text-3xl md:text-3xl/8 p-4 bg-transparent outline-none"
             />
+            <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTitle, MAX_CHARS.TITLE)}</span>
           </div>
         ) : (
           <NavLink to={`/posts/${post.id}`}>
-            <h3 className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22">{post.title}</h3>
+            <h3 className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]">{post.title}</h3>
           </NavLink>
         )}
       </div>
-      <hr className="text-[var(--text1)] opacity-20" />
+      {/* <hr className="text-[var(--text1)] opacity-10" /> */}
       {isEditing ? (
-        <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg">
+        <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg relative">
           <textarea
             ref={textRef}
             aria-label="Edit post body"
             title="Edit post body"
             value={editedBody}
+            maxLength={MAX_CHARS.BODY}
             onKeyDown={handleBodyEnter}
             onChange={(e) => {
-              if (e.target.value.length <= maxCharBody) setEditedBody(e.target.value);
+              if (e.target.value.length <= MAX_CHARS.BODY) setEditedBody(e.target.value);
               handleInput();
             }}
             className="text-sm md:text-lg p-5 resize-none w-full overflow-hidden outline-none"
           />
+          <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
         </div>
       ) : (
-        <p className="px-5 xl:px-10 py-4 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
+        <p className="px-5 xl:px-10 pb-4 pt-1 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
       )}
-      <hr className="text-[var(--text1)] opacity-20" />
-      <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-5">
+      <hr className="text-[var(--text1)] opacity-10" />
+      <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-4">
         {isEditing ? (
-          <div className="mb-8 w-full bg-[var(--bg)] rounded-lg">
+          <div className="mb-8 w-full bg-[var(--bg)] rounded-lg relative">
             <input
             type="text"
             aria-label="Edit post tags"
             title="Edit post tags"
             value={editedTags}
+            maxLength={MAX_CHARS.TAGS}
             onKeyDown={handleTagsEnter}
-            onChange={(e) => setEditedTags(e.target.value)}
+            onChange={(e) =>
+              { if (e.target.value.length <= MAX_CHARS.TAGS) setEditedTags(e.target.value);}}
             className="w-full text-sm md:text-lg p-5"
             />
+            <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTags, MAX_CHARS.TAGS)}</span>
           </div>
         ) : post.tags[0].name.length >= 1 ? (
-          <p className={`${colorTheme === "light" ? "bg-white text-[var(--text1)]" : "bg-[var(--primary)] text-[var(--text2)]"} text-xs md:text-l font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto opacity-70`}>
+          <p title={post.tags.map((tag) => `#${tag.name.toLowerCase()} `).join(" ")} className={`${colorTheme === "light" ? "bg-white text-[var(--text1)]" : "bg-[var(--primary)] text-[var(--text2)]"} text-xs md:text-l font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto opacity-70`}>
             {post.tags.map((tag) => `#${tag.name.toLowerCase()} `)}
           </p>
         ) : <p className="opacity-0 mb-[-10px]"></p>}
@@ -381,7 +387,7 @@ const Post = ({ post }: { post: PostType }) => {
               <b>Publish</b>
             </label>
             <input
-              className="w-4 h-4 cursor-pointer accent-[var(--primary)]"
+              className="w-4 h-4 cursor-pointer accent-[var(--text1)]"
               onChange={() => setPublished((prev) => !prev)}
               id="publish/unpublish"
               aria-label="Publish/Unpublish"
@@ -408,7 +414,7 @@ const Post = ({ post }: { post: PostType }) => {
           </button>
         ) : (
           <Button
-            className="w-full xl:w-auto xl:min-w-[180px]"
+            className="w-full xl:w-auto xl:min-w-[180px] max-h-10 mt-auto"
             onClick={toggleComments}
             size="sm"
             variant="outline"
