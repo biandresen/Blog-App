@@ -149,8 +149,8 @@ const Post = ({ post }: { post: PostType }) => {
       if (res.statusCode !== 200) throw new Error("Request failed");
 
       setIsEditing(false);
-      await refreshPosts();
       toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
+      await refreshPosts();
     } catch (err: any) {
       toast.error("Failed to edit post");
       console.error("Failed to edit post", err.response.data.errors || err.message);
@@ -164,8 +164,9 @@ const Post = ({ post }: { post: PostType }) => {
       const res = await safeRequest(deletePost, accessToken, setAccessToken, postId);
       if (res.statusCode !== 200) throw new Error("Request failed");
 
-      await refreshPosts();
+      setShowModal(false);
       toast.success("Post deleted!");
+      await refreshPosts();
     } catch (err: any) {
       toast.error("Failed to delete post");
       console.error("Failed to delete post", err.message);
@@ -224,7 +225,7 @@ const Post = ({ post }: { post: PostType }) => {
   return (
     <div
       className={`relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] w-full xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10 ${
-        post.published ? "" : "opacity-80"}`}
+        published ? "" : "opacity-80"}`}
     >
       <Modal
         isOpen={showModal}
@@ -236,7 +237,7 @@ const Post = ({ post }: { post: PostType }) => {
         onCancel={() => setShowModal(false)}
       />
 
-      {post.published ? null : (
+      {published ? null : (
         <div className="text-[var(--text1)] absolute top-5 md:top-4.5 right-14 xl:right-19 text-sm md:text-lg">DRAFT</div>
       )}
       <div className="flex absolute gap-2 top-4 right-5 xl:right-10">
@@ -271,7 +272,7 @@ const Post = ({ post }: { post: PostType }) => {
           </button>
         )}</div>
       )}
-      {!post.published ? null : (
+      {!published ? null : (
         <div className="group">
           <button
             aria-label="Like post"

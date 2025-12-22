@@ -91,10 +91,10 @@ const Drafts = () => {
         {showMiniPosts
           ? drafts &&
             drafts.map((draft) => (
-              <DraftCard key={draft.id + draft.title} id={draft.id} draftTitle={draft.title} />)
+              <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />)
               )
           : drafts && drafts.map((draft) => <Post
-                key={draft.id + draft.title}
+                key={draft.id}
                 post={draft}
               />
             )}
