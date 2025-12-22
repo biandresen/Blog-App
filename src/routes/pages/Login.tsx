@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { jwtDecode } from "jwt-decode";
-import { type User } from "../../types/context.types";
+import { safeRequest } from "../../lib/auth";
+import { getMe } from "../../lib/axios";
+
 
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
@@ -28,46 +29,40 @@ const Login = () => {
   const invalidForm = !input1Valid || !input2Valid || !userInput || !password;
 
   const { setAccessToken, setIsAuthenticated } = useAuth();
-  const { setUser } = useUser();
+  const { setUser, user } = useUser();
+
 
   useEffect(() => {
+    if (user) {
+    navigate("/posts");
+    return;
+    }
+
     toast.info("Welcome! Please login to your account.");
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (invalidForm) return;
-    try {
-      const res = await loginUser({ userInput, password });
-      if (res.statusCode !== 200) {
-        toast.error(res.message);
-        throw new Error("Login failed");
-      }
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (invalidForm) return;
 
-      // Save access token
-      setAccessToken(res.data);
-      setIsAuthenticated(true);
+  try {
+    const res = await loginUser({ userInput, password });
+    if (res.statusCode !== 200) throw new Error(res.message);
 
-      // OPTION 1: Decode token
-      const payload: User = jwtDecode(res.data);
-      setUser({
-        id: payload.id,
-        username: payload.username,
-        email: payload.email,
-        avatar: payload.avatar,
-        role: payload.role,
-        createdAt: payload.createdAt,
-        updatedAt: payload.updatedAt,
-      });
-      toast.success(`Welcome back, ${payload.username}!`);
-      setTimeout(() => {
-        navigate("/posts");
-      }, 200);
-    } catch (err: any) {
-      toast.error("Correct the error(s) and try again.");
-      setErrorMsg2(err.message || "Login failed");
-    }
-  };
+    setAccessToken(res.data);
+    setIsAuthenticated(true);
+
+    // Canonical user fetch
+    const meRes = await safeRequest(getMe, res.data, setAccessToken);
+    setUser(meRes.data);
+
+    toast.success(`Welcome back, ${meRes.data.username}!`);
+    setTimeout(() => navigate("/posts"), 200);
+  } catch (err: any) {
+    toast.error("Correct the error(s) and try again.");
+    setErrorMsg2(err.message || "Login failed");
+  }
+};
 
   return (
     <div className="inputInfo-container container">

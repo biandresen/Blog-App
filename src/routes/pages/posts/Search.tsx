@@ -80,7 +80,7 @@ const Search = () => {
       <div className="flex justify-center gap-2 md:gap-4 my-4 flex-wrap text-[var(--text1)]">
         <b>Filters:</b>
         {Object.keys(filters).map((filter) => (
-          <label key={filter} className="flex items-center gap-2 text-[var(--text1)]">
+          <label key={filter} className="flex items-center gap-1 text-[var(--text1)]">
             <input
               type="checkbox"
               checked={filters[filter as keyof typeof filters]}

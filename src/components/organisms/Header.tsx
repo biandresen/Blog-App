@@ -94,7 +94,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
             : <IoMenu size={45} />}
           </Button>
         </div>
-        <Navbar isOpen={menuIsOpen} />
+        <Navbar isOpen={menuIsOpen} setIsOpen={setMenuIsOpen} />
       </section>
     </header>
   );

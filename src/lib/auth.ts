@@ -1,30 +1,20 @@
 import axios from "axios";
 import BLOG_API from "../api/blog-api";
-import { jwtDecode } from "jwt-decode";
-import { type token, type User } from "../types/context.types";
+import { type token} from "../types/context.types";
 
 type SetAccessToken = (token: token | null) => void;
-type SetUser = (user: User | null) => void;
 
-export async function refreshAccessToken(setAccessToken: SetAccessToken, setUser?: SetUser) {
+export async function refreshAccessToken(setAccessToken: SetAccessToken) {
   try {
-    console.log("Refreshing token");
     const res = await axios.post(
-      `${BLOG_API.BASE}/auth/refresh`,
+      `${BLOG_API.BASE}${BLOG_API.REFRESH}`,
       {},
-      { withCredentials: true } // For sending refresh cookie
+      { withCredentials: true }
     );
 
     if (res.data.statusCode === 200) {
       const newAccessToken = res.data.data;
       setAccessToken(newAccessToken);
-
-      // Optionally decode and set the user
-      if (setUser) {
-        const decoded: User = jwtDecode(newAccessToken);
-        setUser(decoded);
-      }
-
       return newAccessToken;
     }
 
@@ -32,7 +22,6 @@ export async function refreshAccessToken(setAccessToken: SetAccessToken, setUser
   } catch (err) {
     console.error("❌ Failed to refresh token:", err);
     setAccessToken(null);
-    if (setUser) setUser(null);
     return null;
   }
 }
@@ -51,7 +40,7 @@ export async function safeRequest<T>(
     return await apiFunc(accessToken, ...args);
   } catch (err: any) {
     // 2️⃣ If unauthorized, try refreshing
-    if (err?.response?.status === 401) {
+    if (err?.response?.status === 401 || err?.statusCode === 401) {
       const newToken = await refreshAccessToken(setAccessToken);
       if (!newToken) {
         // Optionally clear auth state

@@ -6,6 +6,7 @@ const BLOG_API = {
   REGISTER: "/auth/register",
   LOGIN: "/auth/login",
   LOGOUT: "/auth/logout",
+  REFRESH: "/auth/refresh",
   RESETPASSWORD: "/auth/reset-password",
   NEWPASSWORD: "/auth/new-password",
   GCU_DRAFTS: "/posts/drafts", //Get Current User Drafts

@@ -66,6 +66,7 @@ export interface HeaderProps {
 
 export interface NavbarProps {
   isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface CommentFormProps {

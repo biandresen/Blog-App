@@ -5,7 +5,7 @@ import { useUser } from "../../contexts/UserContext";
 
 import { type NavbarProps } from "../../types/components.types";
 
-const Navbar = ({ isOpen }: NavbarProps) => {
+const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
   const { colorTheme, toggleTheme } = useColorTheme();
   const { user } = useUser();
 
@@ -23,7 +23,7 @@ const Navbar = ({ isOpen }: NavbarProps) => {
         md:place-items-end
       `}
     >
-      <ul className="flex flex-col gap-4 ml-8 md:flex-row md:items-center md:gap-6 md:ml-0">
+      <ul onClick={() => setIsOpen(false)} className="flex flex-col gap-4 ml-8 md:flex-row md:items-center md:gap-6 md:ml-0 w-25 md:w-auto">
         <li className="pt-3 md:pt-0">
           <NavLink
             to="/posts"

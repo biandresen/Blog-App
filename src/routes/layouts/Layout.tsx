@@ -26,18 +26,3 @@ const Layout = ({ setSidebars, children }: LayoutProps) => {
   );
 };
 export default Layout;
-
-// useEffect(() => {
-//   const handleResize = () => {
-//     if (window.innerWidth >= 768) {
-//       setSidebars({ left: true, right: true });
-//     } else {
-//       setSidebars({ left: false, right: false });
-//     }
-//   };
-
-//   handleResize(); // run once
-//   window.addEventListener("resize", handleResize);
-
-//   return () => window.removeEventListener("resize", handleResize);
-// }, [setSidebars]);

@@ -17,14 +17,14 @@ const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
 
   const handleLinkClick = () => {
     if (window.innerWidth < 768) {
-      setSidebars((prev) => ({ ...prev, right: false }));
+      setSidebars(() => ({ left: false, right: false}));
     }
   };
 
   return (
     <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-[calc(100vh-3.8rem)] md:max-w-45 md:static z-100">
       <div className="ml-8 mt-5 md:mt-16">
-        <ul onClick={handleLinkClick} className="flex flex-col gap-3">
+        <ul onClick={handleLinkClick} className="flex flex-col gap-3 w-37">
           <NavLink
             to="/dashboard/new-post"
             className={({ isActive }) =>

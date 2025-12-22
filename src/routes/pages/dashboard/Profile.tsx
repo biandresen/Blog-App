@@ -1,4 +1,3 @@
-import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -52,7 +51,6 @@ const Profile = () => {
     logoutUser();
     navigate("/login");
     toast.info("You have been logged out.");
-    console.log("User logged out");
   };
 
   const handleDeleteProfile = async () => {
@@ -91,11 +89,11 @@ const Profile = () => {
       if (res.statusCode !== 200) throw new Error(res.message);
 
       toast.success("Profile updated successfully!");
-      const { password: _, ...updatedUser } = res.data;
-      setUser({ id: user?.id, ...updatedUser });
+      setUser(res?.data);
+      // setUser({id: res?.data?.id, username: res?.data?.username, email: res?.data?.email, avatar: res?.data?.avatar, role: res?.data?.role, createdAt: res?.data?.createdAt, updatedAt: res?.data?.updatedAt});
     } catch (err: any) {
       if (err?.response?.data.message === "File too large") {
-        toast.error("Avatar file size exceeds the limit. Max size is 2MB.");
+        toast.error("Avatar file size exceeds the limit. Max size is 6MB.");
         return;
       }
       console.error("Failed to update profile", err);
@@ -118,7 +116,7 @@ const Profile = () => {
         <div className="info-container flex flex-col">
           <div className="flex flex-col-reverse md:flex-row ">
             <h2 className="text-2xl md:text-4xl my-3 lg:mr-10">{profileContent.infoHeading}</h2>
-            {user?.avatar ? <Avatar size={80} avatarUrl={user?.avatar} /> : <CgProfile size={60} />}
+            <Avatar size={80} avatarUrl={user?.avatar} />
           </div>
           <div className="mb-10 md:mb-0">
             <ul>

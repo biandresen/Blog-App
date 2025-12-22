@@ -1,41 +1,30 @@
 import { useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
-import { refreshAccessToken } from "../lib/auth";
+import { refreshAccessToken, safeRequest } from "../lib/auth";
+import { getMe } from "../lib/axios";
 import { useAuth } from "../contexts/AuthContext";
 import { useUser } from "../contexts/UserContext";
-import { type User } from "../types/context.types";
 
 export const useAuthInitializer = () => {
   const { setAccessToken, setIsAuthenticated, setLoading } = useAuth();
   const { setUser } = useUser();
 
-  useEffect(() => {
-    const tryRefresh = async () => {
+ useEffect(() => {
+    const init = async () => {
       try {
-        const newToken = await refreshAccessToken(setAccessToken);
+        const token = await refreshAccessToken(setAccessToken);
 
-        if (newToken) {
-          // Decode the token to extract user info
-          const payload: User = jwtDecode(newToken);
-          setUser({
-            id: payload.id,
-            username: payload.username,
-            email: payload.email,
-            avatar: payload.avatar,
-            role: payload.role,
-            createdAt: payload.createdAt,
-            updatedAt: payload.updatedAt,
-          });
-
-          setIsAuthenticated(true);
-          console.log("✅ Auto-login successful for", payload.username);
-        } else {
+        if (!token) {
           setIsAuthenticated(false);
           setUser(null);
-          console.log("❌ No valid refresh token found");
+          return;
         }
-      } catch (error) {
-        console.error("Failed to refresh access token:", error);
+
+        setIsAuthenticated(true);
+
+        // Canonical: fetch user from DB
+        const meRes = await safeRequest(getMe, token, setAccessToken);
+        setUser(meRes.data);
+      } catch (err) {
         setIsAuthenticated(false);
         setUser(null);
       } finally {
@@ -43,6 +32,6 @@ export const useAuthInitializer = () => {
       }
     };
 
-    tryRefresh();
+    init();
   }, [setAccessToken, setIsAuthenticated, setLoading, setUser]);
 };

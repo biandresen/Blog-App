@@ -13,6 +13,7 @@ type LoginUser = {
   userInput: string;
   password: string;
 };
+
 export const resetPassword = async ({ email }: { email: string }) => {
   try {
     const res = await axios.post(BLOG_API.BASE + BLOG_API.RESETPASSWORD, {
@@ -182,6 +183,17 @@ export const getUserByNameOrEmail = async (accessToken: token, userInput: string
 export const getUserById = async (accessToken: token, id: number) => {
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getMe = async (accessToken: token) => {
+  try {
+    const res = await axios.get(BLOG_API.BASE + BLOG_API.USER + `/me`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
@@ -396,7 +408,6 @@ export const toggleLike = async (accessToken: token, postId: number) => {
 export const getPopularPosts = async () => {
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.POPULAR);
-    console.log(res.data);
     return res.data;
   } catch (err: any) {
     if (err.response) {

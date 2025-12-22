@@ -13,11 +13,11 @@ import { MAX_CHARS } from "../../../lib/constants";
 
 const NewPost = () => {
   const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [body, setbody] = useState<string>("");
   const [tags, setTags] = useState<string>("");
   const [postErrors, setPostErrors] = useState<string[]>([]);
 
-  const formError = title === "" || content === "";
+  const formError = title === "" || body === "";
   const navigate = useNavigate();
 
   const { accessToken, setAccessToken } = useAuth();
@@ -25,7 +25,7 @@ const NewPost = () => {
 
   const resetForm = () => {
     setTitle("");
-    setContent("");
+    setbody("");
     setTags("");
   };
 
@@ -36,7 +36,7 @@ const NewPost = () => {
       return;
     }
     if (formError) {
-      toast.error("Title and content are required.");
+      toast.error("Title and body are required.");
       return;
     }
     try {
@@ -45,7 +45,7 @@ const NewPost = () => {
         accessToken,
         setAccessToken,
         title,
-        content,
+        body,
         tags?.split(",").map((tag) => tag.trim())
       );
       if (res.statusCode !== 200) {
@@ -72,7 +72,7 @@ const NewPost = () => {
       return;
     }
     if (formError) {
-      toast.error("Title and content are required.");
+      toast.error("Title and body are required.");
       return;
     }
     try {
@@ -81,7 +81,7 @@ const NewPost = () => {
         accessToken,
         setAccessToken,
         title,
-        content,
+        body,
         tags.split(",").map((tag) => tag.trim())
       );
       if (res.statusCode !== 200) {
@@ -121,27 +121,27 @@ const NewPost = () => {
           />
           <span className="absolute bottom-2 right-2 opacity-80 text-xs">{getCharactersLeft(title, MAX_CHARS.TITLE)}</span>
         </div>
-        <label htmlFor="content" className="text-[var(--text2)] md:text-2xl font-bold md:my-2">
-          Content
+        <label htmlFor="body" className="text-[var(--text2)] md:text-2xl font-bold md:my-2">
+          Body
         </label>
         <div className="relative">
           <textarea
             className="md:text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] px-3 font-normal md:h-50 py-2"
-            title="content"
-            value={content}
+            title="body"
+            value={body}
             onChange={(e) => {
-              if (e.target.value.length <= MAX_CHARS.BODY) setContent(e.target.value);
+              if (e.target.value.length <= MAX_CHARS.BODY) setbody(e.target.value);
             }}
-            placeholder="Write your post content here..."
-            name="content"
-            id="content"
+            placeholder="Write your post body here..."
+            name="body"
+            id="body"
             maxLength={MAX_CHARS.BODY}
           ></textarea>
-          <span className="absolute bottom-2 right-5 opacity-80 text-xs">{getCharactersLeft(content, MAX_CHARS.BODY)}</span>
+          <span className="absolute bottom-2 right-5 opacity-80 text-xs">{getCharactersLeft(body, MAX_CHARS.BODY)}</span>
         </div>
         <div className="relative">
           <Input
-            className="text-[var(--text2)] rounded-xl md:text-2xl! mb-2"
+            className="text-[var(--text2)] rounded-xl text-sm md:text-xl! mb-2 font-normal!"
             id="tags"
             label="Tags"
             type="text"

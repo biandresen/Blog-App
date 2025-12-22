@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-import { CgProfile } from "react-icons/cg";
 
 import { type CommentType, type PostType } from "../../types/post.types";
 import Button from "../../components/atoms/Button";
 import Comment from "../molecules/Comment";
 import CommentForm from "../molecules/CommentForm";
-import { formatDate, getCharactersLeft } from "../../lib/utils";
+import { capitalizeFirstLetter, formatDate, getCharactersLeft } from "../../lib/utils";
 import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { deleteComment, deletePost, editComment, editPost, toggleLike } from "../../lib/axios";
@@ -21,9 +20,8 @@ import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import Avatar from "../atoms/Avatar";
 import { NavLink } from "react-router-dom";
 import Modal from "../molecules/Modal";
-import { useColorTheme } from "../../contexts/ColorThemeContext";
-2;
 import { MAX_CHARS } from "../../lib/constants";
+import TagsCard from "../molecules/TagsCard";
 
 const Post = ({ post }: { post: PostType }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
@@ -41,9 +39,15 @@ const Post = ({ post }: { post: PostType }) => {
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
   const { refreshPosts } = usePosts();
-  const { colorTheme } = useColorTheme();
+  const { ref: textRef, handleInput } = useAutoResizeTextarea(editedBody, isEditing);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isAuthor = user?.id != null && post.authorId === Number(user.id);
+  const isAdmin = user?.role === "ADMIN";
+  const canEdit = isAuthor || isAdmin;
+  const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
+
 
   useEffect(() => {
     if (!post || !user) return;
@@ -59,13 +63,6 @@ const Post = ({ post }: { post: PostType }) => {
   }
 }, [isEditing]);
 
-  const isAuthor = post.authorId?.toString() === user?.id.toString();
-  const isAdmin = user?.role.toString() === "ADMIN";
-  const canEdit = isAuthor || isAdmin;
-
-  const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
-
-  const { ref: textRef, handleInput } = useAutoResizeTextarea(editedBody, isEditing);
 
   const handleTitleEnter = useSubmitOnEnter(() =>
     handleEditPost(
@@ -96,7 +93,7 @@ const Post = ({ post }: { post: PostType }) => {
 
   const handleEditInput = () => {
     setCommentsIsOpen(false);
-    setIsEditing(!isEditing);
+    setIsEditing(prev => !prev);
     setEditedBody(post.body);
     setEditedTitle(post.title);
     setEditedTags(post.tags.map((tag) => tag.name).join(", "));
@@ -108,7 +105,10 @@ const Post = ({ post }: { post: PostType }) => {
 
   const handleToggleLike = async () => {
     try {
-      if (!accessToken) return;
+      if (!accessToken) {
+        toast.error("You must be logged in to like a post");
+        return;
+      };
 
       const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
       if (res.statusCode === 200 || res.statusCode === 201) {
@@ -237,7 +237,7 @@ const Post = ({ post }: { post: PostType }) => {
       />
 
       {post.published ? null : (
-        <div className="text-[var(--text1)] text-sm rounded-full px-5 xl:px-10 pt-4">DRAFT</div>
+        <div className="text-[var(--text1)] absolute top-5 md:top-4.5 right-14 xl:right-19 text-sm md:text-lg">DRAFT</div>
       )}
       <div className="flex absolute gap-2 top-4 right-5 xl:right-10">
         {canEdit && <button
@@ -249,7 +249,7 @@ const Post = ({ post }: { post: PostType }) => {
            <BsThreeDotsVertical size={20} color="var(--text3)" />
           </button>}
         {showEditMenu && (
-          <div className="absolute flex top-10 right-0 bg-[var(--bg-input)] border-1 rounded-full px-1 py-0.5 z-50 opacity-80 ">
+          <div className="absolute flex top-9 right-0 bg-[var(--bg-input)] border-1 border-[var(--text1)]/20 rounded-full px-1 py-0.5 z-50 opacity-80 ">
         {isAuthor && (
           <button
             onClick={handleEditInput}
@@ -278,7 +278,8 @@ const Post = ({ post }: { post: PostType }) => {
             title="Like post"
             type="button"
             onClick={handleToggleLike}
-            className="flex cursor-pointer opacity-80 border rounded-full px-2.5 pt-1 min-w-14"
+            className="flex cursor-pointer px-2.5 pt-1 min-w-14 rounded-full transition-colors duration-200 bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text3)] hover:bg-[var(--button1)] hover:text-[var(--text2)]! transition-colors duration-100 text-md
+            "
             style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
           >
             {hasLiked ? <AiFillLike /> : <AiOutlineLike className="mt-0.5" />}
@@ -291,7 +292,7 @@ const Post = ({ post }: { post: PostType }) => {
             <div
               className="
               absolute right-0 xl:right-0 top-8 border max-h-300 overflow-y-auto
-              w-25 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
+              w-32 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
               opacity-0 pointer-events-none
               group-hover:opacity-100 group-hover:pointer-events-auto
               transition-opacity duration-200
@@ -308,12 +309,14 @@ const Post = ({ post }: { post: PostType }) => {
       )}
       </div>
 
-      <div className="grid mb-5 xl:mb-0 md:ml-auto absolute top-4 left-5 xl:left-10">
-        {post.user?.avatar ? <Avatar avatarUrl={post.user?.avatar} size={45} /> : <CgProfile size={45} />}
-        <p className="font-bold text-[0.8rem] md:text-[1rem]">{post.user.username}</p>
-        <p className="text-[0.5rem] md:text-[0.7rem] mt-[-0.2rem] opacity-80">{formatDate(post.createdAt)}</p>
+      <div className="flex xl:mb-0 md:ml-auto absolute top-4 left-5 xl:left-10">
+        <Avatar avatarUrl={post.user?.avatar} size={60} />
+        <div className="flex flex-col justify-center ml-2">
+          <p title="Username" className="font-bold text-[1rem]">{capitalizeFirstLetter(post.user.username)}</p>
+          <p title="Date of post" className="text-[0.7rem] mt-[-0.2rem] opacity-80">{formatDate(post.createdAt)}</p>
+        </div>
       </div>
-      <hr className="text-[var(--text1)] opacity-10 mt-28" />
+      <hr className="text-[var(--text1)] opacity-10 mt-23" />
       <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-4">
         {isEditing ? (
           <div className="bg-[var(--bg)] rounded-lg p-1 w-full relative">
@@ -332,12 +335,11 @@ const Post = ({ post }: { post: PostType }) => {
             <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTitle, MAX_CHARS.TITLE)}</span>
           </div>
         ) : (
-          <NavLink to={`/posts/${post.id}`}>
-            <h3 className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]">{post.title}</h3>
+          <NavLink aria-label="Go to post" to={`/posts/${post.id}`}>
+            <h3 title="Post title" className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]">{post.title}</h3>
           </NavLink>
         )}
       </div>
-      {/* <hr className="text-[var(--text1)] opacity-10" /> */}
       {isEditing ? (
         <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg relative">
           <textarea
@@ -356,7 +358,7 @@ const Post = ({ post }: { post: PostType }) => {
           <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
         </div>
       ) : (
-        <p className="px-5 xl:px-10 pb-4 pt-1 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
+        <p title="Post body" className="px-5 xl:px-10 pb-4 pt-1 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
       )}
       <hr className="text-[var(--text1)] opacity-10" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-4">
@@ -376,9 +378,7 @@ const Post = ({ post }: { post: PostType }) => {
             <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTags, MAX_CHARS.TAGS)}</span>
           </div>
         ) : post.tags[0].name.length >= 1 ? (
-          <p title={post.tags.map((tag) => `#${tag.name.toLowerCase()} `).join(" ")} className={`${colorTheme === "light" ? "bg-white text-[var(--text1)]" : "bg-[var(--primary)] text-[var(--text2)]"} text-xs md:text-l font-semibold rounded-2xl py-2 px-6 w-full xl:w-auto opacity-70`}>
-            {post.tags.map((tag) => `#${tag.name.toLowerCase()} `)}
-          </p>
+          <TagsCard tags={post?.tags} />
         ) : <p className="opacity-0 mb-[-10px]"></p>}
 
         {isEditing && (
@@ -427,8 +427,8 @@ const Post = ({ post }: { post: PostType }) => {
       </div>
       {commentsIsOpen && (
         <div className={`bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl`}>
-          <h3 className="text-2xl mb-0">COMMENTS</h3>
-          {comments.length === 0 && <p className="text-sm opacity-70">No comments yet. Be the first to comment!</p>}
+          <h3 className="text-lg md:text-2xl mb-0">COMMENTS</h3>
+          {comments.length === 0 && <p className="text-xs md:text-sm opacity-70">No comments yet. Be the first to comment!</p>}
           {comments.length > 0 &&
             comments.map((comment) => (
               <Comment

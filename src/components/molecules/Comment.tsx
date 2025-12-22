@@ -8,7 +8,7 @@ import { type CommentProps } from "../../types/components.types";
 import { useUser } from "../../contexts/UserContext";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
-import { getCharactersLeft } from "../../lib/utils";
+import { capitalizeFirstLetter, getCharactersLeft } from "../../lib/utils";
 import { MAX_CHARS } from "../../lib/constants";
 
 const Comment = ({
@@ -54,7 +54,7 @@ const Comment = ({
         <div className="flex bg-[var(--bg)] w-full px-3 pt-2 xl:w-fit rounded-tl-3xl rounded-tr-3xl">
           {avatar ? <Avatar size={40} avatarUrl={avatar} /> : <CgProfile size={40} />}
           <div className="ml-2">
-            <p className="font-bold text-[0.9rem] md:text-[1rem]">{username}</p>
+            <p className="font-bold text-[0.8rem] md:text-[1rem] mb-[-0.2rem]">{capitalizeFirstLetter(username)}</p>
             <p className="text-[0.6rem] md:text-[0.7rem] opacity-80">{date}</p>
           </div>
           <div className="ml-auto xl:ml-3 flex gap-2">
@@ -86,7 +86,7 @@ const Comment = ({
               <textarea
                 ref={textRef}
                 aria-label="Edit comment"
-                className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-xl"
+                className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-sm md:text-lg/6"
                 value={editedComment}
                 onKeyDown={handleKeyDown}
                 onChange={(e) => {
