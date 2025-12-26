@@ -10,6 +10,7 @@ import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import { capitalizeFirstLetter, getCharactersLeft } from "../../lib/utils";
 import { MAX_CHARS } from "../../lib/constants";
+import LinkifiedText from "../atoms/LinkifiedText";
 
 const Comment = ({
   commentId,
@@ -97,7 +98,7 @@ const Comment = ({
               <span className="absolute bottom-5 left-0 opacity-80 text-xs text-[var(--text1)]">{getCharactersLeft(editedComment, MAX_CHARS.COMMENT)}</span>
             </div>
           ) : (
-            <p className="text-wrap text-sm md:text-lg/6 whitespace-break-spaces">{comment}</p>
+            <LinkifiedText className="text-wrap text-sm md:text-lg/6 whitespace-break-spaces" text={comment} />
           )}
           {isEditing && (
             <button
