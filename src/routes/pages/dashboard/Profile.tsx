@@ -92,7 +92,7 @@ const Profile = () => {
       setUser(res?.data);
       // setUser({id: res?.data?.id, username: res?.data?.username, email: res?.data?.email, avatar: res?.data?.avatar, role: res?.data?.role, createdAt: res?.data?.createdAt, updatedAt: res?.data?.updatedAt});
     } catch (err: any) {
-      if (err?.response?.data.message === "File too large") {
+      if (err?.response?.data?.message === "File too large") {
         toast.error("Avatar file size exceeds the limit. Max size is 6MB.");
         return;
       }

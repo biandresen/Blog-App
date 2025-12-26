@@ -1,45 +1,54 @@
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { usePosts } from "../../../contexts/PostsContext";
-import { useUser } from "../../../contexts/UserContext";
+import { useEffect, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../../../components/atoms/Spinner";
 import Post from "../../../components/organisms/Post";
-import { getPost } from "../../../lib/axios";
-import { useSafeRequest } from "../../../hooks/useSafeRequest";
+import { toast } from "react-toastify";
+import { usePostsStore } from "../../../stores/posts/PostsProvider";
+import { selectPost } from "../../../stores/posts/posts.selectors";
+import { useUser } from "../../../contexts/UserContext";
 
 const SinglePost = () => {
-  const { id: postId } = useParams<{ id: string }>();
-  const { posts } = usePosts();
+  const { id } = useParams<{ id: string }>();
+  const postId = Number(id);
+  const navigate = useNavigate();
+
+  const store = usePostsStore();
   const { user } = useUser();
 
-  // Try to find post in context for instant display
-  const contextPost = posts.find((p) => p.id === Number(postId));
+  const post = useMemo(() => (Number.isFinite(postId) ? selectPost(store, postId) : undefined), [store.byId, postId]);
 
-  // Fetch post safely if not found in context
-  const { data: fetchedPost, error, loading } = useSafeRequest(getPost, Number(postId));
+  useEffect(() => {
+  if (!Number.isFinite(postId)) return;
 
-  // Choose which post to show (context or fetched)
-  const post = contextPost ?? fetchedPost?.data;
-  const isAuthor = post?.authorId?.toString() === user?.id.toString();
-  const isDraft = post?.published === false;
+  const s = store.status.single[postId];
+  if (s?.loaded || s?.loading) return;
 
-  // Handle errors and loading
-  if (loading) return <Spinner />;
-  if (error) {
-    toast.error(error);
+  store.ensurePost(postId);
+}, [store.ensurePost, postId, store.status.single]);
+
+  const status = store.status.single[postId];
+
+  if (status?.loading) return <Spinner />;
+  if (status?.error) {
+    toast.error(status.error);
     return <h3 className="text-center text-[var(--error)]">Failed to load post</h3>;
   }
 
-  // Render post
+  if (!post) return <h3 className="text-center text-[var(--text1)]">Post not found</h3>;
+
+  const isAuthor = post.authorId?.toString() === user?.id?.toString();
+  const isDraft = post.published === false;
+
+  if (isDraft && !isAuthor) return <h3 className="text-center text-[var(--text1)]">This draft is private</h3>;
+
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">POST DETAILS</h2>
       <section className="posts-section">
-        {!post && <h3 className="posts-section-heading text-[var(--text1)]">Post not found</h3>}
-        {post && isDraft && !isAuthor && (
-          <h3 className="posts-section-heading text-[var(--text1)]">This draft is private</h3>
-        )}
-        {post && (!isDraft || isAuthor) && <Post key={post.id} post={post} />}
+        <Post
+          post={post}
+          onPostDeleted={() => navigate("/posts")}
+        />
       </section>
     </div>
   );

@@ -1,62 +1,48 @@
-import { useEffect, useState } from "react";
-import { usePosts } from "../../../contexts/PostsContext";
-import Post from "../../../components/organisms/Post";
+import { useEffect, useMemo, useState } from "react";
 import Spinner from "../../../components/atoms/Spinner";
+import Post from "../../../components/organisms/Post";
 import PostCard from "../../../components/molecules/PostCard";
 import Button from "../../../components/atoms/Button";
 
+import { usePostsStore } from "../../../stores/posts/PostsProvider";
+import { selectPublishedPosts } from "../../../stores/posts/posts.selectors";
+
 const AllPosts = () => {
-  const { posts, loading, error, refreshPosts, hasLoaded } = usePosts();
+  const store = usePostsStore();
+  const posts = useMemo(() => selectPublishedPosts(store), [store.byId, store.lists.published]);
+
   const [showMiniPosts, setShowMiniPosts] = useState(true);
 
-  useEffect(() => {
-    if (!hasLoaded) refreshPosts(1, 50);
-  }, [hasLoaded, refreshPosts]);
+useEffect(() => {
+  if (store.status.published.loaded || store.status.published.loading) return;
+  store.ensurePublished(1, 50);
+}, [
+  store.ensurePublished,
+  store.status.published.loaded,
+  store.status.published.loading,
+]);
 
-  const handleTogglePresentation = () => setShowMiniPosts((prev) => !prev);
 
-  const handleManualRefresh = () => refreshPosts(1, 50);
-
-  if (loading) return <Spinner />;
+  if (store.status.published.loading) return <Spinner />;
+  if (store.status.published.error) return <div className="text-[var(--text1)]">{store.status.published.error}</div>;
 
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">ALL POSTS</h2>
 
-      <div className="flex gap-3 justify-center">
-        <Button
-          onClick={handleTogglePresentation}
-          type="button"
-          size="md"
-          variant="primary"
-          label="toggle post presentation"
-        >
-          {showMiniPosts ? "Show mini posts" : "Show full posts"}
-        </Button>
-
-        <Button
-          onClick={handleManualRefresh}
-          type="button"
-          size="md"
-          variant="secondary"
-          label="refresh posts"
-        >
-          Refresh
-        </Button>
-      </div>
-
-      {error && (
-        <div className="mt-4 text-center">
-          <p className="text-red-500">{error}</p>
-        </div>
-      )}
+      <Button
+        className="block mx-auto"
+        onClick={() => setShowMiniPosts((p) => !p)}
+        type="button"
+        size="md"
+        variant="primary"
+        label="toggle post presentation"
+      >
+        {showMiniPosts ? "Show mini posts" : "Show full posts"}
+      </Button>
 
       <section className="posts-section">
-        {!posts.length && !error && (
-          <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>
-          </div>
-        )}
+        {!posts.length && <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>}
 
         {showMiniPosts
           ? posts.map((post) => <Post key={post.id} post={post} />)

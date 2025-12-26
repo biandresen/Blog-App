@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosPerson } from "react-icons/io";
 import BLOG_API from "../../api/blog-api";
 
@@ -9,19 +9,21 @@ type AvatarProps = {
 
 const Avatar = ({ avatarUrl, size }: AvatarProps) => {
   const [hasError, setHasError] = useState(false);
-  // If no URL or image failed → show fallback icon
+
+  useEffect(() => {
+    setHasError(false);
+  }, [avatarUrl]);
+
   if (!avatarUrl || hasError) {
-    return <IoIosPerson className="" size={size} />;
+    return <IoIosPerson size={size} />;
   }
 
+  const src = `${BLOG_API.BASE_AVATAR}${avatarUrl}`;
+
   return (
-    <div
-      title="Profile picture"
-      style={{ width: size, height: size }}
-      className="overflow-hidden rounded-full"
-    >
+    <div title="Profile picture" style={{ width: size, height: size }} className="overflow-hidden rounded-full">
       <img
-        src={`${BLOG_API.BASE_AVATAR}${avatarUrl}`}
+        src={src}
         alt="avatar"
         className="object-cover w-full h-full"
         onError={() => setHasError(true)}

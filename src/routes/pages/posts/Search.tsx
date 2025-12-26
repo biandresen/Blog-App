@@ -1,21 +1,32 @@
-import { useCallback, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import PostCard from "../../../components/molecules/PostCard";
 import Searchbar from "../../../components/molecules/Searchbar";
-import { usePosts } from "../../../contexts/PostsContext";
 import type { PostType } from "../../../types/post.types";
 import { ClipLoader } from "react-spinners";
+
+import { usePostsStore } from "../../../stores/posts/PostsProvider";
+import { selectPublishedPosts } from "../../../stores/posts/posts.selectors";
 
 type FilteredPostType = PostType & { matches?: string[] };
 
 const Search = () => {
+  const store = usePostsStore();
+  const posts = useMemo(() => selectPublishedPosts(store), [store.byId, store.lists.published]);
+
   const [targetPosts, setTargetPosts] = useState<FilteredPostType[] | null>(null);
-  const { posts, loading, error } = usePosts();
   const [filters, setFilters] = useState({
     title: true,
     body: true,
     comments: true,
     tags: true,
   });
+
+  // Ensure we actually have posts available for search
+  useEffect(() => {
+    if (!store.status.published.loaded && !store.status.published.loading) {
+      store.ensurePublished(1, 50);
+    }
+  }, [store]);
 
   const handleSearch = useCallback(
     (searchInput: string) => {
@@ -30,13 +41,8 @@ const Search = () => {
         .map((post) => {
           const matches: string[] = [];
 
-          if (filters.title && post.title.toLowerCase().includes(lowerInput)) {
-            matches.push("title");
-          }
-
-          if (filters.body && post.body.toLowerCase().includes(lowerInput)) {
-            matches.push("body");
-          }
+          if (filters.title && post.title.toLowerCase().includes(lowerInput)) matches.push("title");
+          if (filters.body && post.body.toLowerCase().includes(lowerInput)) matches.push("body");
 
           if (filters.comments && post.comments.some((c) => c.body.toLowerCase().includes(lowerInput))) {
             matches.push("comment");
@@ -46,11 +52,7 @@ const Search = () => {
             matches.push("tag");
           }
 
-          if (matches.length > 0) {
-            return { ...post, matches };
-          }
-
-          return null;
+          return matches.length ? { ...post, matches } : null;
         })
         .filter(Boolean) as FilteredPostType[];
 
@@ -61,7 +63,7 @@ const Search = () => {
 
   const override: CSSProperties = { color: "var(--text1)" };
 
-  if (loading) {
+  if (store.status.published.loading) {
     return (
       <div className="spinner-position">
         <ClipLoader color={override.color} cssOverride={override} size={150} />
@@ -69,7 +71,7 @@ const Search = () => {
     );
   }
 
-  if (error) {
+  if (store.status.published.error) {
     return <div className="text-[var(--error)] text-center">Failed to load posts</div>;
   }
 
@@ -104,11 +106,9 @@ const Search = () => {
           postsToShow.map((post) => (
             <div key={post.id} className="mb-4">
               <PostCard id={post.id} title={post.title} />
-              {(post as any)?.matches?.length > 0 && (
-                <p className="text-sm text-[var(--text1)] opacity-70 mt-1">
-                  Found in: {(post as any).matches.join(", ")}
-                </p>
-              )}
+              {post.matches?.length ? (
+                <p className="text-sm text-[var(--text1)] opacity-70 mt-1">Found in: {post.matches.join(", ")}</p>
+              ) : null}
             </div>
           ))}
       </section>

@@ -356,10 +356,19 @@ export const getAllUserPosts = async (authorId: number, page: number, limit: num
   }
 };
 
-export const getPost = async (accessToken: token, postId: number) => {
+export const getPostPublic = async (postId: number) => {
+  try {
+    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}/${postId}`);
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getPostAuthed = async (accessToken: token, postId: number) => {
   try {
     const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}/${postId}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+       headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       withCredentials: true,
     });
     return res.data;

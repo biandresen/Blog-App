@@ -5,7 +5,7 @@ import { UserProvider } from "./contexts/UserContext.tsx";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
 import "./index.css";
 import App from "./App.tsx";
-import { PostsProvider } from "./contexts/PostsContext.tsx";
+import { PostsProvider } from "./stores/posts/PostsProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>

@@ -7,7 +7,7 @@ const Contact = () => {
       <p className="about-paragraph">{contactContent.paragraph1}</p>
       <p className="about-paragraph">
         {contactContent.paragraph2a+" "}
-        <span className="underline">{contactContent.paragraph2Span}</span>
+        <a href={`mailto:${contactContent.paragraph2Span}`} className="underline">{contactContent.paragraph2Span}</a>
         {" "+contactContent.paragraph2b}
       </p>
     </div>

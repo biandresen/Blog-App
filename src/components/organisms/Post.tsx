@@ -7,13 +7,12 @@ import CommentForm from "../molecules/CommentForm";
 import { capitalizeFirstLetter, formatDate, getCharactersLeft } from "../../lib/utils";
 import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
-import { deleteComment, deletePost, editComment, editPost, toggleLike } from "../../lib/axios";
+import { deleteComment,editComment,toggleLike } from "../../lib/axios";
 import { toast } from "react-toastify";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoSend } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { usePosts } from "../../contexts/PostsContext";
 import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
@@ -22,8 +21,16 @@ import { NavLink } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
+import { usePostsStore } from "../../stores/posts/PostsProvider";
+import LinkifiedText from "../atoms/LinkifiedText";
 
-const Post = ({ post }: { post: PostType }) => {
+type PostProps = {
+  post: PostType;
+  onPostDeleted?: () => void;
+};
+
+const Post = ({ post, onPostDeleted }: PostProps) => {
+
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
   const [comments, setComments] = useState(post.comments);
   const [isEditing, setIsEditing] = useState(false);
@@ -37,8 +44,8 @@ const Post = ({ post }: { post: PostType }) => {
   const [showEditMenu, setShowEditMenu] = useState<boolean>(false);
 
   const { user } = useUser();
+  const store = usePostsStore();
   const { accessToken, setAccessToken } = useAuth();
-  const { refreshPosts } = usePosts();
   const { ref: textRef, handleInput } = useAutoResizeTextarea(editedBody, isEditing);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,14 +53,33 @@ const Post = ({ post }: { post: PostType }) => {
   const isAuthor = user?.id != null && post.authorId === Number(user.id);
   const isAdmin = user?.role === "ADMIN";
   const canEdit = isAuthor || isAdmin;
+  const displayPublished = isEditing ? published : post.published;
   const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
 
+
+  useEffect(() => {
+  // when store replaces the post with a fresh canonical one
+  setComments(post.comments ?? []);
+  setEditedTitle(post.title ?? "");
+  setEditedBody(post.body ?? "");
+  setEditedTags((post.tags ?? []).map(t => t.name).join(", "));
+  setPublished(!!post.published);
+
+  // close menus / editing if you want predictable behavior
+  setIsEditing(false);
+  setShowEditMenu(false);
+}, [
+  post.id,
+  post.title,
+  post.body,
+  post.published,
+]);
 
   useEffect(() => {
     if (!post || !user) return;
 
     const liked = post.likes.some((like) => like.userId === Number(user.id));
-    setLikedList(post.likes.map((like) => like.user.username));
+    setLikedList(post.likes.map((like) => like.user?.username ?? "Unknown"));
     setHasLiked(liked);
   }, [post, user]);
 
@@ -131,47 +157,32 @@ const Post = ({ post }: { post: PostType }) => {
     }
   };
 
-  const handleEditPost = async (postId: number, newTitle: string, newBody: string, editedTags: string[]) => {
-    try {
-      if (!accessToken) return;
+const handleEditPost = async (postId: number, newTitle: string, newBody: string, editedTags: string[]) => {
+  try {
+    const payload = { title: newTitle, body: newBody, published, tags: editedTags };
 
-      const res = await safeRequest(
-        editPost,
-        accessToken,
-        setAccessToken,
-        postId,
-        newTitle,
-        newBody,
-        published,
-        editedTags
-      );
+    await store.updatePost(postId, payload);
 
-      if (res.statusCode !== 200) throw new Error("Request failed");
+    setIsEditing(false);
+    toast.success(`Post edited! ${displayPublished ? "Published" : "Unpublished"}`);
+  } catch (err: any) {
+    toast.error("Failed to edit post");
+    console.error(err?.response?.data?.errors || err.message);
+  }
+};
 
-      setIsEditing(false);
-      toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
-      await refreshPosts();
-    } catch (err: any) {
-      toast.error("Failed to edit post");
-      console.error("Failed to edit post", err.response.data.errors || err.message);
-    }
-  };
+const handleDeletePost = async (postId: number) => {
+  try {
+    await store.removePost(postId);
+    setShowModal(false);
+    toast.success("Post deleted!");
+    onPostDeleted?.();
+  } catch (err: any) {
+    toast.error("Failed to delete post");
+    console.error(err.message);
+  }
+};
 
-  const handleDeletePost = async (postId: number) => {
-    try {
-      if (!accessToken) return;
-
-      const res = await safeRequest(deletePost, accessToken, setAccessToken, postId);
-      if (res.statusCode !== 200) throw new Error("Request failed");
-
-      setShowModal(false);
-      toast.success("Post deleted!");
-      await refreshPosts();
-    } catch (err: any) {
-      toast.error("Failed to delete post");
-      console.error("Failed to delete post", err.message);
-    }
-  };
 
   const handleEditComment = async (commentId: number, newBody: string) => {
     try {
@@ -187,6 +198,7 @@ const Post = ({ post }: { post: PostType }) => {
 
       toast.success("Comment edited!");
       setIsEditing(false);
+      await store.ensurePost(post.id);
     } catch (err: any) {
       toast.error("Failed to edit comment");
       console.error("Failed to edit comment", err.message);
@@ -202,6 +214,7 @@ const Post = ({ post }: { post: PostType }) => {
       if (res.statusCode !== 200) throw new Error("Request failed");
 
       setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+      await store.ensurePost(post.id);
       toast.success("Comment deleted!");
     } catch (err: any) {
       toast.error("Failed to delete comment");
@@ -213,19 +226,23 @@ const Post = ({ post }: { post: PostType }) => {
     setCommentsIsOpen(!commentsIsOpen);
   };
 
-  const addNewComment = (newComment: CommentType) => {
-    // Ensure the new comment has a user object
-    const normalizedComment = {
-      ...newComment,
-      user: newComment.user || { id: user?.id, username: user?.username, avatar: user?.avatar },
-    };
-    setComments((prev) => [...prev, normalizedComment]);
+  const addNewComment = async (newComment: CommentType) => {
+  const normalizedComment = {
+    ...newComment,
+    user: newComment.user || { id: user?.id, username: user?.username, avatar: user?.avatar },
   };
+
+  setComments((prev) => [...prev, normalizedComment]);
+
+  // ✅ sync store so AllPosts + SinglePost match
+  await store.ensurePost(post.id);
+};
+
 
   return (
     <div
       className={`relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] w-full xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10 ${
-        published ? "" : "opacity-80"}`}
+        displayPublished ? "" : "opacity-80"}`}
     >
       <Modal
         isOpen={showModal}
@@ -237,7 +254,7 @@ const Post = ({ post }: { post: PostType }) => {
         onCancel={() => setShowModal(false)}
       />
 
-      {published ? null : (
+      {displayPublished ? null : (
         <div className="text-[var(--text1)] absolute top-5 md:top-4.5 right-14 xl:right-19 text-sm md:text-lg">DRAFT</div>
       )}
       <div className="flex absolute gap-2 top-4 right-5 xl:right-10">
@@ -272,7 +289,7 @@ const Post = ({ post }: { post: PostType }) => {
           </button>
         )}</div>
       )}
-      {!published ? null : (
+      {!displayPublished ? null : (
         <div className="group">
           <button
             aria-label="Like post"
@@ -313,7 +330,7 @@ const Post = ({ post }: { post: PostType }) => {
       <div className="flex xl:mb-0 md:ml-auto absolute top-4 left-5 xl:left-10">
         <Avatar avatarUrl={post.user?.avatar} size={60} />
         <div className="flex flex-col justify-center ml-2">
-          <p title="Username" className="font-bold text-[1rem]">{capitalizeFirstLetter(post.user.username)}</p>
+          <p title="Username" className="font-bold text-[1rem]">{capitalizeFirstLetter(post.user?.username ?? "Unknown")}</p>
           <p title="Date of post" className="text-[0.7rem] mt-[-0.2rem] opacity-80">{formatDate(post.createdAt)}</p>
         </div>
       </div>
@@ -359,7 +376,7 @@ const Post = ({ post }: { post: PostType }) => {
           <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
         </div>
       ) : (
-        <p title="Post body" className="px-5 xl:px-10 pb-4 pt-1 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap">{post.body}</p> //whitespace-pre-wrap to preserve line breaks
+        <LinkifiedText className="px-5 xl:px-10 pb-4 pt-1 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap" text={post.body}/>
       )}
       <hr className="text-[var(--text1)] opacity-10" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-4">

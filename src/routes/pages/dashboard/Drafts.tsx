@@ -1,70 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DraftCard from "../../../components/molecules/DraftCard";
 import draftsContent from "../../../text-content/drafts-page";
-import { getCurrentUserDrafts } from "../../../lib/axios";
-import { useAuth } from "../../../contexts/AuthContext";
-import { toast } from "react-toastify";
 import Spinner from "../../../components/atoms/Spinner";
-import { safeRequest } from "../../../lib/auth";
 import Button from "../../../components/atoms/Button";
 import Post from "../../../components/organisms/Post";
 
+import { usePostsStore } from "../../../stores/posts/PostsProvider";
+import { selectDraftsForUser } from "../../../stores/posts/posts.selectors";
+import { useUser } from "../../../contexts/UserContext";
+
 const Drafts = () => {
-  const [drafts, setDrafts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showMiniPosts, setShowMiniPosts] = useState<boolean>(true);
+  const store = usePostsStore();
+  const { user } = useUser();
+  const [showMiniPosts, setShowMiniPosts] = useState(true);
 
-  const postPresentation = showMiniPosts ? "Show full drafts" : "Show mini drafts";
+  const userId = user?.id ? Number(user.id) : null;
 
-  const { accessToken, setAccessToken } = useAuth();
+  const drafts = useMemo(() => {
+    if (!userId) return [];
+    return selectDraftsForUser(store, userId);
+  }, [store.byId, store.lists.draftsByUser, userId]);
 
-  if (!accessToken) {
-    return <p className="text-center mt-10 text-[var(--text1)]">Please log in to view your drafts.</p>;
-  }
+ useEffect(() => {
+  if (!userId) return;
 
-  const fetchDrafts = async () => {
-    setLoading(true);
+  const s = store.status.drafts[userId];
+  if (s?.loading || s?.loaded) return;
 
-    if (!accessToken) {
-      toast.error("You must be logged in to fetch drafts.");
-      setLoading(false);
-      return;
-    }
+  store.ensureDrafts(userId, 1, 10);
+}, [store.ensureDrafts, store.status.drafts, userId]);
 
-    try {
-      // Use safeRequest to auto-refresh token if expired
-      const res = await safeRequest(
-        getCurrentUserDrafts, // your API function
-        accessToken,
-        setAccessToken, // your state updater
-        1, // page
-        10 // limit
-      );
 
-      if (res.statusCode === 200) {
-        setDrafts(res.data);
-        setError(null);
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to fetch drafts.");
-      console.error("Failed to fetch drafts", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!userId) return <p className="text-center mt-10 text-[var(--text1)]">Please log in to view your drafts.</p>;
 
-    const handleTogglePresentation = () => {
-    setShowMiniPosts((prev) => !prev);
-  };
-
-  useEffect(() => {
-    fetchDrafts();
-  }, []);
-
-  if (loading) return <Spinner />;
-
-  if (error) return <div className="text-[var(--text1)]">No posts found</div>;
+  const status = store.status.drafts[userId];
+  if (status?.loading) return <Spinner />;
+  if (status?.error) return <div className="text-[var(--text1)]">{status.error}</div>;
 
   return (
     <div className="md:mt-8">
@@ -74,30 +45,21 @@ const Drafts = () => {
 
       <Button
         className="block mx-auto"
-        onClick={handleTogglePresentation}
+        onClick={() => setShowMiniPosts((p) => !p)}
         type="button"
         size="md"
         variant="primary"
         label="toggle post presentation"
       >
-        {postPresentation}
+        {showMiniPosts ? "Show full drafts" : "Show mini drafts"}
       </Button>
-        <section className="posts-section">
-        {!drafts.length && (
-          <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>
-          </div>
-        )}
+
+      <section className="posts-section">
+        {!drafts.length && <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>}
+
         {showMiniPosts
-          ? drafts &&
-            drafts.map((draft) => (
-              <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />)
-              )
-          : drafts && drafts.map((draft) => <Post
-                key={draft.id}
-                post={draft}
-              />
-            )}
+          ? drafts.map((draft) => <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />)
+          : drafts.map((draft) => <Post key={draft.id} post={draft} />)}
       </section>
     </div>
   );
