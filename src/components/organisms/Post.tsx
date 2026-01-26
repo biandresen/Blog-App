@@ -18,7 +18,7 @@ import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import Avatar from "../atoms/Avatar";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
@@ -43,6 +43,7 @@ const Post = ({ post }: { post: PostType }) => {
   const { ref: textRef, handleInput } = useAutoResizeTextarea(editedBody, isEditing);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const isAuthor = user?.id != null && post.authorId === Number(user.id);
   const isAdmin = user?.role === "ADMIN";
@@ -168,6 +169,7 @@ const Post = ({ post }: { post: PostType }) => {
       setShowModal(false);
       toast.success("Post deleted!");
       await refreshPosts();
+      navigate("/posts");
     } catch (err: any) {
       toast.error("Failed to delete post");
       console.error("Failed to delete post", err.message);

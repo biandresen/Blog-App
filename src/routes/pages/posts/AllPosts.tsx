@@ -6,12 +6,12 @@ import PostCard from "../../../components/molecules/PostCard";
 import Button from "../../../components/atoms/Button";
 
 const AllPosts = () => {
-  const { posts, loading, error, refreshPosts, hasLoaded } = usePosts();
+  const { posts, loading, error, refreshPosts} = usePosts();
   const [showMiniPosts, setShowMiniPosts] = useState(true);
 
   useEffect(() => {
-    if (!hasLoaded) refreshPosts(1, 50);
-  }, [hasLoaded, refreshPosts]);
+    refreshPosts(1, 50);
+  }, []);
 
   const handleTogglePresentation = () => setShowMiniPosts((prev) => !prev);
 

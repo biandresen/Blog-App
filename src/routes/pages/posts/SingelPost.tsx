@@ -6,11 +6,16 @@ import Spinner from "../../../components/atoms/Spinner";
 import Post from "../../../components/organisms/Post";
 import { getPost } from "../../../lib/axios";
 import { useSafeRequest } from "../../../hooks/useSafeRequest";
+import { useEffect } from "react";
 
 const SinglePost = () => {
   const { id: postId } = useParams<{ id: string }>();
-  const { posts } = usePosts();
+  const { posts, refreshPosts } = usePosts();
   const { user } = useUser();
+
+    useEffect(() => {
+      refreshPosts(1, 50);
+    }, []);
 
   // Try to find post in context for instant display
   const contextPost = posts.find((p) => p.id === Number(postId));
