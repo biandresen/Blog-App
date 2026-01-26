@@ -447,7 +447,7 @@ const Post = ({ post }: { post: PostType }) => {
                 onDelete={handleDeleteComment}
               />
             ))}
-            {user ? (<CommentForm postId={post.id} onCommentAdded={addNewComment} />) : (null)}
+            {user && published ? (<CommentForm postId={post.id} onCommentAdded={addNewComment} />) : (null)}
         </div>
       )}
     </div>
