@@ -51,9 +51,9 @@ const Post = ({ post }: { post: PostType }) => {
 
 
   useEffect(() => {
-    if (!post || !user) return;
+    if (!post) return;
 
-    const liked = post.likes.some((like) => like.userId === Number(user.id));
+    const liked = user ? post.likes.some((like) => like.userId === Number(user.id)) : false;
     setLikedList(post.likes.map((like) => like.user.username));
     setHasLiked(liked);
   }, [post, user]);
