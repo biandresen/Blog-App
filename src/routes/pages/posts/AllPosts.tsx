@@ -15,7 +15,7 @@ const AllPosts = () => {
 
   const handleTogglePresentation = () => setShowMiniPosts((prev) => !prev);
 
-  const handleManualRefresh = () => refreshPosts(1, 50);
+  // const handleManualRefresh = () => refreshPosts(1, 10);
 
   if (loading) return <Spinner />;
 
@@ -34,7 +34,7 @@ const AllPosts = () => {
           {showMiniPosts ? "Show mini posts" : "Show full posts"}
         </Button>
 
-        <Button
+        {/* <Button
           onClick={handleManualRefresh}
           type="button"
           size="md"
@@ -42,7 +42,7 @@ const AllPosts = () => {
           label="refresh posts"
         >
           Refresh
-        </Button>
+        </Button> */}
       </div>
 
       {error && (

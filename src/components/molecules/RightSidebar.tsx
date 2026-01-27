@@ -3,7 +3,7 @@ import PostCard from "./PostCard";
 
 const RightSidebar = () => {
   const { posts } = usePosts();
-  const topPosts = posts.slice(0, 10);
+  const topPosts = posts.slice(0, posts.length >= 100 ? 100 : posts.length);
 
   return (
     <aside className="bg-[var(--primary-shade)] absolute right-0 w-full h-[calc(100vh-3.8rem)] md:max-w-55 lg:max-w-65 md:static overflow-y-auto">
