@@ -101,7 +101,7 @@ function normalizeUrlToken(
   defaultProtocol: "https://" | "http://"
 ): { display: string; href: string } {
   const trimmed = rawToken.replace(TRAILING_PUNCT, "");
-  const removed = rawToken.slice(trimmed.length); // trailing punctuation removed
+  // const removed = rawToken.slice(trimmed.length); // trailing punctuation removed
   // display should keep punctuation in the surrounding text, not inside the link
   const display = trimmed;
 
