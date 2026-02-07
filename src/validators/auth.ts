@@ -28,7 +28,7 @@ export const passwordValidator = (input: string): string[] => {
   const regExLowercase = /[a-z]/;
   const regExUppercase = /[A-Z]/;
   const regExNumber = /[0-9]/;
-  const regExSymbol = /[!@#$%^&*(),.?":{}|<>]/;
+  const regExSymbol = /[^a-zA-Z0-9\s]/;
 
   if (!regExLowercase.test(value)) errors.push("Password must contain a lowercase letter");
   if (!regExUppercase.test(value)) errors.push("Password must contain an uppercase letter");
