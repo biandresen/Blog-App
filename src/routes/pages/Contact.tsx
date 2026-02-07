@@ -1,3 +1,4 @@
+import Button from "../../components/atoms/Button";
 import contactContent from "../../text-content/contact-page";
 
 const Contact = () => {
@@ -10,6 +11,12 @@ const Contact = () => {
         <span className="underline">{contactContent.paragraph2Span}</span>
         {" "+contactContent.paragraph2b}
       </p>
+      <a href="mailto:kontakt@andresensolutions.no?subject=Contact%20from%20Bloggy">
+          <Button label="email">
+          Email us here
+          </Button>
+      </a>
+
     </div>
   );
 };
