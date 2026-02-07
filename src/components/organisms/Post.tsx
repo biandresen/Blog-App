@@ -36,6 +36,7 @@ const Post = ({ post }: { post: PostType }) => {
   const [likedList, setLikedList] = useState<string[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditMenu, setShowEditMenu] = useState<boolean>(false);
+  const [isBodyExpanded, setIsBodyExpanded] = useState(false);
 
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
@@ -50,6 +51,17 @@ const Post = ({ post }: { post: PostType }) => {
   const canEdit = isAuthor || isAdmin;
   const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
 
+  const BODY_PREVIEW_LIMIT = 600;
+  const bodyIsLong = post.body.length > BODY_PREVIEW_LIMIT;
+
+  const displayedBody = bodyIsLong && !isBodyExpanded
+  ? post.body.slice(0, BODY_PREVIEW_LIMIT) + "..."
+  : post.body;
+
+  useEffect(() => {
+    // reset when post changes
+    setIsBodyExpanded(false);
+  }, [post.id]);
 
   useEffect(() => {
     if (!post) return;
@@ -362,7 +374,23 @@ const Post = ({ post }: { post: PostType }) => {
           <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
         </div>
       ) : (
-        <LinkifiedText className="px-5 xl:px-10 pb-4 pt-1 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap [word-break:break-word]" text={post.body} />
+        <div className="px-5 xl:px-10 pb-4 pt-1">
+          <LinkifiedText
+            className="text-sm md:text-lg/7 xl:text-lg whitespace-pre-wrap [overflow-wrap:anywhere] [word-break:break-word]"
+            text={displayedBody}
+          />
+
+          {bodyIsLong && (
+            <button
+              type="button"
+              onClick={() => setIsBodyExpanded((p) => !p)}
+              className="mt-2 text-sm md:text-lg opacity-80 hover:opacity-100 underline"
+              aria-expanded={isBodyExpanded}
+            >
+              {isBodyExpanded ? "Show less" : "Read more"}
+            </button>
+          )}
+        </div>
       )}
       <hr className="text-[var(--text1)] opacity-10" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-4">
