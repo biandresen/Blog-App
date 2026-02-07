@@ -362,7 +362,7 @@ const Post = ({ post }: { post: PostType }) => {
           <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
         </div>
       ) : (
-        <LinkifiedText className="px-5 xl:px-10 pb-4 pt-1 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap" text={post.body} />
+        <LinkifiedText className="px-5 xl:px-10 pb-4 pt-1 text-sm md:text-lg\/7 xl:text-lg whitespace-pre-wrap [word-break:break-word]" text={post.body} />
       )}
       <hr className="text-[var(--text1)] opacity-10" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-4">

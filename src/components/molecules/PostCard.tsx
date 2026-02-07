@@ -15,7 +15,7 @@ const PostCard = ({ id, title, likes }: PostCardProps) => {
           <span className="ml-1 font-bold">{likes}</span>
         </div>
       )}
-      <h3 className="text-xl font-bold overflow-y-hidden">{title}</h3>
+      <h3 className="text-xl font-bold overflow-y-hidden [overflow-wrap:anywhere]">{title}</h3>
       <Link to={`/posts/${id}`} className="w-full mt-auto">
         <Button variant="secondary" size="sm" label={buttonText} className="w-full mt-auto">
           {buttonText}
