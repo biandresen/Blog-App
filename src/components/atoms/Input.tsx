@@ -5,6 +5,7 @@ import { type InputProps } from "../../types/components.types";
 const Input = ({
   id,
   label,
+  title,
   type = "text",
   accept,
   value,
@@ -31,6 +32,7 @@ const Input = ({
       <div className="relative flex items-center -mt-0.5">
         <input
           id={id}
+          title={title}
           type={type}
           value={value}
           onChange={onChange}

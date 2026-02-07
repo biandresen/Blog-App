@@ -15,6 +15,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 //--------------------------------------------------------
 export interface InputProps {
   id: string;
+  title?: string;
   label: string;
   accept?: string;
   type?: "text" | "email" | "password" | "number" | "file";

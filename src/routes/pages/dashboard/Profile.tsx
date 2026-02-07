@@ -14,7 +14,7 @@ import { safeRequest } from "../../../lib/auth";
 import Modal from "../../../components/molecules/Modal";
 import Avatar from "../../../components/atoms/Avatar";
 
-const MAX_AVATAR_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6MB upload (compresses on backend)
 
 const Profile = () => {
   const { user, setUser } = useUser();
@@ -44,6 +44,8 @@ const Profile = () => {
   const [avatarError, setAvatarError] = useState<string>("");
 
   const navigate = useNavigate();
+
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
   const handleLogout = () => {
     setUser(null);
@@ -227,6 +229,7 @@ const Profile = () => {
             id="avatar"
             type="file"
             label="Avatar"
+            title="Upload a new avatar image (optional)"
             accept="image/*"
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -238,10 +241,15 @@ const Profile = () => {
                 return;
               }
 
+                if (!ALLOWED_TYPES.includes(file.type)) {
+                setAvatarError("Only JPG, PNG or WEBP images are allowed.");
+                return;
+              }
+
               if (file.size > MAX_AVATAR_SIZE) {
                 setAvatar(null);
                 setAvatarPreview(null);
-                setAvatarError("Avatar file size exceeds 2MB. Choose a smaller file.");
+                setAvatarError(`Avatar file size exceeds ${MAX_AVATAR_SIZE / (1024 * 1024)}MB. Choose a smaller file.`);
                 return;
               }
 
@@ -251,11 +259,16 @@ const Profile = () => {
               setAvatarPreview(URL.createObjectURL(file));
             }}
           />
+          <p className="text-xs text-gray-400 mb-3 mt-[-10px]">
+            Max size: {MAX_AVATAR_SIZE / (1024 * 1024)}MB. Supported formats: JPG, JPEG, WEBP, PNG.
+          </p>
+
 
           {/* Preview */}
           {avatarPreview && (
             <img src={avatarPreview} alt="Avatar Preview" className="rounded-full w-20 h-20 object-cover" />
           )}
+
           {avatarError && <p className="text-red-500">{avatarError}</p>}
 
           <Button
