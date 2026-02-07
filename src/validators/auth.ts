@@ -4,9 +4,11 @@ export const usernameValidator = (input: string) => {
 };
 
 // Helper that returns an error message (or empty string if valid)
+const emailNumOfCharLower = 5;
+const emailNumOfCharUpper = 50;
 export const emailValidator = (input: string): string => {
   const value = (input ?? "").trim();
-  if (value.length < 5 || value.length > 32) return "Email must be between 5-32 characters";
+  if (value.length < emailNumOfCharLower || value.length > emailNumOfCharUpper) return `Email must be between ${emailNumOfCharLower}-${emailNumOfCharUpper} characters`;
 
   // Require at least one dot after the @ and a final TLD of 2+ letters
   const regEx = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
