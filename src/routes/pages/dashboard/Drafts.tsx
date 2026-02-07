@@ -8,6 +8,7 @@ import Spinner from "../../../components/atoms/Spinner";
 import { safeRequest } from "../../../lib/auth";
 import Button from "../../../components/atoms/Button";
 import Post from "../../../components/organisms/Post";
+import { Link } from "react-router-dom";
 
 const Drafts = () => {
   const [drafts, setDrafts] = useState<any[]>([]);
@@ -72,7 +73,7 @@ const Drafts = () => {
         {draftsContent.heading1}
       </h2>
 
-      <Button
+      {drafts.length > 0 && <Button
         className="block mx-auto"
         onClick={handleTogglePresentation}
         type="button"
@@ -82,12 +83,16 @@ const Drafts = () => {
       >
         {postPresentation}
       </Button>
+      }
+
         <section className="posts-section">
-        {!drafts.length && (
-          <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>
-          </div>
-        )}
+        {drafts.length === 0 && <div className="text-center posts-section-heading text-[var(--text1)]">
+          <p className="text-sm md:text-lg">You haven't created any drafts yet.</p>
+          <Button label="Make draft" className="text-sm mt-3">
+            <Link to="/dashboard" className="">Create Draft</Link>
+          </Button>
+        </div>}
+
         {showMiniPosts
           ? drafts &&
             drafts.map((draft) => (
