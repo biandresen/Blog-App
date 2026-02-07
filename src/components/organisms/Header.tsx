@@ -54,7 +54,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
         <div className="flex items-center gap-1 mr-4">
           {showLeftSidebarBtn && (
             <Button
-              className="p-1.5 md:absolute md:top-18 md:left-6 z-200 text-[var(--text2)]!"
+              className="p-1.5 md:absolute md:top-18 md:left-6 z-45 text-[var(--text2)]!"
               size="zero"
               label="Toggle navigation menu"
               aria-controls="mobile-menu"
@@ -67,7 +67,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
           )}
           {showRightSidebarBtn && (
             <Button
-              className="p-1.5 md:absolute md:top-18 md:right-6 z-200 text-[var(--text2)]!"
+              className="p-1.5 md:absolute md:top-18 md:right-6 z-45 text-[var(--text2)]!"
               size="zero"
               label="Toggle navigation menu"
               aria-controls="mobile-menu"

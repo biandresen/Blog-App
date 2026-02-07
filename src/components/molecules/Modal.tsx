@@ -32,7 +32,7 @@ const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-500" onClick={onCancel}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-100" onClick={onCancel}>
       <div
         className="bg-[var(--bg)] text-[var(--text1)] rounded-2xl p-6 max-w-sm w-full shadow-2xl"
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside

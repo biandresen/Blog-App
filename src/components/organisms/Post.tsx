@@ -248,8 +248,7 @@ const Post = ({
 
   return (
     <div
-      className={`relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] w-full xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10 ${
-        published ? "" : "opacity-80"}`}
+      className={`relative bg-[var(--bg-input)] bg-cover bg-center bg-full text-[var(--text1)] w-full xl:w-[90%] xl:max-w-250 mx-auto rounded-2xl mb-10`}
     >
       <Modal
         isOpen={showModal}
