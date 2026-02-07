@@ -6,6 +6,7 @@ import { useUser } from "../../../contexts/UserContext";
 import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
 import Post from "../../../components/organisms/Post";
+import { Link } from "react-router-dom";
 
 const MyPosts = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -57,7 +58,7 @@ const MyPosts = () => {
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">MY POSTS</h2>
-      <Button
+      {posts.length > 0 && <Button
         className="block mx-auto"
         onClick={handleTogglePresentation}
         type="button"
@@ -67,7 +68,15 @@ const MyPosts = () => {
       >
         {postPresentation}
       </Button>
+      }
       <section className="posts-section">
+        {posts.length === 0 && <div className="text-center posts-section-heading text-[var(--text1)]">
+          <p className="text-sm md:text-lg">You haven't created any posts yet.</p>
+          <Button label="Make post" className="text-sm mt-3">
+            <Link to="/dashboard" className="">Create Post</Link>
+          </Button>
+        </div>}
+
         {showMiniPosts
           ? posts &&
             posts.map((post) => (
