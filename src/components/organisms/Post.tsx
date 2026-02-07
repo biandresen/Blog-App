@@ -432,7 +432,8 @@ const Post = ({ post }: { post: PostType }) => {
       {commentsIsOpen && (
         <div className={`bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl`}>
           <h3 className="text-lg md:text-2xl mb-0">COMMENTS</h3>
-          {comments.length === 0 && <p className="text-xs md:text-sm opacity-70">No comments yet. Be the first to comment!</p>}
+          {comments.length === 0 && <p className="text-xs md:text-sm opacity-70">No comments yet.
+            {published ? ` Be the first to comment!` : ``} </p>}
           {comments.length > 0 &&
             comments.map((comment) => (
               <Comment
