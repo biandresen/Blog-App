@@ -6,16 +6,17 @@ import Spinner from "../../../components/atoms/Spinner";
 import Post from "../../../components/organisms/Post";
 import { getPost } from "../../../lib/axios";
 import { useSafeRequest } from "../../../hooks/useSafeRequest";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const SinglePost = () => {
+  const [localPost, setLocalPost] = useState<any>(null);
   const { id: postId } = useParams<{ id: string }>();
   const { posts, refreshPosts } = usePosts();
   const { user } = useUser();
 
     useEffect(() => {
-      refreshPosts(1, 50);
-    }, []);
+    refreshPosts();
+  }, []);
 
   // Try to find post in context for instant display
   const contextPost = posts.find((p) => p.id === Number(postId));
@@ -23,8 +24,13 @@ const SinglePost = () => {
   // Fetch post safely if not found in context
   const { data: fetchedPost, error, loading } = useSafeRequest(getPost, Number(postId));
 
+  useEffect(() => {
+    const next = contextPost ?? fetchedPost?.data ?? null;
+    setLocalPost(next);
+  }, [contextPost, fetchedPost?.data, postId]);
+
   // Choose which post to show (context or fetched)
-  const post = contextPost ?? fetchedPost?.data;
+  const post = localPost;
   const isAuthor = post?.authorId?.toString() === user?.id.toString();
   const isDraft = post?.published === false;
 
@@ -44,7 +50,11 @@ const SinglePost = () => {
         {post && isDraft && !isAuthor && (
           <h3 className="posts-section-heading text-[var(--text1)]">This draft is private</h3>
         )}
-        {post && (!isDraft || isAuthor) && <Post key={post.id} post={post} />}
+        {post && (!isDraft || isAuthor) && <Post
+        key={post.id}
+        post={post}
+        onPostUpdated={(updated) => setLocalPost(updated)} // ✅ immediate update on this page
+        />}
       </section>
     </div>
   );

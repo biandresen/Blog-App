@@ -9,9 +9,10 @@ import { safeRequest } from "../../../lib/auth";
 import Button from "../../../components/atoms/Button";
 import Post from "../../../components/organisms/Post";
 import { Link } from "react-router-dom";
+import type { PostType } from "../../../types/post.types";
 
 const Drafts = () => {
-  const [drafts, setDrafts] = useState<any[]>([]);
+  const [drafts, setDrafts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showMiniPosts, setShowMiniPosts] = useState<boolean>(true);
@@ -60,8 +61,9 @@ const Drafts = () => {
   };
 
   useEffect(() => {
+    if (!accessToken) return;
     fetchDrafts();
-  }, []);
+  }, [accessToken]);
 
   if (loading) return <Spinner />;
 
@@ -99,9 +101,12 @@ const Drafts = () => {
               <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />)
               )
           : drafts && drafts.map((draft) => <Post
-                key={draft.id}
-                post={draft}
-              />
+              key={draft.id}
+              post={draft}
+              onPostUpdated={(updated) => {
+                setDrafts((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
+              }}
+            />
             )}
       </section>
     </div>

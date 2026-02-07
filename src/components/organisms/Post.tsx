@@ -24,7 +24,13 @@ import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
 import LinkifiedText from "../atoms/LinkifiedText";
 
-const Post = ({ post }: { post: PostType }) => {
+const Post = ({
+  post,
+  onPostUpdated,
+}: {
+  post: PostType;
+  onPostUpdated?: (updated: PostType) => void;
+}) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
   const [comments, setComments] = useState(post.comments);
   const [isEditing, setIsEditing] = useState(false);
@@ -161,6 +167,9 @@ const Post = ({ post }: { post: PostType }) => {
       );
 
       if (res.statusCode !== 200) throw new Error("Request failed");
+      console.log(res)
+      const updatedPost = res.data; // or res.data.post depending on API
+      onPostUpdated?.(updatedPost);
 
       setIsEditing(false);
       toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
