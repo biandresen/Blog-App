@@ -45,8 +45,7 @@ const ResetPassword = () => {
         toast.error(res.message);
         throw new Error("Password reset failed");
       }
-      console.log(res);
-      toast.success(res.message + " .Check spam folder if you don't see the email.");
+      toast.success(res.message || "Password reset successful! You can now login with your new password.");
       navigate("/login");
     } catch (err: any) {
       toast.error(err.message || "Something went wrong. Try again later");
