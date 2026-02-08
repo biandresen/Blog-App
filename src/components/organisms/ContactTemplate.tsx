@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
-import Button from "../../components/atoms/Button";
+import Button from "../atoms/Button";
 import Modal from "../molecules/Modal";
+import { toast } from "react-toastify";
 
 const EMAIL = "dadjokes@andresensolutions.no";
 
@@ -89,10 +90,7 @@ const copySupportEmail = async (email: string, subject: string, body: string) =>
   await navigator.clipboard.writeText(text);
 };
 
-export default function ContactTopics() {
-  const [copiedMsg, setCopiedMsg] = useState<string | null>(null);
-
-  const closeCopiedModal = () => setCopiedMsg(null);
+export default function ContactTemplate() {
 
   const topics = useMemo(
     () => [
@@ -110,7 +108,7 @@ export default function ContactTopics() {
         Choose a topic (prefills subject + message):
       </p>
 
-      <div className="mt-3 flex flex-col flex-wrap gap-2">
+      <div className="mt-3 flex flex-col gap-2">
         {topics.map(({ label, topic }) => {
           const subject = buildSubject(topic);
           const body = buildBody(topic);
@@ -130,9 +128,9 @@ export default function ContactTopics() {
                 onClick={async () => {
                   try {
                     await copySupportEmail(EMAIL, subject, body);
-                    setCopiedMsg(`Copied template for ${label}`);
+                    toast.success(`Copied ${label} template`);
                   } catch {
-                    setCopiedMsg("Copy failed (clipboard permission blocked)");
+                    toast.error("Copy failed (clipboard permission blocked)");
                   }
                 }}
                 className="text-xs underline opacity-80 hover:opacity-100"
@@ -140,7 +138,6 @@ export default function ContactTopics() {
               >
                 Copy
               </button>
-
             </div>
           );
         })}
@@ -149,19 +146,6 @@ export default function ContactTopics() {
       <p className="mt-3 text-xs opacity-70 text-[var(--text1)]">
         If the email button doesn’t open anything, use “Copy” and paste into any email app.
       </p>
-      {/* <a href={defaultMailto}>
-          <Button variant="tertiary" type="button" label="email">
-            Email us
-          </Button>
-        </a> */}
-      <Modal
-        isOpen={!!copiedMsg}
-        title="Copied"
-        message={copiedMsg ?? ""}
-        variant="info"
-        autoCloseMs={2500}
-        onCancel={closeCopiedModal}
-      />
     </section>
   );
 }

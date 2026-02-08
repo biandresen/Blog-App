@@ -1,6 +1,6 @@
 import contactContent from "../../text-content/contact-page";
 import contactImg from "../../assets/img/dad-on-phone.png";
-import ContactTopics from "../../components/organisms/ContactTopic";
+import ContactTemplate from "../../components/organisms/ContactTemplate";
 
 const Contact = () => {
   // const defaultMailto = buildMailto("Contact from DadJokes");
@@ -21,7 +21,7 @@ const Contact = () => {
           <span className="underline">{contactContent.paragraph2Span}</span>
           {" " + contactContent.paragraph2b}
         </p>
-        <ContactTopics />
+        <ContactTemplate />
       </div>
     </div>
   );
