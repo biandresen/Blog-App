@@ -41,7 +41,7 @@ const JokesLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
       {sidebars.left && <LeftSidebar2 setSidebars={setSidebars} />}
 
       <div ref={scrollRef} className="outlet-container relative">
-        <div className="min-h-full pb-20">
+        <div className="pb-20">
           <Outlet />
         </div>
 

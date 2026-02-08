@@ -16,6 +16,7 @@ const BLOG_API = {
   COMMENTS: "/comments",
   PUBLISH: "/publish",
   POPULAR: "/popular",
+  RANDOM: "/random"
 };
 
 export default BLOG_API;

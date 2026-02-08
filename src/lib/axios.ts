@@ -419,3 +419,18 @@ export const getPopularPosts = async () => {
     }
   }
 };
+
+export const getRandomPost = async () => {
+  try {
+    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.RANDOM);
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};

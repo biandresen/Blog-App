@@ -24,6 +24,22 @@ const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
       `}
     >
       <ul onClick={() => setIsOpen(false)} className="flex flex-col gap-4 ml-8 md:flex-row md:items-center md:gap-6 md:ml-0 w-25 md:w-auto">
+        {/* <li className="pt-3 md:pt-0">
+          <NavLink
+            to="/jokes/joke-of-the-day"
+            className={"mr-5"}
+          >
+            Random Joke
+          </NavLink>
+        </li> */}
+        {/* <li className="pt-3 md:pt-0">
+          <NavLink
+            to="/jokes/random-joke"
+            className={"mr-5"}
+          >
+            Random Joke
+          </NavLink>
+        </li> */}
         <li className="pt-3 md:pt-0">
           <NavLink
             to="/jokes"
