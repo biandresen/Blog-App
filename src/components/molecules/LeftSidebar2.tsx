@@ -14,7 +14,7 @@ const linkName2: string = "All Jokes";
 const linkName3: string = "Popular";
 const linkName4: string = "Random";
 const linkName5: string = "Daily Joke";
-const linkName6: string = "Scores";
+const linkName6: string = "Scoreboard";
 const linkName7: string = "My Jokes";
 
 interface LeftSidebar2Props {
@@ -85,12 +85,11 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
           </NavLink>
 
           <NavLink
-            to=""
-            title="Future feature"
+            to="/jokes/daily-joke"
             className={({ isActive }) =>
               isActive
-                ? "flex gap-2 items-center mr-1.5 py-1 px-4 rounded-full -ml-4 opacity-50 cursor-not-allowed"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4 opacity-50 cursor-not-allowed"
+                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
+                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
             <FaCalendarDay size={27} />

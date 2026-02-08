@@ -31,6 +31,7 @@ const Popular = lazy(() => import("./routes/pages/jokes/Popular"));
 const Search = lazy(() => import("./routes/pages/jokes/Search"));
 const SingleJoke = lazy(() => import("./routes/pages/jokes/SingleJoke"));
 const RandomJoke = lazy(() => import("./routes/pages/jokes/RandomJoke"));
+const DailyJoke = lazy(() => import("./routes/pages/jokes/DailyJoke"));
 
 const App = () => {
   useAuthInitializer();
@@ -87,6 +88,7 @@ const App = () => {
               <Route path="search" element={<Search />} />
               <Route path="all-jokes" element={<AllJokes />} />
               <Route path="random-joke" element={<RandomJoke />} />
+              <Route path="daily-joke" element={<DailyJoke />} />
               <Route path="popular" element={<Popular />} />
               <Route path="my-jokes" element={<MyJokes />} />
               <Route path=":id" element={<SingleJoke />} />

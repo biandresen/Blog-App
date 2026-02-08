@@ -11,8 +11,8 @@ type ModalProps = {
   children?: ReactNode;
 
   // Closing
-  onClose?: () => void;      // new name
-  onCancel?: () => void;     // backward-compat (your existing code)
+  onClose?: () => void;
+  onCancel?: () => void;
   closeOnBackdrop?: boolean;
 
   // Confirm mode
@@ -95,7 +95,7 @@ const Modal = ({
 
         {variant === "confirm" && (
           <div className="flex justify-end gap-3 mt-4">
-            <button onClick={close} className="px-4 py-2 rounded-xl bg-[var(--primary-shade)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition">
+            <button onClick={close} className="px-4 py-2 rounded-xl bg-[var(--primary)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition">
               {cancelText}
             </button>
             <button onClick={onConfirm} className="px-4 py-2 rounded-xl bg-[var(--error)] text-white hover:bg-red-400 transition">

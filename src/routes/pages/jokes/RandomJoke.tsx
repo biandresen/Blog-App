@@ -14,8 +14,7 @@ const RandomJoke = () => {
       setLoading(true);
       setError(null);
 
-      const res = await getRandomPost(); // { statusCode, data, ... }
-      console.log("Random joke response:", res);
+      const res = await getRandomPost();
       setRandomJoke(res.data ?? null);
     } catch (err: any) {
       setError(err?.message ?? "Failed to fetch random joke");
@@ -38,15 +37,15 @@ const RandomJoke = () => {
         disabled={loading}
         className="block mx-auto"
       >
-
         {loading ? "Loading..." : "New joke"}
       </Button>
 
       <section className="posts-section">
         {!randomJoke && <h3 className="posts-section-heading text-[var(--text1)]">Joke not found</h3>}
-       {error && <p className="mt-3 text-sm text-[var(--error)]">{error}</p>}
         {randomJoke && <Post key={randomJoke.id} post={randomJoke} />}
       </section>
+
+       {error && <p className="text-center text-sm text-[var(--error)]">{error}</p>}
 
     </div>
   );
