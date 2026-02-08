@@ -333,13 +333,14 @@ const Post = ({
       )}
       </div>
 
-      <div className="flex xl:mb-0 md:ml-auto absolute top-4 left-5 xl:left-10">
-        <Avatar avatarUrl={post.user?.avatar} size={60} />
-        <div className="flex flex-col justify-center ml-2">
-          <p title="Username" className="font-bold text-[1rem]">{capitalizeFirstLetter(post.user.username)}</p>
-          <p title="Date of post" className="text-[0.7rem] mt-[-0.2rem] opacity-80">{formatDate(post.createdAt)}</p>
+      <div className="flex xl:mb-0 md:ml-auto absolute top-5 left-5 xl:left-10">
+        <Avatar avatarUrl={post.user?.avatar} size={50} />
+        <div className="flex flex-col justify-center ml-2 max-w-[calc(20px+30vw)] mt-2">
+          <p title="Username" className="font-bold text-[0.8rem]/3.5 md:text-[1rem] [overflow-wrap:anywhere] max-w-[calc(5px+30vw)]">{capitalizeFirstLetter(post.user.username)}</p>
+          <p title="Date of post" className="text-[0.7rem] mt-0 opacity-80">{formatDate(post.createdAt)}</p>
         </div>
       </div>
+
       <hr className="text-[var(--text1)] opacity-10 mt-23" />
       <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-4">
         {isEditing ? (
@@ -360,10 +361,11 @@ const Post = ({
           </div>
         ) : (
           <NavLink aria-label="Go to joke" to={`/jokes/${post.id}`}>
-            <h3 title="Joke title" className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]">{post.title}</h3>
+            <h3 title="Joke title" className="text-xl/5 xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]">{post.title}</h3>
           </NavLink>
         )}
       </div>
+
       {isEditing ? (
         <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg relative">
           <textarea
