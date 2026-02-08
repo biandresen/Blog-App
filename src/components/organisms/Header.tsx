@@ -5,7 +5,7 @@ import { TbLayoutSidebar } from "react-icons/tb";
 import { TbLayoutSidebarRight } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
 import Navbar from "./Navbar";
-import DadJokesIcon from "../../assets/img/laughing-dad.png";
+import DadJokesIcon from "../../assets/img/laughing-dad-c.png";
 import Button from "../atoms/Button";
 import { type HeaderProps } from "../../types/components.types";
 

@@ -28,7 +28,7 @@ const Layout = ({ setSidebars, children }: LayoutProps) => {
 
       {/* Sticky report button */}
       <button
-        className="fixed bottom-7 left-7 z-[60] bg-[var(--button5)] text-[var(--text0)] font-bold text-sm rounded-full outline-3 outline-[var(--button3)] w-15 h-15 flex items-center justify-center shadow-lg hover:brightness-110"
+        className="fixed bottom-2 left-3 xl:bottom-7 xl:left-7 z-[60] bg-[var(--button5)] text-[var(--text0)] font-bold text-[0.6rem] w-8 h-8 xl:text-sm xl:w-15 xl:h-15 rounded-full outline-2 outline-[var(--button3)] flex items-center justify-center shadow-lg hover:brightness-110"
         aria-label="Report an issue"
         type="button"
         onClick={() => setReportOpen(true)}

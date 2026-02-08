@@ -15,7 +15,7 @@ const AllJokes = () => {
 
   const handleTogglePresentation = () => setShowMiniPosts((prev) => !prev);
 
-  // const handleManualRefresh = () => refreshPosts(1, 10);
+  // const handleManualRefresh = () => refreshPosts();
 
   if (loading) return <Spinner />;
 

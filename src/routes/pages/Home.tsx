@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 // import homeImg from "../../assets/img/home-img.png";
-import homeImg from "../../assets/img/laughing-dad.png";
+import homeImg from "../../assets/img/laughing-dad-c.png";
 import homeContent from "../../text-content/home-page";
 import { useUser } from "../../contexts/UserContext";
 

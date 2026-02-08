@@ -103,8 +103,8 @@ export default function ContactTemplate() {
   );
 
   return (
-    <section className="mt-4 rounded-xl border border-white/10 bg-[var(--primary)]/20 p-4">
-      <p className="text-sm font-semibold text-[var(--text1)]">
+    <section className="mt-4 rounded-xl border border-[var(--text1)]/10 bg-[var(--button1)] p-4">
+      <p className="text-sm font-semibold text-[var(--text2)]">
         Choose a topic (prefills subject + message):
       </p>
 
@@ -117,7 +117,7 @@ export default function ContactTemplate() {
             <div key={topic} className="flex items-center gap-2">
               <a
                 href={buildMailto(EMAIL, subject, body)}
-                className="rounded-full border border-white/10 bg-[var(--primary)] px-3 py-1 text-sm text-[var(--text2)] hover:opacity-90"
+                className="rounded-full bg-[var(--button3)] px-3 py-1 text-sm text-[var(--text0)] hover:brightness-110"
                 title={`Email with subject: ${subject}`}
               >
                 {label}
@@ -133,7 +133,7 @@ export default function ContactTemplate() {
                     toast.error("Copy failed (clipboard permission blocked)");
                   }
                 }}
-                className="text-xs underline opacity-80 hover:opacity-100"
+                className="text-xs underline hover:brightness-110"
                 title="Copy email + template to clipboard"
               >
                 Copy
@@ -143,7 +143,7 @@ export default function ContactTemplate() {
         })}
       </div>
 
-      <p className="mt-3 text-xs opacity-70 text-[var(--text1)]">
+      <p className="mt-3 text-xs opacity-80 text-[var(--text2)]">
         If the email button doesn’t open anything, use “Copy” and paste into any email app.
       </p>
     </section>

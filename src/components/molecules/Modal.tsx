@@ -73,7 +73,7 @@ const Modal = ({
       onClick={closeOnBackdrop ? close : undefined}
     >
       <div
-        className="bg-[var(--bg)] text-[var(--text1)] rounded-2xl p-6 shadow-2xl
+        className="bg-[var(--primary-shade)] text-[var(--text2)] rounded-2xl p-6 shadow-2xl
                    w-[min(92vw,32rem)] max-h-[80vh] overflow-auto"
         onClick={(e) => e.stopPropagation()}
       >

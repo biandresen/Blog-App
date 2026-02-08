@@ -8,7 +8,7 @@ const Contact = () => {
   return (
     <div className="container max-w-150 flex flex-col-reverse lg:flex-row lg:max-w-235 lg:gap-10">
       <img
-        className="mx-auto w-[calc(170px+12vw)]"
+        className="mx-auto w-[calc(170px+12vw)] mt-[-20px]"
         src={contactImg}
         alt="a dad sitting in a chair laughing while holding a phone"
       />
