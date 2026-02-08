@@ -24,7 +24,7 @@ const Searchbar = ({ handleSearch }: { handleSearch: (input: string) => void }) 
             onClick={() => handleSearch(searchInput)}
             type="button"
             className="text-[var(--text2)]"
-            aria-label="Search posts"
+            aria-label="Search jokes"
           >
             <ImSearch size={25} />
           </button>
@@ -32,7 +32,7 @@ const Searchbar = ({ handleSearch }: { handleSearch: (input: string) => void }) 
             value={searchInput}
             onChange={(e) => {if (e.target.value.length <= MAX_CHARS.SEARCH) setSearchInput(e.target.value)}}
             type="text"
-            placeholder="Search posts..."
+            placeholder="Search jokes..."
             className="bg-transparent outline-none text-[var(--text2)] w-full ml-4 text-sm sm:text-lg lg:text-2xl"
           />
         </div>

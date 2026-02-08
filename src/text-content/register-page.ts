@@ -1,10 +1,10 @@
 const registerContent = {
-  infoHeading: "Register to get access!",
-  infoListHeading: "You will be able to:",
+  infoHeading: "Create your account",
+  infoListHeading: "With an account you can:",
   infoListItems: [
-    "Create your own blog posts",
-    "Comment on other posts",
-    "Create and attach tags to your posts",
+    "Submit your own dad jokes",
+    "Like and react to other jokes",
+    "Add tags to organize your jokes",
     "Manage your profile",
   ],
   inputHeading: "REGISTER",

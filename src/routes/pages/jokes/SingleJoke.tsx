@@ -8,7 +8,7 @@ import { getPost } from "../../../lib/axios";
 import { useSafeRequest } from "../../../hooks/useSafeRequest";
 import { useEffect, useState } from "react";
 
-const SinglePost = () => {
+const SingleJoke = () => {
   const [localPost, setLocalPost] = useState<any>(null);
   const { id: postId } = useParams<{ id: string }>();
   const { posts, refreshPosts } = usePosts();
@@ -38,15 +38,15 @@ const SinglePost = () => {
   if (loading) return <Spinner />;
   if (error) {
     toast.error(error);
-    return <h3 className="text-center text-[var(--error)]">Failed to load post</h3>;
+    return <h3 className="text-center text-[var(--error)]">Failed to load joke</h3>;
   }
 
   // Render post
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">POST DETAILS</h2>
+      <h2 className="posts-heading">JOKE DETAILS</h2>
       <section className="posts-section">
-        {!post && <h3 className="posts-section-heading text-[var(--text1)]">Post not found</h3>}
+        {!post && <h3 className="posts-section-heading text-[var(--text1)]">Joke not found</h3>}
         {post && isDraft && !isAuthor && (
           <h3 className="posts-section-heading text-[var(--text1)]">This draft is private</h3>
         )}
@@ -60,4 +60,4 @@ const SinglePost = () => {
   );
 };
 
-export default SinglePost;
+export default SingleJoke;

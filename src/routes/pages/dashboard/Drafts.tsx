@@ -67,7 +67,7 @@ const Drafts = () => {
 
   if (loading) return <Spinner />;
 
-  if (error) return <div className="text-[var(--text1)]">No posts found</div>;
+  if (error) return <div className="text-[var(--text1)]">No jokes found</div>;
 
   return (
     <div className="md:mt-8">
@@ -81,7 +81,7 @@ const Drafts = () => {
         type="button"
         size="md"
         variant="primary"
-        label="toggle post presentation"
+        label="toggle joke presentation"
       >
         {postPresentation}
       </Button>

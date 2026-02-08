@@ -4,7 +4,7 @@ import LeftSidebar2 from "../../components/molecules/LeftSidebar2";
 import RightSidebar from "../../components/molecules/RightSidebar";
 import { type PostsLayoutProps } from "../../types/layout.types";
 
-const PostsLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
+const JokesLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
   return (
     <div className="layout-container">
       {sidebars.left && <LeftSidebar2 setSidebars={setSidebars} />}
@@ -16,4 +16,4 @@ const PostsLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
   );
 };
 
-export default PostsLayout;
+export default JokesLayout;

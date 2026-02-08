@@ -70,7 +70,7 @@ const Search = () => {
   }
 
   if (error) {
-    return <div className="text-[var(--error)] text-center">Failed to load posts</div>;
+    return <div className="text-[var(--error)] text-center">Failed to load jokes</div>;
   }
 
   const postsToShow = targetPosts ?? null;

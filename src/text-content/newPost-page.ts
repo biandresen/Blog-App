@@ -1,7 +1,7 @@
 const newPostContent = {
-  heading: "NEW POST",
+  heading: "NEW JOKE",
   button1: "SAVE AS DRAFT",
-  button2: "PUBLISH POST",
+  button2: "PUBLISH JOKE",
 };
 
 export default newPostContent;

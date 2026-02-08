@@ -74,7 +74,7 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
         <span className="absolute bottom-5 right-5 opacity-80 text-xs text-[var(--text1)]">{getCharactersLeft(body, MAX_CHARS.BODY)}</span>
       </div>
       <button
-        title="Post comment"
+        title="Joke comment"
         type="submit"
         disabled={loading}
         className="ml-auto text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)]/20 text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100"

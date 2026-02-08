@@ -1,13 +1,17 @@
 const aboutContent = {
-  heading: "ABOUT THIS WEBSITE",
+  heading: "ABOUT DADJOKES",
+
   paragraph1:
-    "This is a blog website where you can read and write blog posts, comment on them, and share your thoughts with the community. The platform is designed to be user-friendly and accessible, allowing anyone to create an account and start a topic of their choice.",
+    "Dadjokes is a simple platform dedicated to one thing: gloriously bad dad jokes. Whether it's a clever pun, an eye-roll one-liner, or a joke so bad it's good, this is the place to share it.",
+
   paragraph2:
-    "Your post can cover a wide range of topics, from technology and science to art and culture. The goal is to foster a space where ideas can be exchanged freely and discussions can thrive.",
+    "Anyone can create an account and post their favorite dad jokes. You can also like other jokes to help surface the best (or worst) ones. Over time, the collection grows into a community-powered archive of pure dad humor.",
+
   paragraph3:
-    "Whether you're a seasoned writer or just starting out, this platform provides the tools you need to share your voice and connect with others. Join us in building a vibrant community of bloggers and readers!",
+    "The goal is to keep things simple, fun, and accessible. No complicated features — just jokes, reactions, and a space to appreciate the art of the classic dad joke.",
+
   paragraph4:
-    "We hope you enjoy using this website and find it a valuable resource for your blogging journey. Happy writing!",
+    "If you've ever said, \"Hi hungry, I'm dad,\" you're in the right place.",
 };
 
 export default aboutContent;

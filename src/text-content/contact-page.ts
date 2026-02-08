@@ -1,11 +1,13 @@
 const contactContent = {
   heading: "CONTACT US",
+
   paragraph1:
-    "Contact us for any inquiries, feedback, or support related to our blog platform. We value your input and are here to assist you.",
-  paragraph2a: "You can reach us via email at",
+    "Have a joke that deserves the spotlight? Found a bug? Or just want to say hi? We'd love to hear from you.",
+
+  paragraph2a: "Send us an email at",
   paragraph2Span: "kontakt@andresensolutions.no",
   paragraph2b:
-    "or through our social media channels. We strive to respond to all messages within 24-48 hours.",
+    "and we'll get back to you as soon as possible. Whether it's feedback, feature ideas, or your best (or worst) dad joke — our inbox is open.",
 };
 
 export default contactContent;

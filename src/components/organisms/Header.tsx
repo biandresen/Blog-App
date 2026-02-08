@@ -5,18 +5,20 @@ import { TbLayoutSidebar } from "react-icons/tb";
 import { TbLayoutSidebarRight } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
 import Navbar from "./Navbar";
-import logoImg from "../../assets/img/blogIcon.svg";
+// import DadJokesLogo from "../atoms/DadJokesLogo";
+// import DadJokesIcon from "../../assets/img/DADjokesIcon-white.png";
+import DadJokesIcon from "../../assets/img/laughing-dad.png";
 import Button from "../atoms/Button";
 import { type HeaderProps } from "../../types/components.types";
 
-const heading = "BLOGGY";
+const heading = "DadJokes";
 
 const Header = ({ setSidebars }: HeaderProps) => {
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
 
   const location = useLocation();
-  const showLeftSidebarBtn = location.pathname.includes("/posts") || location.pathname.includes("/dashboard");
-  const showRightSidebarBtn = location.pathname.includes("/posts");
+  const showLeftSidebarBtn = location.pathname.includes("/jokes") || location.pathname.includes("/dashboard");
+  const showRightSidebarBtn = location.pathname.includes("/jokes");
 
   const handleLeftSidebar = () => {
     setSidebars((prev) => {
@@ -46,9 +48,10 @@ const Header = ({ setSidebars }: HeaderProps) => {
   return (
     <header className="bg-[var(--primary)] h-[3.8rem]">
       <section className="flex items-center justify-between h-full px-[var(--space-s)] lg:px-[var(--space-lg)] relative">
-        <Link to="/" className="flex items-end w-full">
-          <img src={logoImg} width={38} alt="Logo" />
-          <h2 className="-ml-2 -mb-2 pr-1 font-medium text-[1.8rem]">{heading}</h2>
+        <Link to="/" className="flex items-end w-full text-[var(--text2)]">
+          {/* <DadJokesLogo className="w-[38px] h-[38px]" /> */}
+          <img src={DadJokesIcon} alt="DadJokes icon" className="w-[38px]" />
+          <h2 className="pr-1 mb-[7px] font-medium text-[1.8rem]">{heading}</h2>
         </Link>
 
         <div className="flex items-center gap-1 mr-4">

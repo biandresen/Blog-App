@@ -5,12 +5,12 @@ import Spinner from "../../../components/atoms/Spinner";
 import PostCard from "../../../components/molecules/PostCard";
 import Button from "../../../components/atoms/Button";
 
-const AllPosts = () => {
+const AllJokes = () => {
   const { posts, loading, error, refreshPosts} = usePosts();
   const [showMiniPosts, setShowMiniPosts] = useState(true);
 
   useEffect(() => {
-    refreshPosts(1, 50);
+    refreshPosts();
   }, []);
 
   const handleTogglePresentation = () => setShowMiniPosts((prev) => !prev);
@@ -21,7 +21,7 @@ const AllPosts = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">ALL POSTS</h2>
+      <h2 className="posts-heading">ALL JOKES</h2>
 
       <div className="flex gap-3 justify-center">
         <Button
@@ -29,9 +29,9 @@ const AllPosts = () => {
           type="button"
           size="md"
           variant="primary"
-          label="toggle post presentation"
+          label="toggle joke presentation"
         >
-          {showMiniPosts ? "Show mini posts" : "Show full posts"}
+          {showMiniPosts ? "Show joke titles" : "Show full jokes"}
         </Button>
 
         {/* <Button
@@ -54,7 +54,7 @@ const AllPosts = () => {
       <section className="posts-section">
         {!posts.length && !error && (
           <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>
+            <h3 className="posts-section-heading text-[var(--text1)]">No jokes found</h3>
           </div>
         )}
 
@@ -68,4 +68,4 @@ const AllPosts = () => {
   );
 };
 
-export default AllPosts;
+export default AllJokes;

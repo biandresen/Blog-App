@@ -8,13 +8,13 @@ import Button from "../../../components/atoms/Button";
 import Post from "../../../components/organisms/Post";
 import { Link } from "react-router-dom";
 
-const MyPosts = () => {
+const MyJokes = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showMiniPosts, setShowMiniPosts] = useState<boolean>(true);
 
-  const postPresentation = showMiniPosts ? "Show full posts" : "Show mini posts";
+  const postPresentation = showMiniPosts ? "Show full jokes" : "Show joke titles";
 
   const { user } = useUser();
 
@@ -22,7 +22,7 @@ const MyPosts = () => {
     const fetchUserPosts = async () => {
       try {
         if (!user) {
-          setError("Login to view your posts");
+          setError("Login to view your jokes");
           return;
         }
         const res = await getAllUserPosts(Number(user?.id), 1, 10);
@@ -33,8 +33,8 @@ const MyPosts = () => {
         setError(null);
         setPosts(res.data);
       } catch (err: any) {
-        console.error("Failed to fetch user posts:", err.message || err);
-        setError(err.message || "An error occurred while fetching posts.");
+        console.error("Failed to fetch user jokes:", err.message || err);
+        setError(err.message || "An error occurred while fetching jokes.");
       } finally {
         setLoading(false);
       }
@@ -57,23 +57,23 @@ const MyPosts = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">MY POSTS</h2>
+      <h2 className="posts-heading">MY JOKES</h2>
       {posts.length > 0 && <Button
         className="block mx-auto"
         onClick={handleTogglePresentation}
         type="button"
         size="md"
         variant="primary"
-        label="toggle post presentation"
+        label="toggle joke presentation"
       >
         {postPresentation}
       </Button>
       }
       <section className="posts-section">
         {posts.length === 0 && <div className="text-center posts-section-heading text-[var(--text1)]">
-          <p className="text-sm md:text-lg">You haven't created any posts yet.</p>
-          <Button label="Make post" className="text-sm mt-3">
-            <Link to="/dashboard" className="">Create Post</Link>
+          <p className="text-sm md:text-lg">You haven't created any jokes yet.</p>
+          <Button label="Create joke" className="text-sm mt-3">
+            <Link to="/dashboard" className="">Create Joke</Link>
           </Button>
         </div>}
 
@@ -93,4 +93,4 @@ const MyPosts = () => {
   );
 };
 
-export default MyPosts;
+export default MyJokes;

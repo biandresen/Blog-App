@@ -10,7 +10,7 @@ const Popular = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [showMiniPosts, setShowMiniPosts] = useState<boolean>(true);
 
-  const postPresentation = showMiniPosts ? "Show full posts" : "Show mini posts";
+  const postPresentation = showMiniPosts ? "Show full jokes" : "Show joke titles";
 
   useEffect(() => {
     const fetchPopularPosts = async () => {
@@ -19,8 +19,8 @@ const Popular = () => {
         const res = await getPopularPosts();
         setPosts(res.data);
       } catch (err: any) {
-        console.error("Error fetching popular posts:", err);
-        toast.error(err.message || "Failed to load popular posts");
+        console.error("Error fetching popular jokes:", err);
+        toast.error(err.message || "Failed to load popular jokes");
       }
     };
 
@@ -33,21 +33,21 @@ const Popular = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">POPULAR POSTS</h2>
+      <h2 className="posts-heading">POPULAR JOKES</h2>
       <Button
         className="block mx-auto"
         onClick={handleTogglePresentation}
         type="button"
         size="md"
         variant="primary"
-        label="toggle post presentation"
+        label="toggle joke presentation"
       >
         {postPresentation}
       </Button>
       <section className="posts-section">
         {!posts.length && (
           <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">No posts found</h3>
+            <h3 className="posts-section-heading text-[var(--text1)]">No jokes found</h3>
           </div>
         )}
         {showMiniPosts

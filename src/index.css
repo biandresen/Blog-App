@@ -7,19 +7,22 @@
 :root {
   --bg: #b8bad6;
   --bg-input: #e0e0e0;
+  --text0: hsl(230, 38%, 6%);
   --text1: #1a1a1a;
   --text2: #e0e0e0;
   --text3: #2b2f52;
   --button1: #2b2f52;
   --button2: #555975;
   --button3: #f2523f;
+  /* --button3: #d9714a; */
   --button4: #1a1a1a;
+  --button5: #ffc430;
   --primary: #2b2f52;
   --primary-shade: #222642;
   --primary-tint: #555975;
   --secondary: #2aa9a1;
   --success: #247546;
-  --warning: #f1c40f;
+  --warning: #ffc430;
   --error: #e74c3c;
   --info: #3498db;
 
@@ -33,19 +36,22 @@
 .dark {
   --bg: hsl(230, 38%, 6%);
   --bg-input: #222642;
+  --text0: hsl(230, 38%, 6%);
   --text1: #c1cffa;
   --text2: #c1cffa;
   --text3: #a7b2ff;
   --button1: #2b2f52;
   --button2: #555975;
   --button3: #f2523f;
+  /* --button3: #d9714a; */
   --button4: #fdfdfd;
+  --button5: #ffc430;
   --primary: #2b2f52;
   --primary-shade: #222642;
   --primary-tint: #555975;
   --secondary: #2aa9a1;
   --success: #247546;
-  --warning: #f1c40f;
+  --warning: #ffc430;
   --error: #f2523f;
   --info: #3498db;
 }

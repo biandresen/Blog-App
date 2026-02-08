@@ -6,9 +6,9 @@ import { CgProfile } from "react-icons/cg";
 import { useUser } from "../../contexts/UserContext";
 
 const linkName1: string = "Search";
-const linkName2: string = "All posts";
+const linkName2: string = "All jokes";
 const linkName3: string = "Popular";
-const linkName4: string = "My posts";
+const linkName4: string = "My jokes";
 
 interface LeftSidebar2Props {
   setSidebars: React.Dispatch<
@@ -33,7 +33,7 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
       <div className="ml-8 mt-5 md:mt-16">
         <ul onClick={handleLinkClick} className="flex flex-col gap-3 w-37">
           <NavLink
-            to="/posts/search"
+            to="/jokes/search"
             className={({ isActive }) =>
               isActive
                 ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
@@ -44,7 +44,7 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
             <span className="text-xl font-medium">{linkName1}</span>
           </NavLink>
           <NavLink
-            to="/posts/all-posts"
+            to="/jokes/all-jokes"
             className={({ isActive }) =>
               isActive
                 ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
@@ -55,7 +55,7 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
             <span className="text-xl font-medium">{linkName2}</span>
           </NavLink>{" "}
           <NavLink
-            to="/posts/popular"
+            to="/jokes/popular"
             className={({ isActive }) =>
               isActive
                 ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
@@ -67,7 +67,7 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
           </NavLink>
           {user && (
             <NavLink
-              to="/posts/my-posts"
+              to="/jokes/my-jokes"
               className={({ isActive }) =>
                 isActive
                   ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"

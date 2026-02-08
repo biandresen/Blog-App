@@ -1,9 +1,10 @@
 const homeContent = {
-  heading: "Read and write interesting posts!",
-  paragraph: "Use the comment sections on your favorite posts to engage and create communities!",
+  heading: "A Community for Classic Dad Humor",
+  paragraph:
+    "Submit dad jokes, like the best ones, and watch the collection grow into a ranked archive of timeless puns.",
   button0: "Dashboard",
   button1: "REGISTER",
-  button2: "VIEW POSTS",
+  button2: "EXPLORE JOKES",
 };
 
 export default homeContent;

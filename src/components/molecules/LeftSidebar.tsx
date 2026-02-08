@@ -7,7 +7,7 @@ import { GrUserAdmin } from "react-icons/gr";
 import { type LeftSidebarProps } from "../../types/components.types";
 import { useUser } from "../../contexts/UserContext";
 
-const linkName1: string = "New post";
+const linkName1: string = "New joke";
 const linkName2: string = "Drafts";
 const linkName3: string = "Profile";
 const linkName4: string = "Admin";
@@ -26,7 +26,7 @@ const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
       <div className="ml-8 mt-5 md:mt-16">
         <ul onClick={handleLinkClick} className="flex flex-col gap-3 w-37">
           <NavLink
-            to="/dashboard/new-post"
+            to="/dashboard/new-joke"
             className={({ isActive }) =>
               isActive ?
                 "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"

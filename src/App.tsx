@@ -19,17 +19,17 @@ const About = lazy(() => import("./routes/pages/About"));
 const Contact = lazy(() => import("./routes/pages/Contact"));
 
 const DashboardLayout = lazy(() => import("./routes/layouts/DashboardLayout"));
-const NewPost = lazy(() => import("./routes/pages/dashboard/NewPost"));
+const NewJoke = lazy(() => import("./routes/pages/dashboard/NewJoke"));
 const Drafts = lazy(() => import("./routes/pages/dashboard/Drafts"));
 const Profile = lazy(() => import("./routes/pages/dashboard/Profile"));
 const Admin = lazy(() => import("./routes/pages/dashboard/Admin"));
 
-const PostsLayout = lazy(() => import("./routes/layouts/PostsLayout"));
-const AllPosts = lazy(() => import("./routes/pages/posts/AllPosts"));
-const MyPosts = lazy(() => import("./routes/pages/posts/MyPosts"));
-const Popular = lazy(() => import("./routes/pages/posts/Popular"));
-const Search = lazy(() => import("./routes/pages/posts/Search"));
-const SingelPost = lazy(() => import("./routes/pages/posts/SingelPost"));
+const JokesLayout = lazy(() => import("./routes/layouts/JokesLayout"));
+const AllJokes = lazy(() => import("./routes/pages/jokes/AllJokes"));
+const MyJokes = lazy(() => import("./routes/pages/jokes/MyJokes"));
+const Popular = lazy(() => import("./routes/pages/jokes/Popular"));
+const Search = lazy(() => import("./routes/pages/jokes/Search"));
+const SingleJoke = lazy(() => import("./routes/pages/jokes/SingleJoke"));
 
 const App = () => {
   useAuthInitializer();
@@ -73,21 +73,21 @@ const App = () => {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<NewPost />} />
-              <Route path="new-post" element={<NewPost />} />
+              <Route index element={<NewJoke />} />
+              <Route path="new-joke" element={<NewJoke />} />
               <Route path="drafts" element={<Drafts />} />
               <Route path="profile" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
             </Route>
 
-            {/* Posts */}
-            <Route path="/posts" element={<PostsLayout sidebars={sidebars} setSidebars={setSidebars} />}>
-              <Route index element={<AllPosts />} />
+            {/* Jokes */}
+            <Route path="/jokes" element={<JokesLayout sidebars={sidebars} setSidebars={setSidebars} />}>
+              <Route index element={<AllJokes />} />
               <Route path="search" element={<Search />} />
-              <Route path="all-posts" element={<AllPosts />} />
+              <Route path="all-jokes" element={<AllJokes />} />
               <Route path="popular" element={<Popular />} />
-              <Route path="my-posts" element={<MyPosts />} />
-              <Route path=":id" element={<SingelPost />} />
+              <Route path="my-jokes" element={<MyJokes />} />
+              <Route path=":id" element={<SingleJoke />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

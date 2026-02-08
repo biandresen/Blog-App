@@ -11,7 +11,7 @@ const RightSidebar = () => {
       <div className="flex md:flex-col flex-wrap items-center justify-center px-4 py-8 gap-4">
         {!posts.length && (
           <div>
-            <h3 className="text-[var(--text2)] font-normal">No posts found</h3>
+            <h3 className="text-[var(--text2)] font-normal">No jokes found</h3>
           </div>
         )}
         {topPosts.map((post) => (

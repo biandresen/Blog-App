@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 
-import homeImg from "../../assets/img/home-img.png";
+// import homeImg from "../../assets/img/home-img.png";
+import homeImg from "../../assets/img/laughing-dad.png";
 import homeContent from "../../text-content/home-page";
 import { useUser } from "../../contexts/UserContext";
 
@@ -19,7 +20,7 @@ const Home = () => {
         <h1 className="text-[var(--text3)] text-[calc(1.8rem+1.5vw)] mt-[calc(1rem+2vw)] leading-9">
           {homeContent.heading}
         </h1>
-        <p className="text-[var(--text3)] font-semibold text-[calc(0.9rem+1vw)] leading-5.5 md:leading-8 mt-[calc(0.5rem+0.8vw)]">
+        <p className="text-[var(--text3)] font-semibold text-[calc(0.9rem+1vw)] leading-5.5 md:leading-8 lg:leading-10 mt-[calc(0.5rem+0.8vw)]">
           {homeContent.paragraph}
         </p>
         <div className="flex mt-[calc(1.3rem+2vw)] gap-3 w-full md:flex-row md:w-full justify-between">
@@ -33,7 +34,7 @@ const Home = () => {
             </NavLink>
           )}
 
-          <NavLink to="/posts" className={"bg-[var(--button2)] nav-link"}>
+          <NavLink to="/jokes" className={"bg-[var(--button5)] nav-link text-[var(--text0)] outline-[var(--button3)] outline-3"}>
             {homeContent.button2}
           </NavLink>
         </div>

@@ -11,7 +11,7 @@ import { usePosts } from "../../../contexts/PostsContext";
 import { getCharactersLeft, setInputErrors } from "../../../lib/utils";
 import { MAX_CHARS } from "../../../lib/constants";
 
-const NewPost = () => {
+const NewJoke = () => {
   const [title, setTitle] = useState<string>("");
   const [body, setbody] = useState<string>("");
   const [tags, setTags] = useState<string>("");
@@ -68,7 +68,7 @@ const NewPost = () => {
   const handlePublishPost = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!accessToken) {
-      toast.error("You must be logged in to publish a post.");
+      toast.error("You must be logged in to publish a joke.");
       return;
     }
     if (formError) {
@@ -88,15 +88,15 @@ const NewPost = () => {
         toast.error(res.message);
         throw new Error("Request failed");
       }
-      toast.success("Post published!");
+      toast.success("Joke published!");
       await refreshPosts();
       resetForm();
-      navigate("/posts");
+      navigate("/jokes");
     } catch (err: any) {
       if (err.message.includes("token")) {
         toast.error("Your session has expired. Please log in again.");
       }
-      console.error("Failed to publish post", err);
+      console.error("Failed to publish joke", err);
       setPostErrors(() => setInputErrors(err.response?.data?.errors))
     }
   };
@@ -115,7 +115,7 @@ const NewPost = () => {
             onChange={(e) => {
               if (e.target.value.length <= MAX_CHARS.TITLE) setTitle(e.target.value);
             }}
-            placeholder="Post title"
+            placeholder="Joke title here..."
             maxLength={MAX_CHARS.TITLE}
             required
           />
@@ -132,7 +132,7 @@ const NewPost = () => {
             onChange={(e) => {
               if (e.target.value.length <= MAX_CHARS.BODY) setbody(e.target.value);
             }}
-            placeholder="Write your post body here..."
+            placeholder="Joke content here..."
             name="body"
             id="body"
             maxLength={MAX_CHARS.BODY}
@@ -184,4 +184,4 @@ const NewPost = () => {
   );
 };
 
-export default NewPost;
+export default NewJoke;

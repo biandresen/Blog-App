@@ -126,7 +126,7 @@ const Post = ({
   const handleToggleLike = async () => {
     try {
       if (!accessToken) {
-        toast.error("You must be logged in to like a post");
+        toast.error("You must be logged in to like a joke");
         return;
       };
 
@@ -175,8 +175,8 @@ const Post = ({
       toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
       await refreshPosts();
     } catch (err: any) {
-      toast.error("Failed to edit post");
-      console.error("Failed to edit post", err.response.data.errors || err.message);
+      toast.error("Failed to edit joke");
+      console.error("Failed to edit joke", err.response.data.errors || err.message);
     }
   };
 
@@ -188,12 +188,12 @@ const Post = ({
       if (res.statusCode !== 200) throw new Error("Request failed");
 
       setShowModal(false);
-      toast.success("Post deleted!");
+      toast.success("Joke deleted!");
       await refreshPosts();
-      navigate("/posts");
+      navigate("/jokes");
     } catch (err: any) {
-      toast.error("Failed to delete post");
-      console.error("Failed to delete post", err.message);
+      toast.error("Failed to delete joke");
+      console.error("Failed to delete joke", err.message);
     }
   };
 
@@ -252,8 +252,8 @@ const Post = ({
     >
       <Modal
         isOpen={showModal}
-        title="Delete post"
-        message="Are you sure you want to delete this post? This action cannot be undone."
+        title="Delete joke"
+        message="Are you sure you want to delete this joke? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         onConfirm={() => handleDeletePost(post.id)}
@@ -267,7 +267,7 @@ const Post = ({
         {canEdit && <button
             onClick={handleOpenEditMenu}
             type="button"
-            title="Edit post"
+            title="Edit joke"
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
           >
            <BsThreeDotsVertical size={20} color="var(--text3)" />
@@ -278,7 +278,7 @@ const Post = ({
           <button
             onClick={handleEditInput}
             type="button"
-            title="Edit post"
+            title="Edit joke"
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
           >
             <MdEdit size={15} color="var(--text3)" />
@@ -288,7 +288,7 @@ const Post = ({
           <button
             onClick={() => setShowModal(true)}
             type="button"
-            title="Delete post"
+            title="Delete joke"
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
           >
             <MdDelete size={15} color="var(--text3)" />
@@ -298,8 +298,8 @@ const Post = ({
       {!published ? null : (
         <div className="group">
           <button
-            aria-label="Like post"
-            title="Like post"
+            aria-label="Like joke"
+            title="Like joke"
             type="button"
             onClick={handleToggleLike}
             className="flex cursor-pointer px-2.5 pt-1 min-w-14 rounded-full transition-colors duration-200 bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text3)] hover:bg-[var(--button1)] hover:text-[var(--text2)]! transition-colors duration-100 text-md
@@ -346,7 +346,7 @@ const Post = ({
           <div className="bg-[var(--bg)] rounded-lg p-1 w-full relative">
             <input
               ref={inputRef}
-              title="Edit post title"
+              title="Edit joke title"
               type="text"
               value={editedTitle}
               maxLength={MAX_CHARS.TITLE}
@@ -359,8 +359,8 @@ const Post = ({
             <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTitle, MAX_CHARS.TITLE)}</span>
           </div>
         ) : (
-          <NavLink aria-label="Go to post" to={`/posts/${post.id}`}>
-            <h3 title="Post title" className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]">{post.title}</h3>
+          <NavLink aria-label="Go to joke" to={`/jokes/${post.id}`}>
+            <h3 title="Joke title" className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]">{post.title}</h3>
           </NavLink>
         )}
       </div>
@@ -368,8 +368,8 @@ const Post = ({
         <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg relative">
           <textarea
             ref={textRef}
-            aria-label="Edit post body"
-            title="Edit post body"
+            aria-label="Edit joke body"
+            title="Edit joke body"
             value={editedBody}
             maxLength={MAX_CHARS.BODY}
             onKeyDown={handleBodyEnter}
@@ -406,8 +406,8 @@ const Post = ({
           <div className="mb-8 w-full bg-[var(--bg)] rounded-lg relative">
             <input
             type="text"
-            aria-label="Edit post tags"
-            title="Edit post tags"
+            aria-label="Edit joke tags"
+            title="Edit joke tags"
             value={editedTags}
             maxLength={MAX_CHARS.TAGS}
             onKeyDown={handleTagsEnter}
