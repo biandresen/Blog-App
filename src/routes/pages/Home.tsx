@@ -25,11 +25,11 @@ const Home = () => {
         </p>
         <div className="flex mt-[calc(1.3rem+2vw)] gap-3 w-full md:flex-row md:w-full justify-between">
           {user ? (
-            <NavLink to="/dashboard" className={"bg-[var(--button3)] nav-link"}>
+            <NavLink to="/dashboard" className={"bg-[var(--button3)] text-[var(--text0)] nav-link"}>
               {homeContent.button0}
             </NavLink>
           ) : (
-            <NavLink to="/register" className={"bg-[var(--button3)] nav-link"}>
+            <NavLink to="/register" className={"bg-[var(--button3)] text-[var(--text0)] nav-link"}>
               {homeContent.button1}
             </NavLink>
           )}

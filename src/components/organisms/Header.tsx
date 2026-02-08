@@ -5,8 +5,6 @@ import { TbLayoutSidebar } from "react-icons/tb";
 import { TbLayoutSidebarRight } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
 import Navbar from "./Navbar";
-// import DadJokesLogo from "../atoms/DadJokesLogo";
-// import DadJokesIcon from "../../assets/img/DADjokesIcon-white.png";
 import DadJokesIcon from "../../assets/img/laughing-dad.png";
 import Button from "../atoms/Button";
 import { type HeaderProps } from "../../types/components.types";
@@ -49,9 +47,9 @@ const Header = ({ setSidebars }: HeaderProps) => {
     <header className="bg-[var(--primary)] h-[3.8rem]">
       <section className="flex items-center justify-between h-full px-[var(--space-s)] lg:px-[var(--space-lg)] relative">
         <Link to="/" className="flex items-end w-full text-[var(--text2)]">
-          {/* <DadJokesLogo className="w-[38px] h-[38px]" /> */}
           <img src={DadJokesIcon} alt="DadJokes icon" className="w-[38px]" />
-          <h2 className="pr-1 mb-[7px] font-medium text-[1.8rem]">{heading}</h2>
+          <h2 className="pr-1 mb-2.5 font-medium text-[1.5rem] md:text-[1.8rem] md:mb-[7px]">{heading}</h2>
+          <span className="text-[var(--button5)] absolute left-14 lg:left-18">Beta</span>
         </Link>
 
         <div className="flex items-center gap-1 mr-4">
@@ -60,6 +58,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
               className="p-1.5 md:absolute md:top-18 md:left-6 z-45 text-[var(--text2)]!"
               size="zero"
               label="Toggle navigation menu"
+              title="Toggle menu"
               aria-controls="mobile-menu"
               onClick={() => {
                 handleLeftSidebar();
@@ -73,6 +72,7 @@ const Header = ({ setSidebars }: HeaderProps) => {
               className="p-1.5 md:absolute md:top-18 md:right-6 z-45 text-[var(--text2)]!"
               size="zero"
               label="Toggle navigation menu"
+              title="Toggle menu"
               aria-controls="mobile-menu"
               onClick={() => {
                 handleRightSidebar();

@@ -7,7 +7,7 @@ const contactContent = {
   paragraph2a: "Send us an email at",
   paragraph2Span: "kontakt@andresensolutions.no",
   paragraph2b:
-    "and we'll get back to you as soon as possible. Whether it's feedback, feature ideas, or your best (or worst) dad joke — our inbox is open.",
+    "and we'll be happy to look for its value to us. Whether it's feedback, feature ideas, or your best (or worst) dad joke — our inbox is open.",
 };
 
 export default contactContent;
