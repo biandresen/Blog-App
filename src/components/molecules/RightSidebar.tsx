@@ -1,8 +1,9 @@
 import { usePosts } from "../../contexts/PostsContext";
+import Button from "../atoms/Button";
 import PostCard from "./PostCard";
 
 const RightSidebar = () => {
-  const { posts } = usePosts();
+  const { posts, refreshPosts, loading, error } = usePosts();
   const topPosts = posts.slice(0, posts.length >= 100 ? 100 : posts.length);
 
   return (
@@ -11,7 +12,9 @@ const RightSidebar = () => {
       <div className="flex md:flex-col flex-wrap items-center justify-center px-4 py-8 gap-4">
         {!posts.length && (
           <div>
-            <h3 className="text-[var(--text2)] font-normal">No jokes found</h3>
+            <h3 className="text-[var(--text2)] font-normal mb-5">No jokes found</h3>
+            <Button onClick={() => refreshPosts()} label="Get jokes" type="button" variant="primary">{loading ? "Loading..." : "Get jokes"}</Button>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
           </div>
         )}
         {topPosts.map((post) => (
