@@ -385,10 +385,12 @@ const Post = ({
         </div>
       ) : (
         <div className="px-5 xl:px-10 pb-4 pt-1">
-          <LinkifiedText
+          <p className="text-sm md:text-lg/7 xl:text-lg whitespace-pre-wrap [overflow-wrap:anywhere] [word-break:break-word]">{displayedBody}</p>
+          {/* If I want to add links */}
+          {/* <LinkifiedText
             className="text-sm md:text-lg/7 xl:text-lg whitespace-pre-wrap [overflow-wrap:anywhere] [word-break:break-word]"
             text={displayedBody}
-          />
+          /> */}
 
           {bodyIsLong && (
             <button
