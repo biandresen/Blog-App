@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { safeRequest } from "../../../lib/auth";
 import Modal from "../../../components/molecules/Modal";
 import Avatar from "../../../components/atoms/Avatar";
+import { logoutAndRedirect } from "../../../lib/logout";
+
 
 const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6MB upload (compresses on backend)
 
@@ -48,11 +50,7 @@ const Profile = () => {
   const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
   const handleLogout = () => {
-    setUser(null);
-    setAccessToken(null);
-    logoutUser();
-    navigate("/login");
-    toast.info("You have been logged out.");
+    logoutAndRedirect({ setUser, setAccessToken, navigate });
   };
 
   const handleDeleteProfile = async () => {

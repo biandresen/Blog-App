@@ -6,6 +6,7 @@ import { CgProfile } from "react-icons/cg";
 import { IoDice } from "react-icons/io5";
 import { FaCalendarDay } from "react-icons/fa";
 import { GiPodium } from "react-icons/gi";
+import { GiBattleGear } from "react-icons/gi";
 
 import { useUser } from "../../contexts/UserContext";
 
@@ -14,8 +15,9 @@ const linkName2: string = "All Jokes";
 const linkName3: string = "Popular";
 const linkName4: string = "Random";
 const linkName5: string = "Daily Joke";
-const linkName6: string = "Scoreboard";
-const linkName7: string = "My Jokes";
+const linkName6: string = "Joke vs. Joke";
+const linkName7: string = "Leaderboard";
+const linkName8: string = "My Jokes";
 
 interface LeftSidebar2Props {
   setSidebars: React.Dispatch<
@@ -36,9 +38,9 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
   };
 
   return (
-    <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-[calc(100vh-3.8rem)] md:max-w-48 md:static z-40">
+    <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-[calc(100vh-3.8rem)] md:max-w-53 md:static z-40">
       <div className="ml-8 mt-5 md:mt-16">
-        <ul onClick={handleLinkClick} className="flex flex-col gap-3 w-37">
+        <ul onClick={handleLinkClick} className="flex flex-col gap-3 w-43">
           <NavLink
             to="/jokes/search"
             className={({ isActive }) =>
@@ -92,7 +94,7 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
                 : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
             }
           >
-            <FaCalendarDay size={27} />
+            <FaCalendarDay size={26} />
             <span className="text-xl font-medium">{linkName5}</span>
           </NavLink>
 
@@ -105,8 +107,21 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
                 : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4 opacity-50 cursor-not-allowed"
             }
           >
-            <GiPodium size={30}/>
+            <GiBattleGear size={30} />
             <span className="text-xl font-medium">{linkName6}</span>
+          </NavLink>
+
+          <NavLink
+            to=""
+            title="Future feature"
+            className={({ isActive }) =>
+              isActive
+                ? "flex gap-2 items-center mr-1.5 py-1 px-4 rounded-full -ml-4 opacity-50 cursor-not-allowed"
+                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4 opacity-50 cursor-not-allowed"
+            }
+          >
+            <GiPodium size={30}/>
+            <span className="text-xl font-medium">{linkName7}</span>
           </NavLink>
 
           {user && (
@@ -119,7 +134,7 @@ const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
               }
             >
               <CgProfile size={30} />
-              <span className="text-xl font-medium">{linkName7}</span>
+              <span className="text-xl font-medium">{linkName8}</span>
             </NavLink>
           )}
         </ul>
