@@ -22,7 +22,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
-import LinkifiedText from "../atoms/LinkifiedText";
+// import LinkifiedText from "../atoms/LinkifiedText";
 
 const Post = ({
   post,
@@ -124,12 +124,17 @@ const Post = ({
   }
 
   const handleToggleLike = async () => {
-    try {
-      if (!accessToken) {
-        toast.error("You must be logged in to like a joke");
-        return;
-      };
+    if (!accessToken || !user) {
+      toast.error("You must be logged in to like a joke");
+      return;
+    };
 
+    if (Number(user.id) == Number(post.authorId)) {
+      toast.error("You cannot like your own joke");
+      return;
+    };
+
+    try {
       const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
       if (res.statusCode === 200 || res.statusCode === 201) {
         setLikedList((prev) => {
