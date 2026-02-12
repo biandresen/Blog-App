@@ -8,6 +8,12 @@ export const formatDate = (date: string) => {
 };
 // 2025-09-20T13:22:01.506Z
 
+export const formatDateProfile = (iso?: string | null) => {
+  if (!iso) return "N/A";
+  return new Date(iso).toLocaleDateString();
+};
+
+
 export const override: CSSProperties = {
   color: "var(--text1)",
 };

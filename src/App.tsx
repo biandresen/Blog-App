@@ -17,6 +17,10 @@ const ForgotPassword = lazy(() => import("./routes/pages/ForgotPassord"));
 const ResetPassword = lazy(() => import("./routes/pages/ResetPassword"));
 const About = lazy(() => import("./routes/pages/About"));
 const Contact = lazy(() => import("./routes/pages/Contact"));
+const Terms = lazy(() => import("./routes/pages/legal/Terms"));
+const Privacy = lazy(() => import("./routes/pages/legal/Privacy"));
+const Cookies = lazy(() => import("./routes/pages/legal/Cookies"));
+const CommunityRules = lazy(() => import("./routes/pages/legal/CommunityRules"));
 
 const DashboardLayout = lazy(() => import("./routes/layouts/DashboardLayout"));
 const NewJoke = lazy(() => import("./routes/pages/dashboard/NewJoke"));
@@ -65,6 +69,12 @@ const App = () => {
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+
+            <Route path="/legal/terms" element={<Terms />} />
+            <Route path="/legal/privacy" element={<Privacy />} />
+            <Route path="/legal/cookies" element={<Cookies />} />
+            <Route path="/legal/rules" element={<CommunityRules />} />
+
 
             {/* Protected dashboard */}
             <Route

@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 
-// import homeImg from "../../assets/img/home-img.png";
 import homeImg from "../../assets/img/laughing-dad-c.png";
 import homeContent from "../../text-content/home-page";
 import { useUser } from "../../contexts/UserContext";
@@ -34,7 +33,7 @@ const Home = () => {
             </NavLink>
           )}
 
-          <NavLink to="/jokes" className={"bg-[var(--button5)] nav-link text-[var(--text0)] outline-[var(--button3)] outline-3"}>
+          <NavLink to="/jokes/daily-joke" className={"bg-[var(--button5)] nav-link text-[var(--text0)] outline-[var(--button3)] outline-3"}>
             {homeContent.button2}
           </NavLink>
         </div>

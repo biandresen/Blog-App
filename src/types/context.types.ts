@@ -16,6 +16,8 @@ export type User = {
   role: UserRole;
   createdAt: string;
   updatedAt: string;
+  termsAcceptedAt: string;
+  termsVersion: string;
 };
 
 export interface UserContextType {

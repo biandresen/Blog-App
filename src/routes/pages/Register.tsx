@@ -3,17 +3,26 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
+import { useAuth } from "../../contexts/AuthContext";
+import { useUser } from "../../contexts/UserContext";
+
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
 import registerContent from "../../text-content/register-page";
 import { usernameValidator, emailValidator, passwordValidator } from "../../validators/auth";
 
 import { registerUser } from "../../lib/axios";
+// import { safeRequest } from "../../lib/auth";
 
 const Register = () => {
+  const { setAccessToken, setIsAuthenticated } = useAuth();
+  const { setUser } = useUser();
+
   useEffect(() => {
     toast.info("Welcome! Please register to create an account.");
   }, []);
+
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -27,61 +36,102 @@ const Register = () => {
   const [input2Valid, setInput2Valid] = useState<boolean>(true);
   const [errorMsg2, setErrorMsg2] = useState<string>("");
 
-  const [input3Valid, setInput3Valid] = useState<boolean>(true);
+  // const [input3Valid, setInput3Valid] = useState<boolean>(true);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   const [input4Valid, setInput4Valid] = useState<boolean>(true);
   const [errorMsg4, setErrorMsg4] = useState<string>("");
 
   const invalidForm =
-    !input1Valid ||
-    !input2Valid ||
-    !input3Valid ||
-    !input4Valid ||
-    !username ||
-    !email ||
-    !password ||
-    !passwordConfirmation;
+  !input1Valid ||
+  !input2Valid ||
+  passwordErrors.length > 0 ||
+  !input4Valid ||
+  !username ||
+  !email ||
+  !password ||
+  !passwordConfirmation ||
+  !acceptedTerms;
+
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (invalidForm) return;
-    try {
-      const res = await registerUser({ username, email, password, passwordConfirmation });
-      if (res.statusCode !== 201) {
-        toast.error(res.message);
-        throw new Error("Registration failed");
-      }
-      toast.success(res.message);
-      navigate("/login");
-    } catch (errors: any) {
-      toast.error("Correct the errors and try again.");
-      if (errors) {
-        errors.forEach((error: { field: string; message: string }) => {
-          switch (error.field) {
-            case "username":
-              setInput1Valid(false);
-              setErrorMsg1(error.message); // API overrides UI
-              break;
-            case "email":
-              setInput2Valid(false);
-              setErrorMsg2(error.message);
-              break;
-            case "password":
-              setInput3Valid(false);
-              setPasswordErrors([error.message]);
-              break;
-            case "passwordConfirmation":
-              setInput4Valid(false);
-              setErrorMsg4(error.message);
-              break;
-          }
-        });
-      }
+  e.preventDefault();
+
+  if (invalidForm) {
+    toast.error("Please fill out the form correctly before submitting.");
+    return;
+  }
+
+  try {
+    const res = await registerUser({
+      username,
+      email,
+      password,
+      passwordConfirmation,
+      acceptedTerms,
+    });
+
+    if (res.statusCode !== 201) {
+      toast.error(res.message ?? "Registration failed");
+      return;
     }
-  };
+
+    const { accessToken, user, needsEmailVerification } = res.data;
+
+    // Future-ready: stop here if you later require email verification
+    if (needsEmailVerification) {
+      toast.info("Please verify your email to continue.");
+      navigate("/check-email");
+      return;
+    }
+
+    // Save auth
+    setAccessToken(accessToken);
+    setIsAuthenticated(true);
+
+    // Canonical fetch is best (keeps app state consistent)
+    // If you don't want /me, you can setUser(user) directly.
+    // const meRes = await safeRequest(getMe, accessToken, setAccessToken);
+    setUser(user);
+
+    toast.success(`Welcome, ${user.username}!`);
+    navigate("/jokes/daily-joke");
+  } catch (err: any) {
+    // Your registerUser rejects with either errors[] or {message}
+    if (Array.isArray(err)) {
+      toast.error("Correct the highlighted errors and try again.");
+      err.forEach((error: { field: string; message: string }) => {
+        switch (error.field) {
+          case "username":
+            setInput1Valid(false);
+            setErrorMsg1(error.message);
+            break;
+          case "email":
+            setInput2Valid(false);
+            setErrorMsg2(error.message);
+            break;
+          case "password":
+            setPasswordErrors([error.message]);
+            break;
+          case "passwordConfirmation":
+            setInput4Valid(false);
+            setErrorMsg4(error.message);
+            break;
+          case "acceptedTerms":
+            // optionally show UI feedback next to checkbox
+            break;
+        }
+      });
+      return;
+    }
+
+    toast.error(err?.message ?? "Registration failed");
+  }
+};
+
+
 
   return (
     <div className="inputInfo-container container">
@@ -194,16 +244,33 @@ const Register = () => {
               setErrorMsg4(isValid ? "" : "Passwords do not match");
             }}
           />
+
+          <label className="mt-4 flex items-start gap-2 text-sm text-[var(--text1)]">
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              className="mt-1"
+            />
+            <span>
+              I agree to the{" "}
+              <Link to="/legal/terms" className="underline font-semibold">Terms</Link>{" "}
+              and{" "}
+              <Link to="/legal/rules" className="underline font-semibold">Community Rules</Link>.
+            </span>
+          </label>
+
           <Button
             type="submit"
             variant="tertiary"
             onClick={handleSubmit}
-            className="w-full mt-7"
+            className={`w-full mt-7 ${invalidForm ? "cursor-not-allowed opacity-50" : ""}`}
             disabled={invalidForm}
             label={registerContent.button}
           >
             {registerContent.button}
           </Button>
+
           <div className="text-center">
             <Link to="/login" className="text-[var(--text1)] mt-3">
               {registerContent.goToLogin} <span className="font-bold">{registerContent.link}</span>

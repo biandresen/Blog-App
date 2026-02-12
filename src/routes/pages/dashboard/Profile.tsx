@@ -7,13 +7,14 @@ import Button from "../../../components/atoms/Button";
 import profileContent from "../../../text-content/profile-page";
 import { useUser } from "../../../contexts/UserContext";
 import { useAuth } from "../../../contexts/AuthContext";
-import { deleteUser, logoutUser, updateUser } from "../../../lib/axios";
+import { deleteUser, updateUser } from "../../../lib/axios";
 import { passwordValidator, userInputValidator, usernameValidator } from "../../../validators/auth";
 import { useNavigate } from "react-router-dom";
 import { safeRequest } from "../../../lib/auth";
 import Modal from "../../../components/molecules/Modal";
 import Avatar from "../../../components/atoms/Avatar";
 import { logoutAndRedirect } from "../../../lib/logout";
+import { formatDateProfile } from "../../../lib/utils";
 
 
 const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6MB upload (compresses on backend)
@@ -21,7 +22,6 @@ const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6MB upload (compresses on backend)
 const Profile = () => {
   const { user, setUser } = useUser();
   const { accessToken, setAccessToken } = useAuth();
-  const infoListItemsVariables = [user?.username, user?.email];
 
   // Values
   const [showModal, setShowModal] = useState(false);
@@ -80,8 +80,10 @@ const Profile = () => {
   const handleUpdateUser = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const updates: any = { username, email, password };
+    const updates: any = { username, email };
+    if (password && password.trim().length > 0) updates.password = password;
     if (avatar) updates.avatar = avatar;
+
 
     try {
       const res = await safeRequest(updateUser, accessToken, setAccessToken, Number(user?.id), updates);
@@ -113,46 +115,76 @@ const Profile = () => {
         onCancel={() => setShowModal(false)}
       />
       <div>
-        <div className="info-container flex flex-col">
-          <div className="flex flex-col-reverse md:flex-row ">
-            <h2 className="text-2xl md:text-4xl my-3 lg:mr-10">{profileContent.infoHeading}</h2>
-            <Avatar size={80} avatarUrl={user?.avatar} />
-          </div>
-          <div className="mb-10 md:mb-0">
-            <ul>
-              {profileContent.infoListItems.map((list, index) => (
-                <li className="text-xl md:text-2xl mt-2" key={list}>
-                  {list} <span className="font-bold break-all">{infoListItemsVariables[index]}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col gap-5 mt-auto">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleLogout}
-              className="w-full"
-              label={profileContent.button2}
-            >
-              {profileContent.button2}
-            </Button>
-            <Button
-              type="button"
-              variant="error"
-              onClick={handleDeleteButton}
-              className="w-full"
-              label={profileContent.button3}
-            >
-              {profileContent.button3}
-            </Button>
-          </div>
-        </div>
+     <div className="info-container flex flex-col">
+  {/* Header row */}
+  <div className="flex items-center justify-between">
+    <h2 className="text-2xl md:text-4xl font-bold">{profileContent.infoHeading}</h2>
+    <Avatar size={80} avatarUrl={user?.avatar} />
+  </div>
+
+  {/* Facts */}
+  <dl className="mt-6 grid gap-y-3 text-lg md:text-xl">
+    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+      <dt className="opacity-70">Username</dt>
+      <dd className="font-bold break-all text-right">{user?.username}</dd>
+    </div>
+
+    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+      <dt className="opacity-70">Email</dt>
+      <dd className="font-bold break-all text-right">{user?.email}</dd>
+    </div>
+
+    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+      <dt className="opacity-70">Role</dt>
+      <dd className="font-bold text-right">{user?.role}</dd>
+    </div>
+
+    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+      <dt className="opacity-70">Created</dt>
+      <dd className="font-bold text-right">{formatDateProfile(user?.createdAt)}</dd>
+    </div>
+
+    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+      <dt className="opacity-70">Updated</dt>
+      <dd className="font-bold text-right">{formatDateProfile(user?.updatedAt)}</dd>
+    </div>
+
+    <div className="my-2 border-t border-white/10" />
+
+    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+      <dt className="opacity-70">Terms accepted</dt>
+      <dd className="font-bold text-right">{formatDateProfile(user?.termsAcceptedAt)}</dd>
+    </div>
+
+    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+      <dt className="opacity-70">Terms version</dt>
+      <dd className="font-bold text-right">{user?.termsVersion ?? "N/A"}</dd>
+    </div>
+  </dl>
+
+  {/* Actions pinned to bottom */}
+  <div className="mt-auto pt-6 flex flex-col gap-4">
+    <Button variant="secondary" onClick={handleLogout} className="w-full" label="logout">
+      LOGOUT
+    </Button>
+
+    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+      <p className="text-sm opacity-80 mb-3">
+        Deleting your account disables it and removes your access.
+      </p>
+      <Button variant="error" onClick={handleDeleteButton} className="w-full" label="delete profile">
+        DELETE PROFILE
+      </Button>
+    </div>
+  </div>
+</div>
       </div>
-      <div className="input-container">
+
+        <div className="input-container">
         <h2 className="input-heading">{profileContent.inputHeading}</h2>
-        <form action="">
-          <Input
+        <form action="" className="flex flex-col h-[87%]">
+          <div>
+            <Input
             id="username"
             label="Username"
             value={username}
@@ -189,8 +221,9 @@ const Profile = () => {
             <Input
               id="password"
               type={!showPassword ? "password" : "text"}
-              label="Password"
+              label={`Password`}
               value={password}
+              placeholder={"optional - only fill to change"}
               required
               inputValid={passwordErrors.length === 0}
               onChange={(e) => {
@@ -203,7 +236,7 @@ const Profile = () => {
               aria-label="Show/Hide password"
               label="Show/Hide password"
               size="zero"
-              className="bg-transparent absolute left-27 top-2"
+              className="bg-transparent absolute left-21 md:left-28 top-2"
             >
               {showPassword ? (
                 <FaEye onClick={() => setShowPassword((s) => !s)} size={20} className="text-[var(--text1)]" />
@@ -257,8 +290,11 @@ const Profile = () => {
               setAvatarPreview(URL.createObjectURL(file));
             }}
           />
-          <p className="text-xs text-gray-400 mb-3 mt-[-10px]">
+          <p className="text-xs text-gray-500 mb-3 mt-[-10px]">
             Max size: {MAX_AVATAR_SIZE / (1024 * 1024)}MB. Supported formats: JPG, JPEG, WEBP, PNG.
+          </p>
+          <p className="text-xs text-gray-500 mb-3 mt-[-10px]">
+            Uploading a new avatar will replace your current one.
           </p>
 
 
@@ -269,10 +305,13 @@ const Profile = () => {
 
           {avatarError && <p className="text-red-500">{avatarError}</p>}
 
+          </div>
+
           <Button
             type="submit"
+            variant="tertiary"
             onClick={handleUpdateUser}
-            className="w-full mt-7"
+            className="w-full mt-auto"
             label={profileContent.button1}
             disabled={!!avatarError} // disable if avatar too big
           >

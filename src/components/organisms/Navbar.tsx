@@ -5,6 +5,7 @@ import { useUser } from "../../contexts/UserContext";
 import UserMenu from "../molecules/UserMenu";
 
 import { type NavbarProps } from "../../types/components.types";
+import LegalMenu from "../molecules/LegalMenu";
 
 const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
 
@@ -52,7 +53,7 @@ const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
         </li> */}
         <li className="pt-3 md:pt-0">
           <NavLink
-            to="/jokes"
+            to="/jokes/daily-joke"
             onClick={closeMobileNav}
             className={({ isActive }) => (isActive ? "navbar-link-active" : "navbar-link-inactive")}
           >
@@ -109,7 +110,10 @@ const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
             Contact
           </NavLink>
         </li>
-        <li className="pb-3 md:pb-0">
+        <li className="md:ml-2 md:mt-2 pb-4 md:pb-0">
+          <LegalMenu />
+        </li>
+        <li className="pb-3 md:pb-0 mt-[-10px] md:mt-0">
           <button
             type="button"
             title="Toggle light/dark theme"

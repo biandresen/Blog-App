@@ -3,7 +3,6 @@ import contactImg from "../../assets/img/dad-on-phone.png";
 import ContactTemplate from "../../components/organisms/ContactTemplate";
 
 const Contact = () => {
-  // const defaultMailto = buildMailto("Contact from DadJokes");
 
   return (
     <div className="container max-w-150 flex flex-col-reverse lg:flex-row lg:max-w-235 lg:gap-10">

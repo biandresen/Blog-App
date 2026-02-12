@@ -7,6 +7,7 @@ type RegisterUser = {
   email: string;
   password: string;
   passwordConfirmation: string;
+  acceptedTerms: boolean;
 };
 
 type LoginUser = {
@@ -57,13 +58,14 @@ export const newPassword = async (token: token | undefined, password: string) =>
   }
 };
 
-export const registerUser = async ({ username, email, password, passwordConfirmation }: RegisterUser) => {
+export const registerUser = async ({ username, email, password, passwordConfirmation, acceptedTerms }: RegisterUser) => {
   try {
     const res = await axios.post(BLOG_API.BASE + BLOG_API.REGISTER, {
       username,
       email,
       password,
       passwordConfirmation,
+      acceptedTerms,
     });
     return res.data; // success case
   } catch (err: any) {

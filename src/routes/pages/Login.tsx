@@ -34,7 +34,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-    navigate("/jokes");
+    navigate("/jokes/daily-joke");
     return;
     }
 
@@ -57,7 +57,7 @@ const Login = () => {
     setUser(meRes.data);
 
     toast.success(`Welcome back, ${meRes.data.username}!`);
-    setTimeout(() => navigate("/jokes"), 200);
+    setTimeout(() => navigate("/jokes/daily-joke"), 200);
   } catch (err: any) {
     toast.error("Correct the error(s) and try again.");
     setErrorMsg2(err.message || "Login failed");
