@@ -18,6 +18,9 @@ export type User = {
   updatedAt: string;
   termsAcceptedAt: string;
   termsVersion: string;
+  dailyJokeStreak: number;
+  dailyJokeLastViewedAt: string;
+  dailyJokeBestStreak: number;
 };
 
 export interface UserContextType {

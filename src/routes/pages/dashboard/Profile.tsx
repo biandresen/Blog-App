@@ -12,10 +12,10 @@ import { passwordValidator, userInputValidator, usernameValidator } from "../../
 import { useNavigate } from "react-router-dom";
 import { safeRequest } from "../../../lib/auth";
 import Modal from "../../../components/molecules/Modal";
-import Avatar from "../../../components/atoms/Avatar";
+// import Avatar from "../../../components/atoms/Avatar";
+import AvatarWithBadges from "../../../components/atoms/AvatarWithBadges";
 import { logoutAndRedirect } from "../../../lib/logout";
 import { formatDateProfile } from "../../../lib/utils";
-
 
 const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6MB upload (compresses on backend)
 
@@ -116,73 +116,92 @@ const Profile = () => {
       />
       <div>
      <div className="info-container flex flex-col">
-  {/* Header row */}
-  <div className="flex items-center justify-between">
-    <h2 className="text-2xl md:text-4xl font-bold">{profileContent.infoHeading}</h2>
-    <Avatar size={80} avatarUrl={user?.avatar} />
-  </div>
+      {/* Header row */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl md:text-4xl font-bold">{profileContent.infoHeading}</h2>
+        {/* <Avatar size={80} avatarUrl={user?.avatar} /> */}
+        <AvatarWithBadges
+          avatarUrl={user?.avatar}
+          size={80}
+          username={user?.username}
+          status={{
+            role: user?.role,
+            streak: user?.dailyJokeStreak,
+            bestStreak: user?.dailyJokeBestStreak,
+            badges: [
+              // later from backend, for now you can hardcode for testing:
+              // "top_creator_month", "fastest_growing"
+            ],
+          }}
+        />
+      </div>
 
-  {/* Facts */}
-  <dl className="mt-6 grid gap-y-3 text-lg md:text-xl">
-    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-      <dt className="opacity-70">Username</dt>
-      <dd className="font-bold break-all text-right">{user?.username}</dd>
+      {/* Facts */}
+      <dl className="mt-6 grid gap-y-3 text-lg md:text-xl">
+        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+          <dt className="opacity-70">🔥Best daily streak:</dt>
+          <dd className="font-bold break-all text-right">{user?.dailyJokeBestStreak}</dd>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+          <dt className="opacity-70">Username</dt>
+          <dd className="font-bold break-all text-right">{user?.username}</dd>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+          <dt className="opacity-70">Email</dt>
+          <dd className="font-bold break-all text-right">{user?.email}</dd>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+          <dt className="opacity-70">Role</dt>
+          <dd className="font-bold text-right">{user?.role}</dd>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+          <dt className="opacity-70">Created</dt>
+          <dd className="font-bold text-right">{formatDateProfile(user?.createdAt)}</dd>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+          <dt className="opacity-70">Updated</dt>
+          <dd className="font-bold text-right">{formatDateProfile(user?.updatedAt)}</dd>
+        </div>
+
+        <div className="my-2 border-t border-white/10" />
+
+        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+          <dt className="opacity-70">Terms accepted</dt>
+          <dd className="font-bold text-right">{formatDateProfile(user?.termsAcceptedAt)}</dd>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+          <dt className="opacity-70">Terms version</dt>
+          <dd className="font-bold text-right">{user?.termsVersion ?? "N/A"}</dd>
+        </div>
+      </dl>
+
+      {/* Actions pinned to bottom */}
+      <div className="mt-auto pt-6 flex flex-col gap-4">
+        <Button variant="secondary" onClick={handleLogout} className="w-full" label="logout">
+          LOGOUT
+        </Button>
+
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+          <p className="text-sm opacity-80 mb-3">
+            Deleting your account disables it and removes your access.
+          </p>
+          <Button variant="error" onClick={handleDeleteButton} className="w-full" label="delete profile">
+            DELETE PROFILE
+          </Button>
+        </div>
+      </div>
     </div>
-
-    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-      <dt className="opacity-70">Email</dt>
-      <dd className="font-bold break-all text-right">{user?.email}</dd>
-    </div>
-
-    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-      <dt className="opacity-70">Role</dt>
-      <dd className="font-bold text-right">{user?.role}</dd>
-    </div>
-
-    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-      <dt className="opacity-70">Created</dt>
-      <dd className="font-bold text-right">{formatDateProfile(user?.createdAt)}</dd>
-    </div>
-
-    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-      <dt className="opacity-70">Updated</dt>
-      <dd className="font-bold text-right">{formatDateProfile(user?.updatedAt)}</dd>
-    </div>
-
-    <div className="my-2 border-t border-white/10" />
-
-    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-      <dt className="opacity-70">Terms accepted</dt>
-      <dd className="font-bold text-right">{formatDateProfile(user?.termsAcceptedAt)}</dd>
-    </div>
-
-    <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-      <dt className="opacity-70">Terms version</dt>
-      <dd className="font-bold text-right">{user?.termsVersion ?? "N/A"}</dd>
-    </div>
-  </dl>
-
-  {/* Actions pinned to bottom */}
-  <div className="mt-auto pt-6 flex flex-col gap-4">
-    <Button variant="secondary" onClick={handleLogout} className="w-full" label="logout">
-      LOGOUT
-    </Button>
-
-    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
-      <p className="text-sm opacity-80 mb-3">
-        Deleting your account disables it and removes your access.
-      </p>
-      <Button variant="error" onClick={handleDeleteButton} className="w-full" label="delete profile">
-        DELETE PROFILE
-      </Button>
-    </div>
-  </div>
-</div>
       </div>
 
         <div className="input-container">
         <h2 className="input-heading">{profileContent.inputHeading}</h2>
-        <form action="" className="flex flex-col h-[87%]">
+        <form action="" className="flex flex-col h-[88%]">
           <div>
             <Input
             id="username"

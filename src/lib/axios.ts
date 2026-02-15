@@ -451,3 +451,26 @@ export const getDailyPost = async () => {
     }
   }
 };
+
+  // must send Authorization header (use your safeRequest wrapper)
+export const recordDailyJokeView = async (accessToken: token) => {
+  try {
+    const res = await axios.post(
+      BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.DAILY_VIEW,
+      {},
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};

@@ -1,8 +1,10 @@
-type UserType = {
-  avatar: string | null;
-  id: number;
-  username: string;
-};
+import { type User } from "./context.types";
+
+// type UserType = {
+//   avatar: string | null;
+//   id: number;
+//   username: string;
+// };
 
 export type CommentType = {
   authorId: number;
@@ -11,7 +13,7 @@ export type CommentType = {
   createdAt: string;
   id: number;
   postId: number;
-  user: UserType;
+  user: User;
 };
 
 export type TagType = {
@@ -32,7 +34,7 @@ export interface PostType {
   likes: PostLike[];
   comments: CommentType[];
   tags: TagType[];
-  user: UserType;
+  user: User;
 }
 
 export interface PostLike {

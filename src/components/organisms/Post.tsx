@@ -17,7 +17,8 @@ import { usePosts } from "../../contexts/PostsContext";
 import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
-import Avatar from "../atoms/Avatar";
+// import Avatar from "../atoms/Avatar";
+import AvatarWithBadges from "../atoms/AvatarWithBadges";
 import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
@@ -68,6 +69,15 @@ const Post = ({
     // reset when post changes
     setIsBodyExpanded(false);
   }, [post.id]);
+
+  let avatarSize = 63;
+  useEffect(() => {
+    if (window.innerWidth >= 1280) {
+      avatarSize = 63;
+    } else if (window.innerWidth >= 768) {
+      avatarSize = 50;
+    }
+  }, [window.innerWidth]);
 
   useEffect(() => {
     if (!post) return;
@@ -338,8 +348,21 @@ const Post = ({
       )}
       </div>
 
-      <div className="flex xl:mb-0 md:ml-auto absolute top-5 left-5 xl:left-10">
-        <Avatar avatarUrl={post.user?.avatar} size={50} />
+      <div className="flex xl:mb-0 md:ml-auto absolute top-3 left-5 xl:left-10">
+        {/* <Avatar avatarUrl={post.user?.avatar} size={50} /> */}
+        <AvatarWithBadges
+          avatarUrl={post.user?.avatar}
+          size={65}
+          username={post.user?.username}
+          status={{
+            role: post.user?.role,
+            streak: post.user?.dailyJokeStreak,
+            bestStreak: post.user?.dailyJokeBestStreak,
+            badges: [
+              // "top_creator_month", "fastest_growing", "joke_of_day", "trending_week", "most_commented", "streak"
+            ],
+          }}
+        />
         <div className="flex flex-col justify-center ml-2 max-w-[calc(20px+30vw)] mt-2">
           <p title="Username" className="font-bold text-[0.8rem]/3.5 md:text-[1rem] [overflow-wrap:anywhere] max-w-[calc(5px+30vw)]">{capitalizeFirstLetter(post.user.username)}</p>
           <p title="Date of post" className="text-[0.7rem] mt-0 opacity-80">{formatDate(post.createdAt)}</p>
@@ -485,7 +508,7 @@ const Post = ({
                 key={comment.id}
                 commentId={comment.id}
                 username={comment.user?.username || "Unknown"}
-                authorId={comment.user?.id || null}
+                authorId={Number(comment.user?.id) || null}
                 avatar={comment.user?.avatar || null}
                 date={formatDate(comment.createdAt)}
                 comment={comment.body}
