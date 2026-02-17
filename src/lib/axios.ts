@@ -204,6 +204,7 @@ export const getMe = async (accessToken: token) => {
   }
 };
 
+
 export const reactivateUser = async (accessToken: token, id: number | string) => {
   try {
     const res = await axios.patch(
@@ -472,5 +473,28 @@ export const recordDailyJokeView = async (accessToken: token) => {
       // Network or unknown error
       return Promise.reject({ message: err.message || "Something went wrong" });
     }
+  }
+};
+
+export const getMyBadgeHistory = async (accessToken: token, page = 1, limit = 50) => {
+  const res = await axios.get(BLOG_API.BASE + BLOG_API.BADGE_HISTORY_ME, {
+    params: { page, limit },
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return res.data;
+};
+
+export const getMyCurrentBadges = async (accessToken: token) => {
+  try {
+    const res = await axios.get(
+      BLOG_API.BASE + BLOG_API.CURRENT_BADGES_ME,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    return res.data;
+  } catch (err: any) {
+    throw err;
   }
 };

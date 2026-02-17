@@ -23,6 +23,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
+import type { User } from "../../types/context.types";
 // import LinkifiedText from "../atoms/LinkifiedText";
 
 const Post = ({
@@ -182,7 +183,6 @@ const Post = ({
       );
 
       if (res.statusCode !== 200) throw new Error("Request failed");
-      console.log(res)
       const updatedPost = res.data; // or res.data.post depending on API
       onPostUpdated?.(updatedPost);
 
@@ -349,19 +349,12 @@ const Post = ({
       </div>
 
       <div className="flex xl:mb-0 md:ml-auto absolute top-3 left-5 xl:left-10">
-        {/* <Avatar avatarUrl={post.user?.avatar} size={50} /> */}
+        {/* <Avatar avatarUrl={post.user?.avatar} size={65} /> */}
         <AvatarWithBadges
-          avatarUrl={post.user?.avatar}
           size={65}
+          avatarUrl={post.user?.avatar}
           username={post.user?.username}
-          status={{
-            role: post.user?.role,
-            streak: post.user?.dailyJokeStreak,
-            bestStreak: post.user?.dailyJokeBestStreak,
-            badges: [
-              // "top_creator_month", "fastest_growing", "joke_of_day", "trending_week", "most_commented", "streak"
-            ],
-          }}
+          user={post.user as User}
         />
         <div className="flex flex-col justify-center ml-2 max-w-[calc(20px+30vw)] mt-2">
           <p title="Username" className="font-bold text-[0.8rem]/3.5 md:text-[1rem] [overflow-wrap:anywhere] max-w-[calc(5px+30vw)]">{capitalizeFirstLetter(post.user.username)}</p>

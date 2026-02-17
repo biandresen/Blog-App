@@ -1,25 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Avatar from "../atoms/Avatar";
-import { getStreakTier, pickPrimaryBadge, resolveActiveBadges, type UserStatus } from "../../lib/badges";
+import { getStreakTier, pickPrimaryBadgeFromUser, resolveActiveBadgesFromUser } from "../../lib/badges";
+import type { User } from "../../types/context.types";
 
 type Props = {
   avatarUrl?: string | null;
   size: number;
-
-  // status data (today: streak + role; later: badge list)
-  status: UserStatus;
-
-  // menu behavior
+  user?: User | null;
   enableMenu?: boolean;
-  username?: string;
+  username?: string; // allow overriding display
 };
 
 export default function AvatarWithBadges({
+  user,
   avatarUrl,
-  size,
-  status,
-  enableMenu = true,
   username,
+  size,
+  enableMenu = true,
 }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -36,13 +33,14 @@ export default function AvatarWithBadges({
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [enableMenu]);
 
-  const primary = useMemo(() => pickPrimaryBadge(status), [status]);
-  const activeBadges = useMemo(() => resolveActiveBadges(status), [status]);
-  const streak = status.streak ?? 0;
-  const bestStreak = status.bestStreak ?? 0;
+  const primary = useMemo(() => pickPrimaryBadgeFromUser(user), [user]);
+  const activeBadges = useMemo(() => resolveActiveBadgesFromUser(user), [user]);
+
+  const streak = user?.dailyJokeStreak ?? 0;
+  const bestStreak = user?.dailyJokeBestStreak ?? 0;
+
   const streakTier = useMemo(() => getStreakTier(streak), [streak]);
 
-  // Compact streak display inside menu
   const streakDisplay = streak > 999 ? "999+" : streak.toString();
   const bestStreakDisplay = bestStreak > 999 ? "999+" : bestStreak.toString();
 
@@ -59,9 +57,8 @@ export default function AvatarWithBadges({
         aria-haspopup={enableMenu ? "menu" : undefined}
         aria-expanded={enableMenu ? open : undefined}
       >
-        <Avatar avatarUrl={avatarUrl} size={size} />
+        <Avatar avatarUrl={avatarUrl ?? user?.avatar} size={size} />
 
-        {/* Primary badge overlay: icon-only */}
         {primary && (
           <span
             className="
@@ -70,7 +67,7 @@ export default function AvatarWithBadges({
               h-[22px] min-w-[22px] px-1
               rounded-full
               border border-white/10
-              bg-[var(--bg-input)]
+              bg-[var(--primary-shade)]
               text-[0.85rem]
               shadow-lg
             "
@@ -82,7 +79,6 @@ export default function AvatarWithBadges({
         )}
       </button>
 
-      {/* Menu */}
       {enableMenu && open && (
         <div
           role="menu"
@@ -94,13 +90,10 @@ export default function AvatarWithBadges({
             md:ml-0 md:mt-2 md:right-0
           `}
         >
-          {username && (
-            <div className="px-3 py-2 text-xs opacity-70 border-b border-white/10">
-              <span className="font-semibold">{username}</span>
-            </div>
-          )}
+          <div className="px-3 py-2 text-xs opacity-70 border-b border-white/10">
+            <span className="font-semibold">{username ?? user?.username}</span>
+          </div>
 
-          {/* Streak row */}
           <div className="px-3 py-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className={`h-2.5 w-2.5 rounded-full ${streakTier.colorClass}`} />
@@ -109,7 +102,6 @@ export default function AvatarWithBadges({
             <span className="font-semibold">{streak > 0 ? `${streakDisplay} (${bestStreakDisplay})` : "—"}</span>
           </div>
 
-          {/* Badges */}
           <div className="px-3 pb-2">
             <div className="text-xs opacity-70 mb-2">Badges</div>
 

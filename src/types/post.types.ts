@@ -1,11 +1,5 @@
 import { type User } from "./context.types";
 
-// type UserType = {
-//   avatar: string | null;
-//   id: number;
-//   username: string;
-// };
-
 export type CommentType = {
   authorId: number;
   body: string;

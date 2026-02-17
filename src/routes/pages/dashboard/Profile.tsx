@@ -16,6 +16,7 @@ import Modal from "../../../components/molecules/Modal";
 import AvatarWithBadges from "../../../components/atoms/AvatarWithBadges";
 import { logoutAndRedirect } from "../../../lib/logout";
 import { formatDateProfile } from "../../../lib/utils";
+import type { User } from "../../../types/context.types";
 
 const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6MB upload (compresses on backend)
 
@@ -121,18 +122,10 @@ const Profile = () => {
         <h2 className="text-2xl md:text-4xl font-bold">{profileContent.infoHeading}</h2>
         {/* <Avatar size={80} avatarUrl={user?.avatar} /> */}
         <AvatarWithBadges
-          avatarUrl={user?.avatar}
           size={80}
+          avatarUrl={user?.avatar}
           username={user?.username}
-          status={{
-            role: user?.role,
-            streak: user?.dailyJokeStreak,
-            bestStreak: user?.dailyJokeBestStreak,
-            badges: [
-              // later from backend, for now you can hardcode for testing:
-              // "top_creator_month", "fastest_growing"
-            ],
-          }}
+          user={user as User}
         />
       </div>
 

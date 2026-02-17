@@ -27,6 +27,7 @@ const NewJoke = lazy(() => import("./routes/pages/dashboard/NewJoke"));
 const Drafts = lazy(() => import("./routes/pages/dashboard/Drafts"));
 const Profile = lazy(() => import("./routes/pages/dashboard/Profile"));
 const Admin = lazy(() => import("./routes/pages/dashboard/Admin"));
+const Badges = lazy(() => import("./routes/pages/dashboard/Badges"));
 
 const JokesLayout = lazy(() => import("./routes/layouts/JokesLayout"));
 const AllJokes = lazy(() => import("./routes/pages/jokes/AllJokes"));
@@ -89,6 +90,7 @@ const App = () => {
               <Route path="new-joke" element={<NewJoke />} />
               <Route path="drafts" element={<Drafts />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="badges" element={<Badges />} />
               <Route path="admin" element={<Admin />} />
             </Route>
 
