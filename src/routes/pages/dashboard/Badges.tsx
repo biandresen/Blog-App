@@ -5,35 +5,48 @@ import { BADGE_CATALOG } from "../../../lib/badges";
 import { getMyBadgeHistory, getMyCurrentBadges } from "../../../lib/axios";
 import type { BadgeAward, CurrentUserBadge } from "../../../types/context.types";
 import { Link } from "react-router-dom";
+import { usePagination } from "../../../hooks/usePagination";
+
+const HISTORY_LIMIT = 2;
 
 const Badges = () => {
   const { accessToken, setAccessToken } = useAuth();
 
   const [current, setCurrent] = useState<CurrentUserBadge[]>([]);
-  const [history, setHistory] = useState<BadgeAward[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [currentLoading, setCurrentLoading] = useState(true);
 
-  // simple pagination (optional)
-  const [page, setPage] = useState(1);
-  const limit = 50;
+  // History (paged)
+  const {
+    items: history,
+    meta,
+    loading: historyLoading,
+    canPrev,
+    canNext,
+    prev,
+    next,
+  } = usePagination<BadgeAward>(getMyBadgeHistory, {
+    accessToken,
+    setAccessToken,
+    limit: HISTORY_LIMIT,
+    mode: "paged",
+  });
 
+
+  // Current badges (simple fetch)
   useEffect(() => {
     (async () => {
-      setLoading(true);
+      setCurrentLoading(true);
       try {
         const currentRes = await safeRequest(getMyCurrentBadges, accessToken, setAccessToken);
         setCurrent((currentRes.data ?? []) as CurrentUserBadge[]);
-
-        const histRes = await safeRequest(getMyBadgeHistory, accessToken, setAccessToken, page, limit);
-        setHistory((histRes.data ?? []) as BadgeAward[]);
       } finally {
-        setLoading(false);
+        setCurrentLoading(false);
       }
     })();
-  }, [accessToken, setAccessToken, page]);
+  }, [accessToken, setAccessToken]);
 
-
-  if (loading) return <div className="text-[var(--text1)]">Loading...</div>;
+  const loading = currentLoading || historyLoading;
+  if (loading) return <div className="text-[var(--text1)] text-center">Loading...</div>;
 
   return (
     <div className="container max-w-150">
@@ -66,10 +79,7 @@ const Badges = () => {
                   {b.context?.postId && (
                     <div className="text-sm mt-2 opacity-80 text-[var(--text1)]">
                       Related post:{" "}
-                      <Link
-                        to={`/jokes/${b.context.postId}`}
-                        className="underline font-semibold hover:opacity-90"
-                      >
+                      <Link to={`/jokes/${b.context.postId}`} className="underline font-semibold hover:opacity-90">
                         #{b.context.postId}
                       </Link>
                     </div>
@@ -115,35 +125,37 @@ const Badges = () => {
                     )}
 
                     {a.context?.postId && (
-                    <div className="text-sm mt-2 opacity-80 text-[var(--text1)]">
-                      Related post:{" "}
-                      <Link
-                        to={`/jokes/${a.context.postId}`}
-                        className="underline font-semibold hover:opacity-90"
-                      >
-                        #{a.context.postId}
-                      </Link>
-                    </div>
-                  )}
+                      <div className="text-sm mt-2 opacity-80 text-[var(--text1)]">
+                        Related post:{" "}
+                        <Link to={`/jokes/${a.context.postId}`} className="underline font-semibold hover:opacity-90">
+                          #{a.context.postId}
+                        </Link>
+                      </div>
+                    )}
                   </li>
                 );
               })}
             </ul>
 
+            {/* Pagination controls (correctly disabled) */}
+            <div className="flex items-center justify-end gap-3 mt-6">
+              {meta && (
+                <div className="mr-auto text-sm opacity-70 text-[var(--text1)]">
+                  Page {meta.page} of {meta.totalPages} • Total {meta.total}
+                </div>
+              )}
 
-
-            {/* Minimal pagination controls */}
-            <div className="flex gap-3 justify-end mt-6">
               <button
                 className="rounded-lg border border-white/10 px-3 py-2 text-[var(--text1)] disabled:opacity-50"
-                disabled={page === 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={!canPrev}
+                onClick={prev}
               >
                 Prev
               </button>
               <button
-                className="rounded-lg border border-white/10 px-3 py-2 text-[var(--text1)]"
-                onClick={() => setPage((p) => p + 1)}
+                className="rounded-lg border border-white/10 px-3 py-2 text-[var(--text1)] disabled:opacity-50"
+                disabled={!canNext}
+                onClick={next}
               >
                 Next
               </button>

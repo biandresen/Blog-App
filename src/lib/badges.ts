@@ -19,7 +19,6 @@ export function resolveActiveBadgesFromUser(user?: User | null): Badge[] {
 
   // currentBadges from backend (if present)
   (user.currentBadges ?? []).forEach((b) => keys.add(b.badge));
-  console.log("user.currentBadges in AvatarWithBadges", user.currentBadges)
 
   // streak badge rule (example: only >= 7)
   if ((user.dailyJokeStreak ?? 0) >= 7) keys.add("STREAK");

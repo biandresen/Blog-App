@@ -13,13 +13,12 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoSend } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { usePosts } from "../../contexts/PostsContext";
 import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 // import Avatar from "../atoms/Avatar";
 import AvatarWithBadges from "../atoms/AvatarWithBadges";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
@@ -29,9 +28,11 @@ import type { User } from "../../types/context.types";
 const Post = ({
   post,
   onPostUpdated,
+  onPostDeleted
 }: {
   post: PostType;
   onPostUpdated?: (updated: PostType) => void;
+  onPostDeleted?: (id: number) => void;
 }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
   const [comments, setComments] = useState(post.comments);
@@ -48,11 +49,9 @@ const Post = ({
 
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
-  const { refreshPosts } = usePosts();
   const { ref: textRef, handleInput } = useAutoResizeTextarea(editedBody, isEditing);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
 
   const isAuthor = user?.id != null && post.authorId === Number(user.id);
   const isAdmin = user?.role === "ADMIN";
@@ -168,49 +167,63 @@ const Post = ({
   };
 
   const handleEditPost = async (postId: number, newTitle: string, newBody: string, editedTags: string[]) => {
-    try {
-      if (!accessToken) return;
+  try {
+    if (!accessToken) return;
 
-      const res = await safeRequest(
-        editPost,
-        accessToken,
-        setAccessToken,
-        postId,
-        newTitle,
-        newBody,
-        published,
-        editedTags
-      );
+    const res = await safeRequest(
+      editPost,
+      accessToken,
+      setAccessToken,
+      postId,
+      newTitle,
+      newBody,
+      published,
+      editedTags
+    );
 
-      if (res.statusCode !== 200) throw new Error("Request failed");
-      const updatedPost = res.data; // or res.data.post depending on API
-      onPostUpdated?.(updatedPost);
+    if (res.statusCode !== 200) throw new Error("Request failed");
 
-      setIsEditing(false);
-      toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
-      await refreshPosts();
-    } catch (err: any) {
-      toast.error("Failed to edit joke");
-      console.error("Failed to edit joke", err.response.data.errors || err.message);
-    }
-  };
+    const updatedPost: PostType = res.data;
 
-  const handleDeletePost = async (postId: number) => {
-    try {
-      if (!accessToken) return;
+    // ✅ Update local Post component state so it re-renders immediately
+    setIsEditing(false);
+    setEditedTitle(updatedPost.title);
+    setEditedBody(updatedPost.body);
+    setEditedTags(updatedPost.tags.map((t) => t.name).join(", "));
+    setPublished(updatedPost.published);
 
-      const res = await safeRequest(deletePost, accessToken, setAccessToken, postId);
-      if (res.statusCode !== 200) throw new Error("Request failed");
+    // ✅ Tell parent list to patch/remove/whatever it wants
+    onPostUpdated?.(updatedPost);
 
-      setShowModal(false);
-      toast.success("Joke deleted!");
-      await refreshPosts();
-      navigate("/jokes");
-    } catch (err: any) {
-      toast.error("Failed to delete joke");
-      console.error("Failed to delete joke", err.message);
-    }
-  };
+    toast.success(`Post edited! ${updatedPost.published ? "Published" : "Unpublished"}`);
+  } catch (err: any) {
+    toast.error("Failed to edit joke");
+    console.error("Failed to edit joke", err?.response?.data?.errors || err.message);
+  }
+};
+
+
+const handleDeletePost = async (postId: number) => {
+  try {
+    if (!accessToken) return;
+
+    const res = await safeRequest(deletePost, accessToken, setAccessToken, postId);
+    if (res.statusCode !== 200) throw new Error("Request failed");
+
+    setShowModal(false);
+    toast.success("Joke deleted!");
+
+    // ✅ Tell parent to remove it from its list
+    onPostDeleted?.(postId);
+
+    // Optional: only navigate if you're on a page where it makes sense
+    // navigate("/jokes");
+  } catch (err: any) {
+    toast.error("Failed to delete joke");
+    console.error("Failed to delete joke", err.message);
+  }
+};
+
 
   const handleEditComment = async (commentId: number, newBody: string) => {
     try {
@@ -351,7 +364,7 @@ const Post = ({
       <div className="flex xl:mb-0 md:ml-auto absolute top-3 left-5 xl:left-10">
         {/* <Avatar avatarUrl={post.user?.avatar} size={65} /> */}
         <AvatarWithBadges
-          size={65}
+          size={avatarSize}
           avatarUrl={post.user?.avatar}
           username={post.user?.username}
           user={post.user as User}

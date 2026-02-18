@@ -1,6 +1,4 @@
-import { useMemo, useState } from "react";
-import Button from "../atoms/Button";
-import Modal from "../molecules/Modal";
+import { useMemo } from "react";
 import { toast } from "react-toastify";
 
 const EMAIL = "dadjokes@andresensolutions.no";

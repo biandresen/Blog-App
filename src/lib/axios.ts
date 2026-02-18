@@ -1,6 +1,8 @@
 import axios from "axios";
 import BLOG_API from "../api/blog-api";
 import type { token } from "../types/context.types";
+import type { PaginatedResponse } from "../types/pagination.types";
+import type { PostType } from "../types/post.types";
 
 type RegisterUser = {
   username: string;
@@ -119,7 +121,27 @@ export const logoutUser = async () => {
   }
 };
 
-export const getCurrentUserDrafts = async (accessToken: token, page: number, limit: number) => {
+// export const getCurrentUserDrafts = async (accessToken: token, page: number, limit: number) => {
+//   try {
+//     const res = await axios.get(
+//       BLOG_API.BASE + BLOG_API.GCU_DRAFTS + `?page=${page}&limit=${limit}&sort=asc`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//       }
+//     );
+//     return res.data;
+//   } catch (err: any) {
+//     throw err;
+//   }
+// };
+
+export const getCurrentUserDrafts = async (
+  accessToken: token,
+  page = 1,
+  limit = 15
+): Promise<PaginatedResponse<PostType>> => {
   try {
     const res = await axios.get(
       BLOG_API.BASE + BLOG_API.GCU_DRAFTS + `?page=${page}&limit=${limit}&sort=asc`,
@@ -134,6 +156,7 @@ export const getCurrentUserDrafts = async (accessToken: token, page: number, lim
     throw err;
   }
 };
+
 
 export const deleteUser = async (accessToken: token, id: number | string) => {
   try {
@@ -255,7 +278,26 @@ export const publishPost = async (accessToken: token, title: string, body: strin
   }
 };
 
-export const getAllPosts = async (page: number, limit: number) => {
+// export const getAllPosts = async (page: number, limit: number) => {
+//   try {
+//     const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=desc`);
+//     return res.data;
+//   } catch (err: any) {
+//     if (err.response) {
+//       // Server responded with 400+
+//       return Promise.reject(err.response.data);
+//     } else {
+//       // Network or unknown error
+//       return Promise.reject({ message: err.message || "Something went wrong" });
+//     }
+//   }
+// };
+
+export const getAllPosts = async (
+  _accessToken: token, // unused (public endpoint)
+  page = 1,
+  limit = 15
+): Promise<PaginatedResponse<PostType>> => {
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=desc`);
     return res.data;
@@ -338,26 +380,47 @@ export const deletePost = async (accessToken: token, postId: number) => {
   }
 };
 
-export const getAllUserPosts = async (authorId: number, page: number, limit: number) => {
-  try {
-    const res = await axios.get(
-      BLOG_API.BASE +
-        BLOG_API.USER +
-        `/${authorId}` +
-        BLOG_API.POSTS +
-        `?page=${page}&limit=${limit}&sort=asc`
-    );
-    return res.data;
-  } catch (err: any) {
-    if (err.response) {
-      // Server responded with 400+
-      return Promise.reject(err.response.data);
-    } else {
-      // Network or unknown error
-      return Promise.reject({ message: err.message || "Something went wrong" });
-    }
+// export const getAllUserPosts = async (authorId: number, page: number, limit: number) => {
+//   try {
+//     const res = await axios.get(
+//       BLOG_API.BASE +
+//         BLOG_API.USER +
+//         `/${authorId}` +
+//         BLOG_API.POSTS +
+//         `?page=${page}&limit=${limit}&sort=asc`
+//     );
+//     return res.data;
+//   } catch (err: any) {
+//     if (err.response) {
+//       // Server responded with 400+
+//       return Promise.reject(err.response.data);
+//     } else {
+//       // Network or unknown error
+//       return Promise.reject({ message: err.message || "Something went wrong" });
+//     }
+//   }
+// };
+
+
+// If this endpoint is public, ignore accessToken.
+// If it’s protected, include it in headers like your other calls.
+export const getAllUserPosts = async (
+  _accessToken: token, // unused if public
+  page = 1,
+  limit = 15,
+  userId?: number
+): Promise<PaginatedResponse<PostType>> => {
+  if (!userId) {
+    return Promise.reject({ message: "Missing userId" });
   }
+
+  const res = await axios.get(
+    `${BLOG_API.BASE}${BLOG_API.USER}/${userId}/posts?page=${page}&limit=${limit}&sort=desc`
+  );
+
+  return res.data;
 };
+
 
 export const getPost = async (accessToken: token, postId: number) => {
   try {
@@ -476,12 +539,23 @@ export const recordDailyJokeView = async (accessToken: token) => {
   }
 };
 
-export const getMyBadgeHistory = async (accessToken: token, page = 1, limit = 50) => {
-  const res = await axios.get(BLOG_API.BASE + BLOG_API.BADGE_HISTORY_ME, {
-    params: { page, limit },
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  return res.data;
+// export const getMyBadgeHistory = async (accessToken: token, page = 1, limit = 50) => {
+//   const res = await axios.get(BLOG_API.BASE + BLOG_API.BADGE_HISTORY_ME, {
+//     params: { page, limit },
+//     headers: { Authorization: `Bearer ${accessToken}` },
+//   });
+//   return res.data;
+// };
+
+export const getMyBadgeHistory = async (accessToken: token, page = 1, limit = 15) => {
+  try {
+    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.BADGE_HISTORY_ME}?page=${page}&limit=${limit}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
 };
 
 export const getMyCurrentBadges = async (accessToken: token) => {
