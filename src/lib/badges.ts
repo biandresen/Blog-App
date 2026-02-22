@@ -5,7 +5,7 @@ export const BADGE_CATALOG: Record<BadgeKey, Omit<Badge, "key">> = {
   TOP_CREATOR_MONTH: { label: "Top Creator (Month)", icon: "🏆", priority: 1 },
   JOKE_OF_DAY: { label: "Joke of the Day", icon: "👑", priority: 2 },
   TRENDING_WEEK: { label: "Trending (Week)", icon: "⚡", priority: 3 },
-  MOST_COMMENTED: { label: "Most Commented", icon: "🎭", priority: 4 },
+  MOST_COMMENTED_WEEK: { label: "Most Commented (Week)", icon: "🎭", priority: 4 },
   FASTEST_GROWING: { label: "Fastest Growing", icon: "🚀", priority: 5 },
   STREAK: { label: "Daily Streak", icon: "🔥", priority: 6 },
 };
