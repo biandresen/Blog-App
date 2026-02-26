@@ -1,167 +1,254 @@
-# Bloggy — Full-Stack Blog Application
+# 🎭 DadJokes — Full-Stack Social Humor Platform
 
-A production-ready full-stack blog application built with **React + TypeScript** on the frontend and **Node.js + Express + PostgreSQL (Prisma)** on the backend.
+A production-ready full-stack dad joke platform built with:
 
-The application is fully deployed on a **Raspberry Pi**, fronted by **Nginx**, managed with **PM2**, and secured via **Cloudflare**.  
-This project was built to demonstrate real-world full-stack development practices beyond local development.
+- **React + TypeScript** (Frontend)
+- **Node.js + Express + PostgreSQL (Prisma)** (Backend)
+
+Deployed on a **Raspberry Pi**, fronted by **Nginx**, managed with **PM2**, and secured via **Cloudflare**.
+
+This project demonstrates real-world full-stack architecture, feature computation systems, badge/leaderboard mechanics, and production deployment.
 
 ---
 
 ## 🚀 Live Demo
 
 **URL:** https://bloggy-app.dev  
-*(Hosted on a Raspberry Pi with Cloudflare, Nginx, and PM2)*
+*(Hosted on Raspberry Pi with Cloudflare, Nginx, and PM2)*
 
 ---
 
 ## 🧠 Project Goals
 
-- Build a **complete CRUD blog platform** with real authentication and authorization
-- Apply **production-grade security practices**
-- Handle **media uploads and optimization**
-- Deploy and operate a full-stack app on **real infrastructure**
-- Demonstrate architectural decision-making suitable for professional work
+- Build a community-driven joke platform
+- Implement deterministic + computed feature ranking systems
+- Design a badge and leaderboard architecture
+- Apply production-grade security practices
+- Operate a full-stack application on real infrastructure
+- Demonstrate scalable backend service design
 
 ---
 
-## ✨ Features
+## ✨ Core Features
 
-### Public (Non-authenticated users)
-- Read published blog posts
-- Read comments
-- View popular posts (top 10 most liked)
-- Search posts by:
-  - title
-  - body
-  - tags
-  - comments  
-  (configurable via checkboxes)
+### 🌍 Public Users
 
----
-
-### Authenticated Users (USER role)
-- Register and log in
-- JWT-based authentication:
-  - short-lived **access token** (stored in app state)
-  - long-lived **refresh token** (HTTP-only cookie)
-- Create, edit, and delete:
-  - posts
-  - comments
-- Write drafts and publish/unpublish posts
-- Like posts
-- Edit own profile:
-  - username
-  - email
-  - password
-  - avatar (profile picture)
-- Upload avatar images:
-  - processed and compressed on the backend
-  - limited to **one avatar per user**
-- Password reset via email:
-  - expiring reset link (5 minutes)
+- Browse published dad jokes
+- View:
+  - 👑 Joke of the Day
+  - 🔥 Trending This Week
+  - 🎭 Most Commented This Week
+  - 💥 Fastest Growing (likes in 24h)
+  - 🏆 Top Creator This Month
+- View **Hall of Fame (Leaderboard)**
+- Search jokes
+- View user badges and streaks
 
 ---
 
-### Admin Users (ADMIN role)
-- Access admin dashboard
-- Search for users
+### 🔐 Registered Users (USER role)
+
+- Register / Login
+- Acceptence of terms required
+- JWT Authentication:
+  - Short-lived access token
+  - HTTP-only refresh token
+- Create jokes and comments
+- Edit / Delete own jokes and comments
+- Save drafts
+- Publish / Unpublish existing jokes
+- Like jokes
+- Build a **Daily Joke Streak**
+- Earn badges:
+  - Joke of the Day
+  - Top Creator of the Month
+  - Trending Week
+  - Most Commented Week
+  - Fastest Growing
+  - Streak tiers
+- View badge history
+- Update profile:
+  - Username
+  - Email
+  - Password
+  - Avatar upload
+
+---
+
+### 👑 Admin Users
+
+- Recompute featured rankings
+- Moderate users
+- Moderate jokes and comments
 - Activate / deactivate users (soft delete)
-- Delete other users’ posts and comments
+- Secure admin-only feature endpoints
 
 ---
 
-### UI / UX
-- Toggleable left and right side menus
-- Toggle between:
-  - full post view
-  - compact “mini” post view
-- Quick navigation bar on the “All Posts” page
-- Responsive layout
-- Hyperlink support:
-  - URLs written in posts are converted to clickable anchor tags
+## 🏆 Gamification System
+
+DadJokes includes a deterministic + database-backed feature system.
+
+### Featured Systems
+
+| Feature | Logic |
+|----------|-------|
+| 👑 Joke of the Day | Deterministic daily selection (no repeat two days in a row) |
+| 🔥 Trending Week | Most likes in last 7 days |
+| 🎭 Most Commented Week | Most comments in last 7 days |
+| 💥 Fastest Growing | Most likes in last 24 hours |
+| 🏆 Top Creator Month | Most published jokes in current month |
+
+Each feature:
+
+- Is computed server-side
+- Persisted in `FeaturedPost`
+- Awards badges via idempotent upsert logic
+- Is concurrency-safe
+- Can be triggered manually or via cron
 
 ---
 
-## 🛡️ Security & Best Practices
+### 🎖 Badge System
+
+Two-layer architecture:
+
+1. **BadgeAward** → historical record
+2. **CurrentUserBadge** → currently active badges
+
+Supports:
+
+- Valid time windows
+- Context (e.g., related postId)
+- Priority-based primary badge display
+- Badge stacking
+- Streak tiers
+
+---
+
+### 🏛 Hall of Fame (Leaderboard)
+
+Dynamic ranking system with selectable period:
+
+- This week
+- This month
+- All-time
+
+Ranking based on weighted score:
+
+- Featured wins
+- Likes received
+- Daily streak
+
+Spam-resistant (does not reward raw post count).
+
+Includes:
+
+- Avatar with primary badge
+- Streak indicator
+- Likes received
+- Wins count
+
+---
+
+## 🛡 Security & Best Practices
 
 ### Backend Security
-- HTTP security headers (Helmet)
-- Input sanitization and validation
+
+- Helmet (security headers)
+- Strict CORS policy
 - Rate limiting
-- Strict CORS configuration
-- Soft deletes (no destructive user deletion)
+- Input validation and sanitization
+- Soft deletes
 - Secure password hashing
 - Expiring password reset tokens
-- Image type validation using byte-level detection
-- Image compression and resizing with Sharp
-
-### Authentication & Authorization
-- Role-based access control (USER / ADMIN)
-- Ownership checks:
-  - users can modify their own content
-  - admins can moderate all content
-- Secure cookie handling for refresh tokens
+- Image validation (byte-level)
+- Image compression (Sharp)
 
 ---
 
-## 🖼️ Media Handling
-- Image uploads handled via:
-  - Multer (memory storage)
-  - Sharp (resize + WebP compression)
-- Optimized for ARM (Raspberry Pi):
-  - single-pass encoding
-  - reduced WebP effort
-- Uploaded files served directly by **Nginx**
-- Canonical public paths: /uploads/avatars/<filename>.webp
+### Authentication & Authorization
+
+- Role-based access control (USER / ADMIN)
+- Ownership checks
+- Secure refresh-token cookies
+- Protected admin feature endpoints
+
+---
+
+## 🖼 Media Handling
+
+- Multer (memory storage)
+- Sharp (resize + WebP compression)
+- Static file serving via Nginx
+- Canonical public path: `/uploads/avatars/<filename>.webp`
 
 ---
 
 ## 🧱 Tech Stack
 
 ### Frontend
+
 - React
 - TypeScript
 - Axios
 - React Router
+- Custom infinite-scroll pagination hook
 - Component-based architecture
-- Built and served as static assets
+- React Toastify
+- React Icons
+
+---
 
 ### Backend
+
 - Node.js
 - Express
 - Prisma ORM
 - PostgreSQL
 - JWT authentication
-- Multer + Sharp for uploads
-- Nodemailer for password reset emails
-
-### Infrastructure / DevOps
-- Raspberry Pi (single-node deployment)
-- PM2 (process manager)
-- Nginx (reverse proxy + static file server)
-- Cloudflare:
-- DNS
-- TLS
-- security headers
-- HTTPS with HTTP/2
+- Service-layer architecture
+- Deterministic ranking algorithms
+- Idempotent upsert patterns
 
 ---
 
-## 🗂️ Architecture Overview
-```
-Browser
-↓
-Cloudflare (DNS, TLS, protection)
-↓
-Nginx (reverse proxy)
-├─ Serves frontend (React build)
-├─ Serves /uploads (static files)
-└─ Proxies /api → Node.js
-↓
-Express API
-↓
-PostgreSQL (Prisma)
-```
+### Infrastructure / DevOps
+
+- Raspberry Pi (self-hosted production)
+- PM2 (API + background processes)
+- Nginx (reverse proxy + static serving)
+- Cloudflare
+
+---
+
+## 🗂 Architecture Overview
+- **Browser**
+  - ↓
+- **Cloudflare** (DNS, TLS, protection)
+  - ↓
+- **Nginx** (reverse proxy)
+  - Serves React frontend
+  - Serves `/uploads`
+  - Proxies `/api` → Node.js
+    - ↓
+- **Express API**
+  - ↓
+- **PostgreSQL** (Prisma)
+
+---
+
+## ⚙ Background Jobs
+
+Featured computations are:
+
+- Idempotent
+- Concurrency-safe
+- Database-backed
+- Cron-ready
+- Admin-triggerable
+
+Designed to scale toward queue-based processing if needed.
 
 ---
 
@@ -170,7 +257,6 @@ PostgreSQL (Prisma)
 - PM2 process monitoring
 - Centralized logs (PM2 + Nginx)
 - Health endpoints
-- Rate-limit headers for visibility
 - Structured error handling
 - Cloudflare analytics
 
@@ -178,31 +264,26 @@ PostgreSQL (Prisma)
 
 ## 📚 What This Project Demonstrates
 
-- Full-stack ownership (frontend → backend → deployment)
-- Real authentication and authorization flows
-- Secure media upload pipelines
-- Role-based permissions
+- Full-stack ownership (frontend → backend → infrastructure)
+- Authentication architecture
+- Gamification systems design
+- Badge + leaderboard architecture
 - Production deployment on constrained hardware
-- Clean separation of concerns
-- Defensive programming practices
+- Security-focused development
 
 ---
 
 ## 📌 Possible Future Improvements
 
-- Background job queue for image processing
-- WebSocket notifications
-- Server-side rendering (SSR)
-- Full-text search
-- Pagination optimization
-- Audit logging for admin actions
+- Caching
+- WebSocket live leaderboard updates and live chat
 
 ---
 
 ## 👤 Author
 
 **Birger**  
-Aspiring Full-Stack Developer  
-**Stack:** JavaScript · TypeScript · Node.js · React · PostgreSQL
+Full-Stack Developer  
 
-
+**Stack:**  
+JavaScript · TypeScript · Node.js · Express · React · PostgreSQL · Prisma · Nginx · PM2 · Cloudflare
