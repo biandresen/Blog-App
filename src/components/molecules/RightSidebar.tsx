@@ -7,7 +7,7 @@ import { getAllPosts } from "../../lib/axios";
 import type { PostType } from "../../types/post.types";
 import { useAuth } from "../../contexts/AuthContext";
 
-const NAV_LIMIT = 3;
+const NAV_LIMIT = 4;
 
 const RightSidebar = () => {
   const { accessToken, setAccessToken } = useAuth();

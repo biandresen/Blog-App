@@ -5,6 +5,7 @@ import { getDailyPost, recordDailyJokeView } from "../../../lib/axios";
 import { safeRequest } from "../../../lib/auth";
 import { useUser } from "../../../contexts/UserContext";
 import { useAuth } from "../../../contexts/AuthContext";
+import Spinner from "../../../components/atoms/Spinner";
 
 // Hashing in the backend for deterministic selection | Same post every day for everyone
 const DailyJoke = () => {
@@ -14,6 +15,9 @@ const DailyJoke = () => {
 
   const { setUser } = useUser();
   const { accessToken, setAccessToken } = useAuth();
+
+  const title = "JOKE OF THE DAY";
+  const subtitle = "The joke selected for today"
 
   const fetchDailyJoke = useCallback(async () => {
     try {
@@ -29,29 +33,29 @@ const DailyJoke = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchDailyJoke();
-  }, [fetchDailyJoke]);
-
 useEffect(() => {
   fetchDailyJoke();
 
-  // record streak (fire-and-forget is OK; but better to update state)
+  // record streak (only if logged in)
+  if (!accessToken) return;
+
   (async () => {
     try {
       const res = await safeRequest(recordDailyJokeView, accessToken, setAccessToken);
-      // if you returned `user` in the payload:
       if (res?.data?.user) setUser(res.data.user);
     } catch {
-      // ignore errors (user can still read daily joke)
+      // ignore
     }
   })();
-}, [fetchDailyJoke]);
+}, [fetchDailyJoke, accessToken, setAccessToken, setUser]);
 
+  if (loading) return <Spinner />;
+  if (error) return <div className="text-center text-[var(--text1)]">{error}</div>;
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">DAILY JOKE</h2>
+      <h2 className="posts-heading">{title}</h2>
+        <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">{subtitle}</p>
 
       <section className="posts-section">
         {!dailyJoke && <h3 className="posts-section-heading text-[var(--text1)]">Joke not found</h3>}

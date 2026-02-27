@@ -20,7 +20,8 @@ const BLOG_API = {
   DAILY: "/daily",
   DAILY_VIEW: "/daily/view",
   BADGE_HISTORY_ME: "/badges/me/history",
-  CURRENT_BADGES_ME:"/badges/me/current"
+  CURRENT_BADGES_ME:"/badges/me/current",
+  SEARCH: "/search"
 };
 
 export default BLOG_API;

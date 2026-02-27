@@ -1,6 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Avatar from "../atoms/Avatar";
-import { getStreakTier, pickPrimaryBadgeFromUser, resolveActiveBadgesFromUser } from "../../lib/badges";
+import {
+  getStreakTier,
+  pickPrimaryBadgeFromUser,
+  resolveActiveBadgesFromUser,
+} from "../../lib/badges";
 import type { User } from "../../types/context.types";
 
 type Props = {
@@ -8,7 +12,7 @@ type Props = {
   size: number;
   user?: User | null;
   enableMenu?: boolean;
-  username?: string; // allow overriding display
+  username?: string;
 };
 
 export default function AvatarWithBadges({
@@ -21,28 +25,90 @@ export default function AvatarWithBadges({
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!enableMenu) return;
-
-    const onDocClick = (e: MouseEvent) => {
-      if (!rootRef.current) return;
-      if (!rootRef.current.contains(e.target as Node)) setOpen(false);
-    };
-
-    document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
-  }, [enableMenu]);
+  // viewport-positioned menu (prevents clipping by overflow containers)
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
 
   const primary = useMemo(() => pickPrimaryBadgeFromUser(user), [user]);
   const activeBadges = useMemo(() => resolveActiveBadgesFromUser(user), [user]);
 
   const streak = user?.dailyJokeStreak ?? 0;
   const bestStreak = user?.dailyJokeBestStreak ?? 0;
-
   const streakTier = useMemo(() => getStreakTier(streak), [streak]);
 
-  const streakDisplay = streak > 999 ? "999+" : streak.toString();
-  const bestStreakDisplay = bestStreak > 999 ? "999+" : bestStreak.toString();
+  const streakDisplay = streak > 999 ? "999+" : String(streak);
+  const bestStreakDisplay = bestStreak > 999 ? "999+" : String(bestStreak);
+
+  const computeMenuPos = useCallback(() => {
+    const btn = rootRef.current?.querySelector("button");
+    if (!btn) return;
+
+    const r = btn.getBoundingClientRect();
+
+    // Align left under avatar; clamp to viewport so it doesn't go off-screen
+    const width = 224; // w-56 = 14rem = 224px
+    const padding = 8;
+
+    const left = Math.min(
+      Math.max(padding, r.left),
+      window.innerWidth - width - padding
+    );
+
+    const top = r.bottom + 8;
+
+    setMenuPos({ top, left });
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setOpen(false);
+    setMenuPos(null);
+  }, []);
+
+  const openMenu = useCallback(() => {
+    computeMenuPos();
+    setOpen(true);
+  }, [computeMenuPos]);
+
+  // close on outside click
+  useEffect(() => {
+    if (!enableMenu) return;
+
+    const onDocClick = (e: MouseEvent) => {
+      if (!rootRef.current) return;
+      if (!rootRef.current.contains(e.target as Node)) closeMenu();
+    };
+
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [enableMenu, closeMenu]);
+
+  // keep menu anchored while scrolling/resize (works with nested scroll containers)
+  useEffect(() => {
+    if (!enableMenu) return;
+    if (!open) return;
+
+    const onReposition = () => computeMenuPos();
+
+    window.addEventListener("scroll", onReposition, true); // capture: catches outlet scroll
+    window.addEventListener("resize", onReposition);
+
+    return () => {
+      window.removeEventListener("scroll", onReposition, true);
+      window.removeEventListener("resize", onReposition);
+    };
+  }, [enableMenu, open, computeMenuPos]);
+
+  // ESC to close
+  useEffect(() => {
+    if (!enableMenu) return;
+    if (!open) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMenu();
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [enableMenu, open, closeMenu]);
 
   return (
     <div ref={rootRef} className="relative inline-block">
@@ -52,7 +118,8 @@ export default function AvatarWithBadges({
         onClick={(e) => {
           if (!enableMenu) return;
           e.stopPropagation();
-          setOpen((v) => !v);
+          if (open) closeMenu();
+          else openMenu();
         }}
         aria-haspopup={enableMenu ? "menu" : undefined}
         aria-expanded={enableMenu ? open : undefined}
@@ -79,16 +146,15 @@ export default function AvatarWithBadges({
         )}
       </button>
 
-      {enableMenu && open && (
+      {enableMenu && open && menuPos && (
         <div
           role="menu"
-          className={`
-            absolute z-[250] w-56 rounded-xl border border-white/10
+          className="
+            fixed z-[9999] w-56 rounded-xl border border-white/10
             bg-[var(--primary-shade)] shadow-xl
             p-2 text-sm text-[var(--text2)]
-            left-0 top-16 ml-3
-            md:ml-0 md:mt-2 md:right-0
-          `}
+          "
+          style={{ top: menuPos.top, left: menuPos.left }}
         >
           <div className="px-3 py-2 text-xs opacity-70 border-b border-white/10">
             <span className="font-semibold">{username ?? user?.username}</span>
@@ -99,7 +165,9 @@ export default function AvatarWithBadges({
               <span className={`h-2.5 w-2.5 rounded-full ${streakTier.colorClass}`} />
               <span className="opacity-90">Daily streak</span>
             </div>
-            <span className="font-semibold">{streak > 0 ? `${streakDisplay} (${bestStreakDisplay})` : "—"}</span>
+            <span className="font-semibold">
+              {streak > 0 ? `${streakDisplay} (${bestStreakDisplay})` : "—"}
+            </span>
           </div>
 
           <div className="px-3 pb-2">
@@ -110,6 +178,7 @@ export default function AvatarWithBadges({
             ) : (
               <div className="flex flex-wrap gap-2">
                 {activeBadges
+                  .slice()
                   .sort((a, b) => a.priority - b.priority)
                   .map((b) => (
                     <span

@@ -7,7 +7,7 @@ import type { BadgeAward, CurrentUserBadge } from "../../../types/context.types"
 import { Link } from "react-router-dom";
 import { usePagination } from "../../../hooks/usePagination";
 
-const HISTORY_LIMIT = 2;
+const HISTORY_LIMIT = 15;
 
 const Badges = () => {
   const { accessToken, setAccessToken } = useAuth();
@@ -146,14 +146,14 @@ const Badges = () => {
               )}
 
               <button
-                className="rounded-lg border border-white/10 px-3 py-2 text-[var(--text1)] disabled:opacity-50"
+                className="rounded-lg border border-[var(--text0]/10 px-3 py-2 text-[var(--text1)] disabled:opacity-50"
                 disabled={!canPrev}
                 onClick={prev}
               >
                 Prev
               </button>
               <button
-                className="rounded-lg border border-white/10 px-3 py-2 text-[var(--text1)] disabled:opacity-50"
+                className="rounded-lg border border-[var(--text0]/10 px-3 py-2 text-[var(--text1)] disabled:opacity-50"
                 disabled={!canNext}
                 onClick={next}
               >

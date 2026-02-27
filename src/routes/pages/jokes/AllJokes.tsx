@@ -8,12 +8,11 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { getAllPosts } from "../../../lib/axios";
 import type { PostType } from "../../../types/post.types";
 
-const LIMIT = 2;
+const LIMIT = 15;
 
 const AllJokes = () => {
-  const { accessToken, setAccessToken } = useAuth();
-
   const [showMiniPosts, setShowMiniPosts] = useState(true);
+  const { accessToken, setAccessToken } = useAuth();
   const handleTogglePresentation = () => setShowMiniPosts((prev) => !prev);
 
   const resetKey = useMemo(() => "all-jokes", []);
@@ -91,7 +90,7 @@ const AllJokes = () => {
         )}
 
         {meta && (
-          <div className="mt-4 text-center text-sm opacity-70 text-[var(--text1)]">
+          <div className="text-center text-sm opacity-70 text-[var(--text1)]">
             Showing {posts.length} of {meta.total}
           </div>
         )}

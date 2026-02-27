@@ -3,6 +3,7 @@ import BLOG_API from "../api/blog-api";
 import type { token } from "../types/context.types";
 import type { PaginatedResponse } from "../types/pagination.types";
 import type { PostType } from "../types/post.types";
+import type { HallOfFameRow } from "../types/hallOfFame.types";
 
 type RegisterUser = {
   username: string;
@@ -571,4 +572,70 @@ export const getMyCurrentBadges = async (accessToken: token) => {
   } catch (err: any) {
     throw err;
   }
+};
+
+export const getHallOfFameUsers = async (period: "week" | "month" | "all" = "month", limit = 25) => {
+  const res = await axios.get(`${BLOG_API.BASE}/hall-of-fame/users?period=${period}&limit=${limit}`);
+  return res.data as {
+    status: string;
+    statusCode: number;
+    message: string;
+    data: HallOfFameRow[];
+  };
+};
+
+export type FeaturedPayload = {
+  type: string;
+  date: string;
+  post: PostType;
+};
+
+export async function getFeaturedPost(slug: string) {
+  try {
+    const res = await axios.get(`${BLOG_API.BASE}/featured/${slug}`);
+    return res.data; // successResponse wrapper
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+}
+
+export type SearchFilters = {
+  title: boolean;
+  body: boolean;
+  comments: boolean;
+  tags: boolean;
+};
+
+export const searchPosts = async (
+  _accessToken: token, // public
+  page = 1,
+  limit = 15,
+  searchParameters?: string,
+  filters?: SearchFilters,
+  sort: "asc" | "desc" = "desc"
+): Promise<PaginatedResponse<PostType>> => {
+  const params = new URLSearchParams();
+  params.set("page", String(page));
+  params.set("limit", String(limit));
+  params.set("sort", sort);
+
+  // backend expects `searchParameters`
+  if (searchParameters) params.set("searchParameters", searchParameters);
+
+  // Only include if your backend supports it (safe to send if validator allows)
+  if (filters) {
+    params.set("inTitle", String(filters.title));
+    params.set("inBody", String(filters.body));
+    params.set("inComments", String(filters.comments));
+    params.set("inTags", String(filters.tags));
+  }
+
+  const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}${BLOG_API.SEARCH}?${params.toString()}`);
+  return res.data;
 };

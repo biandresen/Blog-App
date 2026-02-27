@@ -37,6 +37,11 @@ const Search = lazy(() => import("./routes/pages/jokes/Search"));
 const SingleJoke = lazy(() => import("./routes/pages/jokes/SingleJoke"));
 const RandomJoke = lazy(() => import("./routes/pages/jokes/RandomJoke"));
 const DailyJoke = lazy(() => import("./routes/pages/jokes/DailyJoke"));
+const TrendingWeek = lazy(() => import("./routes/pages/jokes/TrendingWeek"));
+const MostCommentedWeek = lazy(() => import("./routes/pages/jokes/MostCommentedWeek"));
+const FastestGrowing = lazy(() => import("./routes/pages/jokes/FastestGrowing"));
+const TopCreatorMonth = lazy(() => import("./routes/pages/jokes/TopCreatorMonth"));
+const HallOfFame = lazy(() => import("./routes/pages/jokes/HallOfFame"));
 
 const App = () => {
   useAuthInitializer();
@@ -101,7 +106,12 @@ const App = () => {
               <Route path="all-jokes" element={<AllJokes />} />
               <Route path="random-joke" element={<RandomJoke />} />
               <Route path="daily-joke" element={<DailyJoke />} />
+              <Route path="trending-week" element={<TrendingWeek />} />
+              <Route path="most-commented-week" element={<MostCommentedWeek />} />
+              <Route path="fastest-growing" element={<FastestGrowing />} />
+              <Route path="top-creator-month" element={<TopCreatorMonth />} />
               <Route path="popular" element={<Popular />} />
+              <Route path="hall-of-fame" element={<HallOfFame />} />
               <Route path="my-jokes" element={<MyJokes />} />
               <Route path=":id" element={<SingleJoke />} />
             </Route>

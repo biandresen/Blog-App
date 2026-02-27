@@ -12,6 +12,8 @@ const Popular = () => {
 
   const postPresentation = showMiniPosts ? "Show full jokes" : "Show joke titles";
 
+  const subtitle = "10 most liked jokes"
+
   useEffect(() => {
     const fetchPopularPosts = async () => {
       // Fetch popular posts from the API
@@ -34,6 +36,8 @@ const Popular = () => {
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">POPULAR JOKES</h2>
+        <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">{subtitle}</p>
+
       <Button
         className="block mx-auto"
         onClick={handleTogglePresentation}

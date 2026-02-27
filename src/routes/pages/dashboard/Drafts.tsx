@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import type { PostType } from "../../../types/post.types";
 import draftsContent from "../../../text-content/drafts-page";
 
-const LIMIT = 2;
+const LIMIT = 15;
 
 const Drafts = () => {
   const { accessToken, setAccessToken } = useAuth();
