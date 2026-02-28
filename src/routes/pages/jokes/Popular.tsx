@@ -35,7 +35,7 @@ const Popular = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">POPULAR JOKES</h2>
+      <h2 className="posts-heading">👍POPULAR JOKES</h2>
         <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">{subtitle}</p>
 
       <Button

@@ -1,202 +1,185 @@
-import { NavLink } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { ImSearch } from "react-icons/im";
-import { CgNotes } from "react-icons/cg";
+import { CgNotes, CgProfile } from "react-icons/cg";
 import { TbChartBarPopular } from "react-icons/tb";
-import { CgProfile } from "react-icons/cg";
 import { IoDice } from "react-icons/io5";
-import { FaCalendarDay, FaComments } from "react-icons/fa";
-import { GiCrown, GiFire, GiPodium, GiRocket } from "react-icons/gi";
-import { GiBattleGear } from "react-icons/gi";
-
+import { FaComments } from "react-icons/fa";
+import { GiBattleGear, GiPodium, GiCrown, GiTrophyCup } from "react-icons/gi";
+import { MdExpandMore, MdExpandLess, MdRocketLaunch } from "react-icons/md";
 import { useUser } from "../../contexts/UserContext";
+import { BsFillLightningChargeFill } from "react-icons/bs";
 
-const linkName1: string = "Search";
-const linkName2: string = "All Jokes";
-const linkName3: string = "Popular Jokes";
-const linkName4: string = "Random Joke";
-const linkName5: string = "Daily Joke";
-const linkName6: string = "Hall of Fame";
-const linkName7: string = "Joke vs. Joke";
-const linkName8: string = "My Jokes";
-const linkName9: string = "Trending Joke";
-const linkName10: string = "Most Commented";
-const linkName11: string = "Fastest Growing";
-const linkName12: string = "Top Creator";
+type GroupKey = "explore" | "games" | "rankings" | null;
 
-interface LeftSidebar2Props {
-  setSidebars: React.Dispatch<
-    React.SetStateAction<{
-      left: boolean;
-      right: boolean;
-    }>
-  >;
+const baseLink =
+  "flex gap-2 items-center py-1 px-4 rounded-full -ml-4 transition-colors";
+const activeLink = `${baseLink} bg-[var(--primary)] mr-1.5`;
+const inactiveLink = `${baseLink} bg-transparent`;
+
+const groupHeader =
+  "flex items-center justify-between w-full px-4 py-2 -ml-4 text-sm uppercase font-semibold tracking-wider opacity-75 hover:opacity-100 transition-opacity";
+
+interface SidebarItem {
+  label: string;
+  to: string;
+  icon: React.ReactNode;
+  disabled?: boolean;
 }
 
-const LeftSidebar2 = ({ setSidebars }: LeftSidebar2Props) => {
-  const { user } = useUser();
+function SidebarLink({
+  item,
+  onNavigate,
+}: {
+  item: SidebarItem;
+  onNavigate: () => void;
+}) {
+  if (item.disabled) {
+    return (
+      <div className={`${inactiveLink} opacity-50 cursor-not-allowed`}>
+        {item.icon}
+        <span className="text-lg font-medium">{item.label}</span>
+      </div>
+    );
+  }
 
-  const handleLinkClick = () => {
+  return (
+    <NavLink
+      to={item.to}
+      onClick={onNavigate}
+      className={({ isActive }) => (isActive ? activeLink : inactiveLink)}
+    >
+      {item.icon}
+      <span className="text-lg font-medium">{item.label}</span>
+    </NavLink>
+  );
+}
+
+export default function LeftSidebar2({ setSidebars }: any) {
+  const { user } = useUser();
+  const location = useLocation();
+
+  const handleNavigate = () => {
     if (window.innerWidth < 768) {
-      setSidebars(() => ({ left: false, right: false }));
+      setSidebars({ left: false, right: false });
     }
+  };
+
+  const exploreItems: SidebarItem[] = [
+    { label: "All Jokes", to: "/jokes/all-jokes", icon: <CgNotes size={26} /> },
+    { label: "Popular", to: "/jokes/popular", icon: <TbChartBarPopular size={26} /> },
+    { label: "Daily Joke", to: "/jokes/daily-joke", icon: <GiCrown size={26} /> },
+  ];
+
+  const gameItems: SidebarItem[] = [
+    { label: "Random", to: "/jokes/random-joke", icon: <IoDice size={26} /> },
+    { label: "Joke vs. Joke", to: "", icon: <GiBattleGear size={26} />, disabled: true },
+  ];
+
+  const rankingItems: SidebarItem[] = [
+    { label: "Hall of Fame", to: "/jokes/hall-of-fame", icon: <GiPodium size={26} /> },
+    { label: "Top Creator", to: "/jokes/top-creator-month", icon: <GiTrophyCup size={26} /> },
+    { label: "Trending", to: "/jokes/trending-week", icon: <BsFillLightningChargeFill size={26} />},
+    { label: "Most Commented", to: "/jokes/most-commented-week", icon: <FaComments size={24} /> },
+    { label: "Fastest Growing", to: "/jokes/fastest-growing", icon: <MdRocketLaunch size={24} />},
+  ];
+
+  // auto-detect which group a route belongs to
+  const routeGroup = useMemo((): GroupKey => {
+    const path = location.pathname;
+
+    if (exploreItems.some((i) => path.startsWith(i.to))) return "explore";
+    if (gameItems.some((i) => i.to && path.startsWith(i.to))) return "games";
+    if (rankingItems.some((i) => path.startsWith(i.to))) return "rankings";
+
+    return null;
+  }, [location.pathname]);
+
+  // only one open at a time (accordion)
+  const [openGroup, setOpenGroup] = useState<GroupKey>("explore");
+
+  // auto-open based on route
+  useEffect(() => {
+    if (routeGroup) setOpenGroup(routeGroup);
+  }, [routeGroup]);
+
+  const toggleGroup = (key: Exclude<GroupKey, null>) => {
+    setOpenGroup((prev) => (prev === key ? null : key));
   };
 
   return (
     <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-[calc(100vh-3.8rem)] md:max-w-64 md:static z-40">
-      <div className="ml-8 mt-5 md:mt-16">
-        <ul onClick={handleLinkClick} className="flex flex-col gap-3 w-54">
-          <NavLink
-            to="/jokes/hall-of-fame"
-            title="Hall of Fame"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <GiPodium size={30}/>
-            <span className="text-xl font-medium">{linkName6}</span>
-          </NavLink>
+      <div className="ml-8 mt-5 md:mt-16 flex flex-col gap-3 w-54">
+        {/* SEARCH - standalone */}
+        <NavLink
+          to="/jokes/search"
+          onClick={handleNavigate}
+          className={({ isActive }) => (isActive ? activeLink : inactiveLink)}
+        >
+          <ImSearch size={26} />
+          <span className="text-lg font-medium">Search</span>
+        </NavLink>
 
-          <NavLink
-            to="/jokes/search"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <ImSearch size={30} />
-            <span className="text-xl font-medium">{linkName1}</span>
-          </NavLink>
-          <NavLink
-            to="/jokes/all-jokes"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <CgNotes size={30} />
-            <span className="text-xl font-medium">{linkName2}</span>
-          </NavLink>{" "}
-          <NavLink
-            to="/jokes/popular"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <TbChartBarPopular size={30} />
-            <span className="text-xl font-medium">{linkName3}</span>
-          </NavLink>
-          <NavLink
-            to="/jokes/random-joke"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <IoDice size={30} />
-            <span className="text-xl font-medium">{linkName4}</span>
-          </NavLink>
+        {/* PERSONAL */}
+        {user && (
+          <SidebarLink
+            item={{
+              label: "My Jokes",
+              to: "/jokes/my-jokes",
+              icon: <CgProfile size={26} />,
+            }}
+            onNavigate={handleNavigate}
+          />
+        )}
 
-          <NavLink
-            to="/jokes/daily-joke"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <FaCalendarDay size={26} />
-            <span className="text-xl font-medium">{linkName5}</span>
-          </NavLink>
+        {/* EXPLORE */}
+        <div>
+          <button onClick={() => toggleGroup("explore")} className={groupHeader} type="button">
+            <span className="text-lg">Explore</span>
+            {openGroup === "explore" ? <MdExpandLess /> : <MdExpandMore />}
+          </button>
 
-          <NavLink
-            to="/jokes/top-creator-month"
-            title="Top Creator This Month"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <GiCrown size={30} />
-            <span className="text-xl font-medium">{linkName12}</span>
-          </NavLink>
-
-          <NavLink
-            to="/jokes/trending-week"
-            title="Trending This Week"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <GiFire size={30} />
-            <span className="text-xl font-medium">{linkName9}</span>
-          </NavLink>
-
-          <NavLink
-            to="/jokes/most-commented-week"
-            title="Most Commented This Week"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <FaComments size={30} />
-            <span className="text-xl font-medium">{linkName10}</span>
-          </NavLink>
-
-          <NavLink
-            to="/jokes/fastest-growing"
-            title="Fastest Growing This Week"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center bg-[var(--primary)] mr-1.5 py-1 px-4 rounded-full -ml-4"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-            }
-          >
-            <GiRocket size={30} />
-            <span className="text-xl font-medium">{linkName11}</span>
-          </NavLink>
-
-          {user && (
-            <NavLink
-              to="/jokes/my-jokes"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex gap-2 items-center bg-[var(--primary)] mr-3 py-1 px-4 rounded-full -ml-4"
-                  : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4"
-              }
-            >
-              <CgProfile size={30} />
-              <span className="text-xl font-medium">{linkName8}</span>
-            </NavLink>
+          {openGroup === "explore" && (
+            <div className="flex flex-col gap-2 mt-2">
+              {exploreItems.map((item) => (
+                <SidebarLink key={item.to} item={item} onNavigate={handleNavigate} />
+              ))}
+            </div>
           )}
+        </div>
 
-          <NavLink
-            to=""
-            title="Future feature"
-            className={({ isActive }) =>
-              isActive
-                ? "flex gap-2 items-center mr-1.5 py-1 px-4 rounded-full -ml-4 opacity-50 cursor-not-allowed"
-                : "flex gap-2 items-center bg-transparent py-1 px-4 rounded-full -ml-4 opacity-50 cursor-not-allowed"
-            }
-          >
-            <GiBattleGear size={30} />
-            <span className="text-xl font-medium">{linkName7}</span>
-          </NavLink>
-        </ul>
+        {/* GAMES */}
+        <div>
+          <button onClick={() => toggleGroup("games")} className={groupHeader} type="button">
+            <span className="text-lg">Games</span>
+            {openGroup === "games" ? <MdExpandLess /> : <MdExpandMore />}
+          </button>
+
+          {openGroup === "games" && (
+            <div className="flex flex-col gap-2 mt-2">
+              {gameItems.map((item) => (
+                <SidebarLink key={item.label} item={item} onNavigate={handleNavigate} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* RANKINGS */}
+        <div>
+          <button onClick={() => toggleGroup("rankings")} className={groupHeader} type="button">
+            <span className="text-lg">Rankings</span>
+            {openGroup === "rankings" ? <MdExpandLess /> : <MdExpandMore />}
+          </button>
+
+          {openGroup === "rankings" && (
+            <div className="flex flex-col gap-2 mt-2">
+              {rankingItems.map((item) => (
+                <SidebarLink key={item.to} item={item} onNavigate={handleNavigate} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   );
-};
-
-export default LeftSidebar2;
+}

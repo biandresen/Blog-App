@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 import { type CommentType, type PostType } from "../../types/post.types";
 import Button from "../../components/atoms/Button";
@@ -7,7 +7,7 @@ import CommentForm from "../molecules/CommentForm";
 import { capitalizeFirstLetter, formatDate, getCharactersLeft } from "../../lib/utils";
 import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
-import { deleteComment, deletePost, editComment, editPost, toggleLike } from "../../lib/axios";
+import { deleteComment, deletePost, editComment, editPost, getPostComments, toggleLike } from "../../lib/axios";
 import { toast } from "react-toastify";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
@@ -24,6 +24,8 @@ import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
 import type { User } from "../../types/context.types";
 // import LinkifiedText from "../atoms/LinkifiedText";
+import { usePagination } from "../../hooks/usePagination";
+import Spinner from "../atoms/Spinner";
 
 const Post = ({
   post,
@@ -35,7 +37,7 @@ const Post = ({
   onPostDeleted?: (id: number) => void;
 }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
-  const [comments, setComments] = useState(post.comments);
+  // const [comments, setComments] = useState(post.comments);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(post.title);
   const [editedBody, setEditedBody] = useState(post.body);
@@ -46,10 +48,46 @@ const Post = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditMenu, setShowEditMenu] = useState<boolean>(false);
   const [isBodyExpanded, setIsBodyExpanded] = useState(false);
+  const [avatarSize, setAvatarSize] = useState(63);
+
+useEffect(() => {
+  const updateSize = () => {
+    if (window.innerWidth >= 1280) setAvatarSize(63);
+    else if (window.innerWidth >= 768) setAvatarSize(50);
+    else setAvatarSize(40);
+  };
+
+  updateSize();
+  window.addEventListener("resize", updateSize);
+  return () => window.removeEventListener("resize", updateSize);
+}, []);
 
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
   const { ref: textRef, handleInput } = useAutoResizeTextarea(editedBody, isEditing);
+
+  const COMMENTS_LIMIT = 10;
+
+  const args = useMemo<any[]>(() => [post.id, "desc"], [post.id]);
+  const noopSetAccessToken = useMemo(() => () => {}, []);
+
+  const {
+    items: comments,
+    loading: commentsLoading,
+    error: commentsError,
+    canNext,
+    next: loadMoreComments,
+    reload: reloadComments,
+  } = usePagination<CommentType>(getPostComments, {
+    accessToken: null,
+    setAccessToken: noopSetAccessToken,
+    limit: COMMENTS_LIMIT,
+    args,
+    resetKey: `comments:${post.id}`,
+    enabled: commentsIsOpen,
+    mode: "infinite",
+    autoLoadMore: false,
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -70,15 +108,6 @@ const Post = ({
     setIsBodyExpanded(false);
   }, [post.id]);
 
-  let avatarSize = 63;
-  useEffect(() => {
-    if (window.innerWidth >= 1280) {
-      avatarSize = 63;
-    } else if (window.innerWidth >= 768) {
-      avatarSize = 50;
-    }
-  }, [window.innerWidth]);
-
   useEffect(() => {
     if (!post) return;
 
@@ -91,8 +120,11 @@ const Post = ({
   if (isEditing) {
     inputRef.current?.focus();
   }
-}, [isEditing]);
+  }, [isEditing]);
 
+  const toggleComments = () => {
+    setCommentsIsOpen((prev) => !prev);
+  };
 
   const handleTitleEnter = useSubmitOnEnter(() =>
     handleEditPost(
@@ -226,53 +258,34 @@ const handleDeletePost = async (postId: number) => {
 
 
   const handleEditComment = async (commentId: number, newBody: string) => {
-    try {
-      if (!accessToken) return;
-      if (commentId === null) return;
+  try {
+    if (!accessToken) return;
 
-      const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody);
-      if (res.statusCode !== 200) throw new Error("Request failed");
+    const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody);
+    if (res.statusCode !== 200) throw new Error("Request failed");
 
-      setComments((prev) =>
-        prev.map((comment) => (comment.id === commentId ? { ...comment, body: newBody } : comment))
-      );
+    toast.success("Comment edited!");
+    reloadComments(); // ✅ refresh list
+  } catch (err: any) {
+    toast.error("Failed to edit comment");
+    console.error("Failed to edit comment", err.message);
+  }
+};
 
-      toast.success("Comment edited!");
-      setIsEditing(false);
-    } catch (err: any) {
-      toast.error("Failed to edit comment");
-      console.error("Failed to edit comment", err.message);
-    }
-  };
+const handleDeleteComment = async (_authorId: number, commentId: number) => {
+  try {
+    if (!accessToken) return;
 
-  const handleDeleteComment = async (authorId: number, commentId: number) => {
-    try {
-      if (!accessToken) return;
-      if (authorId === null) return;
+    const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId);
+    if (res.statusCode !== 200) throw new Error("Request failed");
 
-      const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId);
-      if (res.statusCode !== 200) throw new Error("Request failed");
-
-      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
-      toast.success("Comment deleted!");
-    } catch (err: any) {
-      toast.error("Failed to delete comment");
-      console.error("Failed to delete comment", err.message);
-    }
-  };
-
-  const toggleComments = () => {
-    setCommentsIsOpen(!commentsIsOpen);
-  };
-
-  const addNewComment = (newComment: CommentType) => {
-    // Ensure the new comment has a user object
-    const normalizedComment = {
-      ...newComment,
-      user: newComment.user || { id: user?.id, username: user?.username, avatar: user?.avatar },
-    };
-    setComments((prev) => [...prev, normalizedComment]);
-  };
+    toast.success("Comment deleted!");
+    reloadComments(); // ✅ refresh list
+  } catch (err: any) {
+    toast.error("Failed to delete comment");
+    console.error("Failed to delete comment", err.message);
+  }
+};
 
   return (
     <div
@@ -506,23 +519,48 @@ const handleDeletePost = async (postId: number) => {
       {commentsIsOpen && (
         <div className={`bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl`}>
           <h3 className="text-lg md:text-2xl mb-0">COMMENTS</h3>
-          {comments.length === 0 && <p className="text-xs md:text-sm opacity-70">No comments yet.
-            {published ? ` Be the first to comment!` : ``} </p>}
-          {comments.length > 0 &&
-            comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                commentId={comment.id}
-                username={comment.user?.username || "Unknown"}
-                authorId={Number(comment.user?.id) || null}
-                avatar={comment.user?.avatar || null}
-                date={formatDate(comment.createdAt)}
-                comment={comment.body}
-                onEdit={handleEditComment}
-                onDelete={handleDeleteComment}
-              />
-            ))}
-            {user && published ? (<CommentForm postId={post.id} onCommentAdded={addNewComment} />) : (null)}
+
+          {user && published ? (
+            <CommentForm
+              postId={post.id}
+              onCommentAdded={() => reloadComments()}
+            />
+            ) : null}
+
+
+          {commentsLoading && comments.length === 0 && <Spinner />}
+
+          {commentsError && (
+          <p className="text-center text-sm text-red-400 mt-2">
+            {typeof commentsError === "string"
+              ? commentsError
+              : "Failed to load comments"}
+          </p>
+          )}
+
+          {!commentsLoading && comments.length === 0 && (
+            <p className="text-xs md:text-sm opacity-70">
+              No comments yet.{published ? " Be the first to comment!" : ""}
+            </p>
+          )}
+
+      {comments.map((comment) => (
+        <Comment key={comment.id} commentId={comment.id} username={comment.user?.username || "Unknown"} authorId={Number(comment.user?.id) || null} avatar={comment.user?.avatar || null} date={formatDate(comment.createdAt)} comment={comment.body} onEdit={handleEditComment} onDelete={handleDeleteComment} />
+      ))}
+
+      {canNext && (
+        <div className="mt-5 flex justify-center">
+          <Button
+            label="Load more comments"
+            onClick={loadMoreComments}
+            size="sm"
+            variant="secondary"
+            disabled={commentsLoading}
+          >
+            {commentsLoading ? "Loading..." : "Load more comments"}
+          </Button>
+        </div>
+      )}
         </div>
       )}
     </div>

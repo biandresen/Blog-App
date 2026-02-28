@@ -54,7 +54,7 @@ useEffect(() => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{title}</h2>
+      <h2 className="posts-heading">👑{title}</h2>
         <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">{subtitle}</p>
 
       <section className="posts-section">

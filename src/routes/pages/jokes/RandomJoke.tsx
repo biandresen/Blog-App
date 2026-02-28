@@ -29,7 +29,7 @@ const RandomJoke = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">RANDOM JOKE</h2>
+      <h2 className="posts-heading">🎲RANDOM JOKE</h2>
       <Button
         label="Get random joke"
         variant="tertiary"

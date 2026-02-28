@@ -52,7 +52,7 @@ export default function FeaturedPostTemplate({ slug, title, subtitle }: Props) {
       <h2 className="posts-heading">{title}</h2>
 
       {subtitle && (
-        <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">{subtitle}</p>
+        <p className="text-center text-[var(--text1)] opacity-70 -mt-3 mb-8">{subtitle}</p>
       )}
 
       {date && (

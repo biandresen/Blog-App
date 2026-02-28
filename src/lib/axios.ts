@@ -2,7 +2,7 @@ import axios from "axios";
 import BLOG_API from "../api/blog-api";
 import type { token } from "../types/context.types";
 import type { PaginatedResponse } from "../types/pagination.types";
-import type { PostType } from "../types/post.types";
+import type { CommentType, PostType } from "../types/post.types";
 import type { HallOfFameRow } from "../types/hallOfFame.types";
 
 type RegisterUser = {
@@ -302,6 +302,37 @@ export const getAllPosts = async (
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=desc`);
     return res.data;
+  } catch (err: any) {
+    if (err.response) {
+      // Server responded with 400+
+      return Promise.reject(err.response.data);
+    } else {
+      // Network or unknown error
+      return Promise.reject({ message: err.message || "Something went wrong" });
+    }
+  }
+};
+
+export const getPostComments = async (
+  _accessToken: token,
+  page = 1,
+  limit = 10,
+  postId?: number,
+  sort: "asc" | "desc" = "desc"
+): Promise<PaginatedResponse<CommentType>> => {
+  if (!postId) {
+    return Promise.reject({ message: "Missing postId for comments request" });
+  }
+
+  try {
+
+  const res = await axios.get(
+    `${BLOG_API.BASE}${BLOG_API.COMMENTS}/${postId}`,
+    { params: { page, limit, sort } }
+  );
+
+  return res.data;
+
   } catch (err: any) {
     if (err.response) {
       // Server responded with 400+
