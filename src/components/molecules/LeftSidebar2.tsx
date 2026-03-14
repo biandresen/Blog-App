@@ -7,8 +7,10 @@ import { IoDice } from "react-icons/io5";
 import { FaComments } from "react-icons/fa";
 import { GiBattleGear, GiPodium, GiCrown, GiTrophyCup } from "react-icons/gi";
 import { MdExpandMore, MdExpandLess, MdRocketLaunch } from "react-icons/md";
-import { useUser } from "../../contexts/UserContext";
 import { BsFillLightningChargeFill } from "react-icons/bs";
+
+import { useUser } from "../../contexts/UserContext";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 type GroupKey = "explore" | "games" | "rankings" | null;
 
@@ -57,6 +59,7 @@ function SidebarLink({
 
 export default function LeftSidebar2({ setSidebars }: any) {
   const { user } = useUser();
+  const { t } = useLanguage();
   const location = useLocation();
 
   const handleNavigate = () => {
@@ -66,39 +69,77 @@ export default function LeftSidebar2({ setSidebars }: any) {
   };
 
   const exploreItems: SidebarItem[] = [
-    { label: "All Jokes", to: "/jokes/all-jokes", icon: <CgNotes size={26} /> },
-    { label: "Popular", to: "/jokes/popular", icon: <TbChartBarPopular size={26} /> },
-    { label: "Daily Joke", to: "/jokes/daily-joke", icon: <GiCrown size={26} /> },
+    {
+      label: t("sidebar.jokes.items.allJokes"),
+      to: "/jokes/all-jokes",
+      icon: <CgNotes size={26} />,
+    },
+    {
+      label: t("sidebar.jokes.items.popular"),
+      to: "/jokes/popular",
+      icon: <TbChartBarPopular size={26} />,
+    },
+    {
+      label: t("sidebar.jokes.items.dailyJoke"),
+      to: "/jokes/daily-joke",
+      icon: <GiCrown size={26} />,
+    },
   ];
 
   const gameItems: SidebarItem[] = [
-    { label: "Random", to: "/jokes/random-joke", icon: <IoDice size={26} /> },
-    { label: "Joke vs. Joke", to: "", icon: <GiBattleGear size={26} />, disabled: true },
+    {
+      label: t("sidebar.jokes.items.random"),
+      to: "/jokes/random-joke",
+      icon: <IoDice size={26} />,
+    },
+    {
+      label: t("sidebar.jokes.items.jokeVsJoke"),
+      to: "",
+      icon: <GiBattleGear size={26} />,
+      disabled: true,
+    },
   ];
 
   const rankingItems: SidebarItem[] = [
-    { label: "Hall of Fame", to: "/jokes/hall-of-fame", icon: <GiPodium size={26} /> },
-    { label: "Top Creator", to: "/jokes/top-creator-month", icon: <GiTrophyCup size={26} /> },
-    { label: "Trending", to: "/jokes/trending-week", icon: <BsFillLightningChargeFill size={26} />},
-    { label: "Most Commented", to: "/jokes/most-commented-week", icon: <FaComments size={24} /> },
-    { label: "Fastest Growing", to: "/jokes/fastest-growing", icon: <MdRocketLaunch size={24} />},
+    {
+      label: t("sidebar.jokes.items.hallOfFame"),
+      to: "/jokes/hall-of-fame",
+      icon: <GiPodium size={26} />,
+    },
+    {
+      label: t("sidebar.jokes.items.topCreator"),
+      to: "/jokes/top-creator-month",
+      icon: <GiTrophyCup size={26} />,
+    },
+    {
+      label: t("sidebar.jokes.items.trending"),
+      to: "/jokes/trending-week",
+      icon: <BsFillLightningChargeFill size={26} />,
+    },
+    {
+      label: t("sidebar.jokes.items.mostCommented"),
+      to: "/jokes/most-commented-week",
+      icon: <FaComments size={24} />,
+    },
+    {
+      label: t("sidebar.jokes.items.fastestGrowing"),
+      to: "/jokes/fastest-growing",
+      icon: <MdRocketLaunch size={24} />,
+    },
   ];
 
-  // auto-detect which group a route belongs to
   const routeGroup = useMemo((): GroupKey => {
     const path = location.pathname;
 
-    if (exploreItems.some((i) => path.startsWith(i.to))) return "explore";
-    if (gameItems.some((i) => i.to && path.startsWith(i.to))) return "games";
-    if (rankingItems.some((i) => path.startsWith(i.to))) return "rankings";
+    if (exploreItems.some((item) => path.startsWith(item.to))) return "explore";
+    if (gameItems.some((item) => item.to && path.startsWith(item.to))) return "games";
+    if (rankingItems.some((item) => path.startsWith(item.to))) return "rankings";
 
     return null;
-  }, [location.pathname]);
+  }, [location.pathname, exploreItems, gameItems, rankingItems]);
 
-  // only one open at a time (accordion)
   const [openGroup, setOpenGroup] = useState<GroupKey>("explore");
 
-  // auto-open based on route
   useEffect(() => {
     if (routeGroup) setOpenGroup(routeGroup);
   }, [routeGroup]);
@@ -110,21 +151,19 @@ export default function LeftSidebar2({ setSidebars }: any) {
   return (
     <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-[calc(100vh-3.8rem)] md:max-w-64 md:static z-40">
       <div className="ml-8 mt-5 md:mt-16 flex flex-col gap-3 w-54">
-        {/* SEARCH - standalone */}
         <NavLink
           to="/jokes/search"
           onClick={handleNavigate}
           className={({ isActive }) => (isActive ? activeLink : inactiveLink)}
         >
           <ImSearch size={26} />
-          <span className="text-lg font-medium">Search</span>
+          <span className="text-lg font-medium">{t("sidebar.jokes.search")}</span>
         </NavLink>
 
-        {/* PERSONAL */}
         {user && (
           <SidebarLink
             item={{
-              label: "My Jokes",
+              label: t("sidebar.jokes.myJokes"),
               to: "/jokes/my-jokes",
               icon: <CgProfile size={26} />,
             }}
@@ -132,10 +171,9 @@ export default function LeftSidebar2({ setSidebars }: any) {
           />
         )}
 
-        {/* EXPLORE */}
         <div>
           <button onClick={() => toggleGroup("explore")} className={groupHeader} type="button">
-            <span className="text-lg">Explore</span>
+            <span className="text-lg">{t("sidebar.jokes.groups.explore")}</span>
             {openGroup === "explore" ? <MdExpandLess /> : <MdExpandMore />}
           </button>
 
@@ -148,10 +186,9 @@ export default function LeftSidebar2({ setSidebars }: any) {
           )}
         </div>
 
-        {/* GAMES */}
         <div>
           <button onClick={() => toggleGroup("games")} className={groupHeader} type="button">
-            <span className="text-lg">Games</span>
+            <span className="text-lg">{t("sidebar.jokes.groups.games")}</span>
             {openGroup === "games" ? <MdExpandLess /> : <MdExpandMore />}
           </button>
 
@@ -164,10 +201,9 @@ export default function LeftSidebar2({ setSidebars }: any) {
           )}
         </div>
 
-        {/* RANKINGS */}
         <div>
           <button onClick={() => toggleGroup("rankings")} className={groupHeader} type="button">
-            <span className="text-lg">Rankings</span>
+            <span className="text-lg">{t("sidebar.jokes.groups.rankings")}</span>
             {openGroup === "rankings" ? <MdExpandLess /> : <MdExpandMore />}
           </button>
 

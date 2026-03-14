@@ -46,11 +46,6 @@ const aboutContent = {
       description:
         "Browse random jokes with the press of a button for a new random joke",
     },
-    // {
-    //  title: "🧑 Profile & Badge History",
-    //   description:
-    // "Manage your profile and view your current badges and badge award history.",
-    // },
   ],
 };
 

@@ -1,4 +1,5 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 type Rect = { top: number; left: number; width: number; height: number };
 
@@ -18,6 +19,8 @@ function getRect(el: HTMLElement | null | undefined): Rect | null {
 export default function MobileNavHint({ open, onDismiss, leftAnchor, rightAnchor }: Props) {
   const [leftRect, setLeftRect] = useState<Rect | null>(null);
   const [rightRect, setRightRect] = useState<Rect | null>(null);
+
+  const { t } = useLanguage();
 
   const recompute = () => {
     setLeftRect(getRect(leftAnchor));
@@ -85,22 +88,23 @@ export default function MobileNavHint({ open, onDismiss, leftAnchor, rightAnchor
         className={bubbleBase}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="font-semibold">Navigation</div>
-        <div className="opacity-80">
-          Use these buttons to open menus:
-          <div className="mt-1 flex gap-2 text-xs opacity-80">
-            {leftRect ? <span>• Left = Explore</span> : null}
-            {rightRect ? <span>• Right = Quick list</span> : null}
-          </div>
-        </div>
+        <div className="font-semibold">{t("mobileNavHint.title")}</div>
+          <div className="opacity-80">
+            {t("mobileNavHint.description")}
 
-        <button
-          type="button"
-          className="mt-2 text-xs underline opacity-80 hover:opacity-100"
-          onClick={onDismiss}
-        >
-          Got it
-        </button>
+            <div className="mt-1 flex gap-2 text-xs opacity-80">
+              {leftRect ? <span>• {t("mobileNavHint.left")}</span> : null}
+              {rightRect ? <span>• {t("mobileNavHint.right")}</span> : null}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="mt-2 text-xs underline opacity-80 hover:opacity-100"
+            onClick={onDismiss}
+          >
+            {t("mobileNavHint.dismiss")}
+          </button>
       </div>
     </div>
   );

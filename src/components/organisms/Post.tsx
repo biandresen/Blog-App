@@ -16,15 +16,14 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
-// import Avatar from "../atoms/Avatar";
 import AvatarWithBadges from "../atoms/AvatarWithBadges";
 import { NavLink } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
 import type { User } from "../../types/context.types";
-// import LinkifiedText from "../atoms/LinkifiedText";
 import { usePagination } from "../../hooks/usePagination";
+import { useLanguage } from "../../contexts/LanguageContext";
 import Spinner from "../atoms/Spinner";
 
 const Post = ({
@@ -50,6 +49,8 @@ const Post = ({
   const [isBodyExpanded, setIsBodyExpanded] = useState(false);
   const [avatarSize, setAvatarSize] = useState(63);
 
+  const { language, t } = useLanguage();
+
 useEffect(() => {
   const updateSize = () => {
     if (window.innerWidth >= 1280) setAvatarSize(63);
@@ -68,7 +69,7 @@ useEffect(() => {
 
   const COMMENTS_LIMIT = 10;
 
-  const args = useMemo<any[]>(() => [post.id, "desc"], [post.id]);
+  const args = useMemo<any[]>(() => [post.id, "desc", language], [post.id, language]);
   const noopSetAccessToken = useMemo(() => () => {}, []);
 
   const {
@@ -83,7 +84,7 @@ useEffect(() => {
     setAccessToken: noopSetAccessToken,
     limit: COMMENTS_LIMIT,
     args,
-    resetKey: `comments:${post.id}`,
+    resetKey: `comments:${post.id}:${language}`,
     enabled: commentsIsOpen,
     mode: "infinite",
     autoLoadMore: false,
@@ -94,7 +95,9 @@ useEffect(() => {
   const isAuthor = user?.id != null && post.authorId === Number(user.id);
   const isAdmin = user?.role === "ADMIN";
   const canEdit = isAuthor || isAdmin;
-  const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
+  const buttonText = commentsIsOpen
+  ? t("post.actions.closeComments")
+  : t("post.actions.openComments");
 
   const BODY_PREVIEW_LIMIT = 600;
   const bodyIsLong = post.body.length > BODY_PREVIEW_LIMIT;
@@ -167,17 +170,17 @@ useEffect(() => {
 
   const handleToggleLike = async () => {
     if (!accessToken || !user) {
-      toast.error("You must be logged in to like a joke");
+      toast.error(t("post.toasts.mustBeLoggedInToLike"));
       return;
     };
 
     if (Number(user.id) == Number(post.authorId)) {
-      toast.error("You cannot like your own joke");
+      toast.error(t("post.toasts.cannotLikeOwn"));
       return;
     };
 
     try {
-      const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
+      const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id, language);
       if (res.statusCode === 200 || res.statusCode === 201) {
         setLikedList((prev) => {
           if (hasLiked) {
@@ -193,7 +196,7 @@ useEffect(() => {
 
       // await refreshPosts();
     } catch (err: any) {
-      toast.error("Failed to toggle like");
+      toast.error(t("post.toasts.toggleLikeFailed"));
       console.error("Failed to toggle like", err.message);
     }
   };
@@ -210,7 +213,8 @@ useEffect(() => {
       newTitle,
       newBody,
       published,
-      editedTags
+      editedTags,
+      language
     );
 
     if (res.statusCode !== 200) throw new Error("Request failed");
@@ -227,9 +231,11 @@ useEffect(() => {
     // ✅ Tell parent list to patch/remove/whatever it wants
     onPostUpdated?.(updatedPost);
 
-    toast.success(`Post edited! ${updatedPost.published ? "Published" : "Unpublished"}`);
+    toast.success(
+  `${t("post.toasts.postEdited")} ${updatedPost.published ? t("post.toasts.published") : t("post.toasts.unpublished")}`
+);
   } catch (err: any) {
-    toast.error("Failed to edit joke");
+    toast.error(t("post.toasts.editJokeFailed"));
     console.error("Failed to edit joke", err?.response?.data?.errors || err.message);
   }
 };
@@ -239,11 +245,11 @@ const handleDeletePost = async (postId: number) => {
   try {
     if (!accessToken) return;
 
-    const res = await safeRequest(deletePost, accessToken, setAccessToken, postId);
+    const res = await safeRequest(deletePost, accessToken, setAccessToken, postId, language);
     if (res.statusCode !== 200) throw new Error("Request failed");
 
     setShowModal(false);
-    toast.success("Joke deleted!");
+    toast.success(t("post.toasts.postDeleted"));
 
     // ✅ Tell parent to remove it from its list
     onPostDeleted?.(postId);
@@ -251,7 +257,7 @@ const handleDeletePost = async (postId: number) => {
     // Optional: only navigate if you're on a page where it makes sense
     // navigate("/jokes");
   } catch (err: any) {
-    toast.error("Failed to delete joke");
+    toast.error(t("post.toasts.deleteJokeFailed"));
     console.error("Failed to delete joke", err.message);
   }
 };
@@ -261,13 +267,13 @@ const handleDeletePost = async (postId: number) => {
   try {
     if (!accessToken) return;
 
-    const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody);
+    const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody, language);
     if (res.statusCode !== 200) throw new Error("Request failed");
 
-    toast.success("Comment edited!");
+    toast.success(t("post.toasts.commentEdited"));
     reloadComments(); // ✅ refresh list
   } catch (err: any) {
-    toast.error("Failed to edit comment");
+    toast.error(t("post.toasts.editCommentFailed"));
     console.error("Failed to edit comment", err.message);
   }
 };
@@ -276,13 +282,13 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
   try {
     if (!accessToken) return;
 
-    const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId);
+    const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId, language);
     if (res.statusCode !== 200) throw new Error("Request failed");
 
-    toast.success("Comment deleted!");
+    toast.success(t("post.toasts.commentDeleted"));
     reloadComments(); // ✅ refresh list
   } catch (err: any) {
-    toast.error("Failed to delete comment");
+    toast.error(t("post.toasts.deleteCommentFailed"));
     console.error("Failed to delete comment", err.message);
   }
 };
@@ -293,22 +299,23 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
     >
       <Modal
         isOpen={showModal}
-        title="Delete joke"
-        message="Are you sure you want to delete this joke? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t("post.modal.deleteTitle")}
+        message={t("post.modal.deleteMessage")}
+        confirmText={t("post.modal.deleteConfirm")}
+        cancelText={t("post.modal.cancel")}
         onConfirm={() => handleDeletePost(post.id)}
         onCancel={() => setShowModal(false)}
       />
-
       {published ? null : (
-        <div className="text-[var(--text1)] absolute top-5 md:top-4.5 right-14 xl:right-19 text-sm md:text-lg">DRAFT</div>
+        <div className="text-[var(--text1)] absolute top-5 md:top-4.5 right-14 xl:right-19 text-sm md:text-lg">
+          {t("post.status.draft")}
+        </div>
       )}
       <div className="flex absolute gap-2 top-4 right-5 xl:right-10">
         {canEdit && <button
             onClick={handleOpenEditMenu}
             type="button"
-            title="Edit joke"
+            title={t("post.aria.editJoke")}
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
           >
            <BsThreeDotsVertical size={20} color="var(--text3)" />
@@ -319,7 +326,7 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
           <button
             onClick={handleEditInput}
             type="button"
-            title="Edit joke"
+            title={t("post.aria.editJoke")}
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
           >
             <MdEdit size={15} color="var(--text3)" />
@@ -329,7 +336,7 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
           <button
             onClick={() => setShowModal(true)}
             type="button"
-            title="Delete joke"
+            title={t("post.aria.deleteJoke")}
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
           >
             <MdDelete size={15} color="var(--text3)" />
@@ -339,8 +346,8 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
       {!published ? null : (
         <div className="group">
           <button
-            aria-label="Like joke"
-            title="Like joke"
+            aria-label={t("post.aria.likeJoke")}
+            title={t("post.aria.likeJoke")}
             type="button"
             onClick={handleToggleLike}
             className="flex cursor-pointer px-2.5 pt-1 min-w-14 rounded-full transition-colors duration-200 bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text3)] hover:bg-[var(--button1)] hover:text-[var(--text2)]! transition-colors duration-100 text-md
@@ -375,7 +382,6 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
       </div>
 
       <div className="flex xl:mb-0 md:ml-auto absolute top-3 left-5 xl:left-10">
-        {/* <Avatar avatarUrl={post.user?.avatar} size={65} /> */}
         <AvatarWithBadges
           size={avatarSize}
           avatarUrl={post.user?.avatar}
@@ -383,8 +389,8 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
           user={post.user as User}
         />
         <div className="flex flex-col justify-center ml-2 max-w-[calc(20px+30vw)] mt-2">
-          <p title="Username" className="font-bold text-[0.8rem]/3.5 md:text-[1rem] [overflow-wrap:anywhere] max-w-[calc(5px+30vw)]">{capitalizeFirstLetter(post.user.username)}</p>
-          <p title="Date of post" className="text-[0.7rem] mt-0 opacity-80">{formatDate(post.createdAt)}</p>
+          <p title={t("post.labels.username")} className="font-bold text-[0.8rem]/3.5 md:text-[1rem] [overflow-wrap:anywhere] max-w-[calc(5px+30vw)]">{capitalizeFirstLetter(post.user.username)}</p>
+          <p title={t("post.labels.postDate")} className="text-[0.7rem] mt-0 opacity-80">{formatDate(post.createdAt)}</p>
         </div>
       </div>
 
@@ -394,7 +400,7 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
           <div className="bg-[var(--bg)] rounded-lg p-1 w-full relative">
             <input
               ref={inputRef}
-              title="Edit joke title"
+              title={t("post.aria.editJokeTitle")}
               type="text"
               value={editedTitle}
               maxLength={MAX_CHARS.TITLE}
@@ -417,8 +423,8 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
         <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg relative">
           <textarea
             ref={textRef}
-            aria-label="Edit joke body"
-            title="Edit joke body"
+            aria-label={t("post.aria.editJokeBody")}
+            title={t("post.aria.editJokeBody")}
             value={editedBody}
             maxLength={MAX_CHARS.BODY}
             onKeyDown={handleBodyEnter}
@@ -446,7 +452,7 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
               className="mt-2 text-sm md:text-lg opacity-80 hover:opacity-100 underline"
               aria-expanded={isBodyExpanded}
             >
-              {isBodyExpanded ? "Show less" : "Read more"}
+              {isBodyExpanded ? t("post.actions.showLess") : t("post.actions.readMore")}
             </button>
           )}
         </div>
@@ -457,8 +463,8 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
           <div className="mb-8 w-full bg-[var(--bg)] rounded-lg relative">
             <input
             type="text"
-            aria-label="Edit joke tags"
-            title="Edit joke tags"
+            aria-label={t("post.aria.editJokeTags")}
+            title={t("post.aria.editJokeTags")}
             value={editedTags}
             maxLength={MAX_CHARS.TAGS}
             onKeyDown={handleTagsEnter}
@@ -475,13 +481,13 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
         {isEditing && (
           <div className="flex items-center absolute bottom-3.5 right-15">
             <label htmlFor="publish/unpublish" className="mr-2">
-              <b>Publish</b>
+              <b>{t("post.actions.publish")}</b>
             </label>
             <input
               className="w-4 h-4 cursor-pointer accent-[var(--text1)]"
               onChange={() => setPublished((prev) => !prev)}
               id="publish/unpublish"
-              aria-label="Publish/Unpublish"
+              aria-label={t("post.aria.publishUnpublish")}
               type="checkbox"
               checked={published}
             />
@@ -490,7 +496,8 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
         {isEditing ? (
           <button
             type="button"
-            aria-label="Edit Message"
+            aria-label={t("post.aria.editMessage")}
+            title={t("post.aria.editMessage")}
             className="absolute bottom-2 right-2 p-2 rounded-full hover:bg-[var(--primary)] text-[var(--button3)]"
             onClick={() => {
               handleEditPost(
@@ -518,7 +525,7 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
       </div>
       {commentsIsOpen && (
         <div className={`bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl`}>
-          <h3 className="text-lg md:text-2xl mb-0">COMMENTS</h3>
+          <h3 className="text-lg md:text-2xl mb-0">{t("post.labels.comments")}</h3>
 
           {user && published ? (
             <CommentForm
@@ -534,15 +541,28 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
           <p className="text-center text-sm text-red-400 mt-2">
             {typeof commentsError === "string"
               ? commentsError
-              : "Failed to load comments"}
+              : t("post.labels.failedToLoadComments")}
           </p>
           )}
 
           {!commentsLoading && comments.length === 0 && (
-            <p className="text-xs md:text-sm opacity-70">
-              No comments yet.{published ? " Be the first to comment!" : ""}
+          <div className="text-xs md:text-sm opacity-70">
+            <p>
+              {t("post.labels.noComments")}
+              {published && user ? ` ${t("post.labels.beFirstToComment")}` : ""}
+              {published && !user ? ` ${t("post.labels.logInToComment")}` : ""}
             </p>
-          )}
+
+            {published && !user && (
+              <NavLink
+                to="/login"
+                className="inline-block mt-2 underline text-[var(--text2)] opacity-100"
+              >
+                {t("post.actions.goToLogin")}
+              </NavLink>
+            )}
+          </div>
+        )}
 
       {comments.map((comment) => (
         <Comment key={comment.id} commentId={comment.id} username={comment.user?.username || "Unknown"} authorId={Number(comment.user?.id) || null} avatar={comment.user?.avatar || null} date={formatDate(comment.createdAt)} comment={comment.body} onEdit={handleEditComment} onDelete={handleDeleteComment} />
@@ -551,13 +571,13 @@ const handleDeleteComment = async (_authorId: number, commentId: number) => {
       {canNext && (
         <div className="mt-5 flex justify-center">
           <Button
-            label="Load more comments"
+            label={t("post.actions.loadMoreComments")}
             onClick={loadMoreComments}
             size="sm"
             variant="secondary"
             disabled={commentsLoading}
           >
-            {commentsLoading ? "Loading..." : "Load more comments"}
+            {commentsLoading ? t("post.actions.loading") : t("post.actions.loadMoreComments")}
           </Button>
         </div>
       )}

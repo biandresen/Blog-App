@@ -43,9 +43,10 @@ export async function safeRequest<T>(
     if (err?.response?.status === 401 || err?.statusCode === 401) {
       const newToken = await refreshAccessToken(setAccessToken);
       if (!newToken) {
-        // Optionally clear auth state
         setAccessToken(null);
-        throw new Error("Session expired. Please log in again.");
+        const error = new Error("Session expired. Please log in again.");
+        (error as any).code = "SESSION_EXPIRED";
+        throw error;
       }
 
       return await apiFunc(newToken, ...args);

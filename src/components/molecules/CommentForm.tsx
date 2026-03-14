@@ -5,6 +5,7 @@ import { IoSend } from "react-icons/io5";
 import { type CommentFormProps } from "../../types/components.types";
 import { addComment } from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
+import { useLanguage } from "../../contexts/LanguageContext";
 import { safeRequest } from "../../lib/auth";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import { getCharactersLeft } from "../../lib/utils";
@@ -15,17 +16,20 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const [loading, setLoading] = useState(false);
 
   const { accessToken, setAccessToken } = useAuth();
+  const { t } = useLanguage();
+
   const formError = body.trim() === "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!accessToken) {
-      toast.error("You must be logged in to publish a comment.");
+      toast.error(t("commentForm.toasts.mustBeLoggedIn"));
       return;
     }
+
     if (formError) {
-      toast.error("Comment cannot be empty");
+      toast.error(t("commentForm.toasts.empty"));
       return;
     }
 
@@ -35,21 +39,21 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
       const res = await safeRequest(addComment, accessToken, setAccessToken, postId, body);
 
       if (res.statusCode !== 201) {
-        toast.error(res.message);
-        throw new Error("Request failed");
+        toast.error(res.message ?? t("commentForm.toasts.requestFailed"));
+        throw new Error(t("commentForm.toasts.requestFailed"));
       }
 
-      toast.success("Comment published!");
-      console.log("Comment published successfully:", res.data);
+      toast.success(t("commentForm.toasts.published"));
 
       onCommentAdded(res.data);
       setBody("");
     } catch (err: any) {
-      if (err.message.includes("token")) {
-        toast.error("Your session has expired. Please log in again.");
+      if (err?.message?.includes("token")) {
+        toast.error(t("commentForm.toasts.sessionExpired"));
       } else {
-        toast.error(err.message || "Failed to publish comment");
+        toast.error(err?.message || t("commentForm.toasts.failed"));
       }
+
       console.error("Failed to publish comment:", err);
     } finally {
       setLoading(false);
@@ -66,29 +70,29 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
       <div className="relative">
         <textarea
           value={body}
-          onChange={(e) => {if (e.target.value.length <= MAX_CHARS.BODY) setBody(e.target.value)}}
-          placeholder="Write a comment..."
+          onChange={(e) => {
+            if (e.target.value.length <= MAX_CHARS.BODY) setBody(e.target.value);
+          }}
+          placeholder={t("commentForm.placeholder")}
           onKeyDown={handleKeyDown}
           className="rounded-2xl p-3 w-full bg-[var(--bg)] mb-3 text-sm md:text-lg/6"
         />
-        <span className="absolute bottom-5 right-5 opacity-80 text-xs text-[var(--text1)]">{getCharactersLeft(body, MAX_CHARS.BODY)}</span>
+        <span className="absolute bottom-5 right-5 opacity-80 text-xs text-[var(--text1)]">
+          {getCharactersLeft(body, MAX_CHARS.BODY)}
+        </span>
       </div>
+
       <button
-        title="Joke comment"
+        title={t("commentForm.aria.submitTitle")}
         type="submit"
         disabled={loading}
         className="ml-auto text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)]/20 text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100"
       >
-        {loading ? "Posting..." : "Add Comment"}{" "}
+        {loading ? t("commentForm.actions.posting") : t("commentForm.actions.addComment")}{" "}
         <IoSend className="text-[var(--button3)] mt-0.5 lg:mt-1 ml-2" />
       </button>
-
     </form>
   );
 };
 
 export default CommentForm;
-
-   {/* <Button variant="tertiary" label="Post comment" type="submit" disabled={loading}>
-        {loading ? "Posting..." : "Add Comment"}
-      </Button> */}

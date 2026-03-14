@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 import LeftSidebar2 from "../../components/molecules/LeftSidebar2";
 import RightSidebar from "../../components/molecules/RightSidebar";
@@ -10,6 +11,8 @@ const SCROLL_THRESHOLD = 150;
 const JokesLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const { t } = useLanguage();
 
   const scrollToTop = useCallback(() => {
     scrollRef.current?.scrollTo({
@@ -48,7 +51,7 @@ const JokesLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
 
           <button
             type="button"
-            aria-label="Scroll to top"
+            aria-label={t("extra.aria.scrollButton")}
             onClick={scrollToTop}
             className={`fixed bottom-2 right-6 z-[60]
                        w-8 h-8 text-xl md:sticky md:ml-[-20px] xl:ml-0

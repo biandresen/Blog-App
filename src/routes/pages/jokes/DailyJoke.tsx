@@ -1,69 +1,85 @@
 import { useCallback, useEffect, useState } from "react";
+
 import { type PostType } from "../../../types/post.types";
 import Post from "../../../components/organisms/Post";
 import { getDailyPost, recordDailyJokeView } from "../../../lib/axios";
 import { safeRequest } from "../../../lib/auth";
 import { useUser } from "../../../contexts/UserContext";
 import { useAuth } from "../../../contexts/AuthContext";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import Spinner from "../../../components/atoms/Spinner";
 
-// Hashing in the backend for deterministic selection | Same post every day for everyone
 const DailyJoke = () => {
-  const [dailyJoke, setdailyJoke] = useState<PostType | null>(null);
+  const [dailyJoke, setDailyJoke] = useState<PostType | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { setUser } = useUser();
   const { accessToken, setAccessToken } = useAuth();
-
-  const title = "JOKE OF THE DAY";
-  const subtitle = "The joke selected for today"
+  const { t } = useLanguage();
 
   const fetchDailyJoke = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const res = await getDailyPost()
-      setdailyJoke(res.data ?? null);
+      const res = await getDailyPost();
+      setDailyJoke(res.data ?? null);
     } catch (err: any) {
-      setError(err?.message ?? "Failed to fetch daily joke");
+      setError(err?.message ?? t("dailyJoke.states.failed"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
-useEffect(() => {
-  fetchDailyJoke();
+  useEffect(() => {
+    fetchDailyJoke();
 
-  // record streak (only if logged in)
-  if (!accessToken) return;
+    if (!accessToken) return;
 
-  (async () => {
-    try {
-      const res = await safeRequest(recordDailyJokeView, accessToken, setAccessToken);
-      if (res?.data?.user) setUser(res.data.user);
-    } catch {
-      // ignore
-    }
-  })();
-}, [fetchDailyJoke, accessToken, setAccessToken, setUser]);
+    (async () => {
+      try {
+        const res = await safeRequest(recordDailyJokeView, accessToken, setAccessToken);
+
+        if (res?.data) {
+          setUser((prev) => {
+            if (!prev) return prev;
+
+            return {
+              ...prev,
+              dailyJokeStreak: res.data.dailyJokeStreak,
+              dailyJokeBestStreak: res.data.dailyJokeBestStreak,
+              dailyJokeLastViewedAt: res.data.dailyJokeLastViewedAt,
+            };
+          });
+        }
+      } catch {
+        // ignore streak-recording errors
+      }
+    })();
+  }, [fetchDailyJoke, accessToken, setAccessToken, setUser]);
 
   if (loading) return <Spinner />;
   if (error) return <div className="text-center text-[var(--text1)]">{error}</div>;
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">👑{title}</h2>
-        <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">{subtitle}</p>
+      <h2 className="posts-heading">{t("dailyJoke.heading")}</h2>
+      <p className="text-center text-[var(--text1)] opacity-70 -mt-4 mb-8">
+        {t("dailyJoke.subtitle")}
+      </p>
 
       <section className="posts-section">
-        {!dailyJoke && <h3 className="posts-section-heading text-[var(--text1)]">Joke not found</h3>}
+        {!dailyJoke && (
+          <h3 className="posts-section-heading text-[var(--text1)]">
+            {t("dailyJoke.states.notFound")}
+          </h3>
+        )}
+
         {dailyJoke && <Post key={dailyJoke.id} post={dailyJoke} />}
       </section>
 
-       {error && <p className="text-center text-sm text-[var(--error)]">{error}</p>}
-
+      {error && <p className="text-center text-sm text-[var(--error)]">{error}</p>}
     </div>
   );
 };

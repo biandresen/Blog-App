@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { toast } from "react-toastify";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const EMAIL = "dadjokes@andresensolutions.no";
 
@@ -27,57 +28,7 @@ const getClientInfo = () => {
   return { os, browser, ua };
 };
 
-const buildSubject = (topic: Topic) => `[DADJOKES][${topic}]`;
-
-const buildBody = (topic: Topic) => {
-  const { os, browser } = getClientInfo();
-  const baseMeta = `Device / Browser: ${os} - ${browser}\nPage URL:\n`;
-
-  switch (topic) {
-    case "BUG":
-      return `Describe the issue:
-
-Steps to reproduce:
-1.
-2.
-3.
-
-Expected result:
-Actual result:
-Screenshots (if applicable):
-
-${baseMeta}`;
-    case "FEATURE":
-      return `What feature would you like to see?
-
-Why is it valuable?
-
-Any examples/links?
-
-${baseMeta}`;
-    case "SUGGESTION":
-      return `Your suggestion:
-
-What problem does it solve?
-
-Any extra context?
-
-${baseMeta}`;
-    case "FEEDBACK":
-      return `Your feedback:
-
-What did you like?
-
-What could be improved?
-
-${baseMeta}`;
-    default:
-      return `${baseMeta}`;
-  }
-};
-
 const buildMailto = (email: string, subject: string, body?: string) => {
-  // Use encodeURIComponent to avoid "+" showing up in some clients (Thunderbird)
   const s = encodeURIComponent(subject);
   const b = body ? encodeURIComponent(body) : "";
   return `mailto:${email}?subject=${s}${body ? `&body=${b}` : ""}`;
@@ -89,25 +40,40 @@ const copySupportEmail = async (email: string, subject: string, body: string) =>
 };
 
 export default function ContactTemplate() {
+  const { t, tf } = useLanguage();
 
   const topics = useMemo(
     () => [
-      { label: "Bug", topic: "BUG" as const },
-      { label: "Feature request", topic: "FEATURE" as const },
-      { label: "Suggestion", topic: "SUGGESTION" as const },
-      { label: "General feedback", topic: "FEEDBACK" as const },
+      { topic: "BUG" as const },
+      { topic: "FEATURE" as const },
+      { topic: "SUGGESTION" as const },
+      { topic: "FEEDBACK" as const },
     ],
     []
   );
 
+  const buildSubject = (topic: Topic) => {
+    return t(`contactTemplate.subjects.${topic}`);
+  };
+
+  const buildBody = (topic: Topic) => {
+    const { os, browser } = getClientInfo();
+    const device = `${os} - ${browser}`;
+
+    return tf(`contactTemplate.bodies.${topic}`, {
+      device,
+    });
+  };
+
   return (
     <section className="mt-4 rounded-xl border border-[var(--text1)]/10 bg-[var(--button1)] p-4">
       <p className="text-sm font-semibold text-[var(--text2)]">
-        Choose a topic (prefills subject + message):
+        {t("contactTemplate.heading")}
       </p>
 
       <div className="mt-3 flex flex-col gap-2">
-        {topics.map(({ label, topic }) => {
+        {topics.map(({ topic }) => {
+          const label = t(`contactTemplate.topics.${topic}`);
           const subject = buildSubject(topic);
           const body = buildBody(topic);
 
@@ -116,7 +82,7 @@ export default function ContactTemplate() {
               <a
                 href={buildMailto(EMAIL, subject, body)}
                 className="rounded-full bg-[var(--button3)] px-3 py-1 text-sm text-[var(--text0)] hover:brightness-110"
-                title={`Email with subject: ${subject}`}
+                title={`${label}: ${subject}`}
               >
                 {label}
               </a>
@@ -126,15 +92,17 @@ export default function ContactTemplate() {
                 onClick={async () => {
                   try {
                     await copySupportEmail(EMAIL, subject, body);
-                    toast.success(`Copied ${label} template`);
+                    toast.success(
+                      tf("contactTemplate.copySuccess", { label })
+                    );
                   } catch {
-                    toast.error("Copy failed (clipboard permission blocked)");
+                    toast.error(t("contactTemplate.copyError"));
                   }
                 }}
                 className="text-xs underline hover:brightness-110"
-                title="Copy email + template to clipboard"
+                title={t("contactTemplate.copy")}
               >
-                Copy
+                {t("contactTemplate.copy")}
               </button>
             </div>
           );
@@ -142,7 +110,7 @@ export default function ContactTemplate() {
       </div>
 
       <p className="mt-3 text-xs opacity-80 text-[var(--text2)]">
-        If the email button doesn’t open anything, use “Copy” and paste into any email app.
+        {t("contactTemplate.fallbackInfo")}
       </p>
     </section>
   );

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Button from "../atoms/Button";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 interface DraftCardProps {
   id: number;
@@ -7,7 +8,8 @@ interface DraftCardProps {
 }
 
 const DraftCard = ({ id, draftTitle }: DraftCardProps) => {
-  const buttonText = "OPEN";
+  const { t } = useLanguage();
+  const buttonText = t("postCard.open");
 
   return (
     <div className="bg-[var(--primary)] p-4 rounded-2xl shadow-md w-55 h-55 flex flex-col justify-self-center">

@@ -1,12 +1,14 @@
 import FeaturedPostTemplate from "./FeaturedPostTemplate";
-
+import { useLanguage } from "../../../contexts/LanguageContext";
 
 export default function TrendingWeek() {
+  const { t } = useLanguage();
+
   return (
     <FeaturedPostTemplate
       slug="top-creator-month"
-      title="🏆TOP CREATOR THIS MONTH"
-      subtitle="The creator with the most jokes this month."
+      title={t("featured.topCreatorMonth.title")}
+      subtitle={t("featured.topCreatorMonth.subtitle")}
     />
   );
 }

@@ -3,10 +3,12 @@ import { ImSearch } from "react-icons/im";
 import { useEffect, useState } from "react";
 import useDebounce from "../../hooks/useDebounce";
 import { MAX_CHARS } from "../../lib/constants";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const Searchbar = ({ handleSearch }: { handleSearch: (input: string) => void }) => {
   const [searchInput, setSearchInput] = useState<string>("");
   const debouncedSearch = useDebounce(searchInput, 300);
+  const { t } = useLanguage();
 
   // Automatically call search when user stops typing
   useEffect(() => {
@@ -32,7 +34,7 @@ const Searchbar = ({ handleSearch }: { handleSearch: (input: string) => void }) 
             value={searchInput}
             onChange={(e) => {if (e.target.value.length <= MAX_CHARS.SEARCH) setSearchInput(e.target.value)}}
             type="text"
-            placeholder="Search jokes..."
+            placeholder={t("search.placeholder")}
             className="bg-transparent outline-none text-[var(--text2)] w-full ml-4 text-sm sm:text-lg lg:text-2xl"
           />
         </div>

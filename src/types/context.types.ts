@@ -1,3 +1,6 @@
+import type { Dispatch, SetStateAction } from "react";
+import type { AppLanguage } from "../i18n/translations"
+
 export type ColorTheme = "light" | "dark";
 
 export interface ColorThemeContextType {
@@ -62,6 +65,7 @@ export type User = {
 
   termsAcceptedAt: string | null;
   termsVersion: string | null;
+  preferredLanguage: AppLanguage;
 
   dailyJokeStreak: number;
   dailyJokeLastViewedAt: string | null;
@@ -73,13 +77,17 @@ export type User = {
 
 export interface UserContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: Dispatch<SetStateAction<User | null>>;
 }
 //--------------------------------------------
 
-export type token = string | null;
+export type token = string | null
 
 export interface AuthContextType {
-  accessToken: token;
-  setAccessToken: (token: token) => void;
+  accessToken: string | null;
+  setAccessToken: (token: string | null) => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (val: boolean) => void;
+  loading: boolean;
+  setLoading: (val: boolean) => void;
 }

@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import Avatar from "../atoms/Avatar";
 import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useLanguage } from "../../contexts/LanguageContext";
 import { logoutUser } from "../../lib/axios";
-import { toast } from "react-toastify";
 
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
@@ -12,6 +14,7 @@ export default function UserMenu() {
 
   const { user, setUser } = useUser();
   const { setAccessToken } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +22,7 @@ export default function UserMenu() {
       if (!rootRef.current) return;
       if (!rootRef.current.contains(e.target as Node)) setOpen(false);
     };
+
     document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
@@ -29,7 +33,7 @@ export default function UserMenu() {
     logoutUser();
     setOpen(false);
     navigate("/login");
-    toast.info("You have been logged out.");
+    toast.info(t("userMenu.loggedOut"));
   };
 
   if (!user) return null;
@@ -39,7 +43,7 @@ export default function UserMenu() {
       <button
         type="button"
         onClick={(e) => {
-          e.stopPropagation(); // prevent any parent click handlers
+          e.stopPropagation();
           setOpen((v) => !v);
         }}
         className="rounded-full"
@@ -52,18 +56,16 @@ export default function UserMenu() {
       {open && (
         <div
           role="menu"
-          className={`
+          className="
             absolute z-[200] w-44 rounded-xl border border-white/10
             bg-[var(--bg-input)] shadow-xl
             p-2 text-sm text-[var(--text1)]
-            // Mobile: open to the RIGHT of the avatar, aligned to top
             left-full top-0 ml-3
-            // Desktop: open BELOW, aligned to right edge
             md:left-auto md:top-full md:ml-0 md:mt-2 md:right-0
-          `}
+          "
         >
           <div className="px-3 py-2 text-xs opacity-70 border-b border-white/10">
-            Signed in as <span className="font-semibold">{user.username}</span>
+            {t("userMenu.signedInAs")} <span className="font-semibold">{user.username}</span>
           </div>
 
           <NavLink
@@ -72,7 +74,7 @@ export default function UserMenu() {
             className="block rounded-lg px-3 py-2 hover:bg-white/5"
             role="menuitem"
           >
-            Profile
+            {t("userMenu.profile")}
           </NavLink>
 
           <button
@@ -81,7 +83,7 @@ export default function UserMenu() {
             className="w-full text-left block rounded-lg px-3 py-2 hover:bg-white/5"
             role="menuitem"
           >
-            Logout
+            {t("userMenu.logout")}
           </button>
         </div>
       )}

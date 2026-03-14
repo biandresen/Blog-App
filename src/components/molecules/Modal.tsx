@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from "react";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 type ModalVariant = "confirm" | "info" | "custom";
 
@@ -6,23 +7,19 @@ type ModalProps = {
   isOpen: boolean;
   title?: string;
 
-  // Content
   message?: string;
   children?: ReactNode;
 
-  // Closing
   onClose?: () => void;
   onCancel?: () => void;
   closeOnBackdrop?: boolean;
 
-  // Confirm mode
   onConfirm?: () => void;
   confirmText?: string;
   cancelText?: string;
 
-  // Info mode
   variant?: ModalVariant;
-  autoCloseMs?: number; // only used for "info"
+  autoCloseMs?: number;
 };
 
 const Modal = ({
@@ -36,14 +33,18 @@ const Modal = ({
   closeOnBackdrop = true,
 
   onConfirm,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
+  confirmText,
+  cancelText,
 
   variant = "confirm",
   autoCloseMs,
 }: ModalProps) => {
-  // unify close handler so old/new callers work
+  const { t } = useLanguage();
+
   const close = onClose ?? onCancel ?? (() => {});
+  const resolvedConfirmText = confirmText ?? t("modal.confirm");
+  const resolvedCancelText = cancelText ?? t("modal.cancel");
+  const resolvedCloseText = t("modal.close");
 
   useEffect(() => {
     if (!isOpen) return;
@@ -54,14 +55,14 @@ const Modal = ({
 
     document.addEventListener("keydown", handleEscape);
 
-    let t: number | undefined;
+    let timeoutId: number | undefined;
     if (variant === "info" && autoCloseMs) {
-      t = window.setTimeout(() => close(), autoCloseMs);
+      timeoutId = window.setTimeout(() => close(), autoCloseMs);
     }
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      if (t) window.clearTimeout(t);
+      if (timeoutId) window.clearTimeout(timeoutId);
     };
   }, [isOpen, close, variant, autoCloseMs]);
 
@@ -83,8 +84,8 @@ const Modal = ({
             type="button"
             onClick={close}
             className="rounded-lg px-2 py-1 hover:bg-white/5"
-            aria-label="Close modal"
-            title="Close"
+            aria-label={t("modal.closeAria")}
+            title={t("modal.closeTitle")}
           >
             ✕
           </button>
@@ -95,25 +96,31 @@ const Modal = ({
 
         {variant === "confirm" && (
           <div className="flex justify-end gap-3 mt-4">
-            <button onClick={close} className="px-4 py-2 rounded-xl bg-[var(--primary)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition">
-              {cancelText}
+            <button
+              onClick={close}
+              className="px-4 py-2 rounded-xl bg-[var(--primary)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition"
+            >
+              {resolvedCancelText}
             </button>
-            <button onClick={onConfirm} className="px-4 py-2 rounded-xl bg-[var(--error)] text-white hover:bg-red-400 transition">
-              {confirmText}
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 rounded-xl bg-[var(--error)] text-white hover:bg-red-400 transition"
+            >
+              {resolvedConfirmText}
             </button>
           </div>
         )}
 
         {variant === "info" && (
           <div className="flex justify-end mt-4">
-            <button onClick={close} className="px-4 py-2 rounded-xl bg-[var(--primary-shade)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition">
-              Close
+            <button
+              onClick={close}
+              className="px-4 py-2 rounded-xl bg-[var(--primary-shade)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition"
+            >
+              {resolvedCloseText}
             </button>
           </div>
         )}
-
-  {/* variant === "custom" -> render no footer */}
-
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import {
   resolveActiveBadgesFromUser,
 } from "../../lib/badges";
 import type { User } from "../../types/context.types";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 type Props = {
   avatarUrl?: string | null;
@@ -24,9 +25,9 @@ export default function AvatarWithBadges({
 }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-
-  // viewport-positioned menu (prevents clipping by overflow containers)
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
+
+  const { t } = useLanguage();
 
   const primary = useMemo(() => pickPrimaryBadgeFromUser(user), [user]);
   const activeBadges = useMemo(() => resolveActiveBadgesFromUser(user), [user]);
@@ -43,9 +44,7 @@ export default function AvatarWithBadges({
     if (!btn) return;
 
     const r = btn.getBoundingClientRect();
-
-    // Align left under avatar; clamp to viewport so it doesn't go off-screen
-    const width = 224; // w-56 = 14rem = 224px
+    const width = 224;
     const padding = 8;
 
     const left = Math.min(
@@ -68,7 +67,6 @@ export default function AvatarWithBadges({
     setOpen(true);
   }, [computeMenuPos]);
 
-  // close on outside click
   useEffect(() => {
     if (!enableMenu) return;
 
@@ -81,14 +79,12 @@ export default function AvatarWithBadges({
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [enableMenu, closeMenu]);
 
-  // keep menu anchored while scrolling/resize (works with nested scroll containers)
   useEffect(() => {
-    if (!enableMenu) return;
-    if (!open) return;
+    if (!enableMenu || !open) return;
 
     const onReposition = () => computeMenuPos();
 
-    window.addEventListener("scroll", onReposition, true); // capture: catches outlet scroll
+    window.addEventListener("scroll", onReposition, true);
     window.addEventListener("resize", onReposition);
 
     return () => {
@@ -97,10 +93,8 @@ export default function AvatarWithBadges({
     };
   }, [enableMenu, open, computeMenuPos]);
 
-  // ESC to close
   useEffect(() => {
-    if (!enableMenu) return;
-    if (!open) return;
+    if (!enableMenu || !open) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeMenu();
@@ -163,18 +157,18 @@ export default function AvatarWithBadges({
           <div className="px-3 py-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className={`h-2.5 w-2.5 rounded-full ${streakTier.colorClass}`} />
-              <span className="opacity-90">Daily streak</span>
+              <span className="opacity-90">{t("avatarWithBadges.streak")}</span>
             </div>
             <span className="font-semibold">
-              {streak > 0 ? `${streakDisplay} (${bestStreakDisplay})` : "—"}
+              {streak > 0 ? `${streakDisplay} (${bestStreakDisplay})` : t("avatarWithBadges.noValue")}
             </span>
           </div>
 
           <div className="px-3 pb-2">
-            <div className="text-xs opacity-70 mb-2">Badges</div>
+            <div className="text-xs opacity-70 mb-2">{t("avatarWithBadges.badges")}</div>
 
             {activeBadges.length === 0 ? (
-              <div className="text-xs opacity-70">No badges yet.</div>
+              <div className="text-xs opacity-70">{t("avatarWithBadges.noBadges")}</div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {activeBadges

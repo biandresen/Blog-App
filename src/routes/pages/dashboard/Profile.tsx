@@ -1,40 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 import Input from "../../../components/atoms/Input";
 import Button from "../../../components/atoms/Button";
-import profileContent from "../../../text-content/profile-page";
+import Modal from "../../../components/molecules/Modal";
+import AvatarWithBadges from "../../../components/atoms/AvatarWithBadges";
+
 import { useUser } from "../../../contexts/UserContext";
 import { useAuth } from "../../../contexts/AuthContext";
+import { useLanguage } from "../../../contexts/LanguageContext";
+
 import { deleteUser, updateUser } from "../../../lib/axios";
-import { passwordValidator, userInputValidator, usernameValidator } from "../../../validators/auth";
-import { useNavigate } from "react-router-dom";
 import { safeRequest } from "../../../lib/auth";
-import Modal from "../../../components/molecules/Modal";
-// import Avatar from "../../../components/atoms/Avatar";
-import AvatarWithBadges from "../../../components/atoms/AvatarWithBadges";
 import { logoutAndRedirect } from "../../../lib/logout";
 import { formatDateProfile } from "../../../lib/utils";
+import { getApiErrorMessage, toastApiError } from "../../../lib/apiErrors";
+
+import {
+  passwordValidator,
+  usernameValidator,
+  emailValidator,
+} from "../../../validators/auth";
+
 import type { User } from "../../../types/context.types";
 
-const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6MB upload (compresses on backend)
+const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6 MB
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const Profile = () => {
   const { user, setUser } = useUser();
   const { accessToken, setAccessToken } = useAuth();
+  const { t, tf } = useLanguage();
+  const navigate = useNavigate();
 
-  // Values
+  // --------------------------------------------------
+  // Local UI state
+  // --------------------------------------------------
   const [showModal, setShowModal] = useState(false);
-
-  const [username, setUsername] = useState<string>(user?.username || "");
-  const [email, setEmail] = useState<string>(user?.email || "");
-  const [password, setPassword] = useState<string>();
-  const [avatar, setAvatar] = useState<File | null>(null);
-
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  // Validation states
+  // Prevent duplicate requests
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // --------------------------------------------------
+  // Form state
+  // --------------------------------------------------
+  const [username, setUsername] = useState<string>(user?.username || "");
+  const [email, setEmail] = useState<string>(user?.email || "");
+  const [password, setPassword] = useState<string>("");
+  const [avatar, setAvatar] = useState<File | null>(null);
+
+  // --------------------------------------------------
+  // Validation / inline error state
+  // --------------------------------------------------
   const [input1Valid, setInput1Valid] = useState<boolean>(true);
   const [errorMsg1, setErrorMsg1] = useState<string>("");
 
@@ -46,61 +67,149 @@ const Profile = () => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState<string>("");
 
-  const navigate = useNavigate();
+  // --------------------------------------------------
+  // Derived state
+  // --------------------------------------------------
+  const invalidForm =
+    !input1Valid ||
+    !input2Valid ||
+    passwordErrors.length > 0 ||
+    !!avatarError ||
+    !username ||
+    !email;
 
-  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+  // --------------------------------------------------
+  // Keep form values in sync if user context changes
+  // Useful after successful profile update
+  // --------------------------------------------------
+  useEffect(() => {
+    setUsername(user?.username || "");
+    setEmail(user?.email || "");
+  }, [user?.username, user?.email]);
 
+  // --------------------------------------------------
+  // Clean up object URL previews to avoid memory leaks
+  // --------------------------------------------------
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
+
+  // --------------------------------------------------
+  // Logout
+  // --------------------------------------------------
   const handleLogout = () => {
+    if (isSubmitting || isDeleting) return;
     logoutAndRedirect({ setUser, setAccessToken, navigate });
   };
 
-  const handleDeleteProfile = async () => {
-    try {
-      const res = await safeRequest(deleteUser, accessToken, setAccessToken, Number(user?.id));
-
-      if (res.statusCode !== 200) {
-        toast.error(res.message);
-        throw new Error("Deletion failed");
-      }
-
-      toast.success("Your profile has been deleted.");
-      setUser(null);
-      setAccessToken(null);
-      navigate("/login");
-    } catch (error) {
-      console.error("Failed to delete profile", error);
-      toast.error("Failed to delete profile");
-    }
-    setShowModal(false);
-  };
-
+  // --------------------------------------------------
+  // Open delete confirmation modal
+  // --------------------------------------------------
   const handleDeleteButton = () => {
+    if (isSubmitting || isDeleting) return;
     setShowModal(true);
   };
 
-  const handleUpdateUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const updates: any = { username, email };
-    if (password && password.trim().length > 0) updates.password = password;
-    if (avatar) updates.avatar = avatar;
-
+  // --------------------------------------------------
+  // Delete profile (soft delete / delete endpoint)
+  // --------------------------------------------------
+  const handleDeleteProfile = async () => {
+    if (isDeleting) return;
 
     try {
-      const res = await safeRequest(updateUser, accessToken, setAccessToken, Number(user?.id), updates);
+      if (!accessToken || !user?.id) return;
 
-      if (res.statusCode !== 200) throw new Error(res.message);
+      setIsDeleting(true);
 
-      toast.success("Profile updated successfully!");
-      setUser(res?.data);
-      // setUser({id: res?.data?.id, username: res?.data?.username, email: res?.data?.email, avatar: res?.data?.avatar, role: res?.data?.role, createdAt: res?.data?.createdAt, updatedAt: res?.data?.updatedAt});
+      const res = await safeRequest(
+        deleteUser,
+        accessToken,
+        setAccessToken,
+        Number(user.id)
+      );
+
+      if (res.statusCode !== 200) {
+        throw new Error(res.message || t("profile.toasts.deleteFailed"));
+      }
+
+      toast.success(t("profile.toasts.deleteSuccess"));
+      setUser(null);
+      setAccessToken(null);
+      navigate("/login");
     } catch (err: any) {
-      if (err?.response?.data.message === "File too large") {
-        toast.error("Avatar file size exceeds the limit. Max size is 6MB.");
+      toastApiError(err, t("profile.toasts.deleteFailed"));
+    } finally {
+      setIsDeleting(false);
+      setShowModal(false);
+    }
+  };
+
+  // --------------------------------------------------
+  // Update profile
+  // Uses form onSubmit to avoid submit/onClick duplication issues
+  // --------------------------------------------------
+  const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (invalidForm || isSubmitting) return;
+    if (!accessToken || !user?.id) return;
+
+    const updates: Record<string, unknown> = {
+      username: username.trim(),
+      email: email.trim(),
+    };
+
+    if (password.trim().length > 0) {
+      updates.password = password;
+    }
+
+    if (avatar) {
+      updates.avatar = avatar;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      const res = await safeRequest(
+        updateUser,
+        accessToken,
+        setAccessToken,
+        Number(user.id),
+        updates
+      );
+
+      if (res.statusCode !== 200) {
+        throw new Error(res.message || t("profile.toasts.updateFailed"));
+      }
+
+      setUser(res.data);
+      setPassword("");
+      setPasswordErrors([]);
+
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+
+      setAvatar(null);
+      setAvatarPreview(null);
+      setAvatarError("");
+
+      toast.success(t("profile.toasts.updateSuccess"));
+    } catch (err: any) {
+      const message = getApiErrorMessage(err, t("profile.toasts.updateFailed"));
+
+      if (err?.response?.data?.message === "File too large") {
+        toast.error(t("profile.toasts.avatarTooLarge"));
         return;
       }
-      console.error("Failed to update profile", err);
-      toast.error("Failed to update profile");
+
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -108,226 +217,270 @@ const Profile = () => {
     <div className="container inputInfo-container">
       <Modal
         isOpen={showModal}
-        title="Delete user"
-        message="Are you sure you want to delete this user? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t("profile.modal.title")}
+        message={t("profile.modal.message")}
+        confirmText={isDeleting ? t("common.loading") : t("profile.modal.confirmText")}
+        cancelText={t("profile.modal.cancelText")}
         onConfirm={handleDeleteProfile}
-        onCancel={() => setShowModal(false)}
+        onCancel={() => {
+          if (isDeleting) return;
+          setShowModal(false);
+        }}
       />
+
       <div>
-     <div className="info-container flex flex-col">
-      {/* Header row */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl md:text-4xl font-bold">{profileContent.infoHeading}</h2>
-        {/* <Avatar size={80} avatarUrl={user?.avatar} /> */}
-        <AvatarWithBadges
-          size={80}
-          avatarUrl={user?.avatar}
-          username={user?.username}
-          user={user as User}
-        />
+        <div className="info-container flex flex-col">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl md:text-4xl font-bold">{t("profile.infoHeading")}</h2>
+
+            <AvatarWithBadges
+              size={80}
+              avatarUrl={user?.avatar}
+              username={user?.username}
+              user={user as User}
+            />
+          </div>
+
+          <dl className="mt-6 grid gap-y-3 text-lg md:text-xl">
+            <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+              <dt className="opacity-70">{t("profile.facts.bestDailyStreak")}</dt>
+              <dd className="font-bold break-all text-right">{user?.dailyJokeBestStreak}</dd>
+            </div>
+
+            <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+              <dt className="opacity-70">{t("profile.facts.username")}</dt>
+              <dd className="font-bold break-all text-right">{user?.username}</dd>
+            </div>
+
+            <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+              <dt className="opacity-70">{t("profile.facts.email")}</dt>
+              <dd className="font-bold break-all text-right">{user?.email}</dd>
+            </div>
+
+            <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+              <dt className="opacity-70">{t("profile.facts.role")}</dt>
+              <dd className="font-bold text-right">{user?.role}</dd>
+            </div>
+
+            <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+              <dt className="opacity-70">{t("profile.facts.created")}</dt>
+              <dd className="font-bold text-right">{formatDateProfile(user?.createdAt)}</dd>
+            </div>
+
+            <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+              <dt className="opacity-70">{t("profile.facts.updated")}</dt>
+              <dd className="font-bold text-right">{formatDateProfile(user?.updatedAt)}</dd>
+            </div>
+
+            <div className="my-2 border-t border-white/10" />
+
+            <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+              <dt className="opacity-70">{t("profile.facts.termsAccepted")}</dt>
+              <dd className="font-bold text-right">{formatDateProfile(user?.termsAcceptedAt)}</dd>
+            </div>
+
+            <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
+              <dt className="opacity-70">{t("profile.facts.termsVersion")}</dt>
+              <dd className="font-bold text-right">
+                {user?.termsVersion ?? t("profile.facts.notAvailable")}
+              </dd>
+            </div>
+          </dl>
+
+          <div className="mt-auto pt-6 flex flex-col gap-4">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleLogout}
+              className="w-full"
+              label={t("profile.actions.logout")}
+              disabled={isSubmitting || isDeleting}
+            >
+              {t("profile.actions.logout")}
+            </Button>
+
+            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+              <p className="text-sm opacity-80 mb-3">{t("profile.deleteBox.text")}</p>
+              <Button
+                type="button"
+                variant="error"
+                onClick={handleDeleteButton}
+                className="w-full"
+                label={t("profile.actions.deleteProfile")}
+                disabled={isSubmitting || isDeleting}
+              >
+                {isDeleting ? t("common.loading") : t("profile.actions.deleteProfile")}
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Facts */}
-      <dl className="mt-6 grid gap-y-3 text-lg md:text-xl">
-        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-          <dt className="opacity-70">🔥Best daily streak:</dt>
-          <dd className="font-bold break-all text-right">{user?.dailyJokeBestStreak}</dd>
-        </div>
+      <div className="input-container">
+        <h2 className="input-heading">{t("profile.inputHeading")}</h2>
 
-        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-          <dt className="opacity-70">Username</dt>
-          <dd className="font-bold break-all text-right">{user?.username}</dd>
-        </div>
-
-        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-          <dt className="opacity-70">Email</dt>
-          <dd className="font-bold break-all text-right">{user?.email}</dd>
-        </div>
-
-        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-          <dt className="opacity-70">Role</dt>
-          <dd className="font-bold text-right">{user?.role}</dd>
-        </div>
-
-        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-          <dt className="opacity-70">Created</dt>
-          <dd className="font-bold text-right">{formatDateProfile(user?.createdAt)}</dd>
-        </div>
-
-        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-          <dt className="opacity-70">Updated</dt>
-          <dd className="font-bold text-right">{formatDateProfile(user?.updatedAt)}</dd>
-        </div>
-
-        <div className="my-2 border-t border-white/10" />
-
-        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-          <dt className="opacity-70">Terms accepted</dt>
-          <dd className="font-bold text-right">{formatDateProfile(user?.termsAcceptedAt)}</dd>
-        </div>
-
-        <div className="grid grid-cols-[1fr_auto] items-start gap-x-6">
-          <dt className="opacity-70">Terms version</dt>
-          <dd className="font-bold text-right">{user?.termsVersion ?? "N/A"}</dd>
-        </div>
-      </dl>
-
-      {/* Actions pinned to bottom */}
-      <div className="mt-auto pt-6 flex flex-col gap-4">
-        <Button variant="secondary" onClick={handleLogout} className="w-full" label="logout">
-          LOGOUT
-        </Button>
-
-        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
-          <p className="text-sm opacity-80 mb-3">
-            Deleting your account disables it and removes your access.
-          </p>
-          <Button variant="error" onClick={handleDeleteButton} className="w-full" label="delete profile">
-            DELETE PROFILE
-          </Button>
-        </div>
-      </div>
-    </div>
-      </div>
-
-        <div className="input-container">
-        <h2 className="input-heading">{profileContent.inputHeading}</h2>
-        <form action="" className="flex flex-col h-[88%]">
+        <form onSubmit={handleUpdateUser} className="flex flex-col h-[88%]">
           <div>
             <Input
-            id="username"
-            label="Username"
-            value={username}
-            errorMsg={errorMsg1}
-            placeholder={""}
-            required
-            inputValid={input1Valid}
-            onChange={(e) => {
-              const value = e.target.value;
-              setUsername(value);
-              const validationResult = usernameValidator(value);
-              setInput1Valid(!validationResult);
-              setErrorMsg1(validationResult);
-            }}
-          />
-          <Input
-            id="email"
-            type="email"
-            label="Email"
-            value={email}
-            errorMsg={errorMsg2}
-            placeholder={""}
-            required
-            inputValid={input2Valid}
-            onChange={(e) => {
-              const value = e.target.value;
-              setEmail(value);
-              const validationResult = userInputValidator(value);
-              setInput2Valid(!validationResult);
-              setErrorMsg2(validationResult);
-            }}
-          />
-          <div className="flex flex-col relative">
-            <Input
-              id="password"
-              type={!showPassword ? "password" : "text"}
-              label={`Password`}
-              value={password}
-              placeholder={"optional - only fill to change"}
+              id="username"
+              label={t("profile.fields.username")}
+              value={username}
+              errorMsg={errorMsg1}
+              placeholder=""
               required
-              inputValid={passwordErrors.length === 0}
+              inputValid={input1Valid}
               onChange={(e) => {
                 const value = e.target.value;
-                setPassword(value);
-                setPasswordErrors(passwordValidator(value));
+                setUsername(value);
+
+                const validationKey = usernameValidator(value);
+                setInput1Valid(!validationKey);
+                setErrorMsg1(validationKey ? t(validationKey) : "");
               }}
             />
-            <Button
-              aria-label="Show/Hide password"
-              label="Show/Hide password"
-              size="zero"
-              className="bg-transparent absolute left-21 md:left-28 top-2"
-            >
-              {showPassword ? (
-                <FaEye onClick={() => setShowPassword((s) => !s)} size={20} className="text-[var(--text1)]" />
-              ) : (
-                <FaEyeSlash
-                  onClick={() => setShowPassword((s) => !s)}
-                  size={20}
-                  className="text-[var(--text1)]"
-                />
-              )}
-            </Button>
-          </div>
-          {passwordErrors.length > 0 && (
-            <ul className="text-[0.9rem] text-[var(--error)] my-2">
-              {passwordErrors.map((err) => (
-                <li key={err}>• {err}</li>
-              ))}
-            </ul>
-          )}
-          <Input
-            id="avatar"
-            type="file"
-            label="Avatar"
-            title="Upload a new avatar image (optional)"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
 
-              if (!file) {
-                setAvatar(null);
-                setAvatarPreview(null);
-                setAvatarError("");
-                return;
-              }
+            <Input
+              id="email"
+              type="email"
+              label={t("profile.fields.email")}
+              value={email}
+              errorMsg={errorMsg2}
+              placeholder=""
+              required
+              inputValid={input2Valid}
+              onChange={(e) => {
+                const value = e.target.value;
+                setEmail(value);
+
+                const validationKey = emailValidator(value);
+                setInput2Valid(!validationKey);
+                setErrorMsg2(validationKey ? t(validationKey) : "");
+              }}
+            />
+
+            <div className="flex flex-col relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                label={t("profile.fields.password")}
+                value={password}
+                placeholder={t("profile.placeholders.password")}
+                inputValid={passwordErrors.length === 0}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword(value);
+                  setPasswordErrors(passwordValidator(value));
+                }}
+              />
+
+              <Button
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                label={showPassword ? "Hide password" : "Show password"}
+                size="zero"
+                className="bg-transparent absolute left-21 md:left-28 top-2"
+                onClick={() => setShowPassword((prev) => !prev)}
+                disabled={isSubmitting || isDeleting}
+              >
+                {showPassword ? (
+                  <FaEye size={20} className="text-[var(--text1)]" />
+                ) : (
+                  <FaEyeSlash size={20} className="text-[var(--text1)]" />
+                )}
+              </Button>
+            </div>
+
+            {passwordErrors.length > 0 && (
+              <ul className="text-[0.9rem] text-[var(--error)] my-2">
+                {passwordErrors.map((message) => (
+                  <li key={message}>• {t(message, message)}</li>
+                ))}
+              </ul>
+            )}
+
+            <Input
+              id="avatar"
+              type="file"
+              label={t("profile.fields.avatar")}
+              title={t("profile.fields.avatar")}
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+
+                if (!file) {
+                  if (avatarPreview) {
+                    URL.revokeObjectURL(avatarPreview);
+                  }
+
+                  setAvatar(null);
+                  setAvatarPreview(null);
+                  setAvatarError("");
+                  return;
+                }
 
                 if (!ALLOWED_TYPES.includes(file.type)) {
-                setAvatarError("Only JPG, PNG or WEBP images are allowed.");
-                return;
-              }
+                  setAvatar(null);
+                  if (avatarPreview) {
+                    URL.revokeObjectURL(avatarPreview);
+                  }
+                  setAvatarPreview(null);
+                  setAvatarError(t("profile.avatar.invalidType"));
+                  return;
+                }
 
-              if (file.size > MAX_AVATAR_SIZE) {
-                setAvatar(null);
-                setAvatarPreview(null);
-                setAvatarError(`Avatar file size exceeds ${MAX_AVATAR_SIZE / (1024 * 1024)}MB. Choose a smaller file.`);
-                return;
-              }
+                if (file.size > MAX_AVATAR_SIZE) {
+                  setAvatar(null);
+                  if (avatarPreview) {
+                    URL.revokeObjectURL(avatarPreview);
+                  }
+                  setAvatarPreview(null);
+                  setAvatarError(
+                    tf("profile.avatar.tooLarge", {
+                      size: String(MAX_AVATAR_SIZE / (1024 * 1024)),
+                    })
+                  );
+                  return;
+                }
 
-              setAvatar(file);
-              setAvatarError("");
-              // create a temporary preview URL
-              setAvatarPreview(URL.createObjectURL(file));
-            }}
-          />
-          <p className="text-xs text-gray-500 mb-3 mt-[-10px]">
-            Max size: {MAX_AVATAR_SIZE / (1024 * 1024)}MB. Supported formats: JPG, JPEG, WEBP, PNG.
-          </p>
-          <p className="text-xs text-gray-500 mb-3 mt-[-10px]">
-            Uploading a new avatar will replace your current one.
-          </p>
+                if (avatarPreview) {
+                  URL.revokeObjectURL(avatarPreview);
+                }
 
+                setAvatar(file);
+                setAvatarError("");
+                setAvatarPreview(URL.createObjectURL(file));
+              }}
+            />
 
-          {/* Preview */}
-          {avatarPreview && (
-            <img src={avatarPreview} alt="Avatar Preview" className="rounded-full w-20 h-20 object-cover" />
-          )}
+            <p className="text-xs text-gray-500 mb-3 mt-[-10px]">
+              {tf("profile.avatar.help1", {
+                size: String(MAX_AVATAR_SIZE / (1024 * 1024)),
+              })}
+            </p>
 
-          {avatarError && <p className="text-red-500">{avatarError}</p>}
+            <p className="text-xs text-gray-500 mb-3 mt-[-10px]">
+              {t("profile.avatar.help2")}
+            </p>
 
+            {avatarPreview && (
+              <img
+                src={avatarPreview}
+                alt={t("profile.avatar.previewAlt")}
+                className="rounded-full w-20 h-20 object-cover"
+              />
+            )}
+
+            {avatarError && <p className="text-red-500">{avatarError}</p>}
           </div>
 
           <Button
             type="submit"
             variant="tertiary"
-            onClick={handleUpdateUser}
             className="w-full mt-auto"
-            label={profileContent.button1}
-            disabled={!!avatarError} // disable if avatar too big
+            label={t("profile.actions.update")}
+            disabled={invalidForm || isSubmitting || isDeleting}
           >
-            {profileContent.button1}
+            {isSubmitting ? t("common.loading") : t("profile.actions.update")}
           </Button>
         </form>
       </div>

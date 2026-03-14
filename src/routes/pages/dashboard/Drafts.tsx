@@ -1,43 +1,50 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+
 import { useAuth } from "../../../contexts/AuthContext";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import { usePagination } from "../../../hooks/usePagination";
 import { getCurrentUserDrafts } from "../../../lib/axios";
+
 import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
 import DraftCard from "../../../components/molecules/DraftCard";
 import Post from "../../../components/organisms/Post";
-import { Link } from "react-router-dom";
+
 import type { PostType } from "../../../types/post.types";
-import draftsContent from "../../../text-content/drafts-page";
 
 const LIMIT = 15;
 
 const Drafts = () => {
   const { accessToken, setAccessToken } = useAuth();
+  const { language, t, tf } = useLanguage();
   const [showMiniPosts, setShowMiniPosts] = useState(true);
 
   if (!accessToken) {
-    return <p className="text-center mt-10 text-[var(--text1)]">Please log in to view your drafts.</p>;
+    return (
+      <p className="text-center mt-10 text-[var(--text1)]">
+        {t("drafts.authRequired")}
+      </p>
+    );
   }
 
-  const resetKey = useMemo(() => "my-drafts", []);
+  const args = useMemo(() => [language], [language]);
+  const resetKey = useMemo(() => `my-drafts:${language}`, [language]);
 
   const {
     items: drafts,
     meta,
     loading,
     error,
-    canNext,
-    next: loadMore,
     sentinelRef,
     reload,
     replaceItem,
     removeItem,
-    updateItem
   } = usePagination<PostType>(getCurrentUserDrafts, {
     accessToken,
     setAccessToken,
     limit: LIMIT,
+    args,
     mode: "infinite",
     autoLoadMore: true,
     rootMargin: "700px",
@@ -46,13 +53,12 @@ const Drafts = () => {
 
   const handleTogglePresentation = () => setShowMiniPosts((prev) => !prev);
 
-  // initial spinner only
   if (loading && drafts.length === 0) return <Spinner />;
 
   return (
     <div className="md:mt-8">
       <h2 className="text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10">
-        {draftsContent.heading1}
+        {t("drafts.heading")}
       </h2>
 
       {drafts.length > 0 && (
@@ -62,13 +68,19 @@ const Drafts = () => {
             type="button"
             size="md"
             variant="primary"
-            label="toggle draft presentation"
+            label={showMiniPosts ? t("drafts.toggleShowTitles") : t("drafts.toggleShowFull")}
           >
-            {showMiniPosts ? "Show draft titles" : "Show full drafts"}
+            {showMiniPosts ? t("drafts.toggleShowTitles") : t("drafts.toggleShowFull")}
           </Button>
 
-          <Button onClick={reload} type="button" size="md" variant="secondary" label="reload drafts">
-            Reload
+          <Button
+            onClick={reload}
+            type="button"
+            size="md"
+            variant="secondary"
+            label={t("drafts.reload")}
+          >
+            {t("drafts.reload")}
           </Button>
         </div>
       )}
@@ -82,9 +94,10 @@ const Drafts = () => {
       <section className="posts-section">
         {drafts.length === 0 && !loading && !error && (
           <div className="text-center posts-section-heading text-[var(--text1)]">
-            <p className="text-sm md:text-lg">You haven't created any drafts yet.</p>
-            <Button label="Make draft" className="text-sm mt-3">
-              <Link to="/dashboard">Create Draft</Link>
+            <p className="text-sm md:text-lg">{t("drafts.empty")}</p>
+
+            <Button label={t("drafts.createDraft")} className="text-sm mt-3">
+              <Link to="/dashboard">{t("drafts.createDraft")}</Link>
             </Button>
           </div>
         )}
@@ -96,7 +109,7 @@ const Drafts = () => {
                 post={draft}
                 onPostUpdated={(updated) => {
                   if (updated.published) {
-                    removeItem(updated.id);     // published => remove from drafts list
+                    removeItem(updated.id);
                   } else {
                     replaceItem(updated.id, updated);
                   }
@@ -104,34 +117,21 @@ const Drafts = () => {
                 onPostDeleted={(id) => removeItem(id)}
               />
             ))
-          :drafts.map((draft) => <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />)
-          }
+          : drafts.map((draft) => (
+              <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />
+            ))}
 
-        {/* infinite scroll sentinel */}
         <div ref={sentinelRef} className="h-8" />
-
-        {/* fallback load more */}
-        {/* {canNext && (
-          <div className="mt-6 flex justify-center">
-            <Button
-              onClick={loadMore}
-              type="button"
-              size="md"
-              variant="secondary"
-              label="load more drafts"
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "Load more"}
-            </Button>
-          </div>
-        )} */}
-
       </section>
-        {meta && (
-          <div className="mt-4 text-center text-sm opacity-70 text-[var(--text1)]">
-            Showing {drafts.length} of {meta.total}
-          </div>
-        )}
+
+      {meta && (
+        <div className="mt-4 text-center text-sm opacity-70 text-[var(--text1)]">
+          {tf("drafts.showing", {
+            shown: String(drafts.length),
+            total: String(meta.total),
+          })}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,14 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { type token } from "../types/context.types";
-
-interface AuthContextType {
-  accessToken: token | null;
-  setAccessToken: (token: token | null) => void;
-  isAuthenticated: boolean;
-  setIsAuthenticated: (val: boolean) => void;
-  loading: boolean;
-  setLoading: (val: boolean) => void;
-}
+import { type token, type AuthContextType } from "../types/context.types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

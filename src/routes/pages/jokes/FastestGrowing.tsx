@@ -1,12 +1,14 @@
 import FeaturedPostTemplate from "./FeaturedPostTemplate";
+import { useLanguage } from "../../../contexts/LanguageContext";
 
+export default function FastestGrowing() {
+  const { t } = useLanguage();
 
-export default function TrendingWeek() {
   return (
     <FeaturedPostTemplate
       slug="fastest-growing"
-      title="🚀FASTEST GROWING"
-      subtitle="The joke with the most growth this week."
+      title={t("featured.fastestGrowing.title")}
+      subtitle={t("featured.fastestGrowing.subtitle")}
     />
   );
 }

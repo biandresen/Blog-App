@@ -6,7 +6,6 @@ const termsContent = {
   intro:
     "These Terms of Service (“Terms”) govern your use of DadJokes (“the Service”). By creating an account or using the Service, you agree to these Terms.",
 
-  // NEW: central place to define the “related policies” you reference from Terms
   incorporatedPolicies: [
     { label: "Privacy Policy", path: "/privacy" },
     { label: "Cookie Policy", path: "/cookies" },
@@ -22,7 +21,6 @@ const termsContent = {
       ],
     },
 
-    // NEW: the “incorporation” section that links your policies into the Terms
     {
       title: "2. Related policies (incorporated by reference)",
       paragraphs: [
@@ -31,7 +29,6 @@ const termsContent = {
       ],
     },
 
-    // Renumber the rest (optional but recommended for clarity)
     {
       title: "3. Eligibility and accounts",
       paragraphs: [

@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+
 import type { HallOfFameRow } from "../../../types/hallOfFame.types";
 import { getHallOfFameUsers } from "../../../lib/axios";
 import Spinner from "../../../components/atoms/Spinner";
 import AvatarWithBadges from "../../../components/atoms/AvatarWithBadges";
+import { useLanguage } from "../../../contexts/LanguageContext";
 
 const HallOfFame = () => {
+  const { t } = useLanguage();
+
   const [period, setPeriod] = useState<"week" | "month" | "all">("month");
   const [items, setItems] = useState<HallOfFameRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -14,16 +18,17 @@ const HallOfFame = () => {
     (async () => {
       setLoading(true);
       setError(null);
+
       try {
         const res = await getHallOfFameUsers(period, 25);
         setItems(res.data ?? []);
       } catch (e: any) {
-        setError(e?.message ?? "Failed to load Hall of Fame");
+        setError(e?.message ?? t("hallOfFame.states.failed"));
       } finally {
         setLoading(false);
       }
     })();
-  }, [period]);
+  }, [period, t]);
 
   if (loading) return <Spinner />;
   if (error) return <div className="text-center text-[var(--text1)]">{error}</div>;
@@ -32,42 +37,41 @@ const HallOfFame = () => {
     <div className="container max-w-150 md:mt-8">
       <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <h2 className="text-4xl font-bold text-[var(--text1)] lg:text-4xl">
-          Hall of Fame
+          {t("hallOfFame.heading")}
         </h2>
 
         <select
           className="w-full lg:w-auto rounded-lg border border-white/10 bg-[var(--primary)] px-3 py-2 text-[var(--text2)]"
           value={period}
-          onChange={(e) => setPeriod(e.target.value as any)}
+          onChange={(e) => setPeriod(e.target.value as "week" | "month" | "all")}
         >
-          <option value="week">This week</option>
-          <option value="month">This month</option>
-          <option value="all">All-time</option>
+          <option value="week">{t("hallOfFame.periods.week")}</option>
+          <option value="month">{t("hallOfFame.periods.month")}</option>
+          <option value="all">{t("hallOfFame.periods.all")}</option>
         </select>
       </div>
 
       {items.length === 0 ? (
-        <div className="text-[var(--text1)] opacity-70">No rankings yet.</div>
+        <div className="text-[var(--text1)] opacity-70">
+          {t("hallOfFame.states.empty")}
+        </div>
       ) : (
         <div className="rounded-2xl border border-white/10 bg-[var(--bg-input)] overflow-x-hidden overflow-y-visible">
           <div className="min-w-[360px]">
-            {/* header row */}
-          <div
-            className="
-              grid grid-cols-[32px_minmax(0,1fr)] lg:grid-cols-[48px_1fr_90px_80px_80px]
-              gap-3 px-3 py-3 lg:px-4 bg-[var(--primary)] text-lg text-[var(--text2)]
-            "
-          >
-            <div>#</div>
-            <div>User</div>
+            <div
+              className="
+                grid grid-cols-[32px_minmax(0,1fr)] lg:grid-cols-[48px_1fr_90px_80px_80px]
+                gap-3 px-3 py-3 lg:px-4 bg-[var(--primary)] text-lg text-[var(--text2)]
+              "
+            >
+              <div>{t("hallOfFame.table.rank")}</div>
+              <div>{t("hallOfFame.table.user")}</div>
 
-            {/* desktop only */}
-            <div className="hidden lg:block text-right">Wins</div>
-            <div className="hidden lg:block text-right">Streak</div>
-            <div className="hidden lg:block text-right">Likes</div>
-          </div>
+              <div className="hidden lg:block text-right">{t("hallOfFame.table.wins")}</div>
+              <div className="hidden lg:block text-right">{t("hallOfFame.table.streak")}</div>
+              <div className="hidden lg:block text-right">{t("hallOfFame.table.likes")}</div>
+            </div>
 
-            {/* rows */}
             {items.map((row, idx) => (
               <div
                 key={row.user.id}
@@ -81,17 +85,19 @@ const HallOfFame = () => {
 
                 <div className="flex items-center gap-3 min-w-0">
                   <AvatarWithBadges user={row.user} size={60} />
-                  <div title={row.user.username} className="font-semibold">{row.user.username}</div>
+                  <div title={row.user.username} className="font-semibold">
+                    {row.user.username}
+                  </div>
                 </div>
 
-                {/* desktop only */}
                 <div className="hidden lg:block text-right font-semibold">{row.winsTotal}</div>
                 <div className="hidden lg:block text-right">{row.dailyStreak}</div>
                 <div className="hidden lg:block text-right">{row.likesReceived}</div>
 
-                {/* mobile-only subrow */}
                 <div className="lg:hidden col-span-2 -mt-2 text-xs opacity-70">
-                  Wins: {row.winsTotal} • Streak: {row.dailyStreak} • Likes: {row.likesReceived}
+                  {t("hallOfFame.mobileStats.wins")}: {row.winsTotal} •{" "}
+                  {t("hallOfFame.mobileStats.streak")}: {row.dailyStreak} •{" "}
+                  {t("hallOfFame.mobileStats.likes")}: {row.likesReceived}
                 </div>
               </div>
             ))}
