@@ -18,17 +18,25 @@ function computeMatches(post: PostType, q: string, filters: SearchFilters): stri
   const input = q.toLowerCase();
   const matches: string[] = [];
 
-  if (filters.title && post.title?.toLowerCase().includes(input)) matches.push("title");
-  if (filters.body && post.body?.toLowerCase().includes(input)) matches.push("body");
+  if (filters.title && post.title?.toLowerCase().includes(input)) {
+    matches.push("title");
+  }
+
+  if (filters.body && post.body?.toLowerCase().includes(input)) {
+    matches.push("body");
+  }
 
   if (
     filters.comments &&
-    post.comments?.some((c) => c.body?.toLowerCase().includes(input))
+    post.comments?.some((comment) => comment.body?.toLowerCase().includes(input))
   ) {
     matches.push("comment");
   }
 
-  if (filters.tags && post.tags?.some((t) => t.name?.toLowerCase().includes(input))) {
+  if (
+    filters.tags &&
+    post.tags?.some((tag) => tag.name?.toLowerCase().includes(input))
+  ) {
     matches.push("tag");
   }
 
@@ -47,15 +55,28 @@ const Search = () => {
     tags: true,
   });
 
+  // --------------------------------------------------
+  // Debounce raw search input to avoid excessive requests
+  // --------------------------------------------------
   useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedQuery(query.trim()), 250);
-    return () => clearTimeout(timeout);
+    const timeout = window.setTimeout(() => {
+      setDebouncedQuery(query.trim());
+    }, 250);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
   }, [query]);
 
-  const args = useMemo<any[]>(() => {
-    if (!debouncedQuery) return [];
+  const hasActiveFilters =
+    filters.title || filters.body || filters.comments || filters.tags;
+
+  const searchEnabled = Boolean(debouncedQuery) && hasActiveFilters;
+
+  const args = useMemo<[string, SearchFilters, "desc", string] | []>(() => {
+    if (!searchEnabled) return [];
     return [debouncedQuery, filters, "desc", language];
-  }, [debouncedQuery, filters, language]);
+  }, [debouncedQuery, filters, language, searchEnabled]);
 
   const resetKey = useMemo(() => {
     return `search:${language}:${debouncedQuery}:${filters.title}-${filters.body}-${filters.comments}-${filters.tags}`;
@@ -78,20 +99,20 @@ const Search = () => {
     limit: LIMIT,
     args,
     resetKey,
-    enabled: !!debouncedQuery,
+    enabled: searchEnabled,
     mode: "infinite",
     autoLoadMore: true,
     rootMargin: "700px",
   });
 
   const postsToShow: FilteredPostType[] = useMemo(() => {
-    if (!debouncedQuery) return [];
+    if (!searchEnabled) return [];
 
     return (items ?? []).map((post) => ({
       ...post,
       matches: computeMatches(post, debouncedQuery, filters),
     }));
-  }, [items, debouncedQuery, filters]);
+  }, [items, debouncedQuery, filters, searchEnabled]);
 
   const filterEntries: Array<{ key: keyof SearchFilters; label: string }> = [
     { key: "title", label: t("search.filters.title") },
@@ -99,6 +120,23 @@ const Search = () => {
     { key: "comments", label: t("search.filters.comments") },
     { key: "tags", label: t("search.filters.tags") },
   ];
+
+  const handleToggleFilter = (key: keyof SearchFilters) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const handleReload = () => {
+    if (!searchEnabled || loading) return;
+    reload();
+  };
+
+  const handleLoadMore = () => {
+    if (!canNext || loading) return;
+    loadMore();
+  };
 
   return (
     <div className="md:mt-8">
@@ -113,36 +151,37 @@ const Search = () => {
               type="checkbox"
               checked={filters[key]}
               className="md:w-5 md:h-5 accent-[var(--primary)]"
-              onChange={() =>
-                setFilters((prev) => ({
-                  ...prev,
-                  [key]: !prev[key],
-                }))
-              }
+              onChange={() => handleToggleFilter(key)}
             />
             {label}
           </label>
         ))}
       </div>
 
-      <Searchbar handleSearch={(value) => setQuery(value)} />
+      <Searchbar handleSearch={setQuery} />
 
       <div className="flex justify-center gap-3 mt-4">
         <Button
-          onClick={reload}
+          onClick={handleReload}
           type="button"
           size="md"
           variant="secondary"
           label={t("search.actions.reload")}
-          disabled={!debouncedQuery}
+          disabled={!searchEnabled || loading}
         >
-          {t("search.actions.reload")}
+          {loading ? t("search.states.loading") : t("search.actions.reload")}
         </Button>
       </div>
 
       {!debouncedQuery && (
         <div className="mt-6 text-center text-[var(--text1)] opacity-70">
           {t("search.states.typeToSearch")}
+        </div>
+      )}
+
+      {debouncedQuery && !hasActiveFilters && (
+        <div className="mt-6 text-center text-[var(--text1)] opacity-70">
+          {t("search.states.enableFilter", "Enable at least one filter to search.")}
         </div>
       )}
 
@@ -155,7 +194,7 @@ const Search = () => {
       <section className="posts-section">
         {loading && postsToShow.length === 0 && <Spinner />}
 
-        {!loading && debouncedQuery && postsToShow.length === 0 && !error && (
+        {!loading && searchEnabled && postsToShow.length === 0 && !error && (
           <div>
             <h3 className="posts-section-heading text-[var(--text1)]">
               {t("search.states.noResults")}
@@ -187,12 +226,12 @@ const Search = () => {
           ))}
         </div>
 
-        {debouncedQuery && <div ref={sentinelRef} className="h-8 w-full" />}
+        {searchEnabled && <div ref={sentinelRef} className="h-8 w-full" />}
 
         {canNext && (
           <div className="mt-6 flex justify-center w-full">
             <Button
-              onClick={loadMore}
+              onClick={handleLoadMore}
               type="button"
               size="md"
               variant="secondary"
@@ -204,7 +243,7 @@ const Search = () => {
           </div>
         )}
 
-        {meta && (
+        {meta && searchEnabled && (
           <div className="text-center text-sm opacity-70 text-[var(--text1)] w-full">
             {tf("search.states.showing", {
               shown: String(postsToShow.length),

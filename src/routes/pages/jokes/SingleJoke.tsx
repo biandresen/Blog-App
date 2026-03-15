@@ -18,13 +18,9 @@ const SingleJoke = () => {
   const [notAvailableInLanguage, setNotAvailableInLanguage] = useState(false);
 
   const { id: postId } = useParams<{ id: string }>();
-  const { posts, refreshPosts } = usePosts();
+  const { posts } = usePosts();
   const { user } = useUser();
   const { language, t } = useLanguage();
-
-  useEffect(() => {
-    refreshPosts();
-  }, [refreshPosts]);
 
   const parsedPostId = Number(postId);
 
@@ -39,15 +35,16 @@ const SingleJoke = () => {
     const fetchSinglePost = async () => {
       if (!postId || Number.isNaN(parsedPostId)) {
         setLocalPost(null);
-        setNotAvailableInLanguage(false);
         setError(t("singleJoke.states.invalidId", "Invalid joke id"));
+        setNotAvailableInLanguage(false);
         return;
       }
 
+      // If post exists in context, use it immediately
       if (contextPost) {
         setLocalPost(contextPost);
-        setNotAvailableInLanguage(false);
         setError(null);
+        setNotAvailableInLanguage(false);
         return;
       }
 
@@ -99,10 +96,15 @@ const SingleJoke = () => {
   }, [postId, parsedPostId, language, contextPost, t]);
 
   const post = localPost;
-  const isAuthor = post?.authorId?.toString() === user?.id?.toString();
+
+  const isAuthor =
+    post && post.authorId?.toString() === user?.id?.toString();
+
   const isDraft = post?.published === false;
 
-  if (loading) return <Spinner />;
+  if (loading && !post) {
+    return <Spinner />;
+  }
 
   return (
     <div className="md:mt-8">

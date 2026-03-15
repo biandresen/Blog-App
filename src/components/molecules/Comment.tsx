@@ -25,31 +25,63 @@ const Comment = ({
   onEdit,
   onDelete,
 }: CommentProps) => {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editedComment, setEditedComment] = useState<string>(comment);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedComment, setEditedComment] = useState(comment);
 
   const { user } = useUser();
   const { t } = useLanguage();
 
-  const { ref: textRef, handleInput } = useAutoResizeTextarea(editedComment, isEditing);
+  const { ref: textRef, handleInput } = useAutoResizeTextarea(
+    editedComment,
+    isEditing
+  );
 
-  const isAuthor = authorId?.toString() === user?.id.toString();
-  const isAdmin = user?.role.toString() === "ADMIN";
+  const isAuthor =
+    authorId != null &&
+    user?.id != null &&
+    authorId.toString() === user.id.toString();
 
+  const isAdmin = user?.role === "ADMIN";
+
+  // Sync local state if parent updates comment
+  useEffect(() => {
+    setEditedComment(comment);
+  }, [comment]);
+
+  // Focus textarea when editing
   useEffect(() => {
     if (isEditing) {
       textRef.current?.focus();
     }
   }, [isEditing, textRef]);
 
+  const handleStartOrStopEditing = () => {
+    setIsEditing((prev) => !prev);
+  };
+
   const handleSubmit = () => {
-    if (comment === editedComment) {
+    const trimmedEdited = editedComment.trim();
+    const trimmedOriginal = comment.trim();
+
+    // Prevent empty comment
+    if (!trimmedEdited) {
+      setEditedComment(comment);
       setIsEditing(false);
       return;
     }
 
-    onEdit(commentId, editedComment);
+    // If unchanged, just close edit mode
+    if (trimmedEdited === trimmedOriginal) {
+      setIsEditing(false);
+      return;
+    }
+
+    onEdit(commentId, trimmedEdited);
     setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    onDelete(commentId);
   };
 
   const handleKeyDown = useSubmitOnEnter(handleSubmit);
@@ -58,35 +90,40 @@ const Comment = ({
     <div className="px-0 pb-6 mt-3">
       <div className="text-[var(--text1)]">
         <div className="flex bg-[var(--bg)] w-full px-3 pt-2 xl:w-fit rounded-tl-3xl rounded-tr-3xl">
-          {avatar ? <Avatar size={40} avatarUrl={avatar} /> : <CgProfile size={40} />}
+          {avatar ? (
+            <Avatar size={40} avatarUrl={avatar} />
+          ) : (
+            <CgProfile size={40} />
+          )}
 
           <div className="ml-2">
             <p className="font-bold text-[0.8rem] md:text-[1rem] mb-[-0.2rem]">
               {capitalizeFirstLetter(username)}
             </p>
+
             <p className="text-[0.6rem] md:text-[0.7rem] opacity-80">{date}</p>
           </div>
 
           <div className="ml-auto xl:ml-3 flex gap-2">
             {isAuthor && (
               <button
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={handleStartOrStopEditing}
                 type="button"
                 title={t("comment.actions.edit")}
                 className="hover:bg-[var(--primary-tint)] rounded-full px-1"
               >
-                <MdEdit size={18} color="text-[var(--button3)]" />
+                <MdEdit size={18} className="text-[var(--button3)]" />
               </button>
             )}
 
             {(isAuthor || isAdmin) && (
               <button
-                onClick={() => onDelete(authorId || 0, commentId)}
+                onClick={handleDelete}
                 type="button"
                 title={t("comment.actions.delete")}
                 className="hover:bg-[var(--primary-tint)] rounded-full px-1"
               >
-                <MdDelete size={18} color="text-[var(--button3)]" />
+                <MdDelete size={18} className="text-[var(--button3)]" />
               </button>
             )}
           </div>
@@ -108,6 +145,7 @@ const Comment = ({
                   handleInput();
                 }}
               />
+
               <span className="absolute bottom-5 left-0 opacity-80 text-xs text-[var(--text1)]">
                 {getCharactersLeft(editedComment, MAX_CHARS.COMMENT)}
               </span>

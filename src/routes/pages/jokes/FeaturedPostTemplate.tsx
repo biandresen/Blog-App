@@ -25,39 +25,40 @@ export default function FeaturedPostTemplate({ slug, title, subtitle }: Props) {
   const { language, t } = useLanguage();
 
   useEffect(() => {
-    let cancelled = false;
+    let isActive = true;
 
-    const fetchFeaturedPost = async () => {
-      setLoading(true);
-      setError(null);
+    setPost(null);
+    setDate(null);
+    setLoading(true);
+    setError(null);
 
+    const run = async () => {
       try {
         const res = await getFeaturedPost(slug, language);
         const payload = res.data;
 
-        if (cancelled) return;
+        if (!isActive) return;
 
         if (!payload?.post) {
           setPost(null);
           setDate(null);
-        } else {
-          setPost(payload.post);
-          setDate(payload.date ?? null);
+          return;
         }
-      } catch (e: any) {
-        if (cancelled) return;
-        setError(e?.message ?? t("featured.failedToLoad", "Failed to load featured post"));
+
+        setPost(payload.post);
+        setDate(payload.date ?? null);
+      } catch (err: any) {
+        if (!isActive) return;
+        setError(err?.message ?? t("featured.failedToLoad"));
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (isActive) setLoading(false);
       }
     };
 
-    fetchFeaturedPost();
+    run();
 
     return () => {
-      cancelled = true;
+      isActive = false;
     };
   }, [slug, language, t]);
 

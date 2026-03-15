@@ -1,9 +1,13 @@
 import { useMemo } from "react";
+
 import PostCard from "./PostCard";
 import Button from "../atoms/Button";
+
 import { usePagination } from "../../hooks/usePagination";
 import { getAllPosts } from "../../lib/axios";
+
 import type { PostType } from "../../types/post.types";
+
 import { useAuth } from "../../contexts/AuthContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 
@@ -35,6 +39,25 @@ const RightSidebar = () => {
     resetKey,
   });
 
+  const showInitialLoading = loading && posts.length === 0;
+  const showEmptyState = !loading && posts.length === 0 && !error;
+  const showPosts = posts.length > 0;
+
+  const handleReload = () => {
+    if (loading) return;
+    reload();
+  };
+
+  const handlePrev = () => {
+    if (!canPrev || loading) return;
+    prev();
+  };
+
+  const handleNext = () => {
+    if (!canNext || loading) return;
+    next();
+  };
+
   return (
     <aside className="bg-[var(--primary-shade)] absolute right-0 w-full h-[calc(100vh-3.8rem)] md:max-w-55 lg:max-w-65 md:static overflow-y-auto z-40">
       <h3 className="text-center text-3xl md:text-2xl mt-8 md:mt-16">
@@ -42,33 +65,51 @@ const RightSidebar = () => {
       </h3>
 
       <div className="flex md:flex-col flex-wrap items-center justify-center px-4 py-8 gap-4">
-        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {error && (
+          <p className="text-red-500 mt-2 text-center">
+            {error}
+          </p>
+        )}
 
-        {!loading && posts.length === 0 && !error && (
+        {showInitialLoading && (
+          <p className="text-[var(--text2)] opacity-70">
+            {t("rightSidebar.loading", "Loading...")}
+          </p>
+        )}
+
+        {showEmptyState && (
           <div className="text-center">
             <h3 className="text-[var(--text2)] font-normal mb-5">
               {t("rightSidebar.empty.title")}
             </h3>
 
             <Button
-              onClick={reload}
+              onClick={handleReload}
               label={t("rightSidebar.empty.action")}
               type="button"
               variant="primary"
+              disabled={loading}
             >
-              {t("rightSidebar.empty.action")}
+              {loading
+                ? t("rightSidebar.loading", "Loading...")
+                : t("rightSidebar.empty.action")}
             </Button>
           </div>
         )}
 
-        {posts.map((post) => (
-          <PostCard key={`${post.id}-${language}`} id={post.id} title={post.title} />
-        ))}
+        {showPosts &&
+          posts.map((post) => (
+            <PostCard
+              key={post.id}
+              id={post.id}
+              title={post.title}
+            />
+          ))}
 
-        {meta && (
+        {meta && showPosts && (
           <div className="w-full flex items-center justify-between gap-2 mt-4">
             <Button
-              onClick={prev}
+              onClick={handlePrev}
               type="button"
               variant="secondary"
               label={t("rightSidebar.pagination.previous")}
@@ -78,13 +119,15 @@ const RightSidebar = () => {
               {t("rightSidebar.pagination.previous")}
             </Button>
 
-            <div className="text-xs opacity-70 text-[var(--text2)]">
-              {t("rightSidebar.pagination.page")}
-              <div>{meta.page} / {meta.totalPages}</div>
+            <div className="text-xs opacity-70 text-[var(--text2)] text-center">
+              <div>{t("rightSidebar.pagination.page")}</div>
+              <div>
+                {meta.page} / {meta.totalPages}
+              </div>
             </div>
 
             <Button
-              onClick={next}
+              onClick={handleNext}
               type="button"
               variant="secondary"
               label={t("rightSidebar.pagination.next")}

@@ -2,36 +2,66 @@ import { useEffect, useState } from "react";
 
 import type { HallOfFameRow } from "../../../types/hallOfFame.types";
 import { getHallOfFameUsers } from "../../../lib/axios";
+
 import Spinner from "../../../components/atoms/Spinner";
 import AvatarWithBadges from "../../../components/atoms/AvatarWithBadges";
+
 import { useLanguage } from "../../../contexts/LanguageContext";
+
+type HallOfFamePeriod = "week" | "month" | "all";
+
+const LIMIT = 25;
 
 const HallOfFame = () => {
   const { t } = useLanguage();
 
-  const [period, setPeriod] = useState<"week" | "month" | "all">("month");
+  const [period, setPeriod] = useState<HallOfFamePeriod>("month");
   const [items, setItems] = useState<HallOfFameRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    (async () => {
+    let isActive = true;
+
+    const fetchHallOfFame = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const res = await getHallOfFameUsers(period, 25);
+        const res = await getHallOfFameUsers(period, LIMIT);
+
+        if (!isActive) return;
+
         setItems(res.data ?? []);
-      } catch (e: any) {
-        setError(e?.message ?? t("hallOfFame.states.failed"));
+      } catch (err: any) {
+        if (!isActive) return;
+
+        setError(err?.message ?? t("hallOfFame.states.failed"));
       } finally {
-        setLoading(false);
+        if (isActive) {
+          setLoading(false);
+        }
       }
-    })();
+    };
+
+    fetchHallOfFame();
+
+    return () => {
+      isActive = false;
+    };
   }, [period, t]);
 
-  if (loading) return <Spinner />;
-  if (error) return <div className="text-center text-[var(--text1)]">{error}</div>;
+  const handlePeriodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPeriod(e.target.value as HallOfFamePeriod);
+  };
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return <div className="text-center text-[var(--text1)]">{error}</div>;
+  }
 
   return (
     <div className="container max-w-150 md:mt-8">
@@ -43,7 +73,9 @@ const HallOfFame = () => {
         <select
           className="w-full lg:w-auto rounded-lg border border-white/10 bg-[var(--primary)] px-3 py-2 text-[var(--text2)]"
           value={period}
-          onChange={(e) => setPeriod(e.target.value as "week" | "month" | "all")}
+          onChange={handlePeriodChange}
+          aria-label={t("hallOfFame.heading")}
+          disabled={loading}
         >
           <option value="week">{t("hallOfFame.periods.week")}</option>
           <option value="month">{t("hallOfFame.periods.month")}</option>
@@ -66,10 +98,15 @@ const HallOfFame = () => {
             >
               <div>{t("hallOfFame.table.rank")}</div>
               <div>{t("hallOfFame.table.user")}</div>
-
-              <div className="hidden lg:block text-right">{t("hallOfFame.table.wins")}</div>
-              <div className="hidden lg:block text-right">{t("hallOfFame.table.streak")}</div>
-              <div className="hidden lg:block text-right">{t("hallOfFame.table.likes")}</div>
+              <div className="hidden lg:block text-right">
+                {t("hallOfFame.table.wins")}
+              </div>
+              <div className="hidden lg:block text-right">
+                {t("hallOfFame.table.streak")}
+              </div>
+              <div className="hidden lg:block text-right">
+                {t("hallOfFame.table.likes")}
+              </div>
             </div>
 
             {items.map((row, idx) => (
@@ -90,9 +127,15 @@ const HallOfFame = () => {
                   </div>
                 </div>
 
-                <div className="hidden lg:block text-right font-semibold">{row.winsTotal}</div>
-                <div className="hidden lg:block text-right">{row.dailyStreak}</div>
-                <div className="hidden lg:block text-right">{row.likesReceived}</div>
+                <div className="hidden lg:block text-right font-semibold">
+                  {row.winsTotal}
+                </div>
+                <div className="hidden lg:block text-right">
+                  {row.dailyStreak}
+                </div>
+                <div className="hidden lg:block text-right">
+                  {row.likesReceived}
+                </div>
 
                 <div className="lg:hidden col-span-2 -mt-2 text-xs opacity-70">
                   {t("hallOfFame.mobileStats.wins")}: {row.winsTotal} •{" "}

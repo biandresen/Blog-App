@@ -10,6 +10,7 @@ import { safeRequest } from "../../lib/auth";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import { getCharactersLeft } from "../../lib/utils";
 import { MAX_CHARS } from "../../lib/constants";
+import { getApiErrorMessage, toastApiError } from "../../lib/apiErrors";
 
 const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const [body, setBody] = useState("");
@@ -18,10 +19,11 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const { accessToken, setAccessToken } = useAuth();
   const { t } = useLanguage();
 
-  const formError = body.trim() === "";
+  const trimmedBody = body.trim();
+  const formError = trimmedBody === "";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitComment = async () => {
+    if (loading) return;
 
     if (!accessToken) {
       toast.error(t("commentForm.toasts.mustBeLoggedIn"));
@@ -36,31 +38,37 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
     try {
       setLoading(true);
 
-      const res = await safeRequest(addComment, accessToken, setAccessToken, postId, body);
+      const res = await safeRequest(
+        addComment,
+        accessToken,
+        setAccessToken,
+        postId,
+        trimmedBody
+      );
 
       if (res.statusCode !== 201) {
-        toast.error(res.message ?? t("commentForm.toasts.requestFailed"));
-        throw new Error(t("commentForm.toasts.requestFailed"));
+        throw new Error(res.message ?? t("commentForm.toasts.requestFailed"));
       }
-
-      toast.success(t("commentForm.toasts.published"));
 
       onCommentAdded(res.data);
       setBody("");
-    } catch (err: any) {
-      if (err?.message?.includes("token")) {
-        toast.error(t("commentForm.toasts.sessionExpired"));
-      } else {
-        toast.error(err?.message || t("commentForm.toasts.failed"));
-      }
 
-      console.error("Failed to publish comment:", err);
+      toast.success(t("commentForm.toasts.published"));
+    } catch (err: any) {
+      toastApiError(err, t("commentForm.toasts.failed"));
     } finally {
       setLoading(false);
     }
   };
 
-  const handleKeyDown = useSubmitOnEnter(() => handleSubmit(new Event("submit") as any));
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await submitComment();
+  };
+
+  const handleKeyDown = useSubmitOnEnter(() => {
+    void submitComment();
+  });
 
   return (
     <form
@@ -71,12 +79,16 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
         <textarea
           value={body}
           onChange={(e) => {
-            if (e.target.value.length <= MAX_CHARS.BODY) setBody(e.target.value);
+            if (e.target.value.length <= MAX_CHARS.BODY) {
+              setBody(e.target.value);
+            }
           }}
           placeholder={t("commentForm.placeholder")}
           onKeyDown={handleKeyDown}
           className="rounded-2xl p-3 w-full bg-[var(--bg)] mb-3 text-sm md:text-lg/6"
+          aria-label={t("commentForm.placeholder")}
         />
+
         <span className="absolute bottom-5 right-5 opacity-80 text-xs text-[var(--text1)]">
           {getCharactersLeft(body, MAX_CHARS.BODY)}
         </span>
@@ -86,9 +98,11 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
         title={t("commentForm.aria.submitTitle")}
         type="submit"
         disabled={loading}
-        className="ml-auto text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)]/20 text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100"
+        className="ml-auto text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)]/20 text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? t("commentForm.actions.posting") : t("commentForm.actions.addComment")}{" "}
+        {loading
+          ? t("commentForm.actions.posting")
+          : t("commentForm.actions.addComment")}{" "}
         <IoSend className="text-[var(--button3)] mt-0.5 lg:mt-1 ml-2" />
       </button>
     </form>

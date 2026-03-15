@@ -1,48 +1,58 @@
+import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { ImSearch } from "react-icons/im";
-import { useEffect, useState } from "react";
-import useDebounce from "../../hooks/useDebounce";
+
 import { MAX_CHARS } from "../../lib/constants";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-const Searchbar = ({ handleSearch }: { handleSearch: (input: string) => void }) => {
-  const [searchInput, setSearchInput] = useState<string>("");
-  const debouncedSearch = useDebounce(searchInput, 300);
+type SearchbarProps = {
+  handleSearch: (input: string) => void;
+};
+
+const Searchbar = ({ handleSearch }: SearchbarProps) => {
+  const [searchInput, setSearchInput] = useState("");
   const { t } = useLanguage();
 
-  // Automatically call search when user stops typing
-  useEffect(() => {
-    handleSearch(debouncedSearch);
-  }, [debouncedSearch, handleSearch]);
+  const handleChange = (value: string) => {
+    if (value.length > MAX_CHARS.SEARCH) return;
+
+    setSearchInput(value);
+    handleSearch(value);
+  };
 
   const resetSearch = () => {
     setSearchInput("");
+    handleSearch("");
   };
+
   return (
     <div className="flex items-center bg-[var(--primary)] p-4 rounded-full max-w-[100%] xl:w-1/2 mx-auto">
       <section className="flex items-center bg-[var(--primary-shade)] p-4 rounded-full w-full justify-between">
-        <div className="flex">
+        <div className="flex items-center w-full min-w-0">
           <button
-            onClick={() => handleSearch(searchInput)}
             type="button"
-            className="text-[var(--text2)]"
-            aria-label="Search jokes"
+            onClick={() => handleSearch(searchInput)}
+            className="text-[var(--text2)] shrink-0"
+            aria-label={t("search.actions.search", "Search")}
           >
             <ImSearch size={25} />
           </button>
+
           <input
             value={searchInput}
-            onChange={(e) => {if (e.target.value.length <= MAX_CHARS.SEARCH) setSearchInput(e.target.value)}}
+            onChange={(e) => handleChange(e.target.value)}
             type="text"
             placeholder={t("search.placeholder")}
-            className="bg-transparent outline-none text-[var(--text2)] w-full ml-4 text-sm sm:text-lg lg:text-2xl"
+            aria-label={t("search.placeholder")}
+            className="bg-transparent outline-none text-[var(--text2)] w-full ml-4 text-sm sm:text-lg lg:text-2xl min-w-0"
           />
         </div>
+
         <button
-          onClick={resetSearch}
           type="button"
-          className="text-[var(--text2)]"
-          aria-label="Close search bar"
+          onClick={resetSearch}
+          className="text-[var(--text2)] shrink-0"
+          aria-label={t("search.actions.clear", "Clear search")}
         >
           <RxCross2 size={25} />
         </button>

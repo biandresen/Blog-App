@@ -180,7 +180,7 @@ useEffect(() => {
     };
 
     try {
-      const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id, language);
+      const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
       if (res.statusCode === 200 || res.statusCode === 201) {
         setLikedList((prev) => {
           if (hasLiked) {
@@ -267,7 +267,7 @@ const handleDeletePost = async (postId: number) => {
   try {
     if (!accessToken) return;
 
-    const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody, language);
+    const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody);
     if (res.statusCode !== 200) throw new Error("Request failed");
 
     toast.success(t("post.toasts.commentEdited"));
@@ -278,11 +278,11 @@ const handleDeletePost = async (postId: number) => {
   }
 };
 
-const handleDeleteComment = async (_authorId: number, commentId: number) => {
+const handleDeleteComment = async (commentId: number) => {
   try {
     if (!accessToken) return;
 
-    const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId, language);
+    const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId);
     if (res.statusCode !== 200) throw new Error("Request failed");
 
     toast.success(t("post.toasts.commentDeleted"));

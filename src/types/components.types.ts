@@ -38,7 +38,7 @@ export interface CommentProps {
   date: string;
   comment: string;
   onEdit: (commentId: number, newBody: string) => void;
-  onDelete: (authorId: number, commentId: number) => void;
+  onDelete: (commentId: number) => void;
 }
 
 export interface LeftSidebarProps {
