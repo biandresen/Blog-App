@@ -25,6 +25,7 @@ import type { User } from "../../types/context.types";
 import { usePagination } from "../../hooks/usePagination";
 import { useLanguage } from "../../contexts/LanguageContext";
 import Spinner from "../atoms/Spinner";
+import { postDeletedEvent } from "../../lib/events";
 
 const Post = ({
   post,
@@ -71,6 +72,7 @@ useEffect(() => {
 
   const args = useMemo<any[]>(() => [post.id, "desc", language], [post.id, language]);
   const noopSetAccessToken = useMemo(() => () => {}, []);
+
 
   const {
     items: comments,
@@ -254,8 +256,12 @@ const handleDeletePost = async (postId: number) => {
     // ✅ Tell parent to remove it from its list
     onPostDeleted?.(postId);
 
-    // Optional: only navigate if you're on a page where it makes sense
-    // navigate("/jokes");
+  window.dispatchEvent(
+    new CustomEvent(postDeletedEvent, {
+      detail: { postId },
+    })
+  );
+
   } catch (err: any) {
     toast.error(t("post.toasts.deleteJokeFailed"));
     console.error("Failed to delete joke", err.message);

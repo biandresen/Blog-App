@@ -128,54 +128,62 @@ export const translations = {
     },
 
     about: {
-      heading: "OM DADJOKES",
+  heading: "OM DADJOKES",
 
-      paragraph1:
-        "Dadjokes er en enkel plattform dedikert til én ting: herlig dårlige pappavitser.",
+  paragraph1:
+    "Dadjokes er en enkel plattform dedikert til én ting: herlig dårlige dad jokes.",
 
-      paragraph2:
-        "Registrerte brukere kan lage vitser, like vitser og kommentere — slik at fellesskapet kan løfte frem de beste (eller verste) pappavitsene.",
+  paragraph2:
+    "Registrerte brukere kan lage vitser, like vitser og kommentere — og dermed hjelpe fellesskapet med å løfte frem den beste (eller verste) pappahumoren.",
 
-      paragraph3:
-        "Hver dag velges en eksisterende vits automatisk som Dagens Vits. Ved å se dagens vits flere dager på rad bygger du en streak.",
+  paragraph3:
+    "Hver dag velges en eksisterende vits automatisk ut som Dagens Vits. Hvis du ser dagens vits jevnlig, bygger du opp streaken din.",
 
-      paragraph4:
-        "Hvis du noen gang har sagt «Hei sulten, jeg er pappa», er du på riktig sted.",
+  paragraph4:
+    "Dadjokes støtter både engelsk og norsk. Appen fungerer som to språkspesifikke versjoner i én, slik at vitser, fremhevet innhold, rangeringer og søkeresultater følger det valgte språket.",
 
-      featuresHeading: "FUNKSJONER",
+  paragraph5:
+    "Hvis du noen gang har sagt «Hei sulten, jeg er pappa», er du på riktig sted.",
 
-      features: [
-        {
-          title: "✍️ Lag, lik og kommenter",
-          description:
-            "Lag dine egne vitser, lik vitser du liker og kommenter for å delta i samtalen.",
-        },
-        {
-          title: "📅 Dagens vits",
-          description:
-            "En eksisterende vits blir valgt hver dag. Forfatteren får et eget badge.",
-        },
-        {
-          title: "🔥 Daglig streak",
-          description:
-            "Se dagens vits flere dager på rad for å bygge streak og slå din beste streak.",
-        },
-        {
-          title: "🏅 Badges",
-          description:
-            "Få badges for prestasjoner som Dagens Vits, Trending og mer.",
-        },
-        {
-          title: "📊 Badge-seksjon og leaderboard",
-          description:
-            "Se brukere og vitser med badges og toppresultater.",
-        },
-        {
-          title: "🎲 Tilfeldig vits",
-          description:
-            "Få en tilfeldig vits med ett klikk.",
-        },
-      ],
+  featuresHeading: "FUNKSJONER",
+
+  features: [
+    {
+      title: "✍️ Lag, lik og kommenter",
+      description:
+        "Lag dine egne vitser, lik vitser du synes er morsomme, og kommenter for å bli med i samtalen.",
+    },
+    {
+      title: "🌍 Engelsk og norsk",
+      description:
+        "Bytt mellom engelsk og norsk. Innhold som vitser, fremhevede sider, rangeringer og søkeresultater følger det valgte språket.",
+    },
+    {
+      title: "📅 Dagens vits",
+      description:
+        "En eksisterende vits blir fremhevet hver dag på siden for Dagens Vits.",
+    },
+    {
+      title: "🔥 Daglig streak",
+      description:
+        "Se dagens vits flere dager på rad for å bygge streaken din.",
+    },
+    {
+      title: "🏅 Merker",
+      description:
+        "Tjen merker for prestasjoner som Dagens Vits og Trending.",
+    },
+    {
+      title: "📊 Topplister",
+      description:
+        "Se brukere og vitser med spesielle merker og oppdag topprangerte bidrag.",
+    },
+    {
+      title: "🎲 Tilfeldig vits",
+      description:
+        "Bla gjennom tilfeldige vitser med en knapp for å få en ny tilfeldig vits.",
+    },
+  ],
     },
 
     contact: {
@@ -1266,54 +1274,62 @@ export const translations = {
     },
 
     about: {
-      heading: "ABOUT DADJOKES",
+  heading: "ABOUT DADJOKES",
 
-      paragraph1:
-        "Dadjokes is a simple platform dedicated to one thing: gloriously bad dad jokes.",
+  paragraph1:
+    "Dadjokes is a simple platform dedicated to one thing: gloriously bad dad jokes.",
 
-      paragraph2:
-        "Registered users can create jokes, like jokes, and comment — helping the community surface the best (or worst) dad humor.",
+  paragraph2:
+    "Registered users can create jokes, like jokes, and comment — helping the community surface the best (or worst) dad humor.",
 
-      paragraph3:
-        "Every day, an existing joke is automatically selected as the Joke of the Day. Viewing the daily joke consistently builds your daily streak.",
+  paragraph3:
+    "Every day, an existing joke is automatically selected as the Joke of the Day. Viewing the daily joke consistently builds your daily streak.",
 
-      paragraph4:
-        "If you've ever said 'Hi hungry, I'm dad', you're in the right place.",
+  paragraph4:
+    "Dadjokes supports both English and Norwegian. The app works like two language-specific versions in one, so jokes, featured content, rankings, and search results follow the selected language.",
 
-      featuresHeading: "FEATURES",
+  paragraph5:
+    "If you've ever said 'Hi hungry, I'm dad', you're in the right place.",
 
-      features: [
-        {
-          title: "✍️ Create, Like & Comment",
-          description:
-            "Create your own jokes, like jokes you enjoy, and comment to join the conversation.",
-        },
-        {
-          title: "📅 Joke of the Day",
-          description:
-            "An existing joke is featured every day on the Joke of the Day page.",
-        },
-        {
-          title: "🔥 Daily Streak",
-          description:
-            "View the daily joke multiple days in a row to build your streak.",
-        },
-        {
-          title: "🏅 Badges",
-          description:
-            "Earn badges for achievements like Joke of the Day and Trending.",
-        },
-        {
-          title: "📊 Leaderboards",
-          description:
-            "Browse users and jokes with special badges and see top performers.",
-        },
-        {
-          title: "🎲 Random Joke",
-          description:
-            "Browse random jokes with a button for a new random joke.",
-        },
-      ],
+  featuresHeading: "FEATURES",
+
+  features: [
+    {
+      title: "✍️ Create, Like & Comment",
+      description:
+        "Create your own jokes, like jokes you enjoy, and comment to join the conversation.",
+    },
+    {
+      title: "🌍 English & Norwegian",
+      description:
+        "Switch between English and Norwegian. Content such as jokes, featured pages, rankings, and search results follows the selected language.",
+    },
+    {
+      title: "📅 Joke of the Day",
+      description:
+        "An existing joke is featured every day on the Joke of the Day page.",
+    },
+    {
+      title: "🔥 Daily Streak",
+      description:
+        "View the daily joke multiple days in a row to build your streak.",
+    },
+    {
+      title: "🏅 Badges",
+      description:
+        "Earn badges for achievements like Joke of the Day and Trending.",
+    },
+    {
+      title: "📊 Leaderboards",
+      description:
+        "Browse users and jokes with special badges and see top performers.",
+    },
+    {
+      title: "🎲 Random Joke",
+      description:
+        "Browse random jokes with a button for a new random joke.",
+    },
+  ],
     },
 
     contact: {

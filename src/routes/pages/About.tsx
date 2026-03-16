@@ -25,6 +25,7 @@ const About = () => {
         <p className="about-paragraph">{t("about.paragraph2")}</p>
         <p className="about-paragraph">{t("about.paragraph3")}</p>
         <p className="about-paragraph">{t("about.paragraph4")}</p>
+        <p className="about-paragraph">{t("about.paragraph5")}</p>
 
         <section className="mt-10">
           <h3 className="text-[var(--text1)] text-2xl font-bold mb-4">

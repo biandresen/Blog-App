@@ -40,7 +40,6 @@ const SingleJoke = () => {
         return;
       }
 
-      // If post exists in context, use it immediately
       if (contextPost) {
         setLocalPost(contextPost);
         setError(null);
@@ -101,6 +100,16 @@ const SingleJoke = () => {
     post && post.authorId?.toString() === user?.id?.toString();
 
   const isDraft = post?.published === false;
+
+  const handlePostUpdated = (updated: PostType) => {
+    setLocalPost(updated);
+  };
+
+  const handlePostDeleted = () => {
+    setLocalPost(null);
+    setError(null);
+    setNotAvailableInLanguage(false);
+  };
 
   if (loading && !post) {
     return <Spinner />;
@@ -165,7 +174,8 @@ const SingleJoke = () => {
           <Post
             key={`${post.id}-${language}`}
             post={post}
-            onPostUpdated={(updated) => setLocalPost(updated)}
+            onPostUpdated={handlePostUpdated}
+            onPostDeleted={handlePostDeleted}
           />
         )}
       </section>

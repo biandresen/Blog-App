@@ -60,6 +60,18 @@ const Popular = () => {
     setShowMiniPosts((prev) => !prev);
   };
 
+  const handlePostDeleted = (deletedPostId: number) => {
+    setPosts((prev) => prev.filter((post) => post.id !== deletedPostId));
+  };
+
+  const handlePostUpdated = (updatedPost: PostType) => {
+    setPosts((prev) =>
+      prev
+        .map((post) => (post.id === updatedPost.id ? updatedPost : post))
+        .filter((post) => post.published !== false)
+    );
+  };
+
   if (loading) {
     return <Spinner />;
   }
@@ -113,7 +125,12 @@ const Popular = () => {
                 likes={post.likes.length}
               />
             ) : (
-              <Post key={post.id} post={post} />
+              <Post
+                key={post.id}
+                post={post}
+                onPostUpdated={handlePostUpdated}
+                onPostDeleted={handlePostDeleted}
+              />
             )
           )
         )}

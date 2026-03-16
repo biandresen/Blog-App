@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { postDeletedEvent } from "../../lib/events";
 
 import PostCard from "./PostCard";
 import Button from "../atoms/Button";
@@ -16,6 +17,8 @@ const NAV_LIMIT = 4;
 const RightSidebar = () => {
   const { accessToken, setAccessToken } = useAuth();
   const { language, t } = useLanguage();
+
+  const [hiddenPostIds, setHiddenPostIds] = useState<number[]>([]);
 
   const args = useMemo(() => [language], [language]);
   const resetKey = useMemo(() => `right-nav:${language}`, [language]);
@@ -39,9 +42,14 @@ const RightSidebar = () => {
     resetKey,
   });
 
-  const showInitialLoading = loading && posts.length === 0;
-  const showEmptyState = !loading && posts.length === 0 && !error;
-  const showPosts = posts.length > 0;
+  const visiblePosts = useMemo(
+    () => posts.filter((post) => !hiddenPostIds.includes(post.id)),
+    [posts, hiddenPostIds]
+  );
+
+  const showInitialLoading = loading && visiblePosts.length === 0;
+  const showEmptyState = !loading && visiblePosts.length === 0 && !error;
+  const showPosts = visiblePosts.length > 0;
 
   const handleReload = () => {
     if (loading) return;
@@ -58,6 +66,36 @@ const RightSidebar = () => {
     next();
   };
 
+  useEffect(() => {
+    const handlePostDeleted = (event: Event) => {
+      const customEvent = event as CustomEvent<{ postId?: number }>;
+      const deletedPostId = customEvent.detail?.postId;
+
+      if (typeof deletedPostId !== "number") return;
+
+      // Remove instantly from UI
+      setHiddenPostIds((prev) =>
+        prev.includes(deletedPostId) ? prev : [...prev, deletedPostId]
+      );
+
+      // Then refetch current page so another post can fill the slot
+      reload();
+    };
+
+    window.addEventListener(postDeletedEvent, handlePostDeleted);
+
+    return () => {
+      window.removeEventListener(postDeletedEvent, handlePostDeleted);
+    };
+  }, [reload]);
+
+  useEffect(() => {
+    // Clean up any ids that no longer exist in fetched results
+    setHiddenPostIds((prev) =>
+      prev.filter((hiddenId) => posts.some((post) => post.id === hiddenId))
+    );
+  }, [posts]);
+
   return (
     <aside className="bg-[var(--primary-shade)] absolute right-0 w-full h-[calc(100vh-3.8rem)] md:max-w-55 lg:max-w-65 md:static overflow-y-auto z-40">
       <h3 className="text-center text-3xl md:text-2xl mt-8 md:mt-16">
@@ -65,11 +103,7 @@ const RightSidebar = () => {
       </h3>
 
       <div className="flex md:flex-col flex-wrap items-center justify-center px-4 py-8 gap-4">
-        {error && (
-          <p className="text-red-500 mt-2 text-center">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
 
         {showInitialLoading && (
           <p className="text-[var(--text2)] opacity-70">
@@ -98,12 +132,8 @@ const RightSidebar = () => {
         )}
 
         {showPosts &&
-          posts.map((post) => (
-            <PostCard
-              key={post.id}
-              id={post.id}
-              title={post.title}
-            />
+          visiblePosts.map((post) => (
+            <PostCard key={post.id} id={post.id} title={post.title} />
           ))}
 
         {meta && showPosts && (
