@@ -244,11 +244,10 @@ export const getAllPosts = async (
   }
 };
 
-export const getPost = async (postId: number, language?: AppLanguage) => {
+export const getPost = async (accessToken: token, postId: number, language?: AppLanguage) => {
   try {
     const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}/${postId}`, {
-      headers: { ...languageHeaders(language) },
-      withCredentials: true,
+      headers: { Authorization: `Bearer ${accessToken}`, ...languageHeaders(language) },
     });
     return res.data;
   } catch (err: any) {

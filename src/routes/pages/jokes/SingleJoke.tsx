@@ -10,6 +10,7 @@ import Post from "../../../components/organisms/Post";
 
 import { getPost } from "../../../lib/axios";
 import type { PostType } from "../../../types/post.types";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const SingleJoke = () => {
   const [localPost, setLocalPost] = useState<PostType | null>(null);
@@ -18,6 +19,7 @@ const SingleJoke = () => {
   const [notAvailableInLanguage, setNotAvailableInLanguage] = useState(false);
 
   const { id: postId } = useParams<{ id: string }>();
+  const { accessToken } = useAuth();
   const { posts } = usePosts();
   const { user } = useUser();
   const { language, t } = useLanguage();
@@ -52,7 +54,7 @@ const SingleJoke = () => {
         setError(null);
         setNotAvailableInLanguage(false);
 
-        const res = await getPost(parsedPostId, language);
+        const res = await getPost(accessToken, parsedPostId, language);
 
         if (cancelled) return;
 
