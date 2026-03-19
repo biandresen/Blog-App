@@ -15,7 +15,13 @@ type FilteredPostType = PostType & { matches?: string[] };
 const LIMIT = 15;
 
 function computeMatches(post: PostType, q: string, filters: SearchFilters): string[] {
-  const input = q.toLowerCase();
+  const input = q.trim().toLowerCase();
+  if (!input) return [];
+
+  console.log(filters)
+  console.log(post)
+
+
   const matches: string[] = [];
 
   if (filters.title && post.title?.toLowerCase().includes(input)) {
@@ -26,16 +32,15 @@ function computeMatches(post: PostType, q: string, filters: SearchFilters): stri
     matches.push("body");
   }
 
-  if (
-    filters.comments &&
-    post.comments?.some((comment) => comment.body?.toLowerCase().includes(input))
-  ) {
+  if (filters.comments) {
     matches.push("comment");
   }
 
   if (
     filters.tags &&
-    post.tags?.some((tag) => tag.name?.toLowerCase().includes(input))
+    post.tags?.some((tag) =>
+      tag.name?.toLowerCase().includes(input)
+    )
   ) {
     matches.push("tag");
   }

@@ -1,4 +1,3 @@
-// src/hooks/usePagination.ts
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { token } from "../types/context.types";
 import { safeRequest } from "../lib/auth";
@@ -23,15 +22,31 @@ type Options = {
   limit?: number;
   args?: any[];
   enabled?: boolean;
-
-  // NEW:
-  mode?: Mode; // "paged" = replace, "infinite" = append
-  autoLoadMore?: boolean; // if true + mode=infinite => intersection observer
-  rootMargin?: string; // e.g. "600px"
-
-  // Use this to reset when filters change (sort, tag, query, etc.)
+  mode?: Mode;
+  autoLoadMore?: boolean;
+  rootMargin?: string;
   resetKey?: string | number;
 };
+
+function dedupeById<T>(items: T[]): T[] {
+  const seen = new Set<any>();
+  const result: T[] = [];
+
+  for (const item of items as any[]) {
+    const id = item?.id;
+
+    if (id == null) {
+      result.push(item);
+      continue;
+    }
+
+    if (seen.has(id)) continue;
+    seen.add(id);
+    result.push(item);
+  }
+
+  return result;
+}
 
 export function usePagination<T>(fetchPage: FetchPage<T>, opts: Options) {
   const {
@@ -40,14 +55,12 @@ export function usePagination<T>(fetchPage: FetchPage<T>, opts: Options) {
     limit = 15,
     args = EMPTY_ARGS,
     enabled = true,
-
     mode = "paged",
     autoLoadMore = false,
     rootMargin = "600px",
     resetKey,
   } = opts;
 
-  // keep args stable (caller should still memoize if building arrays inline)
   const stableArgs = useMemo(() => args, [args]);
 
   const [items, setItems] = useState<T[]>([]);
@@ -56,6 +69,7 @@ export function usePagination<T>(fetchPage: FetchPage<T>, opts: Options) {
   const [error, setError] = useState<string | null>(null);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const requestIdRef = useRef(0);
 
   const page = meta?.page ?? 1;
   const canPrev = meta?.hasPrev ?? page > 1;
@@ -64,57 +78,86 @@ export function usePagination<T>(fetchPage: FetchPage<T>, opts: Options) {
   const load = useCallback(
     async (targetPage: number, behavior: "replace" | "append") => {
       if (!enabled) return;
+
+      const requestId = ++requestIdRef.current;
+
       setLoading(true);
       setError(null);
 
       try {
-        const res = await safeRequest(fetchPage, accessToken, setAccessToken, targetPage, limit, ...stableArgs);
+        const res = await safeRequest(
+          fetchPage,
+          accessToken,
+          setAccessToken,
+          targetPage,
+          limit,
+          ...stableArgs
+        );
+
+        // Ignore stale responses
+        if (requestId !== requestIdRef.current) return;
 
         setMeta(res.meta ?? null);
         setItems((prev) => {
           const nextData = res.data ?? [];
-          return behavior === "append" ? [...prev, ...nextData] : nextData;
+
+          if (behavior === "append") {
+            return dedupeById([...prev, ...nextData]);
+          }
+
+          return nextData;
         });
       } catch (e: any) {
+        if (requestId !== requestIdRef.current) return;
         setError(e?.message ?? "Failed to load");
       } finally {
-        setLoading(false);
+        if (requestId === requestIdRef.current) {
+          setLoading(false);
+        }
       }
     },
     [enabled, fetchPage, accessToken, setAccessToken, limit, stableArgs]
   );
 
-  // initial/reset load
   useEffect(() => {
-    if (!enabled) return;
+    requestIdRef.current += 1;
+
+    if (!enabled) {
+      setItems([]);
+      setMeta(null);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
     setItems([]);
     setMeta(null);
     setError(null);
-    load(1, "replace");
-    // IMPORTANT: resetKey is what you change when filters change
+
+    void load(1, "replace");
   }, [enabled, load, resetKey]);
 
   const prev = useCallback(() => {
     if (mode !== "paged") return;
     if (!canPrev || loading) return;
-    load(Math.max(1, page - 1), "replace");
+    void load(Math.max(1, page - 1), "replace");
   }, [mode, canPrev, loading, load, page]);
 
   const next = useCallback(() => {
+    if (!canNext || loading) return;
+
     if (mode === "paged") {
-      if (!canNext || loading) return;
-      load(page + 1, "replace");
+      void load(page + 1, "replace");
       return;
     }
 
-    // mode === "infinite"
-    if (!canNext || loading) return;
-    load(page + 1, "append");
+    void load(page + 1, "append");
   }, [mode, canNext, loading, load, page]);
 
-  const reload = useCallback(() => load(1, "replace"), [load]);
+  const reload = useCallback(() => {
+    void load(1, "replace");
+  }, [load]);
 
-  // auto infinite scroll
   useEffect(() => {
     if (!enabled) return;
     if (mode !== "infinite") return;
@@ -126,51 +169,58 @@ export function usePagination<T>(fetchPage: FetchPage<T>, opts: Options) {
     const obs = new IntersectionObserver(
       (entries) => {
         const first = entries[0];
-        if (first?.isIntersecting) next();
+        if (first?.isIntersecting) {
+          next();
+        }
       },
       { root: null, rootMargin, threshold: 0 }
     );
 
     obs.observe(el);
-    return () => obs.disconnect();
+
+    return () => {
+      obs.disconnect();
+    };
   }, [enabled, mode, autoLoadMore, rootMargin, next]);
 
-    const updateItem = useCallback((id: any, updater: (prev: T) => T) => {
+  const updateItem = useCallback((id: any, updater: (prev: T) => T) => {
     setItems((prev) =>
-      prev.map((it: any) => (it?.id === id ? updater(it) : it))
+      prev.map((item: any) => (item?.id === id ? updater(item) : item))
     );
   }, []);
 
   const replaceItem = useCallback((id: any, nextItem: T) => {
     setItems((prev) =>
-      prev.map((it: any) => ((it as any)?.id === id ? nextItem : it))
+      prev.map((item: any) => (item?.id === id ? nextItem : item))
     );
   }, []);
 
   const removeItem = useCallback((id: any) => {
-    setItems((prev) => prev.filter((it: any) => it?.id !== id));
+    setItems((prev) => prev.filter((item: any) => item?.id !== id));
+    setMeta((prev) =>
+      prev
+        ? {
+            ...prev,
+            total: Math.max(0, prev.total - 1),
+          }
+        : prev
+    );
   }, []);
-
 
   return {
     items,
     meta,
     loading,
     error,
-
     page,
     canPrev,
     canNext,
-
     prev,
-    next, // in infinite mode, this becomes "load more"
+    next,
     reload,
-
-    // only used when mode="infinite" + autoLoadMore=true
     sentinelRef,
-
     updateItem,
     replaceItem,
-    removeItem
+    removeItem,
   };
 }

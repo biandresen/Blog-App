@@ -624,16 +624,20 @@ export const searchPosts = async (
   language?: AppLanguage
 ): Promise<PaginatedResponse<PostType>> => {
   const params = new URLSearchParams();
+
   params.set("page", String(page));
   params.set("limit", String(limit));
   params.set("sort", sort);
-  if (searchParameters) params.set("searchParameters", searchParameters);
+
+  if (searchParameters) {
+    params.set("searchParameters", searchParameters);
+  }
 
   if (filters) {
-    params.set("inTitle", String(filters.title));
-    params.set("inBody", String(filters.body));
-    params.set("inComments", String(filters.comments));
-    params.set("inTags", String(filters.tags));
+    params.set("title", String(filters.title));
+    params.set("body", String(filters.body));
+    params.set("comments", String(filters.comments));
+    params.set("tags", String(filters.tags));
   }
 
   try {
