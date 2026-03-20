@@ -26,6 +26,8 @@ import { usePagination } from "../../hooks/usePagination";
 import { useLanguage } from "../../contexts/LanguageContext";
 import Spinner from "../atoms/Spinner";
 import { postDeletedEvent } from "../../lib/events";
+import { moderateFields } from "../../lib/moderation";
+import { getApiErrorMessage } from "../../lib/apiErrors";
 
 const Post = ({
   post,
@@ -203,9 +205,27 @@ useEffect(() => {
     }
   };
 
-  const handleEditPost = async (postId: number, newTitle: string, newBody: string, editedTags: string[]) => {
+  const handleEditPost = async (
+  postId: number,
+  newTitle: string,
+  newBody: string,
+  editedTags: string[]
+) => {
   try {
     if (!accessToken) return;
+
+    const moderation = moderateFields(
+      {
+        title: newTitle,
+        body: newBody,
+        tags: editedTags.join(" "),
+      },
+    );
+
+    if (moderation.blocked) {
+      toast.error(t("validation.blockedContent"));
+      return;
+    }
 
     const res = await safeRequest(
       editPost,
@@ -219,26 +239,39 @@ useEffect(() => {
       language
     );
 
-    if (res.statusCode !== 200) throw new Error("Request failed");
+    if (res.statusCode !== 200) {
+      throw new Error(res.message || t("post.toasts.editJokeFailed"));
+    }
 
     const updatedPost: PostType = res.data;
 
-    // ✅ Update local Post component state so it re-renders immediately
     setIsEditing(false);
     setEditedTitle(updatedPost.title);
     setEditedBody(updatedPost.body);
     setEditedTags(updatedPost.tags.map((t) => t.name).join(", "));
     setPublished(updatedPost.published);
 
-    // ✅ Tell parent list to patch/remove/whatever it wants
     onPostUpdated?.(updatedPost);
 
     toast.success(
-  `${t("post.toasts.postEdited")} ${updatedPost.published ? t("post.toasts.published") : t("post.toasts.unpublished")}`
-);
+      `${t("post.toasts.postEdited")} ${
+        updatedPost.published
+          ? t("post.toasts.published")
+          : t("post.toasts.unpublished")
+      }`
+    );
   } catch (err: any) {
-    toast.error(t("post.toasts.editJokeFailed"));
-    console.error("Failed to edit joke", err?.response?.data?.errors || err.message);
+    const backendFieldErrors = err?.response?.data?.errors;
+    const blockedContentError = Array.isArray(backendFieldErrors)
+      ? backendFieldErrors.find((error: any) => error?.field === "content")
+      : null;
+
+    const message =
+      blockedContentError?.message ||
+      getApiErrorMessage(err, t("post.toasts.editJokeFailed"));
+
+    toast.error(message);
+    console.error("Failed to edit joke", err?.response?.data || err?.message);
   }
 };
 
@@ -273,14 +306,41 @@ const handleDeletePost = async (postId: number) => {
   try {
     if (!accessToken) return;
 
-    const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody);
-    if (res.statusCode !== 200) throw new Error("Request failed");
+    const moderation = moderateFields(
+      { comment: newBody },
+    );
+
+    if (moderation.blocked) {
+      toast.error(t("validation.blockedComment"));
+      return;
+    }
+
+    const res = await safeRequest(
+      editComment,
+      accessToken,
+      setAccessToken,
+      commentId,
+      newBody
+    );
+
+    if (res.statusCode !== 200) {
+      throw new Error(res.message || t("post.toasts.editCommentFailed"));
+    }
 
     toast.success(t("post.toasts.commentEdited"));
-    reloadComments(); // ✅ refresh list
+    reloadComments();
   } catch (err: any) {
-    toast.error(t("post.toasts.editCommentFailed"));
-    console.error("Failed to edit comment", err.message);
+    const backendFieldErrors = err?.response?.data?.errors;
+    const blockedCommentError = Array.isArray(backendFieldErrors)
+      ? backendFieldErrors.find((error: any) => error?.field === "comment")
+      : null;
+
+    const message =
+      blockedCommentError?.message ||
+      getApiErrorMessage(err, t("post.toasts.editCommentFailed"));
+
+    toast.error(message);
+    console.error("Failed to edit comment", err?.response?.data || err?.message);
   }
 };
 
@@ -480,7 +540,7 @@ const handleDeleteComment = async (commentId: number) => {
             />
             <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTags, MAX_CHARS.TAGS)}</span>
           </div>
-        ) : post.tags[0].name.length >= 1 ? (
+        ) : post.tags[0]?.name.length >= 1 ? (
           <TagsCard tags={post?.tags} />
         ) : <p className="opacity-0 mb-[-10px]"></p>}
 

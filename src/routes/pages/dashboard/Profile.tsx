@@ -25,6 +25,7 @@ import {
 } from "../../../validators/auth";
 
 import type { User } from "../../../types/context.types";
+import { moderateFields } from "../../../lib/moderation";
 
 const MAX_AVATAR_SIZE = 6 * 1024 * 1024; // 6 MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -32,7 +33,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const Profile = () => {
   const { user, setUser } = useUser();
   const { accessToken, setAccessToken } = useAuth();
-  const { t, tf } = useLanguage();
+  const { t, tf} = useLanguage();
   const navigate = useNavigate();
 
   // --------------------------------------------------
@@ -157,6 +158,17 @@ const Profile = () => {
 
     if (invalidForm || isSubmitting) return;
     if (!accessToken || !user?.id) return;
+
+        const usernameModeration = moderateFields(
+      { username: username.trim() },
+    );
+
+    if (usernameModeration.blocked) {
+      setInput1Valid(false);
+      setErrorMsg1(t("validation.blockedUsername"));
+      toast.error(t("validation.blockedUsername"));
+      return;
+    }
 
     const updates: Record<string, unknown> = {
       username: username.trim(),
@@ -334,8 +346,25 @@ const Profile = () => {
                 setUsername(value);
 
                 const validationKey = usernameValidator(value);
-                setInput1Valid(!validationKey);
-                setErrorMsg1(validationKey ? t(validationKey) : "");
+
+                if (validationKey) {
+                  setInput1Valid(false);
+                  setErrorMsg1(t(validationKey));
+                  return;
+                }
+
+                const moderation = moderateFields(
+                  { username: value.trim() },
+                );
+
+                if (moderation.blocked) {
+                  setInput1Valid(false);
+                  setErrorMsg1(t("validation.blockedUsername"));
+                  return;
+                }
+
+                setInput1Valid(true);
+                setErrorMsg1("");
               }}
             />
 
@@ -476,7 +505,7 @@ const Profile = () => {
           <Button
             type="submit"
             variant="tertiary"
-            className="w-full mt-auto"
+            className="w-full mt-auto disabled:cursor-not-allowed disabled:opacity-50"
             label={t("profile.actions.update")}
             disabled={invalidForm || isSubmitting || isDeleting}
           >

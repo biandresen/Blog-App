@@ -10,7 +10,8 @@ import { safeRequest } from "../../lib/auth";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import { getCharactersLeft } from "../../lib/utils";
 import { MAX_CHARS } from "../../lib/constants";
-import { getApiErrorMessage, toastApiError } from "../../lib/apiErrors";
+import { toastApiError } from "../../lib/apiErrors";
+import { moderateFields } from "../../lib/moderation";
 
 const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const [body, setBody] = useState("");
@@ -32,6 +33,15 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
 
     if (formError) {
       toast.error(t("commentForm.toasts.empty"));
+      return;
+    }
+
+    const moderation = moderateFields(
+    { comment: body},
+    );
+
+    if (moderation.blocked) {
+      toast.error(t("validation.blockedComment"));
       return;
     }
 

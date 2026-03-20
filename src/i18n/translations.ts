@@ -41,6 +41,9 @@ export const translations = {
       loginPassword: {
         required: "Skriv inn passord",
       },
+      blockedComment: "Det som ble skrevet inneholder ord som ikke er lov å bruke.",
+      blockedContent: "Det som ble skrevet inneholder ord som ikke er lov å bruke.",
+      blockedUsername: "Dette brukernavnet inneholder språk som ikke er tillatt.",
     },
 
     contactTemplate: {
@@ -1149,7 +1152,7 @@ export const translations = {
       loading: "loading..."
     },
 
-     extra: {
+    extra: {
       aria: {
         scrollButton: "Scroll to the top"
       },
@@ -1185,6 +1188,10 @@ export const translations = {
       loginPassword: {
         required: "Enter your password",
       },
+      blockedComment: "This content contains language that is not allowed.",
+      blockedContent: "This content contains language that is not allowed.",
+      blockedUsername: "This username contains language that is not allowed.",
+
     },
 
     contactTemplate: {

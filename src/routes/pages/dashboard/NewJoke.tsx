@@ -16,6 +16,7 @@ import { useLanguage } from "../../../contexts/LanguageContext";
 
 import { useAutosaveDraft } from "../../../hooks/useAutosaveDraft";
 import { useUnsavedChangesWarning } from "../../../hooks/useUnsavedChangesWarning";
+import { moderateFields } from "../../../lib/moderation";
 
 const NewJoke = () => {
   const [postErrors, setPostErrors] = useState<string[]>([]);
@@ -67,6 +68,19 @@ const NewJoke = () => {
       return;
     }
 
+      const moderation = moderateFields(
+    {
+      title,
+      body,
+      tags: parsedTags.join(" "),
+    },
+  );
+
+  if (moderation.blocked) {
+    toast.error(t("validation.blockedContent"));
+    return;
+  }
+
     try {
       setIsSavingDraft(true);
       setPostErrors([]);
@@ -110,6 +124,19 @@ const NewJoke = () => {
       toast.error(t("newPost.toasts.mustBeLoggedInPublish"));
       return;
     }
+
+    const moderation = moderateFields(
+    {
+      title,
+      body,
+      tags: parsedTags.join(" "),
+    },
+  );
+
+  if (moderation.blocked) {
+    toast.error(t("validation.blockedContent"));
+    return;
+  }
 
     try {
       setIsPublishing(true);

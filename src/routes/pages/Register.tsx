@@ -18,6 +18,7 @@ import {
 
 import { registerUser } from "../../lib/axios";
 import { toastApiError } from "../../lib/apiErrors";
+import { moderateFields } from "../../lib/moderation";
 
 type BackendFieldError = {
   field: string;
@@ -30,7 +31,7 @@ const Register = () => {
   // --------------------------------------------------
   const { setAccessToken, setIsAuthenticated } = useAuth();
   const { setUser } = useUser();
-  const { t, tr, tf } = useLanguage();
+  const { t, tr, tf, language } = useLanguage();
 
   const navigate = useNavigate();
 
@@ -152,16 +153,27 @@ const Register = () => {
       return;
     }
 
+        const usernameModeration = moderateFields(
+      { username: username.trim() },
+    );
+
+    if (usernameModeration.blocked) {
+      setInput1Valid(false);
+      setErrorMsg1(t("validation.blockedUsername"));
+      toast.error(t("validation.blockedUsername"));
+      return;
+    }
+
     try {
       setIsSubmitting(true);
 
-      const res = await registerUser({
-        username,
-        email,
-        password,
-        passwordConfirmation,
-        acceptedTerms,
-      });
+    const res = await registerUser({
+      username: username.trim(),
+      email: email.trim(),
+      password,
+      passwordConfirmation,
+      acceptedTerms,
+    });
 
       if (res.statusCode !== 201) {
         throw new Error(res.message || t("register.registrationFailed"));
@@ -235,14 +247,31 @@ const Register = () => {
             placeholder={t("register.usernamePlaceholder")}
             required
             inputValid={input1Valid}
-            onChange={(e) => {
-              const value = e.target.value;
-              setUsername(value);
+                onChange={(e) => {
+                const value = e.target.value;
+                setUsername(value);
 
-              const validationKey = usernameValidator(value);
-              setInput1Valid(!validationKey);
-              setErrorMsg1(validationKey ? t(validationKey) : "");
-            }}
+                const validationKey = usernameValidator(value);
+
+                if (validationKey) {
+                  setInput1Valid(false);
+                  setErrorMsg1(t(validationKey));
+                  return;
+                }
+
+                const moderation = moderateFields(
+                  { username: value.trim() },
+                );
+
+                if (moderation.blocked) {
+                  setInput1Valid(false);
+                  setErrorMsg1(t("validation.blockedUsername"));
+                  return;
+                }
+
+                setInput1Valid(true);
+                setErrorMsg1("");
+              }}
           />
 
           <Input
