@@ -180,7 +180,7 @@ const NewJoke = () => {
         {t("newPost.heading")}
       </h2>
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => {e.preventDefault(); handlePublishPost()}}>
         <div className="relative">
           <Input
             className="text-[var(--text2)] rounded-xl md:text-2xl! mb-2"
@@ -277,9 +277,8 @@ const NewJoke = () => {
           </Button>
 
           <Button
-            type="button"
+            type="submit"
             variant="tertiary"
-            onClick={handlePublishPost}
             className="w-full mt-4"
             disabled={invalidForm || isPublishing || isSavingDraft}
             label={t("newPost.actions.publishJoke")}

@@ -1,7 +1,15 @@
-const BLOCKED_TERMS = [
-  "stupid",
-  "dum",
-];
+import { insultsEN, insultsNO, profanityEN, profanityNO, sexualEN, sexualNO } from "./blockedTerms";
+
+const BLOCKED_TERMS = {
+  profanityNO,
+  insultsNO,
+  sexualNO,
+  profanityEN,
+  insultsEN,
+  sexualEN,
+};
+
+const ALL_BLOCKED = Object.values(BLOCKED_TERMS).flat();
 
 const ZERO_WIDTH_REGEX = /[\u200B-\u200D\uFEFF]/g;
 const DIACRITICS_REGEX = /[\u0300-\u036f]/g;
@@ -127,7 +135,7 @@ export function findBlockedTerms(
   input: string,
   { aggressive = false }: { aggressive?: boolean } = {}
 ) {
-  return BLOCKED_TERMS.filter((term) =>
+  return ALL_BLOCKED.filter((term) =>
     matchesBlockedTerm(input, term, { aggressive })
   );
 }
