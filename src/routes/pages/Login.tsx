@@ -15,9 +15,8 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import { getApiErrorMessage, toastApiError } from "../../lib/apiErrors";
 
 const Login = () => {
-  // --------------------------------------------------
-  // Local form state
-  // --------------------------------------------------
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
   const [userInput, setUserInput] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -72,8 +71,12 @@ const Login = () => {
 
     try {
       setIsSubmitting(true);
+      setNeedsVerification(false);
+      setPendingEmail("");
+      setErrorMsg2("");
 
-      const res = await loginUser({ userInput, password }, language);
+      const normalizedUserInput = userInput.trim().toLowerCase();
+      const res = await loginUser({ userInput: normalizedUserInput, password }, language);
 
       if (res.statusCode !== 200) {
         throw new Error(res.message || t("login.loginFailed"));
@@ -115,14 +118,39 @@ const Login = () => {
         err?.response?.status ??
         err?.response?.data?.statusCode;
 
-      // Expected auth failures: show inline under password field
+      const code =
+        err?.response?.data?.code ??
+        err?.code;
+
+      console.log("Login error details:", {
+        message,
+        status,
+        code,
+        raw: err?.response?.data,
+      });
+
       if (status === 400 || status === 401) {
+        setNeedsVerification(false);
+        setPendingEmail("");
         setErrorMsg2(message);
         return;
       }
 
-      // Unexpected/general API errors: toast for visibility
-      // Do not force every general error into the password field
+      if (status === 403 && code === "EMAIL_NOT_VERIFIED") {
+        setErrorMsg2(message);
+        setNeedsVerification(true);
+
+        if (userInput.includes("@")) {
+          setPendingEmail(userInput.trim().toLowerCase());
+        } else {
+          setPendingEmail("");
+        }
+
+        return;
+      }
+
+      setNeedsVerification(false);
+      setPendingEmail("");
       toastApiError(err, t("login.loginFailed"));
     } finally {
       setIsSubmitting(false);
@@ -164,6 +192,9 @@ const Login = () => {
               const value = e.target.value;
               setUserInput(value);
 
+              setNeedsVerification(false);
+              setPendingEmail("");
+
               const validationKey = userInputValidator(value);
               setInput1Valid(!validationKey);
               setErrorMsg1(validationKey ? t(validationKey) : "");
@@ -183,6 +214,8 @@ const Login = () => {
               onChange={(e) => {
                 const value = e.target.value;
                 setPassword(value);
+
+                setNeedsVerification(false);
 
                 const validationKey = loginPasswordValidator(value);
                 setInput2Valid(!validationKey);
@@ -223,6 +256,14 @@ const Login = () => {
             <Link to="/forgotPassword" className="text-[var(--text1)] mt-3">
               {t("login.forgotPassword")} <span className="font-bold">{t("login.link2")}</span>
             </Link>
+            {needsVerification && (
+            <Link
+              to={`/resend-verification${pendingEmail ? `?email=${encodeURIComponent(pendingEmail)}` : ""}`}
+              className="text-[var(--text1)] mt-3 underline font-semibold"
+            >
+              {t("login.resendVerificationLink", "Resend verification email")}
+            </Link>
+          )}
           </div>
         </form>
       </div>

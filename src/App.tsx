@@ -15,6 +15,8 @@ const Login = lazy(() => import("./routes/pages/Login"));
 const Register = lazy(() => import("./routes/pages/Register"));
 const ForgotPassword = lazy(() => import("./routes/pages/ForgotPassord"));
 const ResetPassword = lazy(() => import("./routes/pages/ResetPassword"));
+const VerifyEmail = lazy(() => import("./routes/pages/VerifyEmail"));
+const ResendVerification = lazy(() => import("./routes/pages/ResendVerification"));
 const About = lazy(() => import("./routes/pages/About"));
 const Contact = lazy(() => import("./routes/pages/Contact"));
 const Terms = lazy(() => import("./routes/pages/legal/Terms"));
@@ -73,6 +75,8 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/forgotPassword" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/resend-verification" element={<ResendVerification />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
 

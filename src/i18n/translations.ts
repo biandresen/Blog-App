@@ -401,6 +401,35 @@ export const translations = {
       retryIn: "Send på nytt om {{seconds}} sekunder",
     },
 
+    resendVerification: {
+      infoHeading: "Ny bekreftelseslenke",
+      infoListHeading: "Slik gjør du det:",
+      infoListItems: [
+        "1. Skriv inn e-postadressen din",
+        "2. Klikk på knappen for å sende en ny bekreftelseslenke",
+        "3. Åpne e-posten og bekreft kontoen din",
+      ],
+      inputHeading: "Send ny bekreftelseslenke",
+
+      emailLabel: "E-post",
+      emailPlaceholder: "Skriv inn e-posten din",
+
+      button: "Send ny bekreftelsesmail",
+
+      welcome: "Skriv inn e-posten din for å få en ny bekreftelseslenke.",
+      success: "En ny bekreftelsesmail ble sendt til {{email}}.",
+      failed: "Kunne ikke sende bekreftelsesmail",
+      retryIn: "Du kan prøve igjen om {{seconds}} sekunder.",
+      retryNow: "Du kan be om en ny e-post nå.",
+    },
+
+    verifyEmail: {
+      heading: "Verifiser email",
+      success: "Emailen din er verifisert",
+      goToLogin: "Gå til login",
+      resend: "Send ny bekreftelsesmail"
+    },
+
     terms: {
       heading: "BRUKSVILKÅR",
       versionText: "Versjon",
@@ -1647,6 +1676,35 @@ export const translations = {
       newLink: "Didn't receive an email?",
       retryNow: "Try again",
       retryIn: "Send again in {{seconds}} seconds",
+    },
+
+    resendVerification: {
+      infoHeading: "New verification link",
+      infoListHeading: "How to do it:",
+      infoListItems: [
+        "1. Enter your email address",
+        "2. Click the button to send a new verification link",
+        "3. Open the email and verify your account",
+      ],
+      inputHeading: "Send new verification link",
+
+      emailLabel: "Email",
+      emailPlaceholder: "Enter your email",
+
+      button: "Send new verification email",
+
+      welcome: "Enter your email to receive a new verification link.",
+      success: "A new verification email was sent to {{email}}.",
+      failed: "Failed to send verification email",
+      retryIn: "You can try again in {{seconds}} seconds.",
+      retryNow: "You can request another email now.",
+    },
+
+    verifyEmail: {
+      heading: "Verify email",
+      success: "Your email has been verified successfully.",
+      goToLogin: "Go to login",
+      resend: "Send new verification email"
     },
 
     terms: {

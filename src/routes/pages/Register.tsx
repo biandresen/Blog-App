@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-import { useAuth } from "../../contexts/AuthContext";
-import { useUser } from "../../contexts/UserContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useModeration } from "../../contexts/ModerationContext";
 
@@ -30,9 +28,7 @@ const Register = () => {
   // --------------------------------------------------
   // Global app state
   // --------------------------------------------------
-  const { setAccessToken, setIsAuthenticated } = useAuth();
-  const { setUser } = useUser();
-  const { t, tr, tf} = useLanguage();
+  const { t, tr } = useLanguage();
   const { terms } = useModeration();
 
   const navigate = useNavigate();
@@ -169,10 +165,12 @@ const Register = () => {
 
     try {
       setIsSubmitting(true);
+      const normalizedEmail = email.trim().toLowerCase();
+
 
     const res = await registerUser({
       username: username.trim(),
-      email: email.trim(),
+      email: normalizedEmail,
       password,
       passwordConfirmation,
       acceptedTerms,
@@ -182,23 +180,16 @@ const Register = () => {
         throw new Error(res.message || t("register.registrationFailed"));
       }
 
-      const { accessToken, user, needsEmailVerification } = res.data;
+      const { needsEmailVerification, email: registeredEmail } = res.data;
 
-      // If email verification is enabled in the backend response,
-      // do not authenticate the user yet
       if (needsEmailVerification) {
         toast.info(t("register.verifyEmail"));
-        navigate("/check-email");
+        navigate(`/resend-verification?email=${encodeURIComponent(registeredEmail)}`);
         return;
       }
 
-      // Registration completed successfully and backend returned auth data
-      setAccessToken(accessToken);
-      setIsAuthenticated(true);
-      setUser(user);
-
-      toast.success(tf("register.success", { username: user.username }));
-      navigate("/jokes/daily-joke");
+      toast.success(t("register.verifyEmail"));
+      navigate(`/resend-verification?email=${encodeURIComponent(registeredEmail)}`);
     } catch (err: any) {
       const backendErrors = err?.response?.data?.errors;
 

@@ -21,6 +21,28 @@ type LoginUser = {
   password: string;
 };
 
+export const verifyEmail = async (token: string) => {
+  try {
+    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.VERIFY_EMAIL}`, {
+      params: { token },
+    });
+    return res.data;
+  } catch (err: any) {
+    throw normalizeApiError(err);
+  }
+};
+
+export const resendVerificationEmail = async ({ email }: { email: string }) => {
+  try {
+    const res = await axios.post(`${BLOG_API.BASE}${BLOG_API.RESEND_VERIFICATION}`, {
+      email,
+    });
+    return res.data;
+  } catch (err: any) {
+    throw normalizeApiError(err);
+  }
+};
+
 export const resetPassword = async ({ email }: { email: string }) => {
   try {
     const res = await axios.post(BLOG_API.BASE + BLOG_API.RESETPASSWORD, {

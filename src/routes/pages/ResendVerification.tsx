@@ -1,60 +1,42 @@
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
 import { emailValidator } from "../../validators/auth";
-import { resetPassword } from "../../lib/axios";
+import { resendVerificationEmail } from "../../lib/axios";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { getApiErrorMessage, toastApiError } from "../../lib/apiErrors";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
-const ForgotPassword = () => {
-  // --------------------------------------------------
-  // Translation helpers
-  // --------------------------------------------------
-  const { t, tr, tf } = useLanguage();
+const ResendVerification = () => {
+  const { t, tf, tr } = useLanguage();
+  const [searchParams] = useSearchParams();
 
-  // --------------------------------------------------
-  // Form state
-  // --------------------------------------------------
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState(searchParams.get("email") ?? "");
+  const [emailSent, setEmailSent] = useState(false);
+  const [newLinkCounter, setNewLinkCounter] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Whether a reset email was successfully requested
-  const [emailSent, setEmailSent] = useState<boolean>(false);
-
-  // Cooldown before allowing another request
-  const [newLinkCounter, setNewLinkCounter] = useState<number>(0);
-
-  // Prevent duplicate submits while request is in flight
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-  // Inline validation state
-  const [input1Valid, setInput1Valid] = useState<boolean>(true);
-  const [errorMsg1, setErrorMsg1] = useState<string>("");
-
-  const infoListItems = tr<string[]>("forgotPassword.infoListItems", []);
+  const [input1Valid, setInput1Valid] = useState(true);
+  const [errorMsg1, setErrorMsg1] = useState("");
 
   const invalidForm = !input1Valid || !email;
   const cooldownActive = emailSent && newLinkCounter > 0;
 
-  // --------------------------------------------------
-  // Prevent repeated welcome toasts on rerender / language changes
-  // --------------------------------------------------
   const hasShownWelcomeToast = useRef(false);
+
+  const infoListItems = tr<string[]>("resendVerification.infoListItems", []);
 
   useEffect(() => {
     if (!hasShownWelcomeToast.current) {
-      toast.info(t("forgotPassword.welcome"));
+      toast.info(t("resendVerification.welcome"));
       hasShownWelcomeToast.current = true;
     }
   }, [t]);
 
-  // --------------------------------------------------
-  // Countdown effect
-  // Starts only after a successful request
-  // --------------------------------------------------
   useEffect(() => {
     if (!cooldownActive) return;
 
@@ -65,7 +47,6 @@ const ForgotPassword = () => {
           setEmailSent(false);
           return 0;
         }
-
         return prev - 1;
       });
     }, 1000);
@@ -73,41 +54,34 @@ const ForgotPassword = () => {
     return () => window.clearInterval(timer);
   }, [cooldownActive]);
 
-  // --------------------------------------------------
-  // Handle forgot-password submit
-  // --------------------------------------------------
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Prevent invalid or repeated submissions
     if (invalidForm || isSubmitting || cooldownActive) return;
 
     try {
       setIsSubmitting(true);
       const normalizedEmail = email.trim().toLowerCase();
 
-      await resetPassword({ email: normalizedEmail });
+      await resendVerificationEmail({ email: normalizedEmail });
 
-      // Only start cooldown after a successful request
       setEmailSent(true);
       setNewLinkCounter(RESEND_COOLDOWN_SECONDS);
 
-      toast.success(tf("forgotPassword.success", { email }));
+      toast.success(tf("resendVerification.success", { email: normalizedEmail }));
     } catch (err: any) {
-      const message = getApiErrorMessage(err, t("forgotPassword.failed"));
+      const message = getApiErrorMessage(err, t("resendVerification.failed"));
       const status =
         err?.status ??
         err?.statusCode ??
         err?.response?.status ??
         err?.response?.data?.statusCode;
 
-      // If the backend returns an email-specific client error,
-      // it is reasonable to show it inline under the field.
-      if (status === 400) {
+      if (status === 400 || status === 403 || status === 404) {
         setErrorMsg1(message);
       }
 
-      toastApiError(err, t("forgotPassword.failed"));
+      toastApiError(err, t("resendVerification.failed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -117,10 +91,10 @@ const ForgotPassword = () => {
     <div className="inputInfo-container container">
       <div>
         <section className="info-container">
-          <h2 className="text-2xl my-3">{t("forgotPassword.infoHeading")}</h2>
+          <h2 className="text-2xl my-3">{t("resendVerification.infoHeading")}</h2>
 
           <div>
-            <h3 className="font-medium text-xl">{t("forgotPassword.infoListHeading")}</h3>
+            <h3 className="font-medium text-xl">{t("resendVerification.infoListHeading")}</h3>
             <hr className="mb-2" />
 
             <ol>
@@ -135,15 +109,15 @@ const ForgotPassword = () => {
       </div>
 
       <div className="input-container">
-        <h2 className="input-heading">{t("forgotPassword.inputHeading")}</h2>
+        <h2 className="input-heading">{t("resendVerification.inputHeading")}</h2>
 
         <form onSubmit={handleSubmit}>
           <Input
             id="email"
-            label={t("forgotPassword.emailLabel")}
+            label={t("resendVerification.emailLabel")}
             value={email}
             errorMsg={errorMsg1}
-            placeholder={t("forgotPassword.emailPlaceholder")}
+            placeholder={t("resendVerification.emailPlaceholder")}
             required
             inputValid={input1Valid}
             onChange={(e) => {
@@ -161,20 +135,21 @@ const ForgotPassword = () => {
             variant="tertiary"
             disabled={invalidForm || isSubmitting || cooldownActive}
             className="w-full mt-7 disabled:cursor-not-allowed disabled:opacity-50"
-            label={t("forgotPassword.button")}
+            label={t("resendVerification.button")}
           >
-            {isSubmitting ? t("common.loading") : t("forgotPassword.button")}
+            {isSubmitting ? t("common.loading") : t("resendVerification.button")}
           </Button>
 
           <div className="text-center flex flex-col">
             <p className="text-[var(--text1)] mt-3">
-              {t("forgotPassword.newLink")}{" "}
               {cooldownActive ? (
                 <span className="font-bold block">
-                  {tf("forgotPassword.retryIn", { seconds: String(newLinkCounter) })}
+                  {tf("resendVerification.retryIn", { seconds: String(newLinkCounter) })}
                 </span>
               ) : (
-                <span className="font-bold">{t("forgotPassword.retryNow")}</span>
+                <span className="font-bold">
+                  {t("resendVerification.retryNow")}
+                </span>
               )}
             </p>
           </div>
@@ -184,4 +159,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResendVerification;

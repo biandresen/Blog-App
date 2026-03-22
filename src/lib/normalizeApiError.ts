@@ -12,6 +12,7 @@ export type NormalizedApiError = Error & {
       message?: string;
       retryAfter?: number;
       errors?: unknown;
+      code?: string;
     };
     headers?: Record<string, string>;
   };
@@ -42,10 +43,8 @@ export function normalizeApiError(err: any): NormalizedApiError {
   normalized.status = status;
   normalized.statusCode = status;
   normalized.retryAfter = retryAfter;
-  normalized.code = err?.code;
+  normalized.code = err?.response?.data?.code ?? err?.code;
   normalized.response = err?.response;
-
-  // only mark as network error when there is truly no HTTP response
   normalized.isNetworkError = !err?.response && !status;
 
   return normalized;
