@@ -13,6 +13,7 @@ import { MAX_CHARS } from "../../../lib/constants";
 import { useAuth } from "../../../contexts/AuthContext";
 import { usePosts } from "../../../contexts/PostsContext";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { useModeration } from "../../../contexts/ModerationContext";
 
 import { useAutosaveDraft } from "../../../hooks/useAutosaveDraft";
 import { useUnsavedChangesWarning } from "../../../hooks/useUnsavedChangesWarning";
@@ -28,6 +29,7 @@ const NewJoke = () => {
   const { accessToken, setAccessToken } = useAuth();
   const { refreshPosts } = usePosts();
   const { language, t } = useLanguage();
+  const { terms } = useModeration();
 
   const {
     state,
@@ -73,7 +75,7 @@ const NewJoke = () => {
       title,
       body,
       tags: parsedTags.join(" "),
-    },
+    }, terms,
   );
 
   if (moderation.blocked) {
@@ -130,7 +132,7 @@ const NewJoke = () => {
       title,
       body,
       tags: parsedTags.join(" "),
-    },
+    }, terms,
   );
 
   if (moderation.blocked) {

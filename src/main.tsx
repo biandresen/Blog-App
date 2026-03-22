@@ -8,6 +8,7 @@ import App from "./App.tsx";
 import { PostsProvider } from "./contexts/PostsContext.tsx";
 import { LanguageProvider } from "./contexts/LanguageContext.tsx";
 import { ToastContainer } from "react-toastify";
+import { ModerationProvider } from "./contexts/ModerationContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById("root")!).render(
       <UserProvider>
        <LanguageProvider>
         <PostsProvider>
+          <ModerationProvider>
           <App />
              <ToastContainer
                 position="bottom-center"
@@ -26,6 +28,7 @@ createRoot(document.getElementById("root")!).render(
                 draggable
                 theme="colored"
               />
+          </ModerationProvider>
         </PostsProvider>
        </LanguageProvider>
       </UserProvider>

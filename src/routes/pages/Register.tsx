@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUser } from "../../contexts/UserContext";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { useModeration } from "../../contexts/ModerationContext";
 
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
@@ -31,7 +32,8 @@ const Register = () => {
   // --------------------------------------------------
   const { setAccessToken, setIsAuthenticated } = useAuth();
   const { setUser } = useUser();
-  const { t, tr, tf, language } = useLanguage();
+  const { t, tr, tf} = useLanguage();
+  const { terms } = useModeration();
 
   const navigate = useNavigate();
 
@@ -155,6 +157,7 @@ const Register = () => {
 
         const usernameModeration = moderateFields(
       { username: username.trim() },
+      terms
     );
 
     if (usernameModeration.blocked) {
@@ -261,6 +264,7 @@ const Register = () => {
 
                 const moderation = moderateFields(
                   { username: value.trim() },
+                  terms,
                 );
 
                 if (moderation.blocked) {

@@ -24,7 +24,7 @@ const Input = ({
     <div className={`flex flex-col ${errorMsg && hasValue ? "-mb-1.5" : "mb-3"}`}>
       <label
         htmlFor={id}
-        className={`${className ? className : "text-[var(--text1)]"} text-lg font-semibold md:text-2xl my-1 `}
+        className={`${className ? className : "text-[var(--text2)]"} text-lg font-semibold md:text-2xl my-1 `}
       >
         {label}
         {/* {required && <span className="ml-1">*</span>} */}

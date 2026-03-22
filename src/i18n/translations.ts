@@ -2,6 +2,94 @@ export type AppLanguage = "NO" | "EN";
 
 export const translations = {
   NO: {
+    moderationAdmin: {
+  heading: "Moderering",
+  fields: {
+    term: "Ord",
+    category: "Kategori",
+    active: "Aktiv",
+  },
+  categories: {
+    profanity: "Banning",
+    insult: "Fornærmelse",
+    sexual: "Seksuelt",
+    slur: "Nedsettende uttrykk",
+    other: "Annet",
+  },
+  cards: {
+    totalTerms: "Totalt antall ord",
+    active: "Aktive",
+    inactive: "Inaktive",
+    cacheLoaded: "Cache lastet",
+  },
+  create: {
+    heading: "Opprett modereringsord",
+  },
+  editModal: {
+    title: "Rediger modereringsord",
+    confirm: "Lagre",
+    saving: "Lagrer...",
+    cancel: "Avbryt",
+  },
+  deleteModal: {
+    title: "Slett modereringsord",
+    message: `Er du sikker på at du vil slette "{{term}}"?`,
+    confirm: "Slett",
+    deleting: "Sletter...",
+    cancel: "Avbryt",
+  },
+  filters: {
+    search: "Søk",
+    searchPlaceholder: "Søk etter ord eller kategori",
+    status: "Status",
+    category: "Kategori",
+    all: "Alle",
+    active: "Aktiv",
+    inactive: "Inaktiv",
+    noCategory: "Ingen kategori",
+  },
+  table: {
+    term: "Ord",
+    category: "Kategori",
+    status: "Status",
+    updated: "Oppdatert",
+    actions: "Handlinger",
+  },
+  actions: {
+    addTerm: "Legg til ord",
+    saving: "Lagrer...",
+    edit: "Rediger",
+    activate: "Aktiver",
+    deactivate: "Deaktiver",
+    delete: "Slett",
+    reloadCache: "Last cache på nytt",
+    reloadingCache: "Laster...",
+  },
+  states: {
+    adminRequired: "Admin-tilgang kreves.",
+    notLoaded: "Ikke lastet",
+    noTermsFound: "Ingen modereringsord funnet.",
+  },
+  errors: {
+    termRequired: "Ord er påkrevd",
+    duplicateTerm: "Dette modereringsordet finnes allerede",
+  },
+  toasts: {
+    loadFailed: "Kunne ikke laste modereringsdata",
+    createFailed: "Kunne ikke opprette modereringsord",
+    updateFailed: "Kunne ikke oppdatere modereringsord",
+    deleteFailed: "Kunne ikke slette modereringsord",
+    reloadFailed: "Kunne ikke laste cache på nytt",
+    statusFailed: "Kunne ikke oppdatere status",
+    created: "Modereringsord opprettet",
+    updated: "Modereringsord oppdatert",
+    deleted: "Modereringsord slettet",
+    reloaded: "Modereringscache lastet på nytt",
+    activated: "Ordet ble aktivert",
+    deactivated: "Ordet ble deaktivert",
+  },
+     },
+
     common: {
       loading: "laster..."
     },
@@ -574,38 +662,47 @@ export const translations = {
     },
 
     admin: {
-      infoHeading: "ADMINPANEL",
+      infoHeading: "Admin",
       infoListItems: [
-        "Hent brukerprofiler via brukernavn eller e-post",
-        "Slett / reaktiver brukerprofiler",
-        "Oppdater brukerroller",
+        "Finn en bruker med brukernavn eller e-post.",
+        "Reaktiver inaktive brukere.",
+        "Deaktiver aktive brukere.",
       ],
-      inputHeading: "OPPDATER BRUKERE",
-
-      userInputLabel: "Brukernavn/E-post",
-      removeFetchedUser: "fjern hentet bruker",
-      statusLabel: "Status",
-      active: "Aktiv",
-      inactive: "Inaktiv",
-
-      mustBeLoggedInFetch: "Du må være logget inn for å hente en bruker.",
-      mustBeLoggedInReactivate: "Du må være logget inn for å reaktivere en bruker.",
-      mustBeLoggedInDeactivate: "Du må være logget inn for å deaktivere en bruker.",
-
-      requestFailed: "Forespørselen mislyktes",
-      userFound: "Bruker funnet!",
-      fetchFailed: "Kunne ikke hente bruker",
-      userNotFound: "Bruker ikke funnet",
-
-      userActivated: "Bruker {{username}} aktivert!",
-      activateFailed: "Kunne ikke aktivere bruker",
-
-      userDeactivated: "Bruker {{username}} deaktivert!",
-      deactivateFailed: "Kunne ikke deaktivere bruker",
-
-      button1: "HENT BRUKER",
-      button2: "REAKTIVER BRUKER",
-      button3: "SLETT BRUKER",
+      tabs: {
+        users: "Brukere",
+        moderation: "Moderering",
+      },
+      moderationIntro: {
+        paragraph1: "Administrer blokkerte ord som brukes av modereringssystemet.",
+        paragraph2: "Opprett, rediger, aktiver, deaktiver og slett modereringsord.",
+        paragraph3: "Last modereringscachen på nytt etter endringer ved behov.",
+      },
+      userSection: {
+        heading: "Brukeradministrasjon",
+        userInputLabel: "Brukernavn eller e-post",
+        removeFetchedUser: "Fjern valgt bruker",
+        statusLabel: "Status",
+        active: "Aktiv",
+        inactive: "Inaktiv",
+        actions: {
+          findUser: "Finn bruker",
+          reactivateUser: "Reaktiver bruker",
+          deactivateUser: "Deaktiver bruker",
+        },
+      },
+      toasts: {
+        mustBeLoggedInFetch: "Du må være logget inn for å finne en bruker",
+        mustBeLoggedInReactivate: "Du må være logget inn for å reaktivere en bruker",
+        mustBeLoggedInDeactivate: "Du må være logget inn for å deaktivere en bruker",
+        requestFailed: "Forespørselen mislyktes",
+        userFound: "Bruker funnet",
+        userNotFound: "Bruker ikke funnet",
+        fetchFailed: "Kunne ikke hente bruker",
+        activateFailed: "Kunne ikke reaktivere bruker",
+        deactivateFailed: "Kunne ikke deaktivere bruker",
+        userActivated: "{{username}} ble reaktivert",
+        userDeactivated: "{{username}} ble deaktivert",
+      },
     },
 
     profile: {
@@ -1148,6 +1245,95 @@ export const translations = {
   },
 
   EN: {
+
+  moderationAdmin: {
+  heading: "Moderation",
+  fields: {
+    term: "Term",
+    category: "Category",
+    active: "Active",
+  },
+  categories: {
+    profanity: "Profanity",
+    insult: "Insult",
+    sexual: "Sexual",
+    slur: "Slur",
+    other: "Other",
+  },
+  cards: {
+    totalTerms: "Total terms",
+    active: "Active",
+    inactive: "Inactive",
+    cacheLoaded: "Cache loaded",
+  },
+  create: {
+    heading: "Create moderation term",
+  },
+  editModal: {
+    title: "Edit moderation term",
+    confirm: "Save",
+    saving: "Saving...",
+    cancel: "Cancel",
+  },
+  deleteModal: {
+    title: "Delete moderation term",
+    message: `Are you sure you want to delete "{{term}}"?`,
+    confirm: "Delete",
+    deleting: "Deleting...",
+    cancel: "Cancel",
+  },
+  filters: {
+    search: "Search",
+    searchPlaceholder: "Search by term or category",
+    status: "Status",
+    category: "Category",
+    all: "All",
+    active: "Active",
+    inactive: "Inactive",
+    noCategory: "No category",
+  },
+  table: {
+    term: "Term",
+    category: "Category",
+    status: "Status",
+    updated: "Updated",
+    actions: "Actions",
+  },
+  actions: {
+    addTerm: "Add term",
+    saving: "Saving...",
+    edit: "Edit",
+    activate: "Activate",
+    deactivate: "Deactivate",
+    delete: "Delete",
+    reloadCache: "Reload cache",
+    reloadingCache: "Reloading...",
+  },
+  states: {
+    adminRequired: "Admin access required.",
+    notLoaded: "Not loaded",
+    noTermsFound: "No moderation terms found.",
+  },
+  errors: {
+    termRequired: "Term is required",
+    duplicateTerm: "This moderation term already exists",
+  },
+  toasts: {
+    loadFailed: "Failed to load moderation data",
+    createFailed: "Failed to create moderation term",
+    updateFailed: "Failed to update moderation term",
+    deleteFailed: "Failed to delete moderation term",
+    reloadFailed: "Failed to reload cache",
+    statusFailed: "Failed to update status",
+    created: "Moderation term created",
+    updated: "Moderation term updated",
+    deleted: "Moderation term deleted",
+    reloaded: "Moderation cache reloaded",
+    activated: "Term activated",
+    deactivated: "Term deactivated",
+  },
+  },
+
    common: {
       loading: "loading..."
     },
@@ -1723,38 +1909,47 @@ export const translations = {
     },
 
     admin: {
-      infoHeading: "ADMIN PANEL",
+      infoHeading: "Admin",
       infoListItems: [
-        "Get user profiles by username or email",
-        "Delete/Reactivate user profiles",
-        "Update user roles",
+        "Find a user by username or email.",
+        "Reactivate inactive users.",
+        "Deactivate active users.",
       ],
-      inputHeading: "UPDATE USERS",
-
-      userInputLabel: "Username/Email",
-      removeFetchedUser: "remove fetched user",
-      statusLabel: "Status",
-      active: "Active",
-      inactive: "Inactive",
-
-      mustBeLoggedInFetch: "You must be logged in to fetch a user.",
-      mustBeLoggedInReactivate: "You must be logged in to reactivate a user.",
-      mustBeLoggedInDeactivate: "You must be logged in to deactivate a user.",
-
-      requestFailed: "Request failed",
-      userFound: "User found!",
-      fetchFailed: "Failed to fetch user",
-      userNotFound: "User not found",
-
-      userActivated: "User {{username}} activated!",
-      activateFailed: "Failed to activate user",
-
-      userDeactivated: "User {{username}} deactivated!",
-      deactivateFailed: "Failed to deactivate user",
-
-      button1: "GET USER",
-      button2: "REACTIVATE USER",
-      button3: "DELETE USER",
+      tabs: {
+        users: "Users",
+        moderation: "Moderation",
+      },
+      moderationIntro: {
+        paragraph1: "Manage blocked terms used by the moderation system.",
+        paragraph2: "Create, edit, activate, deactivate, and delete moderation terms.",
+        paragraph3: "Reload the moderation cache after changes if needed.",
+      },
+      userSection: {
+        heading: "User management",
+        userInputLabel: "Username or email",
+        removeFetchedUser: "Remove selected user",
+        statusLabel: "Status",
+        active: "Active",
+        inactive: "Inactive",
+        actions: {
+          findUser: "Find user",
+          reactivateUser: "Reactivate user",
+          deactivateUser: "Deactivate user",
+        },
+      },
+      toasts: {
+        mustBeLoggedInFetch: "You must be logged in to find a user",
+        mustBeLoggedInReactivate: "You must be logged in to reactivate a user",
+        mustBeLoggedInDeactivate: "You must be logged in to deactivate a user",
+        requestFailed: "Request failed",
+        userFound: "User found",
+        userNotFound: "User not found",
+        fetchFailed: "Failed to fetch user",
+        activateFailed: "Failed to reactivate user",
+        deactivateFailed: "Failed to deactivate user",
+        userActivated: "{{username}} was reactivated",
+        userDeactivated: "{{username}} was deactivated",
+      },
     },
 
     profile: {

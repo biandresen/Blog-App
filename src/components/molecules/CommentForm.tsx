@@ -12,6 +12,7 @@ import { getCharactersLeft } from "../../lib/utils";
 import { MAX_CHARS } from "../../lib/constants";
 import { toastApiError } from "../../lib/apiErrors";
 import { moderateFields } from "../../lib/moderation";
+import { useModeration } from "../../contexts/ModerationContext";
 
 const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
   const [body, setBody] = useState("");
@@ -19,6 +20,7 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
 
   const { accessToken, setAccessToken } = useAuth();
   const { t } = useLanguage();
+  const { terms } = useModeration();
 
   const trimmedBody = body.trim();
   const formError = trimmedBody === "";
@@ -38,6 +40,7 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
 
     const moderation = moderateFields(
     { comment: body},
+    terms
     );
 
     if (moderation.blocked) {

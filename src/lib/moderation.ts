@@ -1,16 +1,3 @@
-import { insultsEN, insultsNO, profanityEN, profanityNO, sexualEN, sexualNO } from "./blockedTerms";
-
-const BLOCKED_TERMS = {
-  profanityNO,
-  insultsNO,
-  sexualNO,
-  profanityEN,
-  insultsEN,
-  sexualEN,
-};
-
-const ALL_BLOCKED = Object.values(BLOCKED_TERMS).flat();
-
 const ZERO_WIDTH_REGEX = /[\u200B-\u200D\uFEFF]/g;
 const DIACRITICS_REGEX = /[\u0300-\u036f]/g;
 const NON_ALNUM_REGEX = /[^\p{L}\p{N}\s]/gu;
@@ -133,14 +120,18 @@ function matchesBlockedTerm(
 
 export function findBlockedTerms(
   input: string,
+  blockedTerms: string[],
   { aggressive = false }: { aggressive?: boolean } = {}
 ) {
-  return ALL_BLOCKED.filter((term) =>
+  return blockedTerms.filter((term) =>
     matchesBlockedTerm(input, term, { aggressive })
   );
 }
 
-export function moderateFields(fields: Record<string, string>) {
+export function moderateFields(
+  fields: Record<string, string>,
+  blockedTerms: string[]
+) {
   const result: Record<string, string[]> = {};
 
   const aggressiveFields = new Set([
@@ -155,7 +146,7 @@ export function moderateFields(fields: Record<string, string>) {
     if (!value?.trim()) continue;
 
     const aggressive = aggressiveFields.has(field);
-    const matches = findBlockedTerms(value, { aggressive });
+    const matches = findBlockedTerms(value, blockedTerms, { aggressive });
 
     if (matches.length > 0) {
       result[field] = matches;
@@ -167,23 +158,3 @@ export function moderateFields(fields: Record<string, string>) {
     matches: result,
   };
 }
-
-// export function moderateFields(fields: Record<string, string>) {
-//   const result: Record<string, string[]> = {};
-
-//   for (const [field, value] of Object.entries(fields)) {
-//     if (!value?.trim()) continue;
-
-//     const aggressive = field === "username";
-//     const matches = findBlockedTerms(value, { aggressive });
-
-//     if (matches.length > 0) {
-//       result[field] = matches;
-//     }
-//   }
-
-//   return {
-//     blocked: Object.keys(result).length > 0,
-//     matches: result,
-//   };
-// }

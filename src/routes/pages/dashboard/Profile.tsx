@@ -11,6 +11,7 @@ import AvatarWithBadges from "../../../components/atoms/AvatarWithBadges";
 import { useUser } from "../../../contexts/UserContext";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { useModeration } from "../../../contexts/ModerationContext";
 
 import { deleteUser, updateUser } from "../../../lib/axios";
 import { safeRequest } from "../../../lib/auth";
@@ -34,6 +35,7 @@ const Profile = () => {
   const { user, setUser } = useUser();
   const { accessToken, setAccessToken } = useAuth();
   const { t, tf} = useLanguage();
+  const { terms } = useModeration();
   const navigate = useNavigate();
 
   // --------------------------------------------------
@@ -161,6 +163,7 @@ const Profile = () => {
 
         const usernameModeration = moderateFields(
       { username: username.trim() },
+      terms,
     );
 
     if (usernameModeration.blocked) {
@@ -355,6 +358,7 @@ const Profile = () => {
 
                 const moderation = moderateFields(
                   { username: value.trim() },
+                  terms,
                 );
 
                 if (moderation.blocked) {

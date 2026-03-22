@@ -28,6 +28,7 @@ import Spinner from "../atoms/Spinner";
 import { postDeletedEvent } from "../../lib/events";
 import { moderateFields } from "../../lib/moderation";
 import { getApiErrorMessage } from "../../lib/apiErrors";
+import { useModeration } from "../../contexts/ModerationContext";
 
 const Post = ({
   post,
@@ -53,6 +54,7 @@ const Post = ({
   const [avatarSize, setAvatarSize] = useState(63);
 
   const { language, t } = useLanguage();
+  const { terms } = useModeration();
 
 useEffect(() => {
   const updateSize = () => {
@@ -219,7 +221,7 @@ useEffect(() => {
         title: newTitle,
         body: newBody,
         tags: editedTags.join(" "),
-      },
+      }, terms
     );
 
     if (moderation.blocked) {
@@ -308,6 +310,7 @@ const handleDeletePost = async (postId: number) => {
 
     const moderation = moderateFields(
       { comment: newBody },
+      terms
     );
 
     if (moderation.blocked) {

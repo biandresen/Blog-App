@@ -10,7 +10,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   outline:
     "bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text1)] hover:bg-[var(--button1)] hover:text-[var(--text2)] transition-colors duration-100",
   success: "bg-[var(--success)] button-style",
-  error: "bg-[var(--error)] button-style",
+  error: "bg-[var(--error)] text-[var(--text0)]! button-style",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
