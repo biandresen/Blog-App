@@ -9,6 +9,8 @@ Deployed on a **Raspberry Pi**, fronted by **Nginx**, managed with **PM2**, and 
 
 This project demonstrates real-world full-stack architecture, feature computation systems, badge/leaderboard mechanics, and production deployment.
 
+The platform includes multilingual content support (Norwegian/English), JWT-based authentication, drafts and publishing workflows, featured ranking systems, badges, a Hall of Fame leaderboard, search with field-specific filters, avatar uploads, and an admin moderation dashboard backed by a database-driven moderation cache.
+
 ---
 
 ## 🚀 Live Demo
@@ -26,36 +28,66 @@ This project demonstrates real-world full-stack architecture, feature computatio
 - Apply production-grade security practices
 - Operate a full-stack application on real infrastructure
 - Demonstrate scalable backend service design
+- Support multiple content languages with language-scoped data
+- Build moderation workflows for both users and content
+- Create admin tooling for operational control
 
 ---
 
 ## ✨ Core Features
 
+## 🌐 Multilingual Content System
+
+DadJokes supports language-scoped content for Norwegian and English.
+
+This includes:
+
+- Posts
+- Tags
+- Featured rankings
+- Hall of Fame calculations
+- Daily joke selection
+- Search results
+- UI translations
+
+The app separates content by language so users browse and interact with the currently selected language version of the platform.
+
 ### 🌍 Public Users
 
-- Browse published dad jokes
+- Browse language specific dad jokes
 - View:
   - 👑 Joke of the Day
-  - 🔥 Trending This Week
+  - ⚡ Trending This Week
   - 🎭 Most Commented This Week
-  - 💥 Fastest Growing (likes in 24h)
+  - 🚀 Fastest Growing (likes in 24h)
   - 🏆 Top Creator This Month
+  - All jokes
+  - Single joke pages
+  - Browse random jokes
+  - Search jokes with filters for:
+    - Title
+    - Body
+    - Comments
+    - Tags
 - View **Hall of Fame (Leaderboard)**
-- Search jokes
-- View user badges and streaks
+- View user badges and streaks (🔥)
+- Switch between Norwegian and English content
 
 ---
 
 ### 🔐 Registered Users (USER role)
 
 - Register / Login
-- Acceptence of terms required
+- Acceptance of terms required
 - JWT Authentication:
   - Short-lived access token
   - HTTP-only refresh token
-- Create jokes and comments
+- Create jokes in the selected language
+- Create comments on published jokes
 - Edit / Delete own jokes and comments
-- Save drafts
+- Save jokes as drafts
+- View own drafts
+- View own unpublished draft pages
 - Publish / Unpublish existing jokes
 - Like jokes
 - Build a **Daily Joke Streak**
@@ -72,17 +104,18 @@ This project demonstrates real-world full-stack architecture, feature computatio
   - Email
   - Password
   - Avatar upload
-
+  - Preferred language
 ---
 
 ### 👑 Admin Users
 
 - Recompute featured rankings
-- Moderate users
-- Moderate jokes and comments
 - Activate / deactivate users (soft delete)
+- Search users by username or email
+- Manage moderation terms through an admin dashboard
+- Create / edit / activate / deactivate / delete moderation terms
+- Reload moderation cache
 - Secure admin-only feature endpoints
-
 ---
 
 ## 🏆 Gamification System
@@ -94,9 +127,9 @@ DadJokes includes a deterministic + database-backed feature system.
 | Feature | Logic |
 |----------|-------|
 | 👑 Joke of the Day | Deterministic daily selection (no repeat two days in a row) |
-| 🔥 Trending Week | Most likes in last 7 days |
+| ⚡ Trending Week | Most likes in last 7 days |
 | 🎭 Most Commented Week | Most comments in last 7 days |
-| 💥 Fastest Growing | Most likes in last 24 hours |
+| 🚀 Fastest Growing | Most likes in last 24 hours |
 | 🏆 Top Creator Month | Most published jokes in current month |
 
 Each feature:
@@ -164,7 +197,9 @@ Includes:
 - Expiring password reset tokens
 - Image validation (byte-level)
 - Image compression (Sharp)
-
+- Database-backed moderation term system
+- Server-side moderation cache
+- Frontend + backend blocked-language checks
 ---
 
 ### Authentication & Authorization
@@ -175,6 +210,30 @@ Includes:
 - Protected admin feature endpoints
 
 ---
+
+## 🚨 Moderation System
+
+DadJokes includes a moderation layer for safer community use.
+
+### Content Moderation
+
+- Frontend pre-submit moderation checks
+- Backend moderation enforcement
+- Obfuscation-aware blocked-term matching
+- Moderation applied to:
+  - Usernames
+  - Joke titles
+  - Joke bodies
+  - Tags
+  - Comments
+
+### Moderation Operations
+
+- Database-backed moderation terms
+- Server-side moderation cache for performance
+- Public client-safe moderation term loading
+- Admin CRUD panel for moderation term management
+- Manual cache reload support
 
 ## 🖼 Media Handling
 
@@ -197,6 +256,9 @@ Includes:
 - Component-based architecture
 - React Toastify
 - React Icons
+- Context-based state for auth, user, language, and moderation
+- i18n / translation-driven UI
+- Responsive admin moderation dashboard
 
 ---
 
@@ -210,7 +272,10 @@ Includes:
 - Service-layer architecture
 - Deterministic ranking algorithms
 - Idempotent upsert patterns
-
+- Database-backed moderation system
+- In-memory moderation cache
+- Language-scoped content architecture
+  
 ---
 
 ### Infrastructure / DevOps
@@ -268,15 +333,23 @@ Designed to scale toward queue-based processing if needed.
 - Authentication architecture
 - Gamification systems design
 - Badge + leaderboard architecture
+- Multi-language application architecture
+- Admin tooling and moderation workflows
+- Search/filter system design
 - Production deployment on constrained hardware
 - Security-focused development
-
+  
 ---
 
 ## 📌 Possible Future Improvements
 
-- Caching
+- Redis or edge caching
 - WebSocket live leaderboard updates and live chat
+- Admin audit logs
+- Moderation reports / flagged content workflow
+- Email verification
+- Smarter moderation categories and severity levels
+- Queue-based background job processing
 
 ---
 
