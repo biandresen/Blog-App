@@ -1,6 +1,6 @@
 const BLOG_API = {
-  BASE: "https://bloggy-app.dev/api/v1",
-  BASE_AVATAR: "https://bloggy-app.dev",
+  BASE: "https://pundad.app/api/v1",
+  BASE_AVATAR: "https://pundad.app",
   // BASE: "http://localhost:4000/api/v1",
   // BASE_AVATAR: "http://localhost:4000",
   REGISTER: "/auth/register",

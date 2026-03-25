@@ -1,1377 +1,103 @@
-export type AppLanguage = "NO" | "EN";
-
 export const translations = {
-  NO: {
+  EN: {
     moderationAdmin: {
-  heading: "Moderering",
-  fields: {
-    term: "Ord",
-    category: "Kategori",
-    active: "Aktiv",
-  },
-  categories: {
-    profanity: "Banning",
-    insult: "Fornærmelse",
-    sexual: "Seksuelt",
-    slur: "Nedsettende uttrykk",
-    other: "Annet",
-  },
-  cards: {
-    totalTerms: "Totalt antall ord",
-    active: "Aktive",
-    inactive: "Inaktive",
-    cacheLoaded: "Cache lastet",
-  },
-  create: {
-    heading: "Opprett modereringsord",
-  },
-  editModal: {
-    title: "Rediger modereringsord",
-    confirm: "Lagre",
-    saving: "Lagrer...",
-    cancel: "Avbryt",
-  },
-  deleteModal: {
-    title: "Slett modereringsord",
-    message: `Er du sikker på at du vil slette "{{term}}"?`,
-    confirm: "Slett",
-    deleting: "Sletter...",
-    cancel: "Avbryt",
-  },
-  filters: {
-    search: "Søk",
-    searchPlaceholder: "Søk etter ord eller kategori",
-    status: "Status",
-    category: "Kategori",
-    all: "Alle",
-    active: "Aktiv",
-    inactive: "Inaktiv",
-    noCategory: "Ingen kategori",
-  },
-  table: {
-    term: "Ord",
-    category: "Kategori",
-    status: "Status",
-    updated: "Oppdatert",
-    actions: "Handlinger",
-  },
-  actions: {
-    addTerm: "Legg til ord",
-    saving: "Lagrer...",
-    edit: "Rediger",
-    activate: "Aktiver",
-    deactivate: "Deaktiver",
-    delete: "Slett",
-    reloadCache: "Last cache på nytt",
-    reloadingCache: "Laster...",
-  },
-  states: {
-    adminRequired: "Admin-tilgang kreves.",
-    notLoaded: "Ikke lastet",
-    noTermsFound: "Ingen modereringsord funnet.",
-  },
-  errors: {
-    termRequired: "Ord er påkrevd",
-    duplicateTerm: "Dette modereringsordet finnes allerede",
-  },
-  toasts: {
-    loadFailed: "Kunne ikke laste modereringsdata",
-    createFailed: "Kunne ikke opprette modereringsord",
-    updateFailed: "Kunne ikke oppdatere modereringsord",
-    deleteFailed: "Kunne ikke slette modereringsord",
-    reloadFailed: "Kunne ikke laste cache på nytt",
-    statusFailed: "Kunne ikke oppdatere status",
-    created: "Modereringsord opprettet",
-    updated: "Modereringsord oppdatert",
-    deleted: "Modereringsord slettet",
-    reloaded: "Modereringscache lastet på nytt",
-    activated: "Ordet ble aktivert",
-    deactivated: "Ordet ble deaktivert",
-  },
-     },
+      heading: "Moderation",
+      fields: {
+        term: "Term",
+        category: "Category",
+        active: "Active",
+      },
+      categories: {
+        profanity: "Profanity",
+        insult: "Insult",
+        sexual: "Sexual",
+        slur: "Slur",
+        other: "Other",
+      },
+      cards: {
+        totalTerms: "Total terms",
+        active: "Active",
+        inactive: "Inactive",
+        cacheLoaded: "Cache loaded",
+      },
+      create: {
+        heading: "Create moderation term",
+      },
+      editModal: {
+        title: "Edit moderation term",
+        confirm: "Save",
+        saving: "Saving...",
+        cancel: "Cancel",
+      },
+      deleteModal: {
+        title: "Delete moderation term",
+        message: `Are you sure you want to delete "{{term}}"?`,
+        confirm: "Delete",
+        deleting: "Deleting...",
+        cancel: "Cancel",
+      },
+      filters: {
+        search: "Search",
+        searchPlaceholder: "Search by term or category",
+        status: "Status",
+        category: "Category",
+        all: "All",
+        active: "Active",
+        inactive: "Inactive",
+        noCategory: "No category",
+      },
+      table: {
+        term: "Term",
+        category: "Category",
+        status: "Status",
+        updated: "Updated",
+        actions: "Actions",
+      },
+      actions: {
+        addTerm: "Add term",
+        saving: "Saving...",
+        edit: "Edit",
+        activate: "Activate",
+        deactivate: "Deactivate",
+        delete: "Delete",
+        reloadCache: "Reload cache",
+        reloadingCache: "Reloading...",
+      },
+      states: {
+        adminRequired: "Admin access required.",
+        notLoaded: "Not loaded",
+        noTermsFound: "No moderation terms found.",
+      },
+      errors: {
+        termRequired: "Term is required",
+        duplicateTerm: "This moderation term already exists",
+      },
+      toasts: {
+        loadFailed: "Failed to load moderation data",
+        createFailed: "Failed to create moderation term",
+        updateFailed: "Failed to update moderation term",
+        deleteFailed: "Failed to delete moderation term",
+        reloadFailed: "Failed to reload cache",
+        statusFailed: "Failed to update status",
+        created: "Moderation term created",
+        updated: "Moderation term updated",
+        deleted: "Moderation term deleted",
+        reloaded: "Moderation cache reloaded",
+        activated: "Term activated",
+        deactivated: "Term deactivated",
+      },
+    },
 
     common: {
-      loading: "laster..."
+      loading: "Loading...",
+      and: "and",
     },
 
     extra: {
       aria: {
-        scrollButton: "Scroll til toppen"
+        scrollButton: "Scroll to the top",
       },
-    },
-
-    layout: {
-      report: {
-        button: "Melding",
-        aria: "Rapporter et problem",
-        title: "Rapporter et problem",
-      },
-    },
-
-    validation: {
-      username: {
-        length: "Brukernavn må være mellom 3 og 16 tegn",
-      },
-      email: {
-        length: "E-post må være mellom 5 og 50 tegn",
-        invalid: "Ugyldig e-postadresse",
-      },
-      password: {
-        length: "Passord må være minst 8 tegn langt",
-        uppercase: "Passord må inneholde en stor bokstav",
-        number: "Passord må inneholde et tall",
-        symbol: "Passord må inneholde et symbol",
-      },
-       userInput: {
-        required: "Skriv inn brukernavn eller e-post",
-      },
-
-      loginPassword: {
-        required: "Skriv inn passord",
-      },
-      blockedComment: "Det som ble skrevet inneholder ord som ikke er lov å bruke.",
-      blockedContent: "Det som ble skrevet inneholder ord som ikke er lov å bruke.",
-      blockedUsername: "Dette brukernavnet inneholder språk som ikke er tillatt.",
-    },
-
-    contactTemplate: {
-      heading: "Velg et tema (fyller inn emne + melding):",
-      copy: "Kopier",
-      copySuccess: "Kopierte mal for {{label}}",
-      copyError: "Kopiering feilet (utklippstavletillatelse blokkert)",
-      fallbackInfo:
-        "Hvis e-postknappen ikke åpner noe, bruk «Kopier» og lim inn i et e-postprogram.",
-
-      topics: {
-        BUG: "Feil",
-        FEATURE: "Funksjonsønske",
-        SUGGESTION: "Forslag",
-        FEEDBACK: "Generell tilbakemelding",
-      },
-
-      subjects: {
-        BUG: "[DADJOKES][FEIL]",
-        FEATURE: "[DADJOKES][FUNKSJONSØNSKE]",
-        SUGGESTION: "[DADJOKES][FORSLAG]",
-        FEEDBACK: "[DADJOKES][TILBAKEMELDING]",
-      },
-
-      bodies: {
-        BUG: `Beskriv problemet:
-
-    Steg for å gjenskape problemet:
-    1.
-    2.
-    3.
-
-    Forventet resultat:
-    Faktisk resultat:
-    Skjermbilder (hvis aktuelt):
-
-    Enhet / nettleser: {{device}}
-    Side-URL:
-    `,
-
-        FEATURE: `Hvilken funksjon ønsker du å se?
-
-    Hvorfor er den nyttig?
-
-    Har du eksempler/lenker?
-
-    Enhet / nettleser: {{device}}
-    Side-URL:
-    `,
-
-        SUGGESTION: `Forslaget ditt:
-
-    Hvilket problem løser det?
-
-    Ekstra kontekst?
-
-    Enhet / nettleser: {{device}}
-    Side-URL:
-    `,
-
-        FEEDBACK: `Tilbakemeldingen din:
-
-    Hva likte du?
-
-    Hva kan forbedres?
-
-    Enhet / nettleser: {{device}}
-    Side-URL:
-    `,
-      },
-    },
-
-    home: {
-      heading: "Et fellesskap for klassiske pappavitser",
-      paragraph: "Send inn vitser, lik de beste, og bygg et rangert arkiv av tidløse ordspill.",
-      button0: "DASHBOARD",
-      button1: "REGISTRER",
-      button2: "FINN VITSER",
-    },
-
-    error404: {
-      heading: "BEKLAGER! SIDEN FINNES IKKE",
-      paragraph: "Gå tilbake ved å klikke knappen under for å returnere til startsiden.",
-      button: "GÅ TIL STARTSIDEN",
-    },
-
-    about: {
-  heading: "OM DADJOKES",
-
-  paragraph1:
-    "Dadjokes er en enkel plattform dedikert til én ting: herlig dårlige dad jokes.",
-
-  paragraph2:
-    "Registrerte brukere kan lage vitser, like vitser og kommentere — og dermed hjelpe fellesskapet med å løfte frem den beste (eller verste) pappahumoren.",
-
-  paragraph3:
-    "Hver dag velges en eksisterende vits automatisk ut som Dagens Vits. Hvis du ser dagens vits jevnlig, bygger du opp streaken din.",
-
-  paragraph4:
-    "Dadjokes støtter både engelsk og norsk. Appen fungerer som to språkspesifikke versjoner i én, slik at vitser, fremhevet innhold, rangeringer og søkeresultater følger det valgte språket.",
-
-  paragraph5:
-    "Hvis du noen gang har sagt «Hei sulten, jeg er pappa», er du på riktig sted.",
-
-  featuresHeading: "FUNKSJONER",
-
-  features: [
-    {
-      title: "✍️ Lag, lik og kommenter",
-      description:
-        "Lag dine egne vitser, lik vitser du synes er morsomme, og kommenter for å bli med i samtalen.",
-    },
-    {
-      title: "🌍 Engelsk og norsk",
-      description:
-        "Bytt mellom engelsk og norsk. Innhold som vitser, fremhevede sider, rangeringer og søkeresultater følger det valgte språket.",
-    },
-    {
-      title: "📅 Dagens vits",
-      description:
-        "En eksisterende vits blir fremhevet hver dag på siden for Dagens Vits.",
-    },
-    {
-      title: "🔥 Daglig streak",
-      description:
-        "Se dagens vits flere dager på rad for å bygge streaken din.",
-    },
-    {
-      title: "🏅 Merker",
-      description:
-        "Tjen merker for prestasjoner som Dagens Vits og Trending.",
-    },
-    {
-      title: "📊 Topplister",
-      description:
-        "Se brukere og vitser med spesielle merker og oppdag topprangerte bidrag.",
-    },
-    {
-      title: "🎲 Tilfeldig vits",
-      description:
-        "Bla gjennom tilfeldige vitser med en knapp for å få en ny tilfeldig vits.",
-    },
-  ],
-    },
-
-    contact: {
-      heading: "KONTAKT OSS",
-      paragraph1:
-        "Har du en vits som fortjener rampelyset? Funnet en bug? Eller vil du bare si hei?",
-      paragraph2a: "Send oss en e-post til",
-      paragraph2Span: "dadjokes@andresensolutions.no",
-      paragraph2b:
-        "så ser vi på det. Enten det er tilbakemelding, feature-forslag eller din beste (eller verste) pappavits.",
-    },
-
-    register: {
-      welcome: "Velkommen! Opprett en konto for å komme i gang.",
-      invalidForm: "Fyll ut skjemaet riktig før du sender inn.",
-      verifyEmail: "Bekreft e-posten din for å fortsette.",
-      registrationFailed: "Registrering mislyktes",
-      highlightedErrors: "Rett opp feilene og prøv igjen.",
-      success: "Velkommen, {{username}}!",
-
-      infoHeading: "Opprett konto",
-      infoListHeading: "Med en konto kan du:",
-      infoListItems: [
-        "Sende inn dine egne pappavitser",
-        "Like og reagere på andre vitser",
-        "Legge til tags for å organisere vitsene dine",
-        "Administrere profilen din",
-      ],
-
-      inputHeading: "REGISTRER",
-      usernameLabel: "Brukernavn",
-      emailLabel: "E-post",
-      passwordLabel: "Passord",
-      confirmPasswordLabel: "Bekreft passord",
-
-      usernamePlaceholder: "John92",
-      emailPlaceholder: "john92@gmail.com",
-      passwordPlaceholder: "********",
-      confirmPasswordPlaceholder: "********",
-
-      passwordsDoNotMatch: "Passordene er ikke like",
-      agreeTo: "Jeg godtar",
-      terms: "bruksvilkårene",
-      communityRules: "reglene for fellesskapet",
-
-      button: "REGISTRER",
-      goToLogin: "Har du allerede en konto?",
-      link: "Logg inn",
-    },
-
-    login: {
-      welcome: "Velkommen! Logg inn på kontoen din.",
-      loginFailed: "Innlogging mislyktes",
-      fixErrors: "Rett opp feilene og prøv igjen.",
-      missingAccessToken: "Innloggingssvaret mangler access token",
-      success: "Velkommen tilbake, {{username}}!",
-
-      infoHeading: "Logg inn og slipp løs din indre pappa",
-      infoListHeading: "Hva er nytt:",
-      infoListItems: [
-        "Fellesskapsrangert pappahumor",
-        "Send inn dine egne legendariske ordspill",
-      ],
-
-      inputHeading: "VELKOMMEN TILBAKE",
-      userInputLabel: "Brukernavn/E-post",
-      userInputPlaceholder: "John92/john@gmail.com",
-      passwordLabel: "Passord",
-      passwordPlaceholder: "********",
-
-      button: "LOGG INN",
-      forgotPassword: "Glemt passord?",
-      link2: "Tilbakestill passord",
-      goToRegister: "Ny her?",
-      link: "Opprett konto",
-    },
-
-    resetPassword: {
-      infoHeading: "Nytt passord",
-      infoListHeading: "Slik gjør du det:",
-      infoListItems: [
-        "1. Skriv et nytt passord",
-        "2. Bekreft passordet",
-        "3. Klikk på knappen for å opprette passord",
-      ],
-      inputHeading: "Nytt passord",
-
-      passwordLabel: "Passord",
-      confirmPasswordLabel: "Bekreft passord",
-      passwordPlaceholder: "********",
-      confirmPasswordPlaceholder: "********",
-
-      button: "Opprett passord",
-
-      welcome: "Vennligst tilbakestill passordet ditt.",
-      missingToken: "Ugyldig eller manglende token.",
-      failed: "Tilbakestilling av passord mislyktes",
-      success: "Passordet ble tilbakestilt. Du kan nå logge inn med det nye passordet.",
-      genericError: "Noe gikk galt. Prøv igjen senere.",
-      passwordsDoNotMatch: "Passordene er ikke like",
-    },
-
-    forgotPassword: {
-      infoHeading: "Tilbakestill passord",
-      infoListHeading: "Slik gjør du det:",
-      infoListItems: [
-        "1. Skriv inn e-posten som er knyttet til brukeren din",
-        "2. Følg lenken du får på e-post",
-        "3. Sett et nytt passord og logg inn",
-      ],
-
-      inputHeading: "Tilbakestill passord",
-      emailLabel: "E-post",
-      emailPlaceholder: "john@gmail.com",
-
-      button: "Send e-post",
-
-      welcome: "Skriv inn e-posten din.",
-      failed: "Kunne ikke sende e-post for tilbakestilling av passord",
-      fixError: "Rett opp feilen og prøv igjen.",
-      success: "Informasjon sendt til {{email}}. Sjekk søppelpost hvis du ikke ser e-posten.",
-      newLink: "Fikk du ikke e-post?",
-      retryNow: "Prøv igjen",
-      retryIn: "Send på nytt om {{seconds}} sekunder",
-    },
-
-    resendVerification: {
-      infoHeading: "Ny bekreftelseslenke",
-      infoListHeading: "Slik gjør du det:",
-      infoListItems: [
-        "1. Skriv inn e-postadressen din",
-        "2. Klikk på knappen for å sende en ny bekreftelseslenke",
-        "3. Åpne e-posten og bekreft kontoen din",
-      ],
-      inputHeading: "Send ny bekreftelseslenke",
-
-      emailLabel: "E-post",
-      emailPlaceholder: "Skriv inn e-posten din",
-
-      button: "Send ny bekreftelsesmail",
-
-      welcome: "Skriv inn e-posten din for å få en ny bekreftelseslenke.",
-      success: "En ny bekreftelsesmail ble sendt til {{email}}.",
-      failed: "Kunne ikke sende bekreftelsesmail",
-      retryIn: "Du kan prøve igjen om {{seconds}} sekunder.",
-      retryNow: "Du kan be om en ny e-post nå.",
-    },
-
-    verifyEmail: {
-      heading: "Verifiser email",
-      success: "Emailen din er verifisert",
-      goToLogin: "Gå til login",
-      resend: "Send ny bekreftelsesmail"
-    },
-
-    terms: {
-      heading: "BRUKSVILKÅR",
-      versionText: "Versjon",
-      version: "1.0",
-      lastUpdated: "2026-02-10",
-      lastUpdatedText: "Sist oppdatert",
-      relatedPolicies: "Relaterte retningslinjer",
-      intro:
-        "Disse bruksvilkårene («Vilkårene») regulerer din bruk av DadJokes («Tjenesten»). Ved å opprette en konto eller bruke Tjenesten godtar du disse Vilkårene.",
-
-      incorporatedPolicies: [
-        { label: "Personvernerklæring", path: "/privacy" },
-        { label: "Cookie-informasjon", path: "/cookies" },
-        { label: "Regler for fellesskapet", path: "/rules" },
-      ],
-
-      sections: [
-        {
-          title: "1. Hvem vi er",
-          paragraphs: [
-            "DadJokes drives av Andresen Solutions (andresensolutions.no).",
-            "Kontakt: dadjokes@andresensolutions.no",
-          ],
-        },
-
-        {
-          title: "2. Relaterte retningslinjer (innlemmet ved henvisning)",
-          paragraphs: [
-            "Disse Vilkårene innlemmer vår personvernerklæring, cookie-informasjon og regler for fellesskapet ved henvisning.",
-            "Ved å bruke Tjenesten godtar du å følge reglene for fellesskapet og erkjenner vår personvernerklæring og cookie-informasjon.",
-          ],
-        },
-
-        {
-          title: "3. Kvalifikasjon og kontoer",
-          paragraphs: [
-            "Du må oppgi korrekt informasjon når du oppretter en konto.",
-            "Du er ansvarlig for å holde innloggingsinformasjonen din sikker. Hvis du mistenker uautorisert tilgang, kontakt oss.",
-            "Vi kan suspendere eller fjerne kontoer som bryter disse Vilkårene eller reglene for fellesskapet.",
-          ],
-        },
-        {
-          title: "4. Ditt innhold",
-          paragraphs: [
-            "Du kan publisere vitser og annet tekstinnhold («Brukerinnhold»). Du beholder eierskapet til ditt Brukerinnhold.",
-            "Ved å publisere Brukerinnhold gir du DadJokes en ikke-eksklusiv lisens til å hoste, lagre, reprodusere og vise innholdet for å kunne drifte Tjenesten.",
-            "Ikke publiser innhold du ikke har rett til å dele.",
-          ],
-        },
-        {
-          title: "5. Forbudt atferd",
-          paragraphs: [
-            "Du må ikke trakassere andre, publisere hatefullt eller ulovlig innhold, spamme, forsøke å hacke eller forstyrre Tjenesten, eller misbruke likesystemet.",
-            "Vi kan fjerne innhold eller begrense kontoer etter eget skjønn for å beskytte Tjenesten og brukerne.",
-          ],
-        },
-        {
-          title: "6. Likes, rangeringer og ledertavler",
-          paragraphs: [
-            "Likes og rangeringer er ment for underholdning. Vi kan endre hvordan rangeringer fungerer når som helst.",
-            "Vi kan bruke tiltak mot misbruk (for eksempel rate limiting, svindeldeteksjon eller kontobegrensninger).",
-          ],
-        },
-        {
-          title: "7. Beta / tilgjengelighet",
-          paragraphs: [
-            "Tjenesten kan være i beta. Funksjoner kan endres eller slutte å virke, og vi kan midlertidig deaktivere deler av Tjenesten.",
-          ],
-        },
-        {
-          title: "8. Opphør",
-          paragraphs: [
-            "Du kan når som helst slutte å bruke Tjenesten.",
-            "Vi kan suspendere eller avslutte tilgangen din hvis du bryter disse Vilkårene, eller dersom det er nødvendig av sikkerhetsmessige eller juridiske grunner.",
-          ],
-        },
-        {
-          title: "9. Ansvarsfraskrivelser",
-          paragraphs: [
-            "Tjenesten leveres «som den er» uten garantier av noe slag.",
-            "Vi gjør vårt beste for å holde Tjenesten tilgjengelig og sikker, men vi kan ikke garantere uavbrutt tilgang.",
-          ],
-        },
-        {
-          title: "10. Ansvar",
-          paragraphs: [
-            "I den grad loven tillater det, er vi ikke ansvarlige for indirekte skader eller tap av data, fortjeneste eller goodwill.",
-          ],
-        },
-        {
-          title: "11. Endringer i disse Vilkårene",
-          paragraphs: [
-            "Vi kan oppdatere disse Vilkårene fra tid til annen. Vi oppdaterer datoen for «Sist oppdatert» og versjonsnummeret når vi gjør det.",
-            "Hvis endringene er vesentlige, kan vi be deg om å godta de oppdaterte Vilkårene på nytt.",
-          ],
-        },
-      ],
-    },
-
-    privacy: {
-      heading: "PERSONVERNERKLÆRING",
-      versionText: "Versjon",
-      version: "1.0",
-      lastUpdatedText: "Sist oppdatert",
-      lastUpdated: "2026-02-10",
-      intro:
-        "Denne personvernerklæringen forklarer hvilke personopplysninger vi samler inn, hvordan vi bruker dem, og hvilke rettigheter du har etter personvernreglene i EU/EØS (GDPR).",
-
-      sections: [
-        {
-          title: "1. Behandlingsansvarlig",
-          paragraphs: [
-            "Dadjokes drives av Andresen Solutions (andresensolutions.no).",
-            "Kontakt: dadjokes@andresensolutions.no",
-          ],
-        },
-        {
-          title: "2. Hva vi samler inn",
-          bullets: [
-            "Kontodata: brukernavn, e-post, passordhash (aldri passordet ditt i klartekst).",
-            "Profildata du velger å legge til: avatarbilde.",
-            "Innhold du oppretter: vitser, kommentarer og likes.",
-            "Sikkerhetsdata: IP-adresse og user-agent for å forhindre misbruk, rate limiting og tokensikkerhet.",
-          ],
-        },
-        {
-          title: "3. Hvorfor vi behandler opplysningene dine (rettslig grunnlag)",
-          bullets: [
-            "For å levere tjenesten (avtale): opprette kontoer, logge inn, poste vitser/kommentarer og vise likes.",
-            "For å holde tjenesten sikker (berettiget interesse): forhindre misbruk, oppdage mistenkelig aktivitet og bruke rate limiting.",
-            "For å overholde loven (rettslig forpliktelse) dersom det kreves.",
-          ],
-        },
-        {
-          title: "4. Cookies og lignende teknologier",
-          paragraphs: [
-            "Vi bruker en cookie for å holde deg innlogget (refresh token). Denne er strengt nødvendig for autentisering.",
-            "Vi bruker ikke reklamecookies.",
-          ],
-        },
-        {
-          title: "5. Deling av data",
-          paragraphs: [
-            "Vi selger ikke personopplysningene dine.",
-            "Vi kan dele data med leverandører av infrastruktur (hosting, databaser, e-postlevering) kun i den grad det er nødvendig for å drifte tjenesten.",
-          ],
-        },
-        {
-          title: "6. Lagringstid",
-          bullets: [
-            "Kontodata lagres så lenge kontoen din er aktiv.",
-            "Vitser, kommentarer og likes lagres med mindre de fjernes eller kontoen din slettes (avhengig av sletteregler).",
-            "Sikkerhetslogger lagres i en begrenset periode for å beskytte tjenesten.",
-          ],
-        },
-        {
-          title: "7. Dine rettigheter (EØS/EU)",
-          bullets: [
-            "Innsyn: be om en kopi av opplysningene dine.",
-            "Retting: korrigere unøyaktige opplysninger.",
-            "Sletting: be om sletting (med forbehold om juridiske og sikkerhetsmessige begrensninger).",
-            "Innsigelse/begrensning: begrense visse former for behandling i noen tilfeller.",
-            "Dataportabilitet: motta opplysningene dine i et strukturert format der det er relevant.",
-          ],
-        },
-        {
-          title: "8. Sikkerhet",
-          paragraphs: [
-            "Vi bruker passordhashing, HTTPS (når løsningen er riktig satt opp) og tokenbasert autentisering for å beskytte kontoer.",
-            "Ingen systemer er helt sikre, men vi tar rimelige tekniske og organisatoriske tiltak for å redusere risiko.",
-          ],
-        },
-        {
-          title: "9. Kontakt",
-          paragraphs: [
-            "Hvis du har spørsmål eller forespørsler om personvern, kontakt: dadjokes@andresensolutions.no",
-          ],
-        },
-      ],
-    },
-
-    cookies: {
-      heading: "INFORMASJON OM COOKIES",
-      versionText: "Versjon",
-      version: "1.0",
-      lastUpdatedText: "Sist oppdatert",
-      lastUpdated: "2026-02-10",
-
-      intro:
-        "Denne siden forklarer hvilke cookies Dadjokes bruker og hvorfor.",
-
-      sections: [
-        {
-          title: "1. Hva cookies er",
-          paragraphs: [
-            "Cookies er små tekstfiler som lagres på enheten din. De hjelper nettsteder med å huske informasjon, som for eksempel innloggingsøkter.",
-          ],
-        },
-        {
-          title: "2. Cookies vi bruker",
-          bullets: [
-            "Autentiseringscookie (refresh token): strengt nødvendig for å holde deg innlogget og for å utstede nye tilgangstokener på en sikker måte.",
-          ],
-        },
-        {
-          title: "3. Bruker vi analyse- eller reklamecookies?",
-          paragraphs: [
-            "Nei. Dadjokes bruker ikke reklamecookies.",
-            "Hvis vi legger til analyseverktøy senere, vil vi oppdatere denne informasjonen og, dersom det kreves, be om samtykke.",
-          ],
-        },
-        {
-          title: "4. Administrering av cookies",
-          paragraphs: [
-            "Du kan kontrollere cookies gjennom innstillingene i nettleseren din. Hvis du deaktiverer cookies, kan det føre til at innlogging ikke fungerer.",
-          ],
-        },
-      ],
-    },
-
-    rules: {
-      heading: "REGLER FOR FELLESSKAPET",
-      versionText: "Versjon",
-      version: "1.0",
-      lastUpdatedText: "Sist oppdatert:",
-      lastUpdated: "2026-02-10",
-      intro:
-        "Dadjokes skal være morsomt og inkluderende. Disse reglene finnes for å holde stemningen god.",
-
-      sections: [
-        {
-          title: "1. Vis respekt",
-          bullets: [
-            "Ingen trakassering, trusler eller hatefulle ytringer.",
-            "Ingen målrettet mobbing eller deling av private opplysninger.",
-          ],
-        },
-        {
-          title: "2. Hold det lovlig og trygt",
-          bullets: [
-            "Ingen ulovlig innhold eller instruksjoner til ulovlige handlinger.",
-            "Ingen ondsinnede lenker eller forsøk på å kompromittere kontoer eller systemer.",
-          ],
-        },
-        {
-          title: "3. Ingen spam eller manipulering",
-          bullets: [
-            "Ingen spam-innlegg eller spam-kommentarer.",
-            "Ingen manipulering av likes, falske kontoer eller automatiserte handlinger.",
-          ],
-        },
-        {
-          title: "4. Modereringstiltak",
-          paragraphs: [
-            "Vi kan fjerne innhold eller begrense kontoer for å håndheve disse reglene.",
-          ],
-        },
-      ],
-    },
-
-    admin: {
-      infoHeading: "Admin",
-      infoListItems: [
-        "Finn en bruker med brukernavn eller e-post.",
-        "Reaktiver inaktive brukere.",
-        "Deaktiver aktive brukere.",
-      ],
-      tabs: {
-        users: "Brukere",
-        moderation: "Moderering",
-      },
-      moderationIntro: {
-        paragraph1: "Administrer blokkerte ord som brukes av modereringssystemet.",
-        paragraph2: "Opprett, rediger, aktiver, deaktiver og slett modereringsord.",
-        paragraph3: "Last modereringscachen på nytt etter endringer ved behov.",
-      },
-      userSection: {
-        heading: "Brukeradministrasjon",
-        userInputLabel: "Brukernavn eller e-post",
-        removeFetchedUser: "Fjern valgt bruker",
-        statusLabel: "Status",
-        active: "Aktiv",
-        inactive: "Inaktiv",
-        actions: {
-          findUser: "Finn bruker",
-          reactivateUser: "Reaktiver bruker",
-          deactivateUser: "Deaktiver bruker",
-        },
-      },
-      toasts: {
-        mustBeLoggedInFetch: "Du må være logget inn for å finne en bruker",
-        mustBeLoggedInReactivate: "Du må være logget inn for å reaktivere en bruker",
-        mustBeLoggedInDeactivate: "Du må være logget inn for å deaktivere en bruker",
-        requestFailed: "Forespørselen mislyktes",
-        userFound: "Bruker funnet",
-        userNotFound: "Bruker ikke funnet",
-        fetchFailed: "Kunne ikke hente bruker",
-        activateFailed: "Kunne ikke reaktivere bruker",
-        deactivateFailed: "Kunne ikke deaktivere bruker",
-        userActivated: "{{username}} ble reaktivert",
-        userDeactivated: "{{username}} ble deaktivert",
-      },
-    },
-
-    profile: {
-      infoHeading: "PROFILDATA",
-      inputHeading: "OPPDATER PROFIL",
-
-      facts: {
-        bestDailyStreak: "🔥 Beste daglige streak:",
-        username: "Brukernavn",
-        email: "E-post",
-        role: "Rolle",
-        created: "Opprettet",
-        updated: "Oppdatert",
-        termsAccepted: "Godkjente vilkår",
-        termsVersion: "Vilkårsversjon",
-        notAvailable: "Ikke tilgjengelig",
-      },
-
-      fields: {
-        username: "Brukernavn",
-        email: "E-post",
-        password: "Passord",
-        avatar: "Avatar",
-      },
-
-      placeholders: {
-        password: "valgfritt - fyll kun inn for å endre",
-      },
-
-    drafts: {
-      heading1: "UTKAST",
-      heading2: "Ingen utkast enda",
-      paragraph: "Start å skrive en ny vits og lagre som utkast",
-    },
-
-    newPost: {
-      heading: "NY VITS",
-      button1: "LAGRE SOM UTKAST",
-      button2: "PUBLISER VITS",
-    },
-
-
-
-      avatar: {
-        help1: "Maks størrelse: {{size}}MB. Støttede formater: JPG, JPEG, WEBP, PNG.",
-        help2: "Opplasting av ny avatar vil erstatte den nåværende.",
-        previewAlt: "Forhåndsvisning av avatar",
-        invalidType: "Kun JPG-, PNG- eller WEBP-bilder er tillatt.",
-        tooLarge: "Avatarfilen er større enn {{size}}MB. Velg en mindre fil.",
-      },
-
-      modal: {
-        title: "Slett bruker",
-        message: "Er du sikker på at du vil slette denne brukeren? Denne handlingen kan ikke angres.",
-        confirmText: "Slett",
-        cancelText: "Avbryt",
-      },
-
-      deleteBox: {
-        text: "Sletting av kontoen deaktiverer den og fjerner tilgangen din.",
-      },
-
-      actions: {
-        logout: "LOGG UT",
-        deleteProfile: "SLETT PROFIL",
-        update: "OPPDATER",
-      },
-
-      toasts: {
-        deleteSuccess: "Profilen din er slettet.",
-        deleteFailed: "Kunne ikke slette profil",
-        updateSuccess: "Profil oppdatert!",
-        updateFailed: "Kunne ikke oppdatere profil",
-        avatarTooLarge: "Avatarfilen overskrider grensen. Maks størrelse er 6MB.",
-      },
-    },
-
-    badges: {
-      heading: "Medaljer",
-
-      current: {
-        heading: "Aktive",
-        subheading: "Aktive medaljer",
-        empty: "Ingen aktive medaljer ennå.",
-        since: "Siden",
-      },
-
-      history: {
-        heading: "Historikk",
-        subheading: "Alle tildelinger (nyeste først)",
-        empty: "Ingen medalje-historikk ennå.",
-        valid: "Gyldig",
-        from: "fra",
-        to: "til",
-      },
-
-      relatedPost: "Relatert innlegg",
-      loading: "Laster...",
-      page: "Side",
-      of: "av",
-      total: "Totalt",
-      prev: "Forrige",
-      next: "Neste",
-    },
-
-    drafts: {
-      heading: "UTKAST",
-
-      authRequired: "Logg inn for å se utkastene dine.",
-
-      toggleShowTitles: "Vis utkasttitler",
-      toggleShowFull: "Vis hele utkast",
-      reload: "Last inn på nytt",
-
-      empty: "Du har ikke opprettet noen utkast ennå.",
-      createDraft: "Opprett utkast",
-
-      showing: "Viser {{shown}} av {{total}}",
-    },
-
-    newPost: {
-      heading: "NY VITS",
-
-      fields: {
-        title: "Tittel",
-        body: "Innhold",
-        tags: "Tags",
-      },
-
-      placeholders: {
-        title: "Skriv vitsetittel her...",
-        body: "Skriv vitsen her...",
-        tags: "Legg til tags (kommaseparert)",
-      },
-
-      toasts: {
-        mustBeLoggedInDraft: "Du må være logget inn for å lagre et utkast.",
-        mustBeLoggedInPublish: "Du må være logget inn for å publisere en vits.",
-        titleAndBodyRequired: "Tittel og innhold er påkrevd.",
-        draftSaved: "Utkast lagret!",
-        jokePublished: "Vits publisert!",
-        sessionExpired: "Økten din har utløpt. Logg inn igjen.",
-        requestFailed: "Forespørselen mislyktes",
-      },
-
-      actions: {
-        saveDraft: "LAGRE SOM UTKAST",
-        publishJoke: "PUBLISER VITS",
-      },
-
-      currentLanguageLabel: "Denne vitsen vil bli laget som: "
-    },
-
-    search: {
-      heading: "SØK",
-
-      filters: {
-        heading: "Filtre:",
-        title: "Tittel",
-        body: "Innhold",
-        comments: "Kommentarer",
-        tags: "Tags",
-      },
-
-      actions: {
-        reload: "Last inn på nytt",
-        loadMore: "Last inn flere",
-      },
-
-      states: {
-        typeToSearch: "Skriv noe for å søke etter vitser.",
-        noResults: "Ingen resultater",
-        loading: "Laster...",
-        showing: "Viser {{shown}} av {{total}}",
-        foundIn: "Funnet i",
-      },
-
-      matchLabels: {
-        title: "tittel",
-        body: "innhold",
-        comment: "kommentar",
-        tag: "tag",
-      },
-
-      placeholder: "Søk vitser..."
-    },
-
-    myJokes: {
-      heading: "MINE VITSER",
-
-      authRequired: "Logg inn for å se vitsene dine.",
-
-      toggleShowFull: "Vis hele vitser",
-      toggleShowTitles: "Vis vitsetitler",
-      reload: "Last inn på nytt",
-
-      empty: "Du har ikke laget noen vitser ennå.",
-      createJoke: "Lag vits",
-
-      loadMore: "Last inn flere",
-      loading: "Laster...",
-
-      showing: "Viser {{shown}} av {{total}}",
-
-      login: "Logg inn"
-    },
-
-    allJokes: {
-      heading: "ALLE VITSER",
-
-      actions: {
-        showTitles: "Vis vitsetitler",
-        showFull: "Vis hele vitser",
-        reload: "Last inn på nytt",
-        loadMore: "Last inn flere",
-      },
-
-      states: {
-        empty: "Ingen vitser funnet",
-        loading: "Laster...",
-        showing: "Viser {{shown}} av {{total}}",
-      },
-    },
-
-    popular: {
-      heading: "👍 POPULÆRE VITSER",
-      subtitle: "10 mest likte vitser",
-
-      actions: {
-        showFull: "Vis hele vitser",
-        showTitles: "Vis vitsetitler",
-      },
-
-      states: {
-        empty: "Ingen vitser funnet",
-        failed: "Kunne ikke laste populære vitser",
-      },
-    },
-
-    dailyJoke: {
-      heading: "👑 DAGENS VITS",
-      subtitle: "Vitsen som er valgt for i dag",
-
-      states: {
-        notFound: "Fant ikke vitsen",
-        failed: "Kunne ikke hente dagens vits",
-      },
-    },
-
-    randomJoke: {
-      heading: "🎲 TILFELDIG VITS",
-
-      actions: {
-        getRandomJoke: "Hent tilfeldig vits",
-        newJoke: "Ny vits",
-        loading: "Laster...",
-      },
-
-      states: {
-        notFound: "Fant ikke vitsen",
-        failed: "Kunne ikke hente tilfeldig vits",
-      },
-    },
-
-    hallOfFame: {
-      heading: "Hall of Fame",
-
-      periods: {
-        week: "Denne uken",
-        month: "Denne måneden",
-        all: "Alle tider",
-      },
-
-      table: {
-        rank: "#",
-        user: "Bruker",
-        wins: "Seire",
-        streak: "Streak",
-        likes: "Likes",
-      },
-
-      mobileStats: {
-        wins: "Seire",
-        streak: "Streak",
-        likes: "Likes",
-      },
-
-      states: {
-        empty: "Ingen rangeringer ennå.",
-        failed: "Kunne ikke laste Hall of Fame",
-      },
-    },
-
-    featured: {
-      noJoke: "Ingenting ennå...",
-      topCreatorMonth: {
-        title: "🏆 TOPPSKAPER DENNE MÅNEDEN",
-        subtitle: "Skaperen med flest vitser denne måneden.",
-      },
-      trendingWeek: {
-        title: "⚡ TRENDER DENNE UKEN",
-        subtitle: "Vitsen som får mest oppmerksomhet akkurat nå.",
-      },
-      mostCommentedWeek: {
-        title: "🎭 MEST KOMMENTERT DENNE UKEN",
-        subtitle: "Vitsen med flest kommentarer denne uken.",
-      },
-      fastestGrowing: {
-        title: "🚀 RASKEST VOKSENDE",
-        subtitle: "Vitsen med størst vekst denne uken.",
-      },
-    },
-
-    commentForm: {
-      placeholder: "Skriv en kommentar...",
-
-      actions: {
-        addComment: "Legg til kommentar",
-        posting: "Publiserer...",
-      },
-
-      toasts: {
-        mustBeLoggedIn: "Du må være logget inn for å publisere en kommentar.",
-        empty: "Kommentaren kan ikke være tom",
-        published: "Kommentar publisert!",
-        sessionExpired: "Økten din har utløpt. Logg inn igjen.",
-        failed: "Kunne ikke publisere kommentar",
-        requestFailed: "Forespørselen mislyktes",
-      },
-
-      aria: {
-        submitTitle: "Kommenter vits",
-      },
-    },
-
-    comment: {
-      actions: {
-        edit: "Rediger kommentar",
-        delete: "Slett kommentar",
-        send: "Send",
-      },
-
-      aria: {
-        edit: "Rediger kommentar",
-        editMessage: "Rediger melding",
-      },
-    },
-
-    sidebar: {
-      dashboard: {
-        newJoke: "Ny vits",
-        drafts: "Utkast",
-        profile: "Profil",
-        badges: "Medaljer",
-        admin: "Admin",
-      },
-
-      jokes: {
-        search: "Søk",
-        myJokes: "Mine vitser",
-
-        groups: {
-          explore: "Utforsk",
-          games: "Spill",
-          rankings: "Rangeringer",
-        },
-
-        items: {
-          allJokes: "Alle vitser",
-          popular: "Populære",
-          dailyJoke: "Dagens vits",
-          random: "Tilfeldig",
-          jokeVsJoke: "Vits mot vits",
-          hallOfFame: "Hall of Fame",
-          topCreator: "Toppskaper",
-          trending: "Trending",
-          mostCommented: "Mest kommentert",
-          fastestGrowing: "Raskest voksende",
-        },
-      },
-    },
-
-    legalMenu: {
-      openAria: "Åpne juridisk meny",
-      title: "Juridisk",
-      heading: "Juridisk",
-
-      links: {
-        terms: "Bruksvilkår",
-        privacy: "Personvernerklæring",
-        cookies: "Informasjon om cookies",
-        rules: "Regler for fellesskapet",
-      },
-    },
-
-    mobileNavHint: {
-      title: "Navigasjon",
-      description: "Bruk disse knappene for å åpne menyer:",
-      left: "Venstre = Utforsk",
-      right: "Høyre = Hurtigliste",
-      dismiss: "Skjønner",
-    },
-
-    modal: {
-      closeAria: "Lukk modal",
-      closeTitle: "Lukk",
-      confirm: "Bekreft",
-      cancel: "Avbryt",
-      close: "Lukk",
-    },
-
-    postCard: {
-      open: "ÅPNE",
-    },
-
-    rightSidebar: {
-      heading: "Navigasjon",
-
-      empty: {
-        title: "Ingen vitser funnet",
-        action: "Hent vitser",
-      },
-
-      pagination: {
-        previous: "Forrige",
-        next: "Neste",
-        page: "Side",
-      },
-    },
-
-    tagsCard: {
-      show: "VIS TAGS"
-    },
-
-    userMenu: {
-      signedInAs: "Logget inn som",
-      profile: "Profil",
-      logout: "Logg ut",
-      loggedOut: "Du er nå logget ut.",
-    },
-
-    header: {
-      brand: "DadJokes",
-      beta: "Beta",
-
-      actions: {
-        toggleNavMenu: "Åpne/lukk navigasjonsmeny",
-        toggleMenu: "Åpne/lukk meny",
-      },
-    },
-
-    navbar: {
-      links: {
-        jokes: "Vitser",
-        dashboard: "Dashbord",
-        register: "Registrer",
-        login: "Login",
-        about: "Om",
-        contact: "Kontakt",
-      },
-
-      actions: {
-        toggleTheme: "Bytt lyst/mørkt tema",
-      },
-    },
-
-    post: {
-      status: {
-        draft: "UTKAST",
-      },
-
-      actions: {
-        openComments: "VIS KOMMENTARER",
-        closeComments: "LUKK KOMMENTARER",
-        showLess: "Vis mindre",
-        readMore: "Les mer",
-        publish: "Publiser",
-        loadMoreComments: "Last inn flere kommentarer",
-        loading: "Laster...",
-        goToLogin: "Logg inn"
-      },
-
-      toasts: {
-        mustBeLoggedInToLike: "Du må være logget inn for å like en vits",
-        cannotLikeOwn: "Du kan ikke like din egen vits",
-        toggleLikeFailed: "Kunne ikke endre like",
-        postEdited: "Vits oppdatert!",
-        postDeleted: "Vits slettet!",
-        commentEdited: "Kommentar oppdatert!",
-        commentDeleted: "Kommentar slettet!",
-        editJokeFailed: "Kunne ikke redigere vits",
-        deleteJokeFailed: "Kunne ikke slette vits",
-        editCommentFailed: "Kunne ikke redigere kommentar",
-        deleteCommentFailed: "Kunne ikke slette kommentar",
-        published: "Publisert",
-        unpublished: "Avpublisert",
-      },
-
-      modal: {
-        deleteTitle: "Slett vits",
-        deleteMessage: "Er du sikker på at du vil slette denne vitsen? Denne handlingen kan ikke angres.",
-        deleteConfirm: "Slett",
-        cancel: "Avbryt",
-      },
-
-      aria: {
-        editJoke: "Rediger vits",
-        deleteJoke: "Slett vits",
-        likeJoke: "Lik vits",
-        goToJoke: "Gå til vits",
-        editJokeTitle: "Rediger vitsetittel",
-        editJokeBody: "Rediger vitsetekst",
-        editJokeTags: "Rediger tags",
-        publishUnpublish: "Publiser/avpubliser",
-        editMessage: "Rediger melding",
-        toggleComments: "Vis/skjul kommentarer",
-      },
-
-      labels: {
-        username: "Brukernavn",
-        postDate: "Publiseringsdato",
-        comments: "KOMMENTARER",
-        noComments: "Ingen kommentarer ennå.",
-        beFirstToComment: "Vær den første som kommenterer!",
-        failedToLoadComments: "Kunne ikke laste kommentarer",
-        logInToComment: "Logg inn for å kommentere."
-      },
-
-      buttons: {
-        send: "Send",
-      },
-    },
-
-    avatarWithBadges: {
-      streak: "Daglig streak",
-      badges: "Medaljer",
-      noBadges: "Ingen medjaler ennå.",
-      noValue: "—",
-    },
-  },
-
-  EN: {
-
-  moderationAdmin: {
-  heading: "Moderation",
-  fields: {
-    term: "Term",
-    category: "Category",
-    active: "Active",
-  },
-  categories: {
-    profanity: "Profanity",
-    insult: "Insult",
-    sexual: "Sexual",
-    slur: "Slur",
-    other: "Other",
-  },
-  cards: {
-    totalTerms: "Total terms",
-    active: "Active",
-    inactive: "Inactive",
-    cacheLoaded: "Cache loaded",
-  },
-  create: {
-    heading: "Create moderation term",
-  },
-  editModal: {
-    title: "Edit moderation term",
-    confirm: "Save",
-    saving: "Saving...",
-    cancel: "Cancel",
-  },
-  deleteModal: {
-    title: "Delete moderation term",
-    message: `Are you sure you want to delete "{{term}}"?`,
-    confirm: "Delete",
-    deleting: "Deleting...",
-    cancel: "Cancel",
-  },
-  filters: {
-    search: "Search",
-    searchPlaceholder: "Search by term or category",
-    status: "Status",
-    category: "Category",
-    all: "All",
-    active: "Active",
-    inactive: "Inactive",
-    noCategory: "No category",
-  },
-  table: {
-    term: "Term",
-    category: "Category",
-    status: "Status",
-    updated: "Updated",
-    actions: "Actions",
-  },
-  actions: {
-    addTerm: "Add term",
-    saving: "Saving...",
-    edit: "Edit",
-    activate: "Activate",
-    deactivate: "Deactivate",
-    delete: "Delete",
-    reloadCache: "Reload cache",
-    reloadingCache: "Reloading...",
-  },
-  states: {
-    adminRequired: "Admin access required.",
-    notLoaded: "Not loaded",
-    noTermsFound: "No moderation terms found.",
-  },
-  errors: {
-    termRequired: "Term is required",
-    duplicateTerm: "This moderation term already exists",
-  },
-  toasts: {
-    loadFailed: "Failed to load moderation data",
-    createFailed: "Failed to create moderation term",
-    updateFailed: "Failed to update moderation term",
-    deleteFailed: "Failed to delete moderation term",
-    reloadFailed: "Failed to reload cache",
-    statusFailed: "Failed to update status",
-    created: "Moderation term created",
-    updated: "Moderation term updated",
-    deleted: "Moderation term deleted",
-    reloaded: "Moderation cache reloaded",
-    activated: "Term activated",
-    deactivated: "Term deactivated",
-  },
-  },
-
-   common: {
-      loading: "loading..."
-    },
-
-    extra: {
-      aria: {
-        scrollButton: "Scroll to the top"
-      },
-      loading: "loading..."
+      loading: "Loading...",
     },
 
     layout: {
@@ -1398,15 +124,13 @@ export const translations = {
       },
       userInput: {
         required: "Enter your username or email",
-        },
-
+      },
       loginPassword: {
         required: "Enter your password",
       },
       blockedComment: "This content contains language that is not allowed.",
       blockedContent: "This content contains language that is not allowed.",
       blockedUsername: "This username contains language that is not allowed.",
-
     },
 
     contactTemplate: {
@@ -1425,58 +149,58 @@ export const translations = {
       },
 
       subjects: {
-        BUG: "[DADJOKES][BUG]",
-        FEATURE: "[DADJOKES][FEATURE]",
-        SUGGESTION: "[DADJOKES][SUGGESTION]",
-        FEEDBACK: "[DADJOKES][FEEDBACK]",
+        BUG: "[PUNDAD][BUG]",
+        FEATURE: "[PUNDAD][FEATURE]",
+        SUGGESTION: "[PUNDAD][SUGGESTION]",
+        FEEDBACK: "[PUNDAD][FEEDBACK]",
       },
 
       bodies: {
         BUG: `Describe the issue:
 
-        Steps to reproduce:
-        1.
-        2.
-        3.
+Steps to reproduce:
+1.
+2.
+3.
 
-        Expected result:
-        Actual result:
-        Screenshots (if applicable):
+Expected result:
+Actual result:
+Screenshots (if applicable):
 
-        Device / Browser: {{device}}
-        Page URL:
-        `,
+Device / Browser: {{device}}
+Page URL:
+`,
 
-                FEATURE: `What feature would you like to see?
+        FEATURE: `What feature would you like to see?
 
-        Why is it valuable?
+Why is it valuable?
 
-        Any examples/links?
+Any examples/links?
 
-        Device / Browser: {{device}}
-        Page URL:
-        `,
+Device / Browser: {{device}}
+Page URL:
+`,
 
-                SUGGESTION: `Your suggestion:
+        SUGGESTION: `Your suggestion:
 
-        What problem does it solve?
+What problem does it solve?
 
-        Any extra context?
+Any extra context?
 
-        Device / Browser: {{device}}
-        Page URL:
-        `,
+Device / Browser: {{device}}
+Page URL:
+`,
 
-                FEEDBACK: `Your feedback:
+        FEEDBACK: `Your feedback:
 
-        What did you like?
+What did you like?
 
-        What could be improved?
+What could be improved?
 
-        Device / Browser: {{device}}
-        Page URL:
-        `,
-              },
+Device / Browser: {{device}}
+Page URL:
+`,
+      },
     },
 
     home: {
@@ -1496,62 +220,62 @@ export const translations = {
     },
 
     about: {
-  heading: "ABOUT DADJOKES",
+      heading: "ABOUT PUNDAD",
 
-  paragraph1:
-    "Dadjokes is a simple platform dedicated to one thing: gloriously bad dad jokes.",
+      paragraph1:
+        "PunDad is a simple platform dedicated to gloriously bad dad jokes, puns, and groan-worthy humor.",
 
-  paragraph2:
-    "Registered users can create jokes, like jokes, and comment — helping the community surface the best (or worst) dad humor.",
+      paragraph2:
+        "Registered users can create jokes, like jokes, and comment — helping the community surface the best (or worst) dad humor.",
 
-  paragraph3:
-    "Every day, an existing joke is automatically selected as the Joke of the Day. Viewing the daily joke consistently builds your daily streak.",
+      paragraph3:
+        "Every day, an existing joke is automatically selected as the Joke of the Day. Viewing the daily joke consistently builds your daily streak.",
 
-  paragraph4:
-    "Dadjokes supports both English and Norwegian. The app works like two language-specific versions in one, so jokes, featured content, rankings, and search results follow the selected language.",
+      paragraph4:
+        "PunDad supports both English and Norwegian. The app works like two language-specific versions in one, so jokes, featured content, rankings, and search results follow the selected language.",
 
-  paragraph5:
-    "If you've ever said 'Hi hungry, I'm dad', you're in the right place.",
+      paragraph5:
+        "If you've ever said 'Hi hungry, I'm dad', you're in the right place.",
 
-  featuresHeading: "FEATURES",
+      featuresHeading: "FEATURES",
 
-  features: [
-    {
-      title: "✍️ Create, Like & Comment",
-      description:
-        "Create your own jokes, like jokes you enjoy, and comment to join the conversation.",
-    },
-    {
-      title: "🌍 English & Norwegian",
-      description:
-        "Switch between English and Norwegian. Content such as jokes, featured pages, rankings, and search results follows the selected language.",
-    },
-    {
-      title: "📅 Joke of the Day",
-      description:
-        "An existing joke is featured every day on the Joke of the Day page.",
-    },
-    {
-      title: "🔥 Daily Streak",
-      description:
-        "View the daily joke multiple days in a row to build your streak.",
-    },
-    {
-      title: "🏅 Badges",
-      description:
-        "Earn badges for achievements like Joke of the Day and Trending.",
-    },
-    {
-      title: "📊 Leaderboards",
-      description:
-        "Browse users and jokes with special badges and see top performers.",
-    },
-    {
-      title: "🎲 Random Joke",
-      description:
-        "Browse random jokes with a button for a new random joke.",
-    },
-  ],
+      features: [
+        {
+          title: "✍️ Create, Like & Comment",
+          description:
+            "Create your own jokes, like jokes you enjoy, and comment to join the conversation.",
+        },
+        {
+          title: "🌍 English & Norwegian",
+          description:
+            "Switch between English and Norwegian. Content such as jokes, featured pages, rankings, and search results follows the selected language.",
+        },
+        {
+          title: "📅 Joke of the Day",
+          description:
+            "An existing joke is featured every day on the Joke of the Day page.",
+        },
+        {
+          title: "🔥 Daily Streak",
+          description:
+            "View the daily joke multiple days in a row to build your streak.",
+        },
+        {
+          title: "🏅 Badges",
+          description:
+            "Earn badges for achievements like Joke of the Day and Trending.",
+        },
+        {
+          title: "📊 Leaderboards",
+          description:
+            "Browse users and jokes with special badges and see top performers.",
+        },
+        {
+          title: "🎲 Random Joke",
+          description:
+            "Browse random jokes with a button for a new random joke.",
+        },
+      ],
     },
 
     contact: {
@@ -1609,7 +333,7 @@ export const translations = {
       missingAccessToken: "Login response missing accessToken",
       success: "Welcome back, {{username}}!",
 
-      infoHeading: "Log in to unleash your inner dad",
+      infoHeading: "Log in to unleash your inner pun dad",
       infoListHeading: "What's new:",
       infoListItems: [
         "Community-ranked dad jokes",
@@ -1627,6 +351,7 @@ export const translations = {
       link2: "Reset password",
       goToRegister: "New here?",
       link: "Create account",
+      resendVerificationLink: "Resend verification email",
     },
 
     resetPassword: {
@@ -1649,7 +374,8 @@ export const translations = {
       welcome: "Please reset your password.",
       missingToken: "Invalid or missing token.",
       failed: "Password reset failed",
-      success: "Password reset successful! You can now log in with your new password.",
+      success:
+        "Password reset successful! You can now log in with your new password.",
       genericError: "Something went wrong. Try again later.",
       passwordsDoNotMatch: "Passwords do not match",
     },
@@ -1672,7 +398,8 @@ export const translations = {
       welcome: "Enter your email.",
       failed: "Failed to send reset password email",
       fixError: "Correct the error and try again.",
-      success: "Info sent to {{email}}. Check spam folder if you don't see the email.",
+      success:
+        "Info sent to {{email}}. Check spam folder if you don't see the email.",
       newLink: "Didn't receive an email?",
       retryNow: "Try again",
       retryIn: "Send again in {{seconds}} seconds",
@@ -1704,7 +431,7 @@ export const translations = {
       heading: "Verify email",
       success: "Your email has been verified successfully.",
       goToLogin: "Go to login",
-      resend: "Send new verification email"
+      resend: "Send new verification email",
     },
 
     terms: {
@@ -1716,7 +443,7 @@ export const translations = {
       relatedPolicies: "Related policies",
 
       intro:
-        "These Terms of Service (“Terms”) govern your use of DadJokes (“the Service”). By creating an account or using the Service, you agree to these Terms.",
+        "These Terms of Service (“Terms”) govern your use of PunDad (“the Service”). By creating an account or using the Service, you agree to these Terms.",
 
       incorporatedPolicies: [
         { label: "Privacy Policy", path: "/privacy" },
@@ -1728,11 +455,10 @@ export const translations = {
         {
           title: "1. Who we are",
           paragraphs: [
-            "DadJokes is operated by Andresen Solutions (andresensolutions.no).",
+            "PunDad is operated by Andresen Solutions (andresensolutions.no).",
             "Contact: dadjokes@andresensolutions.no",
           ],
         },
-
         {
           title: "2. Related policies (incorporated by reference)",
           paragraphs: [
@@ -1740,7 +466,6 @@ export const translations = {
             "By using the Service, you agree to comply with the Community Rules and acknowledge our Privacy and Cookie Policies.",
           ],
         },
-
         {
           title: "3. Eligibility and accounts",
           paragraphs: [
@@ -1753,7 +478,7 @@ export const translations = {
           title: "4. Your content",
           paragraphs: [
             "You may post jokes and other text content (“User Content”). You retain ownership of your User Content.",
-            "By posting User Content, you grant DadJokes a non-exclusive license to host, store, reproduce, and display it for the purpose of operating the Service.",
+            "By posting User Content, you grant PunDad a non-exclusive license to host, store, reproduce, and display it for the purpose of operating the Service.",
             "Do not post content you do not have the right to share.",
           ],
         },
@@ -1820,7 +545,7 @@ export const translations = {
         {
           title: "1. Data controller",
           paragraphs: [
-            "Dadjokes is operated by Andresen Solutions (andresensolutions.no).",
+            "PunDad is operated by Andresen Solutions (andresensolutions.no).",
             "Contact: dadjokes@andresensolutions.no",
           ],
         },
@@ -1897,7 +622,7 @@ export const translations = {
       lastUpdated: "2026-02-10",
 
       intro:
-        "This page explains what cookies Dadjokes uses and why.",
+        "This page explains what cookies PunDad uses and why.",
 
       sections: [
         {
@@ -1915,7 +640,7 @@ export const translations = {
         {
           title: "3. Do we use analytics or ads cookies?",
           paragraphs: [
-            "No. Dadjokes does not use advertising cookies.",
+            "No. PunDad does not use advertising cookies.",
             "If we add analytics later, we will update this notice and, if required, request your consent.",
           ],
         },
@@ -1933,7 +658,7 @@ export const translations = {
       version: "1.0",
       lastUpdated: "2026-02-10",
       intro:
-        "Dadjokes is meant to be fun and welcoming. These rules exist to keep the vibes good.",
+        "PunDad is meant to be fun and welcoming. These rules exist to keep the vibes good.",
 
       sections: [
         {
@@ -1958,12 +683,12 @@ export const translations = {
           ],
         },
         {
-        title: "4. Moderation actions",
-        paragraphs: [
-          "We may remove content or restrict accounts to enforce these rules.",
-        ],
-      },
-    ],
+          title: "4. Moderation actions",
+          paragraphs: [
+            "We may remove content or restrict accounts to enforce these rules.",
+          ],
+        },
+      ],
     },
 
     admin: {
@@ -1979,7 +704,8 @@ export const translations = {
       },
       moderationIntro: {
         paragraph1: "Manage blocked terms used by the moderation system.",
-        paragraph2: "Create, edit, activate, deactivate, and delete moderation terms.",
+        paragraph2:
+          "Create, edit, activate, deactivate, and delete moderation terms.",
         paragraph3: "Reload the moderation cache after changes if needed.",
       },
       userSection: {
@@ -1997,8 +723,10 @@ export const translations = {
       },
       toasts: {
         mustBeLoggedInFetch: "You must be logged in to find a user",
-        mustBeLoggedInReactivate: "You must be logged in to reactivate a user",
-        mustBeLoggedInDeactivate: "You must be logged in to deactivate a user",
+        mustBeLoggedInReactivate:
+          "You must be logged in to reactivate a user",
+        mustBeLoggedInDeactivate:
+          "You must be logged in to deactivate a user",
         requestFailed: "Request failed",
         userFound: "User found",
         userNotFound: "User not found",
@@ -2038,16 +766,19 @@ export const translations = {
       },
 
       avatar: {
-        help1: "Max size: {{size}}MB. Supported formats: JPG, JPEG, WEBP, PNG.",
+        help1:
+          "Max size: {{size}}MB. Supported formats: JPG, JPEG, WEBP, PNG.",
         help2: "Uploading a new avatar will replace your current one.",
         previewAlt: "Avatar preview",
         invalidType: "Only JPG, PNG or WEBP images are allowed.",
-        tooLarge: "Avatar file size exceeds {{size}}MB. Choose a smaller file.",
+        tooLarge:
+          "Avatar file size exceeds {{size}}MB. Choose a smaller file.",
       },
 
       modal: {
         title: "Delete user",
-        message: "Are you sure you want to delete this user? This action cannot be undone.",
+        message:
+          "Are you sure you want to delete this user? This action cannot be undone.",
         confirmText: "Delete",
         cancelText: "Cancel",
       },
@@ -2067,7 +798,8 @@ export const translations = {
         deleteFailed: "Failed to delete profile",
         updateSuccess: "Profile updated successfully!",
         updateFailed: "Failed to update profile",
-        avatarTooLarge: "Avatar file size exceeds the limit. Max size is 6MB.",
+        avatarTooLarge:
+          "Avatar file size exceeds the limit. Max size is 6MB.",
       },
     },
 
@@ -2144,7 +876,7 @@ export const translations = {
         publishJoke: "PUBLISH JOKE",
       },
 
-      currentLanguageLabel: "This joke will be created as: "
+      currentLanguageLabel: "This joke will be created as: ",
     },
 
     search: {
@@ -2178,7 +910,7 @@ export const translations = {
         tag: "tag",
       },
 
-      placeholder: "Search jokes..."
+      placeholder: "Search jokes...",
     },
 
     myJokes: {
@@ -2198,7 +930,7 @@ export const translations = {
 
       showing: "Showing {{shown}} of {{total}}",
 
-      login: "Login"
+      login: "Login",
     },
 
     allJokes: {
@@ -2425,7 +1157,7 @@ export const translations = {
     },
 
     tagsCard: {
-      show: "SHOW TAGS"
+      show: "SHOW TAGS",
     },
 
     userMenu: {
@@ -2436,7 +1168,7 @@ export const translations = {
     },
 
     header: {
-      brand: "DadJokes",
+      brand: "PunDad",
       beta: "Beta",
 
       actions: {
@@ -2473,7 +1205,7 @@ export const translations = {
         publish: "Publish",
         loadMoreComments: "Load more comments",
         loading: "Loading...",
-        goToLogin: "Log in"
+        goToLogin: "Log in",
       },
 
       toasts: {
@@ -2494,7 +1226,8 @@ export const translations = {
 
       modal: {
         deleteTitle: "Delete joke",
-        deleteMessage: "Are you sure you want to delete this joke? This action cannot be undone.",
+        deleteMessage:
+          "Are you sure you want to delete this joke? This action cannot be undone.",
         deleteConfirm: "Delete",
         cancel: "Cancel",
       },
@@ -2519,7 +1252,7 @@ export const translations = {
         noComments: "No comments yet.",
         beFirstToComment: "Be the first to comment!",
         failedToLoadComments: "Failed to load comments",
-        logInToComment: "Log in to comment."
+        logInToComment: "Log in to comment.",
       },
 
       buttons: {
@@ -2533,5 +1266,1279 @@ export const translations = {
       noBadges: "No badges yet.",
       noValue: "—",
     },
-  }
+  },
+
+  NO: {
+    moderationAdmin: {
+      heading: "Moderering",
+      fields: {
+        term: "Term",
+        category: "Kategori",
+        active: "Aktiv",
+      },
+      categories: {
+        profanity: "Banning",
+        insult: "Fornærmelse",
+        sexual: "Seksuelt",
+        slur: "Nedsettende uttrykk",
+        other: "Annet",
+      },
+      cards: {
+        totalTerms: "Totalt antall termer",
+        active: "Aktive",
+        inactive: "Inaktive",
+        cacheLoaded: "Cache lastet",
+      },
+      create: {
+        heading: "Opprett modereringsterm",
+      },
+      editModal: {
+        title: "Rediger modereringsterm",
+        confirm: "Lagre",
+        saving: "Lagrer...",
+        cancel: "Avbryt",
+      },
+      deleteModal: {
+        title: "Slett modereringsterm",
+        message: `Er du sikker på at du vil slette "{{term}}"?`,
+        confirm: "Slett",
+        deleting: "Sletter...",
+        cancel: "Avbryt",
+      },
+      filters: {
+        search: "Søk",
+        searchPlaceholder: "Søk etter term eller kategori",
+        status: "Status",
+        category: "Kategori",
+        all: "Alle",
+        active: "Aktive",
+        inactive: "Inaktive",
+        noCategory: "Ingen kategori",
+      },
+      table: {
+        term: "Term",
+        category: "Kategori",
+        status: "Status",
+        updated: "Oppdatert",
+        actions: "Handlinger",
+      },
+      actions: {
+        addTerm: "Legg til term",
+        saving: "Lagrer...",
+        edit: "Rediger",
+        activate: "Aktiver",
+        deactivate: "Deaktiver",
+        delete: "Slett",
+        reloadCache: "Last inn cache på nytt",
+        reloadingCache: "Laster inn cache...",
+      },
+      states: {
+        adminRequired: "Admin-tilgang kreves.",
+        notLoaded: "Ikke lastet",
+        noTermsFound: "Ingen modereringstermer funnet.",
+      },
+      errors: {
+        termRequired: "Term er påkrevd",
+        duplicateTerm: "Denne modereringstermen finnes allerede",
+      },
+      toasts: {
+        loadFailed: "Kunne ikke laste modereringsdata",
+        createFailed: "Kunne ikke opprette modereringsterm",
+        updateFailed: "Kunne ikke oppdatere modereringsterm",
+        deleteFailed: "Kunne ikke slette modereringsterm",
+        reloadFailed: "Kunne ikke laste inn cache på nytt",
+        statusFailed: "Kunne ikke oppdatere status",
+        created: "Modereringsterm opprettet",
+        updated: "Modereringsterm oppdatert",
+        deleted: "Modereringsterm slettet",
+        reloaded: "Moderering-cache lastet inn på nytt",
+        activated: "Term aktivert",
+        deactivated: "Term deaktivert",
+      },
+    },
+
+    common: {
+      loading: "Laster...",
+      and: "og",
+    },
+
+    extra: {
+      aria: {
+        scrollButton: "Scroll til toppen",
+      },
+      loading: "Laster...",
+    },
+
+    layout: {
+      report: {
+        button: "Rapporter",
+        aria: "Rapporter et problem",
+        title: "Rapporter et problem",
+      },
+    },
+
+    validation: {
+      username: {
+        length: "Brukernavn må være mellom 3 og 16 tegn",
+      },
+      email: {
+        length: "E-post må være mellom 5 og 50 tegn",
+        invalid: "Ugyldig e-postadresse",
+      },
+      password: {
+        length: "Passord må være minst 8 tegn langt",
+        uppercase: "Passord må inneholde en stor bokstav",
+        number: "Passord må inneholde et tall",
+        symbol: "Passord må inneholde et symbol",
+      },
+      userInput: {
+        required: "Skriv inn brukernavn eller e-post",
+      },
+      loginPassword: {
+        required: "Skriv inn passord",
+      },
+      blockedComment: "Dette innholdet inneholder språk som ikke er tillatt.",
+      blockedContent: "Dette innholdet inneholder språk som ikke er tillatt.",
+      blockedUsername: "Dette brukernavnet inneholder språk som ikke er tillatt.",
+    },
+
+    contactTemplate: {
+      heading: "Velg et tema (fyller inn emne + melding):",
+      copy: "Kopier",
+      copySuccess: "Kopierte mal for {{label}}",
+      copyError: "Kunne ikke kopiere (utklippstavletillatelse blokkert)",
+      fallbackInfo:
+        "Hvis e-postknappen ikke åpner noe, bruk «Kopier» og lim inn i en e-postapp.",
+
+      topics: {
+        BUG: "Feil",
+        FEATURE: "Funksjonsønske",
+        SUGGESTION: "Forslag",
+        FEEDBACK: "Generell tilbakemelding",
+      },
+
+      subjects: {
+        BUG: "[PUNDAD][FEIL]",
+        FEATURE: "[PUNDAD][FUNKSJON]",
+        SUGGESTION: "[PUNDAD][FORSLAG]",
+        FEEDBACK: "[PUNDAD][TILBAKEMELDING]",
+      },
+
+      bodies: {
+        BUG: `Beskriv problemet:
+
+Steg for å gjenskape:
+1.
+2.
+3.
+
+Forventet resultat:
+Faktisk resultat:
+Skjermbilder (hvis relevant):
+
+Enhet / Nettleser: {{device}}
+Side-URL:
+`,
+
+        FEATURE: `Hvilken funksjon ønsker du å se?
+
+Hvorfor er den verdifull?
+
+Noen eksempler/lenker?
+
+Enhet / Nettleser: {{device}}
+Side-URL:
+`,
+
+        SUGGESTION: `Ditt forslag:
+
+Hvilket problem løser det?
+
+Ekstra kontekst?
+
+Enhet / Nettleser: {{device}}
+Side-URL:
+`,
+
+        FEEDBACK: `Din tilbakemelding:
+
+Hva likte du?
+
+Hva kan forbedres?
+
+Enhet / Nettleser: {{device}}
+Side-URL:
+`,
+      },
+    },
+
+    home: {
+      heading: "Et fellesskap for klassisk pappa-humor",
+      paragraph:
+        "Send inn dad jokes, lik de beste, og se samlingen vokse til et rangert arkiv av tidløse ordspill.",
+      button0: "DASHBOARD",
+      button1: "REGISTRER",
+      button2: "FINN VITSER",
+    },
+
+    error404: {
+      heading: "BEKLAGER! SIDEN BLE IKKE FUNNET",
+      paragraph:
+        "Kom tilbake på rett spor ved å klikke knappen under for å gå til startsiden.",
+      button: "GÅ TIL STARTSIDEN",
+    },
+
+    about: {
+      heading: "OM PUNDAD",
+
+      paragraph1:
+        "PunDad er en enkel plattform dedikert til herlig dårlige dad jokes, ordspill og pinlig pappa-humor.",
+
+      paragraph2:
+        "Registrerte brukere kan lage vitser, like vitser og kommentere — og dermed hjelpe fellesskapet med å løfte fram den beste (eller verste) pappa-humoren.",
+
+      paragraph3:
+        "Hver dag blir en eksisterende vits automatisk valgt som Dagens vits. Hvis du ser dagens vits jevnlig, bygger du opp streaken din.",
+
+      paragraph4:
+        "PunDad støtter både engelsk og norsk. Appen fungerer som to språkspesifikke versjoner i én, slik at vitser, utvalgt innhold, rangeringer og søkeresultater følger valgt språk.",
+
+      paragraph5:
+        "Hvis du noen gang har sagt «Hei sulten, jeg er pappa», er du på rett sted.",
+
+      featuresHeading: "FUNKSJONER",
+
+      features: [
+        {
+          title: "✍️ Lag, lik og kommenter",
+          description:
+            "Lag dine egne vitser, lik vitser du liker, og kommenter for å bli med i samtalen.",
+        },
+        {
+          title: "🌍 Engelsk og norsk",
+          description:
+            "Bytt mellom engelsk og norsk. Innhold som vitser, utvalgte sider, rangeringer og søkeresultater følger valgt språk.",
+        },
+        {
+          title: "📅 Dagens vits",
+          description:
+            "En eksisterende vits blir løftet fram hver dag på siden for Dagens vits.",
+        },
+        {
+          title: "🔥 Daglig streak",
+          description:
+            "Se dagens vits flere dager på rad for å bygge streaken din.",
+        },
+        {
+          title: "🏅 Merker",
+          description:
+            "Tjen merker for prestasjoner som Dagens vits og Trending.",
+        },
+        {
+          title: "📊 Topplister",
+          description:
+            "Se brukere og vitser med spesielle merker og oppdag topprangerte bidrag.",
+        },
+        {
+          title: "🎲 Tilfeldig vits",
+          description:
+            "Bla gjennom tilfeldige vitser med en knapp for å hente en ny tilfeldig vits.",
+        },
+      ],
+    },
+
+    contact: {
+      heading: "KONTAKT OSS",
+      paragraph1:
+        "Har du en vits som fortjener rampelyset? Funnet en feil? Eller vil du bare si hei?",
+      paragraph2a: "Send oss en e-post på",
+      paragraph2Span: "dadjokes@andresensolutions.no",
+      paragraph2b:
+        "så hører vi gjerne fra deg. Tilbakemeldinger og dad jokes er velkomne.",
+    },
+
+    register: {
+      welcome: "Velkommen! Opprett en konto for å komme i gang.",
+      invalidForm: "Fyll ut skjemaet riktig før du sender inn.",
+      verifyEmail: "Bekreft e-posten din for å fortsette.",
+      registrationFailed: "Registrering mislyktes",
+      highlightedErrors: "Rett opp de markerte feilene og prøv igjen.",
+      success: "Velkommen, {{username}}!",
+
+      infoHeading: "Opprett kontoen din",
+      infoListHeading: "Med en konto kan du:",
+      infoListItems: [
+        "Sende inn dine egne dad jokes",
+        "Like og reagere på andres vitser",
+        "Legge til tags for å organisere vitsene dine",
+        "Administrere profilen din",
+      ],
+
+      inputHeading: "REGISTRER",
+      usernameLabel: "Brukernavn",
+      emailLabel: "E-post",
+      passwordLabel: "Passord",
+      confirmPasswordLabel: "Bekreft passord",
+
+      usernamePlaceholder: "John92",
+      emailPlaceholder: "john92@gmail.com",
+      passwordPlaceholder: "********",
+      confirmPasswordPlaceholder: "********",
+
+      passwordsDoNotMatch: "Passordene er ikke like",
+      agreeTo: "Jeg godtar",
+      terms: "vilkårene",
+      communityRules: "samfunnsreglene",
+
+      button: "REGISTRER",
+      goToLogin: "Har du allerede en konto?",
+      link: "Logg inn",
+    },
+
+    login: {
+      welcome: "Velkommen! Logg inn på kontoen din.",
+      loginFailed: "Innlogging mislyktes",
+      fixErrors: "Rett opp feilen(e) og prøv igjen.",
+      missingAccessToken: "Innloggingssvaret mangler accessToken",
+      success: "Velkommen tilbake, {{username}}!",
+
+      infoHeading: "Logg inn og slipp løs din indre ordspill-pappa",
+      infoListHeading: "Hva er nytt:",
+      infoListItems: [
+        "Fellesskapsrangerte dad jokes",
+        "Send inn dine egne legendariske ordspill",
+      ],
+
+      inputHeading: "VELKOMMEN TILBAKE",
+      userInputLabel: "Brukernavn/E-post",
+      userInputPlaceholder: "John92/john@gmail.com",
+      passwordLabel: "Passord",
+      passwordPlaceholder: "********",
+
+      button: "LOGG INN",
+      forgotPassword: "Glemt passordet ditt?",
+      link2: "Tilbakestill passord",
+      goToRegister: "Ny her?",
+      link: "Opprett konto",
+      resendVerificationLink: "Send ny verifiseringsmail",
+    },
+
+    resetPassword: {
+      infoHeading: "Nytt passord!",
+      infoListHeading: "Slik gjør du det:",
+      infoListItems: [
+        "1. Skriv inn et nytt passord",
+        "2. Bekreft det",
+        "3. Klikk på knappen for å opprette passordet",
+      ],
+      inputHeading: "Nytt passord",
+
+      passwordLabel: "Passord",
+      confirmPasswordLabel: "Bekreft passord",
+      passwordPlaceholder: "********",
+      confirmPasswordPlaceholder: "********",
+
+      button: "Opprett passord",
+
+      welcome: "Vennligst tilbakestill passordet ditt.",
+      missingToken: "Ugyldig eller manglende token.",
+      failed: "Tilbakestilling av passord mislyktes",
+      success:
+        "Passordet ble tilbakestilt. Du kan nå logge inn med det nye passordet.",
+      genericError: "Noe gikk galt. Prøv igjen senere.",
+      passwordsDoNotMatch: "Passordene er ikke like",
+    },
+
+    forgotPassword: {
+      infoHeading: "Tilbakestill passord!",
+      infoListHeading: "Slik gjør du det:",
+      infoListItems: [
+        "1. Skriv inn e-posten som er koblet til brukeren din",
+        "2. Følg lenken du mottar på e-post",
+        "3. Sett et nytt passord og logg inn",
+      ],
+
+      inputHeading: "Tilbakestill passord",
+      emailLabel: "E-post",
+      emailPlaceholder: "john@gmail.com",
+
+      button: "Send e-post",
+
+      welcome: "Skriv inn e-posten din.",
+      failed: "Kunne ikke sende e-post for tilbakestilling av passord",
+      fixError: "Rett opp feilen og prøv igjen.",
+      success:
+        "Informasjon sendt til {{email}}. Sjekk søppelpost dersom du ikke ser e-posten.",
+      newLink: "Fikk du ikke e-post?",
+      retryNow: "Prøv igjen",
+      retryIn: "Send igjen om {{seconds}} sekunder",
+    },
+
+    resendVerification: {
+      infoHeading: "Ny verifiseringslenke",
+      infoListHeading: "Slik gjør du det:",
+      infoListItems: [
+        "1. Skriv inn e-postadressen din",
+        "2. Klikk på knappen for å sende en ny verifiseringslenke",
+        "3. Åpne e-posten og bekreft kontoen din",
+      ],
+      inputHeading: "Send ny verifiseringslenke",
+
+      emailLabel: "E-post",
+      emailPlaceholder: "Skriv inn e-posten din",
+
+      button: "Send ny verifiseringsmail",
+
+      welcome:
+        "Skriv inn e-posten din for å motta en ny verifiseringslenke.",
+      success: "En ny verifiseringsmail ble sendt til {{email}}.",
+      failed: "Kunne ikke sende verifiseringsmail",
+      retryIn: "Du kan prøve igjen om {{seconds}} sekunder.",
+      retryNow: "Du kan be om en ny e-post nå.",
+    },
+
+    verifyEmail: {
+      heading: "Bekreft e-post",
+      success: "E-posten din er bekreftet.",
+      goToLogin: "Gå til innlogging",
+      resend: "Send ny verifiseringsmail",
+    },
+
+    terms: {
+      heading: "BRUKSVILKÅR",
+      version: "1.0",
+      versionText: "Versjon",
+      lastUpdatedText: "Sist oppdatert",
+      lastUpdated: "2026-02-10",
+      relatedPolicies: "Relaterte retningslinjer",
+
+      intro:
+        "Disse bruksvilkårene («Vilkårene») regulerer din bruk av PunDad («Tjenesten»). Ved å opprette en konto eller bruke Tjenesten godtar du disse vilkårene.",
+
+      incorporatedPolicies: [
+        { label: "Personvernerklæring", path: "/privacy" },
+        { label: "Cookie-erklæring", path: "/cookies" },
+        { label: "Samfunnsregler", path: "/rules" },
+      ],
+
+      sections: [
+        {
+          title: "1. Hvem vi er",
+          paragraphs: [
+            "PunDad drives av Andresen Solutions (andresensolutions.no).",
+            "Kontakt: dadjokes@andresensolutions.no",
+          ],
+        },
+        {
+          title: "2. Relaterte retningslinjer (innlemmet ved henvisning)",
+          paragraphs: [
+            "Disse vilkårene innlemmer vår personvernerklæring, cookie-erklæring og samfunnsregler ved henvisning.",
+            "Ved å bruke Tjenesten godtar du å følge samfunnsreglene og erkjenner vår personvernerklæring og cookie-erklæring.",
+          ],
+        },
+        {
+          title: "3. Kvalifikasjon og kontoer",
+          paragraphs: [
+            "Du må oppgi korrekt informasjon når du oppretter en konto.",
+            "Du er ansvarlig for å holde innloggingsinformasjonen din sikker. Hvis du mistenker uautorisert tilgang, kontakt oss.",
+            "Vi kan suspendere eller fjerne kontoer som bryter disse vilkårene eller samfunnsreglene.",
+          ],
+        },
+        {
+          title: "4. Ditt innhold",
+          paragraphs: [
+            "Du kan publisere vitser og annet tekstinnhold («Brukerinnhold»). Du beholder eierskapet til brukerinnholdet ditt.",
+            "Ved å publisere brukerinnhold gir du PunDad en ikke-eksklusiv lisens til å hoste, lagre, reprodusere og vise det for å kunne drive Tjenesten.",
+            "Ikke publiser innhold du ikke har rett til å dele.",
+          ],
+        },
+        {
+          title: "5. Forbudt oppførsel",
+          paragraphs: [
+            "Du må ikke: trakassere andre, publisere hatefulle eller ulovlige ytringer, spamme, forsøke å hacke eller forstyrre Tjenesten, eller misbruke likesystemet.",
+            "Vi kan fjerne innhold eller begrense kontoer etter eget skjønn for å beskytte Tjenesten og brukerne.",
+          ],
+        },
+        {
+          title: "6. Likes, rangeringer og topplister",
+          paragraphs: [
+            "Likes og rangeringer er ment som underholdning. Vi kan endre hvordan rangeringer fungerer når som helst.",
+            "Vi kan bruke tiltak mot misbruk (for eksempel rate limiting, svindeldeteksjon eller kontobegrensninger).",
+          ],
+        },
+        {
+          title: "7. Beta / tilgjengelighet",
+          paragraphs: [
+            "Tjenesten kan være i beta. Funksjoner kan endres eller slutte å fungere, og vi kan midlertidig deaktivere deler av Tjenesten.",
+          ],
+        },
+        {
+          title: "8. Oppsigelse",
+          paragraphs: [
+            "Du kan når som helst slutte å bruke Tjenesten.",
+            "Vi kan suspendere eller avslutte tilgangen din dersom du bryter disse vilkårene, eller hvis det kreves av sikkerhets- eller juridiske hensyn.",
+          ],
+        },
+        {
+          title: "9. Ansvarsfraskrivelser",
+          paragraphs: [
+            "Tjenesten tilbys «som den er» uten garantier av noe slag.",
+            "Vi gjør vårt beste for å holde Tjenesten tilgjengelig og sikker, men vi kan ikke garantere uavbrutt tilgang.",
+          ],
+        },
+        {
+          title: "10. Ansvar",
+          paragraphs: [
+            "Så langt loven tillater, er vi ikke ansvarlige for indirekte tap eller tap av data, fortjeneste eller goodwill.",
+          ],
+        },
+        {
+          title: "11. Endringer i disse vilkårene",
+          paragraphs: [
+            "Vi kan oppdatere disse vilkårene fra tid til annen. Vi oppdaterer datoen for «Sist oppdatert» og versjonsnummeret når vi gjør det.",
+            "Hvis endringene er vesentlige, kan vi be deg godta de oppdaterte vilkårene på nytt.",
+          ],
+        },
+      ],
+    },
+
+    privacy: {
+      heading: "PERSONVERNERKLÆRING",
+      versionText: "Versjon",
+      version: "1.0",
+      lastUpdatedText: "Sist oppdatert",
+      lastUpdated: "2026-02-10",
+      intro:
+        "Denne personvernerklæringen forklarer hvilke personopplysninger vi samler inn, hvordan vi bruker dem og hvilke rettigheter du har etter personvernreglene i EU/EØS (GDPR).",
+
+      sections: [
+        {
+          title: "1. Behandlingsansvarlig",
+          paragraphs: [
+            "PunDad drives av Andresen Solutions (andresensolutions.no).",
+            "Kontakt: dadjokes@andresensolutions.no",
+          ],
+        },
+        {
+          title: "2. Hva vi samler inn",
+          bullets: [
+            "Kontodata: brukernavn, e-post, passordhash (aldri passordet ditt i klartekst).",
+            "Profildata du velger å legge til: avatarbilde.",
+            "Innhold du lager: vitser, kommentarer, likes.",
+            "Sikkerhetsdata: IP-adresse og user-agent for å forebygge misbruk, rate limiting og tokensikkerhet.",
+          ],
+        },
+        {
+          title: "3. Hvorfor vi behandler opplysningene dine (rettslig grunnlag)",
+          bullets: [
+            "For å levere Tjenesten (avtale): opprette kontoer, logge inn, publisere vitser/kommentarer, vise likes.",
+            "For å holde Tjenesten sikker (berettiget interesse): forhindre misbruk, oppdage mistenkelig aktivitet, rate limiting.",
+            "For å overholde loven (rettslig plikt) dersom det kreves.",
+          ],
+        },
+        {
+          title: "4. Cookies og lignende teknologi",
+          paragraphs: [
+            "Vi bruker en cookie for å holde deg innlogget (refresh token). Dette er strengt nødvendig for autentisering.",
+            "Vi bruker ikke reklamecookies.",
+          ],
+        },
+        {
+          title: "5. Deling av data",
+          paragraphs: [
+            "Vi selger ikke personopplysningene dine.",
+            "Vi kan dele data med infrastrukturleverandører (hosting, databaser, e-postlevering) bare når det er nødvendig for å drifte Tjenesten.",
+          ],
+        },
+        {
+          title: "6. Lagringstid",
+          bullets: [
+            "Kontodata lagres så lenge kontoen din er aktiv.",
+            "Vitser/kommentarer/likes lagres med mindre de fjernes eller kontoen din slettes (avhengig av sletteregler).",
+            "Sikkerhetslogger lagres i en begrenset periode for å beskytte Tjenesten.",
+          ],
+        },
+        {
+          title: "7. Dine rettigheter (EØS/EU)",
+          bullets: [
+            "Innsyn: be om en kopi av opplysningene dine.",
+            "Rettelse: korrigere feilaktige opplysninger.",
+            "Sletting: be om sletting (med forbehold om juridiske/sikkerhetsmessige begrensninger).",
+            "Innsigelse/begrensning: begrense visse behandlinger i noen tilfeller.",
+            "Dataportabilitet: motta opplysningene dine i et strukturert format der det er aktuelt.",
+          ],
+        },
+        {
+          title: "8. Sikkerhet",
+          paragraphs: [
+            "Vi bruker hashing av passord, HTTPS (når løsningen er satt opp riktig) og tokenbasert autentisering for å beskytte kontoer.",
+            "Ingen systemer er perfekt sikre, men vi bruker rimelige tekniske og organisatoriske tiltak for å redusere risiko.",
+          ],
+        },
+        {
+          title: "9. Kontakt",
+          paragraphs: [
+            "Hvis du har spørsmål eller ønsker knyttet til personvern, kontakt: dadjokes@andresensolutions.no",
+          ],
+        },
+      ],
+    },
+
+    cookies: {
+      heading: "COOKIE-ERKLÆRING",
+      versionText: "Versjon",
+      version: "1.0",
+      lastUpdatedText: "Sist oppdatert",
+      lastUpdated: "2026-02-10",
+
+      intro:
+        "Denne siden forklarer hvilke cookies PunDad bruker og hvorfor.",
+
+      sections: [
+        {
+          title: "1. Hva cookies er",
+          paragraphs: [
+            "Cookies er små tekstfiler som lagres på enheten din. De hjelper nettsteder med å huske informasjon, som innloggingsøkter.",
+          ],
+        },
+        {
+          title: "2. Cookies vi bruker",
+          bullets: [
+            "Autentiseringscookie (refresh token): strengt nødvendig for å holde deg innlogget og for å utstede nye tilgangstoken på en sikker måte.",
+          ],
+        },
+        {
+          title: "3. Bruker vi analyse- eller reklamecookies?",
+          paragraphs: [
+            "Nei. PunDad bruker ikke reklamecookies.",
+            "Hvis vi senere legger til analyseverktøy, oppdaterer vi denne erklæringen og ber om samtykke dersom det kreves.",
+          ],
+        },
+        {
+          title: "4. Håndtering av cookies",
+          paragraphs: [
+            "Du kan styre cookies gjennom innstillingene i nettleseren din. Hvis du deaktiverer cookies, kan innlogging slutte å fungere.",
+          ],
+        },
+      ],
+    },
+
+    rules: {
+      heading: "SAMFUNNSREGLER",
+      version: "1.0",
+      lastUpdated: "2026-02-10",
+      intro:
+        "PunDad skal være morsomt og inkluderende. Disse reglene finnes for å holde stemningen god.",
+
+      sections: [
+        {
+          title: "1. Vis respekt",
+          bullets: [
+            "Ingen trakassering, trusler eller hatefulle ytringer.",
+            "Ingen målrettet mobbing eller doxxing.",
+          ],
+        },
+        {
+          title: "2. Hold det lovlig og trygt",
+          bullets: [
+            "Ikke legg ut ulovlig innhold eller instruksjoner for ulovlige handlinger.",
+            "Ingen ondsinnede lenker eller forsøk på å kompromittere kontoer eller systemer.",
+          ],
+        },
+        {
+          title: "3. Ingen spam eller manipulering",
+          bullets: [
+            "Ingen spam-innlegg/kommentarer.",
+            "Ingen manipulering av likes, falske kontoer eller automatiserte handlinger.",
+          ],
+        },
+        {
+          title: "4. Modereringstiltak",
+          paragraphs: [
+            "Vi kan fjerne innhold eller begrense kontoer for å håndheve disse reglene.",
+          ],
+        },
+      ],
+    },
+
+    admin: {
+      infoHeading: "Admin",
+      infoListItems: [
+        "Finn en bruker via brukernavn eller e-post.",
+        "Reaktiver inaktive brukere.",
+        "Deaktiver aktive brukere.",
+      ],
+      tabs: {
+        users: "Brukere",
+        moderation: "Moderering",
+      },
+      moderationIntro: {
+        paragraph1: "Administrer blokkerte termer brukt av modereringssystemet.",
+        paragraph2:
+          "Opprett, rediger, aktiver, deaktiver og slett modereringstermer.",
+        paragraph3:
+          "Last inn modereringscachen på nytt etter endringer ved behov.",
+      },
+      userSection: {
+        heading: "Brukeradministrasjon",
+        userInputLabel: "Brukernavn eller e-post",
+        removeFetchedUser: "Fjern valgt bruker",
+        statusLabel: "Status",
+        active: "Aktiv",
+        inactive: "Inaktiv",
+        actions: {
+          findUser: "Finn bruker",
+          reactivateUser: "Reaktiver bruker",
+          deactivateUser: "Deaktiver bruker",
+        },
+      },
+      toasts: {
+        mustBeLoggedInFetch: "Du må være logget inn for å finne en bruker",
+        mustBeLoggedInReactivate:
+          "Du må være logget inn for å reaktivere en bruker",
+        mustBeLoggedInDeactivate:
+          "Du må være logget inn for å deaktivere en bruker",
+        requestFailed: "Forespørselen mislyktes",
+        userFound: "Bruker funnet",
+        userNotFound: "Bruker ikke funnet",
+        fetchFailed: "Kunne ikke hente bruker",
+        activateFailed: "Kunne ikke reaktivere bruker",
+        deactivateFailed: "Kunne ikke deaktivere bruker",
+        userActivated: "{{username}} ble reaktivert",
+        userDeactivated: "{{username}} ble deaktivert",
+      },
+    },
+
+    profile: {
+      infoHeading: "PROFILDATA",
+      inputHeading: "OPPDATER PROFIL",
+
+      facts: {
+        bestDailyStreak: "🔥 Beste daglige streak:",
+        username: "Brukernavn",
+        email: "E-post",
+        role: "Rolle",
+        created: "Opprettet",
+        updated: "Oppdatert",
+        termsAccepted: "Vilkår godtatt",
+        termsVersion: "Vilkårsversjon",
+        notAvailable: "Ikke tilgjengelig",
+      },
+
+      fields: {
+        username: "Brukernavn",
+        email: "E-post",
+        password: "Passord",
+        avatar: "Avatar",
+      },
+
+      placeholders: {
+        password: "valgfritt - fyll kun ut for å endre",
+      },
+
+      avatar: {
+        help1:
+          "Maks størrelse: {{size}}MB. Støttede formater: JPG, JPEG, WEBP, PNG.",
+        help2: "Opplasting av ny avatar erstatter den nåværende.",
+        previewAlt: "Forhåndsvisning av avatar",
+        invalidType: "Kun JPG-, PNG- eller WEBP-bilder er tillatt.",
+        tooLarge:
+          "Avatarfilen er større enn {{size}}MB. Velg en mindre fil.",
+      },
+
+      modal: {
+        title: "Slett bruker",
+        message:
+          "Er du sikker på at du vil slette denne brukeren? Handlingen kan ikke angres.",
+        confirmText: "Slett",
+        cancelText: "Avbryt",
+      },
+
+      deleteBox: {
+        text: "Sletting av kontoen din deaktiverer den og fjerner tilgangen din.",
+      },
+
+      actions: {
+        logout: "LOGG UT",
+        deleteProfile: "SLETT PROFIL",
+        update: "OPPDATER",
+      },
+
+      toasts: {
+        deleteSuccess: "Profilen din ble slettet.",
+        deleteFailed: "Kunne ikke slette profil",
+        updateSuccess: "Profil oppdatert!",
+        updateFailed: "Kunne ikke oppdatere profil",
+        avatarTooLarge:
+          "Avatarfilen overskrider grensen. Maks størrelse er 6MB.",
+      },
+    },
+
+    badges: {
+      heading: "Merker",
+
+      current: {
+        heading: "Nåværende",
+        subheading: "Aktive merker",
+        empty: "Ingen aktive merker ennå.",
+        since: "Siden",
+      },
+
+      history: {
+        heading: "Historikk",
+        subheading: "Alle utdelinger (nyeste først)",
+        empty: "Ingen merkehistorikk ennå.",
+        valid: "Gyldig",
+        from: "fra",
+        to: "til",
+      },
+
+      relatedPost: "Relatert innlegg",
+      loading: "Laster...",
+      page: "Side",
+      of: "av",
+      total: "Totalt",
+      prev: "Forrige",
+      next: "Neste",
+    },
+
+    drafts: {
+      heading: "UTKAST",
+
+      authRequired: "Logg inn for å se utkastene dine.",
+
+      toggleShowTitles: "Vis utkasttitler",
+      toggleShowFull: "Vis hele utkast",
+      reload: "Last inn på nytt",
+
+      empty: "Du har ikke laget noen utkast ennå.",
+      createDraft: "Lag utkast",
+
+      showing: "Viser {{shown}} av {{total}}",
+    },
+
+    newPost: {
+      heading: "NY VITS",
+
+      fields: {
+        title: "Tittel",
+        body: "Innhold",
+        tags: "Tags",
+      },
+
+      placeholders: {
+        title: "Vitstittel her...",
+        body: "Vitsens innhold her...",
+        tags: "Legg til tags (kommadelt)",
+      },
+
+      toasts: {
+        mustBeLoggedInDraft: "Du må være logget inn for å lagre et utkast.",
+        mustBeLoggedInPublish:
+          "Du må være logget inn for å publisere en vits.",
+        titleAndBodyRequired: "Tittel og innhold er påkrevd.",
+        draftSaved: "Utkast lagret!",
+        jokePublished: "Vits publisert!",
+        sessionExpired: "Økten din har utløpt. Logg inn igjen.",
+        requestFailed: "Forespørselen mislyktes",
+      },
+
+      actions: {
+        saveDraft: "LAGRE SOM UTKAST",
+        publishJoke: "PUBLISER VITS",
+      },
+
+      currentLanguageLabel: "Denne vitsen blir opprettet som: ",
+    },
+
+    search: {
+      heading: "SØK",
+
+      filters: {
+        heading: "Filtre:",
+        title: "Tittel",
+        body: "Innhold",
+        comments: "Kommentarer",
+        tags: "Tags",
+      },
+
+      actions: {
+        reload: "Last inn på nytt",
+        loadMore: "Last mer",
+      },
+
+      states: {
+        typeToSearch: "Skriv noe for å søke etter vitser.",
+        noResults: "Ingen resultater",
+        loading: "Laster...",
+        showing: "Viser {{shown}} av {{total}}",
+        foundIn: "Funnet i",
+      },
+
+      matchLabels: {
+        title: "tittel",
+        body: "innhold",
+        comment: "kommentar",
+        tag: "tag",
+      },
+
+      placeholder: "Søk etter vitser...",
+    },
+
+    myJokes: {
+      heading: "MINE VITSER",
+
+      authRequired: "Logg inn for å se vitsene dine.",
+
+      toggleShowFull: "Vis hele vitser",
+      toggleShowTitles: "Vis vitstitler",
+      reload: "Last inn på nytt",
+
+      empty: "Du har ikke laget noen vitser ennå.",
+      createJoke: "Lag vits",
+
+      loadMore: "Last mer",
+      loading: "Laster...",
+
+      showing: "Viser {{shown}} av {{total}}",
+
+      login: "Logg inn",
+    },
+
+    allJokes: {
+      heading: "ALLE VITSER",
+
+      actions: {
+        showTitles: "Vis vitstitler",
+        showFull: "Vis hele vitser",
+        reload: "Last inn på nytt",
+        loadMore: "Last mer",
+      },
+
+      states: {
+        empty: "Ingen vitser funnet",
+        loading: "Laster...",
+        showing: "Viser {{shown}} av {{total}}",
+      },
+    },
+
+    popular: {
+      heading: "👍 POPULÆRE VITSER",
+      subtitle: "10 mest likte vitser",
+
+      actions: {
+        showFull: "Vis hele vitser",
+        showTitles: "Vis vitstitler",
+      },
+
+      states: {
+        empty: "Ingen vitser funnet",
+        failed: "Kunne ikke laste populære vitser",
+      },
+    },
+
+    dailyJoke: {
+      heading: "👑 DAGENS VITS",
+      subtitle: "Vitsen som er valgt for i dag",
+
+      states: {
+        notFound: "Vits ikke funnet",
+        failed: "Kunne ikke hente dagens vits",
+      },
+    },
+
+    randomJoke: {
+      heading: "🎲 TILFELDIG VITS",
+
+      actions: {
+        getRandomJoke: "Hent tilfeldig vits",
+        newJoke: "Ny vits",
+        loading: "Laster...",
+      },
+
+      states: {
+        notFound: "Vits ikke funnet",
+        failed: "Kunne ikke hente tilfeldig vits",
+      },
+    },
+
+    hallOfFame: {
+      heading: "Hall of Fame",
+
+      periods: {
+        week: "Denne uken",
+        month: "Denne måneden",
+        all: "Gjennom tidene",
+      },
+
+      table: {
+        rank: "#",
+        user: "Bruker",
+        wins: "Seire",
+        streak: "Streak",
+        likes: "Likes",
+      },
+
+      mobileStats: {
+        wins: "Seire",
+        streak: "Streak",
+        likes: "Likes",
+      },
+
+      states: {
+        empty: "Ingen rangeringer ennå.",
+        failed: "Kunne ikke laste Hall of Fame",
+      },
+    },
+
+    featured: {
+      noJoke: "Ingenting ennå...",
+      topCreatorMonth: {
+        title: "🏆 TOPP-SKAPER DENNE MÅNEDEN",
+        subtitle: "Skaperen med flest vitser denne måneden.",
+      },
+      trendingWeek: {
+        title: "⚡ TRENDER DENNE UKEN",
+        subtitle: "Vitsen som får mest oppmerksomhet akkurat nå.",
+      },
+      mostCommentedWeek: {
+        title: "🎭 MEST KOMMENTERT DENNE UKEN",
+        subtitle: "Vitsen med flest kommentarer denne uken.",
+      },
+      fastestGrowing: {
+        title: "🚀 RASKEREST VOKSENDE",
+        subtitle: "Vitsen med mest vekst denne uken.",
+      },
+    },
+
+    commentForm: {
+      placeholder: "Skriv en kommentar...",
+
+      actions: {
+        addComment: "Legg til kommentar",
+        posting: "Publiserer...",
+      },
+
+      toasts: {
+        mustBeLoggedIn:
+          "Du må være logget inn for å publisere en kommentar.",
+        empty: "Kommentaren kan ikke være tom",
+        published: "Kommentar publisert!",
+        sessionExpired: "Økten din har utløpt. Logg inn igjen.",
+        failed: "Kunne ikke publisere kommentar",
+        requestFailed: "Forespørselen mislyktes",
+      },
+
+      aria: {
+        submitTitle: "Vitsekommentar",
+      },
+    },
+
+    comment: {
+      actions: {
+        edit: "Rediger kommentar",
+        delete: "Slett kommentar",
+        send: "Send",
+      },
+
+      aria: {
+        edit: "Rediger kommentar",
+        editMessage: "Rediger melding",
+      },
+    },
+
+    sidebar: {
+      dashboard: {
+        newJoke: "Ny vits",
+        drafts: "Utkast",
+        profile: "Profil",
+        badges: "Merker",
+        admin: "Admin",
+      },
+
+      jokes: {
+        search: "Søk",
+        myJokes: "Mine vitser",
+
+        groups: {
+          explore: "Utforsk",
+          games: "Spill",
+          rankings: "Rangeringer",
+        },
+
+        items: {
+          allJokes: "Alle vitser",
+          popular: "Populære",
+          dailyJoke: "Dagens vits",
+          random: "Tilfeldig",
+          jokeVsJoke: "Vits mot vits",
+          hallOfFame: "Hall of Fame",
+          topCreator: "Topp-skaper",
+          trending: "Trending",
+          mostCommented: "Mest kommentert",
+          fastestGrowing: "Raskest voksende",
+        },
+      },
+    },
+
+    legalMenu: {
+      openAria: "Åpne juridisk meny",
+      title: "Juridisk",
+      heading: "Juridisk",
+
+      links: {
+        terms: "Bruksvilkår",
+        privacy: "Personvernerklæring",
+        cookies: "Cookie-erklæring",
+        rules: "Samfunnsregler",
+      },
+    },
+
+    mobileNavHint: {
+      title: "Navigasjon",
+      description: "Bruk disse knappene for å åpne menyer:",
+      left: "Venstre = Utforsk",
+      right: "Høyre = Hurtigliste",
+      dismiss: "Skjønner",
+    },
+
+    modal: {
+      closeAria: "Lukk modal",
+      closeTitle: "Lukk",
+      confirm: "Bekreft",
+      cancel: "Avbryt",
+      close: "Lukk",
+    },
+
+    postCard: {
+      open: "ÅPNE",
+    },
+
+    rightSidebar: {
+      heading: "Navigasjon",
+
+      empty: {
+        title: "Ingen vitser funnet",
+        action: "Hent vitser",
+      },
+
+      pagination: {
+        previous: "Forrige",
+        next: "Neste",
+        page: "Side",
+      },
+    },
+
+    tagsCard: {
+      show: "VIS TAGS",
+    },
+
+    userMenu: {
+      signedInAs: "Logget inn som",
+      profile: "Profil",
+      logout: "Logg ut",
+      loggedOut: "Du har blitt logget ut.",
+    },
+
+    header: {
+      brand: "PunDad",
+      beta: "Beta",
+
+      actions: {
+        toggleNavMenu: "Bytt navigasjonsmeny",
+        toggleMenu: "Bytt meny",
+      },
+    },
+
+    navbar: {
+      links: {
+        jokes: "Vitser",
+        dashboard: "Dashboard",
+        register: "Registrer",
+        login: "Logg inn",
+        about: "Om",
+        contact: "Kontakt",
+      },
+
+      actions: {
+        toggleTheme: "Bytt lys/mørk modus",
+      },
+    },
+
+    post: {
+      status: {
+        draft: "UTKAST",
+      },
+
+      actions: {
+        openComments: "VIS KOMMENTARER",
+        closeComments: "SKJUL KOMMENTARER",
+        showLess: "Vis mindre",
+        readMore: "Les mer",
+        publish: "Publiser",
+        loadMoreComments: "Last flere kommentarer",
+        loading: "Laster...",
+        goToLogin: "Logg inn",
+      },
+
+      toasts: {
+        mustBeLoggedInToLike:
+          "Du må være logget inn for å like en vits",
+        cannotLikeOwn: "Du kan ikke like din egen vits",
+        toggleLikeFailed: "Kunne ikke bytte like",
+        postEdited: "Innlegg redigert!",
+        postDeleted: "Vits slettet!",
+        commentEdited: "Kommentar redigert!",
+        commentDeleted: "Kommentar slettet!",
+        editJokeFailed: "Kunne ikke redigere vits",
+        deleteJokeFailed: "Kunne ikke slette vits",
+        editCommentFailed: "Kunne ikke redigere kommentar",
+        deleteCommentFailed: "Kunne ikke slette kommentar",
+        published: "Publisert",
+        unpublished: "Avpublisert",
+      },
+
+      modal: {
+        deleteTitle: "Slett vits",
+        deleteMessage:
+          "Er du sikker på at du vil slette denne vitsen? Handlingen kan ikke angres.",
+        deleteConfirm: "Slett",
+        cancel: "Avbryt",
+      },
+
+      aria: {
+        editJoke: "Rediger vits",
+        deleteJoke: "Slett vits",
+        likeJoke: "Lik vits",
+        goToJoke: "Gå til vits",
+        editJokeTitle: "Rediger vitstittel",
+        editJokeBody: "Rediger vitsens innhold",
+        editJokeTags: "Rediger vitsens tags",
+        publishUnpublish: "Publiser/avpubliser",
+        editMessage: "Rediger melding",
+        toggleComments: "Vis/skjul kommentarer",
+      },
+
+      labels: {
+        username: "Brukernavn",
+        postDate: "Dato for innlegg",
+        comments: "KOMMENTARER",
+        noComments: "Ingen kommentarer ennå.",
+        beFirstToComment: "Bli den første som kommenterer!",
+        failedToLoadComments: "Kunne ikke laste kommentarer",
+        logInToComment: "Logg inn for å kommentere.",
+      },
+
+      buttons: {
+        send: "Send",
+      },
+    },
+
+    avatarWithBadges: {
+      streak: "Daglig streak",
+      badges: "Merker",
+      noBadges: "Ingen merker ennå.",
+      noValue: "—",
+    },
+  },
 } as const;
