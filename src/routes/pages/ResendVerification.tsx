@@ -12,7 +12,7 @@ import { getApiErrorMessage, toastApiError } from "../../lib/apiErrors";
 const RESEND_COOLDOWN_SECONDS = 60;
 
 const ResendVerification = () => {
-  const { t, tf, tr } = useLanguage();
+  const { t, tf, tr, language } = useLanguage();
   const [searchParams] = useSearchParams();
 
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
@@ -63,7 +63,7 @@ const ResendVerification = () => {
       setIsSubmitting(true);
       const normalizedEmail = email.trim().toLowerCase();
 
-      await resendVerificationEmail({ email: normalizedEmail });
+      await resendVerificationEmail({ email: normalizedEmail }, language);
 
       setEmailSent(true);
       setNewLinkCounter(RESEND_COOLDOWN_SECONDS);

@@ -1,3 +1,5 @@
+export type AppLanguage = "EN" | "NO"
+
 export const translations = {
   EN: {
     moderationAdmin: {

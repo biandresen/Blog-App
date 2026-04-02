@@ -118,7 +118,7 @@ const ResetPassword = () => {
        * If your backend later returns structured field errors here,
        * you can map them similarly to the Register page.
        */
-      toastApiError(err, t("resetPassword.genericError"));
+      toastApiError(err || message, t("resetPassword.genericError"));
 
       /**
        * Optional:

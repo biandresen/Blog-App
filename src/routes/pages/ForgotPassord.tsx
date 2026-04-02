@@ -14,7 +14,7 @@ const ForgotPassword = () => {
   // --------------------------------------------------
   // Translation helpers
   // --------------------------------------------------
-  const { t, tr, tf } = useLanguage();
+  const { t, tr, tf, language } = useLanguage();
 
   // --------------------------------------------------
   // Form state
@@ -86,7 +86,7 @@ const ForgotPassword = () => {
       setIsSubmitting(true);
       const normalizedEmail = email.trim().toLowerCase();
 
-      await resetPassword({ email: normalizedEmail });
+      await resetPassword({ email: normalizedEmail }, language);
 
       // Only start cooldown after a successful request
       setEmailSent(true);

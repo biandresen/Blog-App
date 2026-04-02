@@ -32,22 +32,42 @@ export const verifyEmail = async (token: string) => {
   }
 };
 
-export const resendVerificationEmail = async ({ email }: { email: string }) => {
+export const resendVerificationEmail = async (
+  { email }: { email: string },
+  language?: AppLanguage
+) => {
   try {
-    const res = await axios.post(`${BLOG_API.BASE}${BLOG_API.RESEND_VERIFICATION}`, {
-      email,
-    });
+    const res = await axios.post(
+      `${BLOG_API.BASE}${BLOG_API.RESEND_VERIFICATION}`,
+      { email },
+      {
+        headers: {
+          ...languageHeaders(language),
+        },
+      }
+    );
+
     return res.data;
   } catch (err: any) {
     throw normalizeApiError(err);
   }
 };
 
-export const resetPassword = async ({ email }: { email: string }) => {
+export const resetPassword = async (
+  { email }: { email: string },
+  language?: AppLanguage
+) => {
   try {
-    const res = await axios.post(BLOG_API.BASE + BLOG_API.RESETPASSWORD, {
-      email,
-    });
+    const res = await axios.post(
+      BLOG_API.BASE + BLOG_API.RESETPASSWORD,
+      { email },
+      {
+        headers: {
+          ...languageHeaders(language),
+        },
+      }
+    );
+
     return res.data;
   } catch (err: any) {
     throw normalizeApiError(err);

@@ -25,7 +25,7 @@ export const PostsProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(true);
       setError(null);
 
-      const res = await getAllPosts(page, limit);
+      const res = await getAllPosts(null, page, limit);
       if (res.statusCode !== 200) throw new Error(res.message);
 
       setPosts(res.data);
