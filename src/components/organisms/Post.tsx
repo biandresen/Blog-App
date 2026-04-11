@@ -281,6 +281,7 @@ useEffect(() => {
 const handleDeletePost = async (postId: number) => {
   try {
     if (!accessToken) return;
+    console.log("Deleting post with ID:", postId);
 
     const res = await safeRequest(deletePost, accessToken, setAccessToken, postId, language);
     if (res.statusCode !== 200) throw new Error("Request failed");

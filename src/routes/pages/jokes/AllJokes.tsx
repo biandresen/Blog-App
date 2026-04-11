@@ -138,7 +138,7 @@ const AllJokes = () => {
 
         {/* INFINITE SCROLL SENTINEL */}
 
-        <div ref={sentinelRef} className="h-8" />
+        <div ref={sentinelRef} className="w-full h-px opacity-0 pointer-events-none" />
 
         {/* LOAD MORE BUTTON (fallback for scroll) */}
 

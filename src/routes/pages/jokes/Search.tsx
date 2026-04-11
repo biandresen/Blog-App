@@ -231,7 +231,7 @@ const Search = () => {
           ))}
         </div>
 
-        {searchEnabled && <div ref={sentinelRef} className="h-8 w-full" />}
+        {searchEnabled && <div ref={sentinelRef} className="w-full h-px opacity-0 pointer-events-none" />}
 
         {canNext && (
           <div className="mt-6 flex justify-center w-full">

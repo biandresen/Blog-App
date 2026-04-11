@@ -406,6 +406,7 @@ export const editPost = async (
 
 export const deletePost = async (accessToken: token, postId: number, language?: AppLanguage) => {
   try {
+    console.log("Axios deletePost:, ", postId)
     const res = await axios.delete(BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,

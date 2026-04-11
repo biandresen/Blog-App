@@ -177,7 +177,7 @@ const MyJokes = () => {
           )
         )}
 
-        <div ref={sentinelRef} className="h-8" />
+        <div ref={sentinelRef} className="w-full h-px opacity-0 pointer-events-none" />
 
         {canNext && (
           <div className="mt-6 flex justify-center">

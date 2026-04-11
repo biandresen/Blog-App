@@ -136,8 +136,8 @@ const Drafts = () => {
           )
         )}
 
-        <div ref={sentinelRef} className="h-8" />
-      </section>
+      <div ref={sentinelRef} className="w-full h-px opacity-0 pointer-events-none" />
+     </section>
 
       {meta && (
         <div className="mt-4 text-center text-sm opacity-70 text-[var(--text1)]">
