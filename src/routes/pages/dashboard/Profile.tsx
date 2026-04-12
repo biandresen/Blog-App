@@ -485,7 +485,7 @@ const Profile = () => {
               }}
             />
 
-            <p className="text-xs text-gray-500 mb-3 mt-[-10px]">
+            <p className="text-xs text-gray-500 mb-3 mt-[-5px]">
               {tf("profile.avatar.help1", {
                 size: String(MAX_AVATAR_SIZE / (1024 * 1024)),
               })}
@@ -499,7 +499,7 @@ const Profile = () => {
               <img
                 src={avatarPreview}
                 alt={t("profile.avatar.previewAlt")}
-                className="rounded-full w-20 h-20 object-cover"
+                className="rounded-full w-20 h-20 object-cover mb-4 md:mb-0"
               />
             )}
 

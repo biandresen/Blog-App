@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
 import Post from "../../../components/organisms/Post";
-import PostCard from "../../../components/molecules/PostCard";
+import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
 
 import { usePagination } from "../../../hooks/usePagination";
 import { getAllUserPosts } from "../../../lib/axios";
@@ -20,21 +20,15 @@ const MyJokes = () => {
   const { user } = useUser();
   const { language, t, tf } = useLanguage();
 
-  const [showMiniPosts, setShowMiniPosts] = useState(true);
+  const [showMiniPosts, setShowMiniPosts] = useState(false);
 
   const userId = user?.id ? Number(user.id) : null;
 
   const noopSetAccessToken = useCallback(() => {}, []);
 
-  const args = useMemo(
-    () => (userId ? [userId, language] : []),
-    [userId, language]
-  );
+  const args = useMemo(() => (userId ? [userId, language] : []), [userId, language]);
 
-  const resetKey = useMemo(
-    () => `my-jokes:${userId ?? "anon"}:${language}`,
-    [userId, language]
-  );
+  const resetKey = useMemo(() => `my-jokes:${userId ?? "anon"}:${language}`, [userId, language]);
 
   const {
     items: posts,
@@ -66,9 +60,7 @@ const MyJokes = () => {
   if (!userId) {
     return (
       <div className="text-center text-[var(--text1)]">
-        <p className="posts-section-heading">
-          {t("myJokes.authRequired")}
-        </p>
+        <p className="posts-section-heading">{t("myJokes.authRequired")}</p>
 
         <NavLink
           to="/login"
@@ -96,15 +88,9 @@ const MyJokes = () => {
             size="md"
             variant="primary"
             disabled={loading}
-            label={
-              showMiniPosts
-                ? t("myJokes.toggleShowFull")
-                : t("myJokes.toggleShowTitles")
-            }
+            label={showMiniPosts ? t("myJokes.toggleShowFull") : t("myJokes.toggleShowTitles")}
           >
-            {showMiniPosts
-              ? t("myJokes.toggleShowFull")
-              : t("myJokes.toggleShowTitles")}
+            {showMiniPosts ? t("myJokes.toggleShowFull") : t("myJokes.toggleShowTitles")}
           </Button>
 
           <Button
@@ -115,38 +101,26 @@ const MyJokes = () => {
             disabled={loading}
             label={t("myJokes.reload")}
           >
-            {loading
-              ? t("myJokes.loading")
-              : t("myJokes.reload")}
+            {loading ? t("myJokes.loading") : t("myJokes.reload")}
           </Button>
         </div>
       )}
 
-      {error && (
-        <div className="mt-4 text-center text-red-500">
-          {error}
-        </div>
-      )}
+      {error && <div className="mt-4 text-center text-red-500">{error}</div>}
 
       <section
         className={
-          showMiniPosts
-            ? "posts-section flex-col"
-            : "posts-section grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+          showMiniPosts ? "posts-section flex-col" : (
+            "posts-section grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+          )
         }
       >
         {posts.length === 0 && !loading && !error && (
           <div className="text-center posts-section-heading text-[var(--text1)]">
-            <p className="text-sm md:text-lg">
-              {t("myJokes.empty")}
-            </p>
+            <p className="text-sm md:text-lg">{t("myJokes.empty")}</p>
 
             <Link to="/dashboard" className="inline-block mt-3">
-              <Button
-                type="button"
-                className="text-sm"
-                label={t("myJokes.createJoke")}
-              >
+              <Button type="button" className="text-sm" label={t("myJokes.createJoke")}>
                 {t("myJokes.createJoke")}
               </Button>
             </Link>
@@ -154,8 +128,9 @@ const MyJokes = () => {
         )}
 
         {posts.map((post) =>
-          showMiniPosts ? (
-            <Post
+          showMiniPosts ?
+            <JokePreviewCard key={post.id} id={post.id} title={post.title} likes={post.likes.length} />
+          : <Post
               key={post.id}
               post={post}
               onPostUpdated={(updated) => {
@@ -166,15 +141,7 @@ const MyJokes = () => {
                 }
               }}
               onPostDeleted={(id) => removeItem(id)}
-            />
-          ) : (
-            <PostCard
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              likes={post.likes.length}
-            />
-          )
+            />,
         )}
 
         <div ref={sentinelRef} className="w-full h-px opacity-0 pointer-events-none" />
@@ -189,9 +156,7 @@ const MyJokes = () => {
               disabled={loading}
               label={t("myJokes.loadMore")}
             >
-              {loading
-                ? t("myJokes.loading")
-                : t("myJokes.loadMore")}
+              {loading ? t("myJokes.loading") : t("myJokes.loadMore")}
             </Button>
           </div>
         )}

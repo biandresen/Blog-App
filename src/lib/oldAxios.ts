@@ -3,8 +3,8 @@ import BLOG_API from "../api/blog-api";
 import type { token } from "../types/context.types";
 import type { PaginatedResponse } from "../types/pagination.types";
 import type { CommentType, PostType } from "../types/post.types";
-import type { HallOfFameRow } from "../types/hallOfFame.types";
-import type { AppLanguage } from "../i18n/translations"
+import type { HallOfFameRow } from "../types/leaderboard.types";
+import type { AppLanguage } from "../i18n/translations";
 import { languageHeaders } from "../lib/utils";
 
 type RegisterUser = {
@@ -49,7 +49,7 @@ export const newPassword = async (token: token | undefined, password: string) =>
         headers: {
           "x-frontend-url": window.location.origin,
         },
-      }
+      },
     );
     return res.data; // success case
   } catch (err: any) {
@@ -63,7 +63,13 @@ export const newPassword = async (token: token | undefined, password: string) =>
   }
 };
 
-export const registerUser = async ({ username, email, password, passwordConfirmation, acceptedTerms }: RegisterUser) => {
+export const registerUser = async ({
+  username,
+  email,
+  password,
+  passwordConfirmation,
+  acceptedTerms,
+}: RegisterUser) => {
   try {
     const res = await axios.post(BLOG_API.BASE + BLOG_API.REGISTER, {
       username,
@@ -84,10 +90,7 @@ export const registerUser = async ({ username, email, password, passwordConfirma
   }
 };
 
-export const loginUser = async (
-  { userInput, password }: LoginUser,
-  language?: AppLanguage
-) => {
+export const loginUser = async ({ userInput, password }: LoginUser, language?: AppLanguage) => {
   try {
     const res = await axios.post(
       BLOG_API.BASE + BLOG_API.LOGIN,
@@ -97,7 +100,7 @@ export const loginUser = async (
         headers: {
           ...languageHeaders(language),
         },
-      }
+      },
     );
 
     return res.data;
@@ -114,7 +117,7 @@ export const logoutUser = async () => {
     const res = await axios.post(
       BLOG_API.BASE + BLOG_API.LOGOUT,
       {},
-      { withCredentials: true } // required for receiving cookie
+      { withCredentials: true }, // required for receiving cookie
     );
 
     return res.data; // success case
@@ -143,7 +146,7 @@ export const deleteUser = async (accessToken: token, id: number | string) => {
 export const updateUser = async (
   accessToken: string | null,
   id: number | string,
-  updates: Record<string, any>
+  updates: Record<string, any>,
 ) => {
   if (!accessToken) throw new Error("No access token provided");
 
@@ -194,7 +197,8 @@ export const getUserById = async (accessToken: token, id: number) => {
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`},
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
     return res.data;
   } catch (err: any) {
@@ -202,13 +206,12 @@ export const getUserById = async (accessToken: token, id: number) => {
   }
 };
 
-
 export const reactivateUser = async (accessToken: token, id: number | string) => {
   try {
     const res = await axios.patch(
       BLOG_API.BASE + BLOG_API.USER + `/${id}/reactivate`,
       {},
-      { headers: { Authorization: `Bearer ${accessToken}` } }
+      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     return res.data;
   } catch (err: any) {
@@ -231,7 +234,7 @@ export const getCurrentUserDrafts = async (
   accessToken: token,
   page = 1,
   limit = 15,
-  language?: AppLanguage
+  language?: AppLanguage,
 ): Promise<PaginatedResponse<PostType>> => {
   try {
     const res = await axios.get(
@@ -241,7 +244,7 @@ export const getCurrentUserDrafts = async (
           Authorization: `Bearer ${accessToken}`,
           ...languageHeaders(language),
         },
-      }
+      },
     );
     return res.data;
   } catch (err: any) {
@@ -253,13 +256,12 @@ export const getAllPosts = async (
   _accessToken: token,
   page = 1,
   limit = 15,
-  language?: AppLanguage
+  language?: AppLanguage,
 ): Promise<PaginatedResponse<PostType>> => {
   try {
-    const res = await axios.get(
-      BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=desc`,
-      { headers: { ...languageHeaders(language) } }
-    );
+    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=desc`, {
+      headers: { ...languageHeaders(language) },
+    });
     return res.data;
   } catch (err: any) {
     if (err.response) return Promise.reject(err.response.data);
@@ -270,7 +272,7 @@ export const getAllPosts = async (
 export const getPost = async (postId: number, language?: AppLanguage) => {
   try {
     const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}/${postId}`, {
-      headers: {...languageHeaders(language),},
+      headers: { ...languageHeaders(language) },
       withCredentials: true,
     });
     return res.data;
@@ -320,7 +322,7 @@ export const saveDraft = async (
   title: string,
   body: string,
   tags: string[],
-  language?: AppLanguage
+  language?: AppLanguage,
 ) => {
   try {
     const res = await axios.post(
@@ -331,7 +333,7 @@ export const saveDraft = async (
           Authorization: `Bearer ${accessToken}`,
           ...languageHeaders(language),
         },
-      }
+      },
     );
     return res.data;
   } catch (err: any) {
@@ -344,7 +346,7 @@ export const publishPost = async (
   title: string,
   body: string,
   tags: string[],
-  language?: AppLanguage
+  language?: AppLanguage,
 ) => {
   try {
     const res = await axios.post(
@@ -355,7 +357,7 @@ export const publishPost = async (
           Authorization: `Bearer ${accessToken}`,
           ...languageHeaders(language),
         },
-      }
+      },
     );
     return res.data;
   } catch (err: any) {
@@ -370,7 +372,7 @@ export const editPost = async (
   body: string,
   published: boolean,
   tags: string[],
-  language?: AppLanguage
+  language?: AppLanguage,
 ) => {
   try {
     const res = await axios.patch(
@@ -381,7 +383,7 @@ export const editPost = async (
           Authorization: `Bearer ${accessToken}`,
           ...languageHeaders(language),
         },
-      }
+      },
     );
     return res.data;
   } catch (err: any) {
@@ -414,7 +416,7 @@ export const toggleLike = async (accessToken: token, postId: number, language?: 
           ...languageHeaders(language),
         },
         withCredentials: true,
-      }
+      },
     );
     return res.data;
   } catch (err: any) {
@@ -429,7 +431,7 @@ export const getPostComments = async (
   limit = 10,
   postId?: number,
   sort: "asc" | "desc" = "desc",
-  language?: AppLanguage
+  language?: AppLanguage,
 ): Promise<PaginatedResponse<CommentType>> => {
   if (!postId) return Promise.reject({ message: "Missing postId for comments request" });
 
@@ -449,7 +451,7 @@ export const addComment = async (
   accessToken: token,
   authorId: number,
   comment: string,
-  language?: AppLanguage
+  language?: AppLanguage,
 ) => {
   try {
     const res = await axios.post(
@@ -460,7 +462,7 @@ export const addComment = async (
           Authorization: `Bearer ${accessToken}`,
           ...languageHeaders(language),
         },
-      }
+      },
     );
     return res.data;
   } catch (err: any) {
@@ -468,7 +470,12 @@ export const addComment = async (
   }
 };
 
-export const editComment = async (accessToken: token, commentId: number, comment: string, language?: AppLanguage) => {
+export const editComment = async (
+  accessToken: token,
+  commentId: number,
+  comment: string,
+  language?: AppLanguage,
+) => {
   try {
     const res = await axios.patch(
       BLOG_API.BASE + BLOG_API.COMMENTS + `/${commentId}`,
@@ -478,7 +485,7 @@ export const editComment = async (accessToken: token, commentId: number, comment
           Authorization: `Bearer ${accessToken}`,
           ...languageHeaders(language),
         },
-      }
+      },
     );
     return res.data;
   } catch (err: any) {
@@ -507,7 +514,7 @@ export const getAllUserPosts = async (
   page = 1,
   limit = 15,
   userId?: number,
-  language?: AppLanguage
+  language?: AppLanguage,
 ): Promise<PaginatedResponse<PostType>> => {
   if (!userId) {
     return Promise.reject({ message: "Missing userId" });
@@ -519,7 +526,7 @@ export const getAllUserPosts = async (
       headers: {
         ...languageHeaders(language),
       },
-    }
+    },
   );
 
   return res.data;
@@ -540,7 +547,7 @@ export const refreshToken = async (postId: number) => {
   }
 };
 
-  // must send Authorization header (use your safeRequest wrapper)
+// must send Authorization header (use your safeRequest wrapper)
 export const recordDailyJokeView = async (accessToken: token) => {
   try {
     const res = await axios.post(
@@ -549,7 +556,7 @@ export const recordDailyJokeView = async (accessToken: token) => {
       {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
-      }
+      },
     );
     return res.data;
   } catch (err: any) {
@@ -612,7 +619,7 @@ export async function getFeaturedPost(slug: string, language?: AppLanguage) {
 export const getHallOfFameUsers = async (
   period: "week" | "month" | "all" = "month",
   limit = 25,
-  language?: AppLanguage
+  language?: AppLanguage,
 ) => {
   const res = await axios.get(`${BLOG_API.BASE}/hall-of-fame/users?period=${period}&limit=${limit}`, {
     headers: { ...languageHeaders(language) },
@@ -640,7 +647,7 @@ export const searchPosts = async (
   searchParameters?: string,
   filters?: SearchFilters,
   sort: "asc" | "desc" = "desc",
-  language?: AppLanguage
+  language?: AppLanguage,
 ): Promise<PaginatedResponse<PostType>> => {
   const params = new URLSearchParams();
   params.set("page", String(page));

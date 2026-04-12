@@ -1,34 +1,34 @@
 import { useEffect, useState } from "react";
 
-import type { HallOfFameRow } from "../../../types/hallOfFame.types";
-import { getHallOfFameUsers } from "../../../lib/axios";
+import type { LeaderboardRow } from "../../../types/leaderboard.types";
+import { getLeaderboardUsers } from "../../../lib/axios";
 
 import Spinner from "../../../components/atoms/Spinner";
 import AvatarWithBadges from "../../../components/atoms/AvatarWithBadges";
 
 import { useLanguage } from "../../../contexts/LanguageContext";
 
-type HallOfFamePeriod = "week" | "month" | "all";
+type LeaderboardPeriod = "week" | "month" | "all";
 
 const LIMIT = 25;
 
-const HallOfFame = () => {
+const Leaderboard = () => {
   const { t } = useLanguage();
 
-  const [period, setPeriod] = useState<HallOfFamePeriod>("month");
-  const [items, setItems] = useState<HallOfFameRow[]>([]);
+  const [period, setPeriod] = useState<LeaderboardPeriod>("month");
+  const [items, setItems] = useState<LeaderboardRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
 
-    const fetchHallOfFame = async () => {
+    const fetchLeaderboard = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const res = await getHallOfFameUsers(period, LIMIT);
+        const res = await getLeaderboardUsers(period, LIMIT);
 
         if (!isActive) return;
 
@@ -36,7 +36,7 @@ const HallOfFame = () => {
       } catch (err: any) {
         if (!isActive) return;
 
-        setError(err?.message ?? t("hallOfFame.states.failed"));
+        setError(err?.message ?? t("leaderboard.states.failed"));
       } finally {
         if (isActive) {
           setLoading(false);
@@ -44,7 +44,7 @@ const HallOfFame = () => {
       }
     };
 
-    fetchHallOfFame();
+    fetchLeaderboard();
 
     return () => {
       isActive = false;
@@ -52,7 +52,7 @@ const HallOfFame = () => {
   }, [period, t]);
 
   const handlePeriodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPeriod(e.target.value as HallOfFamePeriod);
+    setPeriod(e.target.value as LeaderboardPeriod);
   };
 
   if (loading) {
@@ -66,29 +66,24 @@ const HallOfFame = () => {
   return (
     <div className="container max-w-150 md:mt-8">
       <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <h2 className="text-4xl font-bold text-[var(--text1)] lg:text-4xl">
-          {t("hallOfFame.heading")}
-        </h2>
+        <h2 className="text-4xl font-bold text-[var(--text1)] lg:text-4xl">{t("leaderboard.heading")}</h2>
 
         <select
           className="w-full lg:w-auto rounded-lg border border-white/10 bg-[var(--primary)] px-3 py-2 text-[var(--text2)]"
           value={period}
           onChange={handlePeriodChange}
-          aria-label={t("hallOfFame.heading")}
+          aria-label={t("leaderboard.heading")}
           disabled={loading}
         >
-          <option value="week">{t("hallOfFame.periods.week")}</option>
-          <option value="month">{t("hallOfFame.periods.month")}</option>
-          <option value="all">{t("hallOfFame.periods.all")}</option>
+          <option value="week">{t("leaderboard.periods.week")}</option>
+          <option value="month">{t("leaderboard.periods.month")}</option>
+          <option value="all">{t("leaderboard.periods.all")}</option>
         </select>
       </div>
 
-      {items.length === 0 ? (
-        <div className="text-[var(--text1)] opacity-70">
-          {t("hallOfFame.states.empty")}
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-white/10 bg-[var(--bg-input)] overflow-x-hidden overflow-y-visible">
+      {items.length === 0 ?
+        <div className="text-[var(--text1)] opacity-70">{t("leaderboard.states.empty")}</div>
+      : <div className="rounded-2xl border border-white/10 bg-[var(--bg-input)] overflow-x-hidden overflow-y-visible">
           <div className="min-w-[360px]">
             <div
               className="
@@ -96,17 +91,11 @@ const HallOfFame = () => {
                 gap-3 px-3 py-3 lg:px-4 bg-[var(--primary)] text-lg text-[var(--text2)]
               "
             >
-              <div>{t("hallOfFame.table.rank")}</div>
-              <div>{t("hallOfFame.table.user")}</div>
-              <div className="hidden lg:block text-right">
-                {t("hallOfFame.table.wins")}
-              </div>
-              <div className="hidden lg:block text-right">
-                {t("hallOfFame.table.streak")}
-              </div>
-              <div className="hidden lg:block text-right">
-                {t("hallOfFame.table.likes")}
-              </div>
+              <div>{t("leaderboard.table.rank")}</div>
+              <div>{t("leaderboard.table.user")}</div>
+              <div className="hidden lg:block text-right">{t("leaderboard.table.wins")}</div>
+              <div className="hidden lg:block text-right">{t("leaderboard.table.streak")}</div>
+              <div className="hidden lg:block text-right">{t("leaderboard.table.likes")}</div>
             </div>
 
             {items.map((row, idx) => (
@@ -127,28 +116,21 @@ const HallOfFame = () => {
                   </div>
                 </div>
 
-                <div className="hidden lg:block text-right font-semibold">
-                  {row.winsTotal}
-                </div>
-                <div className="hidden lg:block text-right">
-                  {row.dailyStreak}
-                </div>
-                <div className="hidden lg:block text-right">
-                  {row.likesReceived}
-                </div>
+                <div className="hidden lg:block text-right font-semibold">{row.winsTotal}</div>
+                <div className="hidden lg:block text-right">{row.dailyStreak}</div>
+                <div className="hidden lg:block text-right">{row.likesReceived}</div>
 
                 <div className="lg:hidden col-span-2 -mt-2 text-xs opacity-70">
-                  {t("hallOfFame.mobileStats.wins")}: {row.winsTotal} •{" "}
-                  {t("hallOfFame.mobileStats.streak")}: {row.dailyStreak} •{" "}
-                  {t("hallOfFame.mobileStats.likes")}: {row.likesReceived}
+                  {t("leaderboard.mobileStats.wins")}: {row.winsTotal} • {t("leaderboard.mobileStats.streak")}
+                  : {row.dailyStreak} • {t("leaderboard.mobileStats.likes")}: {row.likesReceived}
                 </div>
               </div>
             ))}
           </div>
         </div>
-      )}
+      }
     </div>
   );
 };
 
-export default HallOfFame;
+export default Leaderboard;

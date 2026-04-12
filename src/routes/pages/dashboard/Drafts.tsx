@@ -8,7 +8,7 @@ import { getCurrentUserDrafts } from "../../../lib/axios";
 
 import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
-import DraftCard from "../../../components/molecules/DraftCard";
+import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
 import Post from "../../../components/organisms/Post";
 
 import type { PostType } from "../../../types/post.types";
@@ -22,11 +22,7 @@ const Drafts = () => {
 
   // If the user is not authenticated, do not initialize pagination requests.
   if (!accessToken) {
-    return (
-      <p className="text-center mt-10 text-[var(--text1)]">
-        {t("drafts.authRequired")}
-      </p>
-    );
+    return <p className="text-center mt-10 text-[var(--text1)]">{t("drafts.authRequired")}</p>;
   }
 
   // Stable pagination config values.
@@ -106,11 +102,7 @@ const Drafts = () => {
             <p className="text-sm md:text-lg">{t("drafts.empty")}</p>
 
             <Link to="/dashboard" className="inline-block mt-3">
-              <Button
-                type="button"
-                label={t("drafts.createDraft")}
-                className="text-sm"
-              >
+              <Button type="button" label={t("drafts.createDraft")} className="text-sm">
                 {t("drafts.createDraft")}
               </Button>
             </Link>
@@ -118,7 +110,7 @@ const Drafts = () => {
         )}
 
         {drafts.map((draft) =>
-          showMiniPosts ? (
+          showMiniPosts ?
             <Post
               key={draft.id}
               post={draft}
@@ -131,13 +123,11 @@ const Drafts = () => {
               }}
               onPostDeleted={(id) => removeItem(id)}
             />
-          ) : (
-            <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />
-          )
+          : <JokePreviewCard key={draft.id} id={draft.id} title={draft.title} />,
         )}
 
-      <div ref={sentinelRef} className="w-full h-px opacity-0 pointer-events-none" />
-     </section>
+        <div ref={sentinelRef} className="w-full h-px opacity-0 pointer-events-none" />
+      </section>
 
       {meta && (
         <div className="mt-4 text-center text-sm opacity-70 text-[var(--text1)]">

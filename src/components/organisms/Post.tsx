@@ -480,7 +480,7 @@ const handleDeleteComment = async (commentId: number) => {
               }}
               className="w-full text-xl xl:text-3xl md:text-3xl/8 p-4 bg-transparent outline-none"
             />
-            <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTitle, MAX_CHARS.TITLE)}</span>
+            <span className="characters-left">{getCharactersLeft(editedTitle, MAX_CHARS.TITLE)}</span>
           </div>
         ) : (
           <NavLink aria-label="Go to joke" to={`/jokes/${post.id}`}>
@@ -504,7 +504,7 @@ const handleDeleteComment = async (commentId: number) => {
             }}
             className="text-sm md:text-lg p-5 resize-none w-full overflow-hidden outline-none"
           />
-          <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
+          <span className="characters-left">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
         </div>
       ) : (
         <div className="px-5 xl:px-10 pb-4 pt-1">
@@ -540,9 +540,9 @@ const handleDeleteComment = async (commentId: number) => {
             onKeyDown={handleTagsEnter}
             onChange={(e) =>
               { if (e.target.value.length <= MAX_CHARS.TAGS) setEditedTags(e.target.value);}}
-            className="w-full text-sm md:text-lg p-5"
+            className="w-full text-sm md:text-lg p-5 outline-none"
             />
-            <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTags, MAX_CHARS.TAGS)}</span>
+            <span className="characters-left">{getCharactersLeft(editedTags, MAX_CHARS.TAGS)}</span>
           </div>
         ) : post.tags[0]?.name.length >= 1 ? (
           <TagsCard tags={post?.tags} />

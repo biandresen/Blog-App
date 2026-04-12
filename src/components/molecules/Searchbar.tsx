@@ -44,7 +44,7 @@ const Searchbar = ({ handleSearch }: SearchbarProps) => {
             type="text"
             placeholder={t("search.placeholder")}
             aria-label={t("search.placeholder")}
-            className="bg-transparent outline-none text-[var(--text2)] w-full ml-4 text-sm sm:text-lg lg:text-2xl min-w-0"
+            className="bg-transparent outline-none text-[var(--text2)] w-full ml-4 text-lg sm:text-lg lg:text-2xl min-w-0"
           />
         </div>
 

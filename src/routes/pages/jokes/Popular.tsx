@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import type { PostType } from "../../../types/post.types";
-import PostCard from "../../../components/molecules/PostCard";
+import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
 import Post from "../../../components/organisms/Post";
 import Button from "../../../components/atoms/Button";
 import Spinner from "../../../components/atoms/Spinner";
@@ -14,13 +14,11 @@ const Popular = () => {
   const { language, t } = useLanguage();
 
   const [posts, setPosts] = useState<PostType[]>([]);
-  const [showMiniPosts, setShowMiniPosts] = useState(true);
+  const [showMiniPosts, setShowMiniPosts] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const postPresentation = showMiniPosts
-    ? t("popular.actions.showFull")
-    : t("popular.actions.showTitles");
+  const postPresentation = showMiniPosts ? t("popular.actions.showFull") : t("popular.actions.showTitles");
 
   useEffect(() => {
     let isActive = true;
@@ -68,7 +66,7 @@ const Popular = () => {
     setPosts((prev) =>
       prev
         .map((post) => (post.id === updatedPost.id ? updatedPost : post))
-        .filter((post) => post.published !== false)
+        .filter((post) => post.published !== false),
     );
   };
 
@@ -84,9 +82,7 @@ const Popular = () => {
     <div className="md:mt-8">
       <h2 className="posts-heading">{t("popular.heading")}</h2>
 
-      <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">
-        {t("popular.subtitle")}
-      </p>
+      <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">{t("popular.subtitle")}</p>
 
       {posts.length > 0 && (
         <Button
@@ -104,36 +100,26 @@ const Popular = () => {
 
       <section
         className={
-          showMiniPosts
-            ? "posts-section grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4"
-            : "posts-section"
+          showMiniPosts ?
+            "posts-section grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4"
+          : "posts-section"
         }
       >
-        {!posts.length ? (
+        {!posts.length ?
           <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">
-              {t("popular.states.empty")}
-            </h3>
+            <h3 className="posts-section-heading text-[var(--text1)]">{t("popular.states.empty")}</h3>
           </div>
-        ) : (
-          posts.map((post) =>
-            showMiniPosts ? (
-              <PostCard
-                key={post.id}
-                id={post.id}
-                title={post.title}
-                likes={post.likes.length}
-              />
-            ) : (
-              <Post
+        : posts.map((post) =>
+            showMiniPosts ?
+              <JokePreviewCard key={post.id} id={post.id} title={post.title} likes={post.likes.length} />
+            : <Post
                 key={post.id}
                 post={post}
                 onPostUpdated={handlePostUpdated}
                 onPostDeleted={handlePostDeleted}
-              />
-            )
+              />,
           )
-        )}
+        }
       </section>
     </div>
   );

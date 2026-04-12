@@ -1,7 +1,6 @@
 import type { User } from "./context.types";
 
-
-export type HallOfFameRow = {
+export type LeaderboardRow = {
   user: User;
   winsByBadge: Record<string, number>;
   winsTotal: number;

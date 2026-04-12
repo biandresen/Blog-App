@@ -1,4 +1,4 @@
-export type AppLanguage = "EN" | "NO"
+export type AppLanguage = "EN" | "NO";
 
 export const translations = {
   EN: {
@@ -140,8 +140,7 @@ export const translations = {
       copy: "Copy",
       copySuccess: "Copied {{label}} template",
       copyError: "Copy failed (clipboard permission blocked)",
-      fallbackInfo:
-        "If the email button doesn’t open anything, use “Copy” and paste into any email app.",
+      fallbackInfo: "If the email button doesn’t open anything, use “Copy” and paste into any email app.",
 
       topics: {
         BUG: "Bug",
@@ -216,8 +215,7 @@ Page URL:
 
     error404: {
       heading: "SORRY! PAGE NOT FOUND",
-      paragraph:
-        "Get back on track by clicking the button below to return to the home page.",
+      paragraph: "Get back on track by clicking the button below to return to the home page.",
       button: "GO TO HOME PAGE",
     },
 
@@ -231,21 +229,20 @@ Page URL:
         "Registered users can create jokes, like jokes, and comment — helping the community surface the best (or worst) dad humor.",
 
       paragraph3:
-        "Every day, an existing joke is automatically selected as the Joke of the Day. Viewing the daily joke consistently builds your daily streak.",
+        "Every day, an existing joke is automatically selected as the 'Joke of the Day'. Viewing the daily joke consistently builds your daily streak.",
 
       paragraph4:
         "PunDad supports both English and Norwegian. The app works like two language-specific versions in one, so jokes, featured content, rankings, and search results follow the selected language.",
 
       paragraph5:
-        "If you've ever said 'Hi hungry, I'm dad', you're in the right place.",
+        "If you've ever said or laughed at someone say 'Hi hungry, I'm dad', you're in the right place.",
 
       featuresHeading: "FEATURES",
 
       features: [
         {
           title: "✍️ Create, Like & Comment",
-          description:
-            "Create your own jokes, like jokes you enjoy, and comment to join the conversation.",
+          description: "Create your own jokes, like jokes you enjoy, and comment to join the conversation.",
         },
         {
           title: "🌍 English & Norwegian",
@@ -254,40 +251,37 @@ Page URL:
         },
         {
           title: "📅 Joke of the Day",
-          description:
-            "An existing joke is featured every day on the Joke of the Day page.",
+          description: "An existing joke is featured every day on the 'Joke of the Day' page.",
         },
         {
           title: "🔥 Daily Streak",
-          description:
-            "View the daily joke multiple days in a row to build your streak.",
+          description: "View the daily joke multiple days in a row to build your streak.",
         },
         {
           title: "🏅 Badges",
-          description:
-            "Earn badges for achievements like Joke of the Day and Trending.",
+          description: "Earn badges for achievements like 'Joke of the Day' and 'Trending'.",
         },
         {
-          title: "📊 Leaderboards",
-          description:
-            "Browse users and jokes with special badges and see top performers.",
+          title: "ℹ️ Inspection",
+          description: "Click on profile pictures to inspect streaks and badges.",
+        },
+        {
+          title: "📊 Leaderboard",
+          description: "Browse users and jokes with special badges and see top performers.",
         },
         {
           title: "🎲 Random Joke",
-          description:
-            "Browse random jokes with a button for a new random joke.",
+          description: "Browse random jokes with a button for a new random joke.",
         },
       ],
     },
 
     contact: {
       heading: "CONTACT US",
-      paragraph1:
-        "Have a joke that deserves the spotlight? Found a bug? Or just want to say hi?",
+      paragraph1: "Have a joke that deserves the spotlight? Found a bug? Or just want to say hi?",
       paragraph2a: "Send us an email at",
-      paragraph2Span: "dadjokes@andresensolutions.no",
-      paragraph2b:
-        "and we'll be happy to hear from you. Feedback and dad jokes are welcome.",
+      paragraph2Span: "contact@pundad.app",
+      paragraph2b: "and we'll be happy to hear from you. Feedback and dad jokes are welcome.",
     },
 
     register: {
@@ -337,10 +331,7 @@ Page URL:
 
       infoHeading: "Log in to unleash your inner pun dad",
       infoListHeading: "What's new:",
-      infoListItems: [
-        "Community-ranked dad jokes",
-        "Submit your own legendary puns",
-      ],
+      infoListItems: ["Community-ranked dad jokes", "Submit your own legendary puns"],
 
       inputHeading: "WELCOME BACK",
       userInputLabel: "Username/Email",
@@ -376,8 +367,7 @@ Page URL:
       welcome: "Please reset your password.",
       missingToken: "Invalid or missing token.",
       failed: "Password reset failed",
-      success:
-        "Password reset successful! You can now log in with your new password.",
+      success: "Password reset successful! You can now log in with your new password.",
       genericError: "Something went wrong. Try again later.",
       passwordsDoNotMatch: "Passwords do not match",
     },
@@ -400,8 +390,7 @@ Page URL:
       welcome: "Enter your email.",
       failed: "Failed to send reset password email",
       fixError: "Correct the error and try again.",
-      success:
-        "Info sent to {{email}}. Check spam folder if you don't see the email.",
+      success: "Info sent to {{email}}. Check spam folder if you don't see the email.",
       newLink: "Didn't receive an email?",
       retryNow: "Try again",
       retryIn: "Send again in {{seconds}} seconds",
@@ -441,28 +430,27 @@ Page URL:
       version: "1.0",
       versionText: "Version",
       lastUpdatedText: "Last updated",
-      lastUpdated: "2026-02-10",
-      relatedPolicies: "Related policies",
+      lastUpdated: "12-04-2026",
 
       intro:
         "These Terms of Service (“Terms”) govern your use of PunDad (“the Service”). By creating an account or using the Service, you agree to these Terms.",
 
       incorporatedPolicies: [
-        { label: "Privacy Policy", path: "/privacy" },
-        { label: "Cookie Policy", path: "/cookies" },
-        { label: "Community Rules", path: "/rules" },
+        { label: "Privacy Policy", path: "/legal/privacy" },
+        { label: "Cookie Policy", path: "/legal/cookies" },
+        { label: "Community Rules", path: "/legal/rules" },
       ],
 
       sections: [
         {
           title: "1. Who we are",
           paragraphs: [
-            "PunDad is operated by Andresen Solutions (andresensolutions.no).",
-            "Contact: dadjokes@andresensolutions.no",
+            "PunDad is operated by Andresen Solutions (sole proprietorship, Norway, org. no. 935 365 333).",
+            "Contact: contact@pundad.app",
           ],
         },
         {
-          title: "2. Related policies (incorporated by reference)",
+          title: "2. Related policies",
           paragraphs: [
             "These Terms incorporate by reference our Privacy Policy, Cookie Policy, and Community Rules.",
             "By using the Service, you agree to comply with the Community Rules and acknowledge our Privacy and Cookie Policies.",
@@ -471,9 +459,10 @@ Page URL:
         {
           title: "3. Eligibility and accounts",
           paragraphs: [
+            "You must be at least 13 years old (or the minimum age required in your country) to use the Service.",
             "You must provide accurate information when creating an account.",
             "You are responsible for keeping your login credentials secure. If you suspect unauthorized access, contact us.",
-            "We may suspend or remove accounts that break these Terms or the Community Rules.",
+            "We may suspend, deactivate, or restrict accounts that violate these Terms or the Community Rules.",
           ],
         },
         {
@@ -481,55 +470,69 @@ Page URL:
           paragraphs: [
             "You may post jokes and other text content (“User Content”). You retain ownership of your User Content.",
             "By posting User Content, you grant PunDad a non-exclusive license to host, store, reproduce, and display it for the purpose of operating the Service.",
-            "Do not post content you do not have the right to share.",
+            "Content may remain visible even if your account is deactivated, unless we determine removal is necessary.",
           ],
         },
         {
-          title: "5. Prohibited behavior",
+          title: "5. Intellectual property and copyright",
           paragraphs: [
-            "You must not: harass others, post hateful or illegal content, spam, attempt to hack or disrupt the Service, or abuse the like system.",
-            "We may remove content or restrict accounts at our discretion to protect the Service and users.",
+            "You are responsible for ensuring that any content you post does not infringe the rights of others, including copyright and other intellectual property rights.",
+            "Do not post content that you do not have the right to use or share.",
+            "If you believe that content on the Service infringes your rights, you may contact us at contact@pundad.app with sufficient information to identify the content.",
+            "We may remove or restrict access to content that we believe violates these Terms or applicable law.",
           ],
         },
         {
-          title: "6. Likes, rankings, and leaderboards",
+          title: "6. Prohibited behavior",
           paragraphs: [
-            "Likes and rankings are provided for fun. We may change how rankings work at any time.",
-            "We may apply anti-abuse measures (for example: rate limiting, fraud detection, or account restrictions).",
+            "You must not harass others, post hateful or illegal content, spam, attempt to hack or disrupt the Service, or abuse the like system.",
+            "We may remove content, limit visibility, or restrict accounts to protect the Service and its users.",
           ],
         },
         {
-          title: "7. Beta / availability",
+          title: "7. Likes, rankings, and leaderboards",
           paragraphs: [
-            "The Service may be in beta. Features may change or break, and we may temporarily disable parts of the Service.",
+            "Likes and rankings are provided for entertainment purposes only and may change at any time.",
+            "We may apply anti-abuse measures, including rate limiting, fraud detection, and account restrictions.",
           ],
         },
         {
-          title: "8. Termination",
+          title: "8. Availability",
           paragraphs: [
-            "You can stop using the Service at any time.",
-            "We can suspend or terminate your access if you violate these Terms or if required for security or legal reasons.",
+            "The Service may be in beta. Features may change, break, or be removed, and we may temporarily disable parts of the Service.",
           ],
         },
         {
-          title: "9. Disclaimers",
+          title: "9. Termination",
+          paragraphs: [
+            "You may stop using the Service at any time and may deactivate your account from your profile.",
+            "We may suspend, deactivate, or restrict accounts if you violate these Terms, the Community Rules, or for security or legal reasons.",
+            "Account deactivation does not necessarily result in full deletion of associated data.",
+          ],
+        },
+        {
+          title: "10. Disclaimers",
           paragraphs: [
             "The Service is provided “as is” without warranties of any kind.",
             "We do our best to keep the Service available and secure, but we cannot guarantee uninterrupted access.",
           ],
         },
         {
-          title: "10. Liability",
+          title: "11. Liability",
           paragraphs: [
             "To the extent permitted by law, we are not liable for indirect damages or loss of data, profits, or goodwill.",
           ],
         },
         {
-          title: "11. Changes to these Terms",
+          title: "12. Changes",
           paragraphs: [
-            "We may update these Terms from time to time. We’ll update the “Last updated” date and version when we do.",
+            "We may update these Terms from time to time. We will update the version number and the “Last updated” date when we do.",
             "If changes are material, we may ask you to accept the updated Terms again.",
           ],
+        },
+        {
+          title: "13. Governing law",
+          paragraphs: ["These Terms are governed by the laws of Norway."],
         },
       ],
     },
@@ -539,7 +542,8 @@ Page URL:
       versionText: "Version",
       version: "1.0",
       lastUpdatedText: "Last updated",
-      lastUpdated: "2026-02-10",
+      lastUpdated: "12-04-2026",
+
       intro:
         "This Privacy Policy explains what personal data we collect, how we use it, and your rights under EU/EEA privacy rules (GDPR).",
 
@@ -547,70 +551,73 @@ Page URL:
         {
           title: "1. Data controller",
           paragraphs: [
-            "PunDad is operated by Andresen Solutions (andresensolutions.no).",
-            "Contact: dadjokes@andresensolutions.no",
+            "The data controller for PunDad is Andresen Solutions, a sole proprietorship registered in Norway (org. no. 935 365 333).",
+            "We are responsible for determining the purposes and means of processing personal data in connection with the Service.",
+            "Contact: contact@pundad.app",
           ],
         },
         {
           title: "2. What we collect",
           bullets: [
-            "Account data: username, email, password hash (never your plain password).",
-            "Profile data you choose to add: avatar image.",
-            "Content you create: jokes, comments, likes.",
+            "Account data: username, email, and password hash (never your plain password).",
+            "Profile data you choose to add, such as avatar image.",
+            "Content you create: posts, comments, and likes. Such content may be publicly visible.",
             "Security data: IP address and user-agent for fraud prevention, rate limiting, and token security.",
           ],
         },
         {
-          title: "3. Why we process your data (legal bases)",
+          title: "3. Why we process your data",
           bullets: [
-            "To provide the Service (contract): creating accounts, logging in, posting jokes/comments, displaying likes.",
-            "To keep the Service secure (legitimate interests): preventing abuse, detecting suspicious activity, rate limiting.",
-            "To comply with law (legal obligation) if required.",
+            "To provide the Service, including account creation, login, posting content, and core functionality.",
+            "To keep the Service secure, including abuse prevention, suspicious activity detection, and system protection.",
+            "To comply with legal obligations where required.",
           ],
         },
         {
-          title: "4. Cookies and similar technologies",
-          paragraphs: [
-            "We use a cookie to keep you logged in (refresh token). This is strictly necessary for authentication.",
-            "We do not use advertising cookies.",
-          ],
-        },
-        {
-          title: "5. Data sharing",
+          title: "4. Data sharing",
           paragraphs: [
             "We do not sell your personal data.",
-            "We may share data with infrastructure providers (hosting, databases, email delivery) only as needed to operate the Service.",
+            "We may share data with service providers, such as hosting, database, and email providers, only where necessary to operate the Service.",
+            "We may disclose data if required by law or if necessary to protect the security and integrity of the Service.",
           ],
         },
         {
-          title: "6. Data retention",
+          title: "5. Data retention",
           bullets: [
-            "Account data is kept while your account is active.",
-            "Posts/comments/likes are kept unless removed or your account is deleted (depending on deletion rules).",
-            "Security logs are kept for a limited time to protect the Service.",
+            "Account data is retained while your account is active.",
+            "If your account is deactivated, we may retain account and related data for security, moderation, legal, and service integrity purposes.",
+            "User-generated content, such as posts, comments, and likes, may remain visible after account deactivation unless removal is necessary.",
+            "Security and audit logs, such as IP address and user-agent, are retained for a limited period as needed to prevent abuse and ensure system integrity.",
+            "Retention periods may vary depending on purpose, security needs, and legal requirements.",
           ],
         },
         {
-          title: "7. Your rights (EEA/EU)",
+          title: "6. Your rights (EEA/EU)",
           bullets: [
-            "Access: request a copy of your data.",
-            "Rectification: correct inaccurate data.",
-            "Erasure: request deletion (subject to legal/security constraints).",
-            "Objection/restriction: limit certain processing in some cases.",
-            "Portability: receive your data in a structured format where applicable.",
+            "Access: you may request a copy of your personal data.",
+            "Rectification: you may request correction of inaccurate data.",
+            "Erasure: you may request deletion of your personal data, subject to legal, security, and service-related limitations.",
+            "Restriction or objection: you may request limited processing in certain cases.",
+            "Portability: you may request your data in a structured, commonly used format where applicable.",
+            "Requests may be submitted by contacting us. We may require verification of your identity before processing requests.",
           ],
         },
         {
-          title: "8. Security",
+          title: "7. Security",
           paragraphs: [
-            "We use password hashing, HTTPS (when deployed properly), and token-based authentication to protect accounts.",
+            "We use password hashing, HTTPS, and token-based authentication to protect accounts.",
+            "Access to personal data is limited to what is necessary for operation, security, and maintenance of the Service.",
             "No system is perfectly secure, but we take reasonable technical and organizational measures to reduce risk.",
           ],
         },
         {
-          title: "9. Contact",
+          title: "8. Contact",
+          paragraphs: ["If you have questions or requests about privacy, contact: contact@pundad.app"],
+        },
+        {
+          title: "9. Complaints",
           paragraphs: [
-            "If you have questions or requests about privacy, contact: dadjokes@andresensolutions.no",
+            "If you believe your personal data is being processed in violation of applicable law, you may lodge a complaint with your local data protection authority. In Norway, this is Datatilsynet.",
           ],
         },
       ],
@@ -619,12 +626,11 @@ Page URL:
     cookies: {
       heading: "COOKIE NOTICE",
       versionText: "Version",
-      version: "1.0",
+      version: "1.1",
       lastUpdatedText: "Last updated",
-      lastUpdated: "2026-02-10",
+      lastUpdated: "12-04-2026",
 
-      intro:
-        "This page explains what cookies PunDad uses and why.",
+      intro: "This page explains what cookies PunDad uses and why.",
 
       sections: [
         {
@@ -636,20 +642,26 @@ Page URL:
         {
           title: "2. Cookies we use",
           bullets: [
-            "Authentication cookie (refresh token): strictly necessary to keep you logged in and to issue new access tokens securely.",
+            "Authentication cookie (refresh token): strictly necessary to keep you logged in and to securely issue new access tokens.",
           ],
         },
         {
-          title: "3. Do we use analytics or ads cookies?",
+          title: "3. Legal basis",
           paragraphs: [
-            "No. PunDad does not use advertising cookies.",
-            "If we add analytics later, we will update this notice and, if required, request your consent.",
+            "The authentication cookie is strictly necessary for the Service to function and does not require consent under applicable EU/EEA rules.",
           ],
         },
         {
-          title: "4. Managing cookies",
+          title: "4. Do we use analytics or advertising cookies?",
           paragraphs: [
-            "You can control cookies through your browser settings. Disabling cookies may prevent login from working.",
+            "No. PunDad does not use analytics or advertising cookies.",
+            "If we introduce such technologies in the future, we will update this notice and request consent where required.",
+          ],
+        },
+        {
+          title: "5. Managing cookies",
+          paragraphs: [
+            "You can control cookies through your browser settings. Disabling cookies may prevent login functionality from working.",
           ],
         },
       ],
@@ -658,36 +670,40 @@ Page URL:
     rules: {
       heading: "COMMUNITY RULES",
       version: "1.0",
-      lastUpdated: "2026-02-10",
+      lastUpdated: "12-04-2026",
       intro:
-        "PunDad is meant to be fun and welcoming. These rules exist to keep the vibes good.",
+        "PunDad is meant to be fun and welcoming. These rules exist to keep the experience safe and enjoyable for everyone.",
 
       sections: [
         {
           title: "1. Be respectful",
           bullets: [
             "No harassment, threats, or hate speech.",
-            "No targeted bullying or doxxing.",
+            "No targeted bullying.",
+            "No sharing of private or identifying information about others without consent (doxxing).",
           ],
         },
         {
           title: "2. Keep it legal and safe",
           bullets: [
-            "No illegal content or instructions to do illegal acts.",
-            "No malicious links or attempts to compromise accounts or systems.",
+            "No illegal content or instructions to carry out illegal acts.",
+            "Do not post copyrighted material you do not have permission to use.",
+            "No malicious links, exploits, or attempts to compromise accounts or systems.",
           ],
         },
         {
           title: "3. No spam or manipulation",
           bullets: [
-            "No spam posts/comments.",
-            "No like manipulation, sockpuppet accounts, or automated actions.",
+            "No spam posts or comments.",
+            "No manipulation of likes, fake accounts, or automated behavior.",
+            "No attempts to bypass moderation systems or enforcement actions.",
           ],
         },
         {
           title: "4. Moderation actions",
           paragraphs: [
-            "We may remove content or restrict accounts to enforce these rules.",
+            "We may remove content, limit visibility, or restrict or deactivate accounts to enforce these rules.",
+            "Moderation decisions are made to protect users and the integrity of the Service.",
           ],
         },
       ],
@@ -706,8 +722,7 @@ Page URL:
       },
       moderationIntro: {
         paragraph1: "Manage blocked terms used by the moderation system.",
-        paragraph2:
-          "Create, edit, activate, deactivate, and delete moderation terms.",
+        paragraph2: "Create, edit, activate, deactivate, and delete moderation terms.",
         paragraph3: "Reload the moderation cache after changes if needed.",
       },
       userSection: {
@@ -725,10 +740,8 @@ Page URL:
       },
       toasts: {
         mustBeLoggedInFetch: "You must be logged in to find a user",
-        mustBeLoggedInReactivate:
-          "You must be logged in to reactivate a user",
-        mustBeLoggedInDeactivate:
-          "You must be logged in to deactivate a user",
+        mustBeLoggedInReactivate: "You must be logged in to reactivate a user",
+        mustBeLoggedInDeactivate: "You must be logged in to deactivate a user",
         requestFailed: "Request failed",
         userFound: "User found",
         userNotFound: "User not found",
@@ -768,19 +781,16 @@ Page URL:
       },
 
       avatar: {
-        help1:
-          "Max size: {{size}}MB. Supported formats: JPG, JPEG, WEBP, PNG.",
+        help1: "Max size: {{size}}MB. Supported formats: JPG, JPEG, WEBP, PNG.",
         help2: "Uploading a new avatar will replace your current one.",
         previewAlt: "Avatar preview",
         invalidType: "Only JPG, PNG or WEBP images are allowed.",
-        tooLarge:
-          "Avatar file size exceeds {{size}}MB. Choose a smaller file.",
+        tooLarge: "Avatar file size exceeds {{size}}MB. Choose a smaller file.",
       },
 
       modal: {
         title: "Delete user",
-        message:
-          "Are you sure you want to delete this user? This action cannot be undone.",
+        message: "Are you sure you want to delete this user? This action cannot be undone.",
         confirmText: "Delete",
         cancelText: "Cancel",
       },
@@ -800,8 +810,7 @@ Page URL:
         deleteFailed: "Failed to delete profile",
         updateSuccess: "Profile updated successfully!",
         updateFailed: "Failed to update profile",
-        avatarTooLarge:
-          "Avatar file size exceeds the limit. Max size is 6MB.",
+        avatarTooLarge: "Avatar file size exceeds the limit. Max size is 6MB.",
       },
     },
 
@@ -860,7 +869,7 @@ Page URL:
       placeholders: {
         title: "Joke title here...",
         body: "Joke content here...",
-        tags: "Add tags (comma separated)",
+        tags: "tag1,tag2,tag3...",
       },
 
       toasts: {
@@ -992,8 +1001,8 @@ Page URL:
       },
     },
 
-    hallOfFame: {
-      heading: "Hall of Fame",
+    leaderboard: {
+      heading: "Leaderboard",
 
       periods: {
         week: "This week",
@@ -1017,7 +1026,7 @@ Page URL:
 
       states: {
         empty: "No rankings yet.",
-        failed: "Failed to load Hall of Fame",
+        failed: "Failed to load Leaderboard",
       },
     },
 
@@ -1091,7 +1100,6 @@ Page URL:
 
         groups: {
           explore: "Explore",
-          games: "Games",
           rankings: "Rankings",
         },
 
@@ -1101,7 +1109,7 @@ Page URL:
           dailyJoke: "Daily Joke",
           random: "Random",
           jokeVsJoke: "Joke vs. Joke",
-          hallOfFame: "Hall of Fame",
+          leaderboard: "Leaderboard",
           topCreator: "Top Creator",
           trending: "Trending",
           mostCommented: "Most Commented",
@@ -1228,8 +1236,7 @@ Page URL:
 
       modal: {
         deleteTitle: "Delete joke",
-        deleteMessage:
-          "Are you sure you want to delete this joke? This action cannot be undone.",
+        deleteMessage: "Are you sure you want to delete this joke? This action cannot be undone.",
         deleteConfirm: "Delete",
         cancel: "Cancel",
       },
@@ -1409,8 +1416,7 @@ Page URL:
       copy: "Kopier",
       copySuccess: "Kopierte mal for {{label}}",
       copyError: "Kunne ikke kopiere (utklippstavletillatelse blokkert)",
-      fallbackInfo:
-        "Hvis e-postknappen ikke åpner noe, bruk «Kopier» og lim inn i en e-postapp.",
+      fallbackInfo: "Hvis e-postknappen ikke åpner noe, bruk «Kopier» og lim inn i en e-postapp.",
 
       topics: {
         BUG: "Feil",
@@ -1420,10 +1426,10 @@ Page URL:
       },
 
       subjects: {
-        BUG: "[PUNDAD][FEIL]",
-        FEATURE: "[PUNDAD][FUNKSJON]",
-        SUGGESTION: "[PUNDAD][FORSLAG]",
-        FEEDBACK: "[PUNDAD][TILBAKEMELDING]",
+        BUG: "[PUNDAD][BUG]",
+        FEATURE: "[PUNDAD][FEATURE]",
+        SUGGESTION: "[PUNDAD][SUGGESTION]",
+        FEEDBACK: "[PUNDAD][FEEDBACK]",
       },
 
       bodies: {
@@ -1485,8 +1491,7 @@ Side-URL:
 
     error404: {
       heading: "BEKLAGER! SIDEN BLE IKKE FUNNET",
-      paragraph:
-        "Kom tilbake på rett spor ved å klikke knappen under for å gå til startsiden.",
+      paragraph: "Kom tilbake på rett spor ved å klikke knappen under for å gå til startsiden.",
       button: "GÅ TIL STARTSIDEN",
     },
 
@@ -1500,21 +1505,20 @@ Side-URL:
         "Registrerte brukere kan lage vitser, like vitser og kommentere — og dermed hjelpe fellesskapet med å løfte fram den beste (eller verste) pappa-humoren.",
 
       paragraph3:
-        "Hver dag blir en eksisterende vits automatisk valgt som Dagens vits. Hvis du ser dagens vits jevnlig, bygger du opp streaken din.",
+        "Hver dag blir en eksisterende vits automatisk valgt som 'Dagens vits'. Hvis du ser dagens vits jevnlig, bygger du opp streaken din.",
 
       paragraph4:
         "PunDad støtter både engelsk og norsk. Appen fungerer som to språkspesifikke versjoner i én, slik at vitser, utvalgt innhold, rangeringer og søkeresultater følger valgt språk.",
 
       paragraph5:
-        "Hvis du noen gang har sagt «Hei sulten, jeg er pappa», er du på rett sted.",
+        "Hvis du noen gang har sagt eller ledd av noen si «Hei sulten, jeg er pappa», er du på rett sted.",
 
       featuresHeading: "FUNKSJONER",
 
       features: [
         {
           title: "✍️ Lag, lik og kommenter",
-          description:
-            "Lag dine egne vitser, lik vitser du liker, og kommenter for å bli med i samtalen.",
+          description: "Lag dine egne vitser, lik vitser du liker, og kommenter for å bli med i samtalen.",
         },
         {
           title: "🌍 Engelsk og norsk",
@@ -1523,40 +1527,37 @@ Side-URL:
         },
         {
           title: "📅 Dagens vits",
-          description:
-            "En eksisterende vits blir løftet fram hver dag på siden for Dagens vits.",
+          description: "En eksisterende vits blir løftet fram hver dag på siden for 'Dagens vits'.",
         },
         {
           title: "🔥 Daglig streak",
-          description:
-            "Se dagens vits flere dager på rad for å bygge streaken din.",
+          description: "Se dagens vits flere dager på rad for å bygge streaken din.",
         },
         {
           title: "🏅 Merker",
-          description:
-            "Tjen merker for prestasjoner som Dagens vits og Trending.",
+          description: "Tjen merker for prestasjoner som 'Dagens vits' og 'Trending'.",
         },
         {
-          title: "📊 Topplister",
-          description:
-            "Se brukere og vitser med spesielle merker og oppdag topprangerte bidrag.",
+          title: "ℹ️ Inspeksjon",
+          description: "Trykk på profilbilder for å inspisere streaks og merker.",
+        },
+        {
+          title: "📊 Toppliste",
+          description: "Se brukere og vitser med spesielle merker og oppdag topprangerte bidrag.",
         },
         {
           title: "🎲 Tilfeldig vits",
-          description:
-            "Bla gjennom tilfeldige vitser med en knapp for å hente en ny tilfeldig vits.",
+          description: "Bla gjennom tilfeldige vitser med en knapp for å hente en ny tilfeldig vits.",
         },
       ],
     },
 
     contact: {
       heading: "KONTAKT OSS",
-      paragraph1:
-        "Har du en vits som fortjener rampelyset? Funnet en feil? Eller vil du bare si hei?",
+      paragraph1: "Har du en vits som fortjener rampelyset? Funnet en feil? Eller vil du bare si hei?",
       paragraph2a: "Send oss en e-post på",
-      paragraph2Span: "dadjokes@andresensolutions.no",
-      paragraph2b:
-        "så hører vi gjerne fra deg. Tilbakemeldinger og dad jokes er velkomne.",
+      paragraph2Span: "contact@pundad.app",
+      paragraph2b: "så hører vi gjerne fra deg. Tilbakemeldinger og dad jokes er velkomne.",
     },
 
     register: {
@@ -1606,10 +1607,7 @@ Side-URL:
 
       infoHeading: "Logg inn og slipp løs din indre ordspill-pappa",
       infoListHeading: "Hva er nytt:",
-      infoListItems: [
-        "Fellesskapsrangerte dad jokes",
-        "Send inn dine egne legendariske ordspill",
-      ],
+      infoListItems: ["Fellesskapsrangerte dad jokes", "Send inn dine egne legendariske ordspill"],
 
       inputHeading: "VELKOMMEN TILBAKE",
       userInputLabel: "Brukernavn/E-post",
@@ -1645,8 +1643,7 @@ Side-URL:
       welcome: "Vennligst tilbakestill passordet ditt.",
       missingToken: "Ugyldig eller manglende token.",
       failed: "Tilbakestilling av passord mislyktes",
-      success:
-        "Passordet ble tilbakestilt. Du kan nå logge inn med det nye passordet.",
+      success: "Passordet ble tilbakestilt. Du kan nå logge inn med det nye passordet.",
       genericError: "Noe gikk galt. Prøv igjen senere.",
       passwordsDoNotMatch: "Passordene er ikke like",
     },
@@ -1669,8 +1666,7 @@ Side-URL:
       welcome: "Skriv inn e-posten din.",
       failed: "Kunne ikke sende e-post for tilbakestilling av passord",
       fixError: "Rett opp feilen og prøv igjen.",
-      success:
-        "Informasjon sendt til {{email}}. Sjekk søppelpost dersom du ikke ser e-posten.",
+      success: "Informasjon sendt til {{email}}. Sjekk søppelpost dersom du ikke ser e-posten.",
       newLink: "Fikk du ikke e-post?",
       retryNow: "Prøv igjen",
       retryIn: "Send igjen om {{seconds}} sekunder",
@@ -1691,8 +1687,7 @@ Side-URL:
 
       button: "Send ny verifiseringsmail",
 
-      welcome:
-        "Skriv inn e-posten din for å motta en ny verifiseringslenke.",
+      welcome: "Skriv inn e-posten din for å motta en ny verifiseringslenke.",
       success: "En ny verifiseringsmail ble sendt til {{email}}.",
       failed: "Kunne ikke sende verifiseringsmail",
       retryIn: "Du kan prøve igjen om {{seconds}} sekunder.",
@@ -1707,99 +1702,113 @@ Side-URL:
     },
 
     terms: {
-      heading: "BRUKSVILKÅR",
+      heading: "VILKÅR FOR BRUK",
       version: "1.0",
       versionText: "Versjon",
       lastUpdatedText: "Sist oppdatert",
-      lastUpdated: "2026-02-10",
-      relatedPolicies: "Relaterte retningslinjer",
+      lastUpdated: "12-04-2026",
 
       intro:
-        "Disse bruksvilkårene («Vilkårene») regulerer din bruk av PunDad («Tjenesten»). Ved å opprette en konto eller bruke Tjenesten godtar du disse vilkårene.",
+        "Disse vilkårene (“Vilkårene”) regulerer din bruk av PunDad (“Tjenesten”). Ved å opprette en konto eller bruke Tjenesten godtar du disse Vilkårene.",
 
       incorporatedPolicies: [
-        { label: "Personvernerklæring", path: "/privacy" },
-        { label: "Cookie-erklæring", path: "/cookies" },
-        { label: "Samfunnsregler", path: "/rules" },
+        { label: "Personvernerklæring", path: "/legal/privacy" },
+        { label: "Cookie-erklæring", path: "/legal/cookies" },
+        { label: "Retningslinjer for fellesskapet", path: "/legal/rules" },
       ],
 
       sections: [
         {
           title: "1. Hvem vi er",
           paragraphs: [
-            "PunDad drives av Andresen Solutions (andresensolutions.no).",
-            "Kontakt: dadjokes@andresensolutions.no",
+            "PunDad drives av Andresen Solutions (enkeltpersonforetak, Norge, org. nr. 935 365 333).",
+            "Kontakt: contact@pundad.app",
           ],
         },
         {
-          title: "2. Relaterte retningslinjer (innlemmet ved henvisning)",
+          title: "2. Relaterte retningslinjer",
           paragraphs: [
-            "Disse vilkårene innlemmer vår personvernerklæring, cookie-erklæring og samfunnsregler ved henvisning.",
-            "Ved å bruke Tjenesten godtar du å følge samfunnsreglene og erkjenner vår personvernerklæring og cookie-erklæring.",
+            "Disse Vilkårene inkluderer vår personvernerklæring, cookie-erklæring og retningslinjer for fellesskapet.",
+            "Ved bruk av Tjenesten godtar du å følge retningslinjene for fellesskapet og erkjenner vår personvernerklæring og cookie-erklæring.",
           ],
         },
         {
-          title: "3. Kvalifikasjon og kontoer",
+          title: "3. Konto og bruk",
           paragraphs: [
-            "Du må oppgi korrekt informasjon når du oppretter en konto.",
-            "Du er ansvarlig for å holde innloggingsinformasjonen din sikker. Hvis du mistenker uautorisert tilgang, kontakt oss.",
-            "Vi kan suspendere eller fjerne kontoer som bryter disse vilkårene eller samfunnsreglene.",
+            "Du må være minst 13 år (eller minimumsalderen i ditt land) for å bruke Tjenesten.",
+            "Du må oppgi korrekt informasjon ved registrering.",
+            "Du er ansvarlig for å holde innloggingsinformasjonen din sikker. Hvis du mistenker uautorisert tilgang, må du kontakte oss.",
+            "Vi kan suspendere, deaktivere eller begrense kontoer som bryter Vilkårene eller retningslinjene for fellesskapet.",
           ],
         },
         {
           title: "4. Ditt innhold",
           paragraphs: [
-            "Du kan publisere vitser og annet tekstinnhold («Brukerinnhold»). Du beholder eierskapet til brukerinnholdet ditt.",
-            "Ved å publisere brukerinnhold gir du PunDad en ikke-eksklusiv lisens til å hoste, lagre, reprodusere og vise det for å kunne drive Tjenesten.",
-            "Ikke publiser innhold du ikke har rett til å dele.",
+            "Du kan publisere vitser og annet tekstinnhold («Brukerinnhold»). Du beholder eierskapet til ditt Brukerinnhold.",
+            "Ved publisering gir du PunDad en ikke-eksklusiv lisens til å lagre, reprodusere og vise innholdet for å drive Tjenesten.",
+            "Innhold kan forbli synlig selv om kontoen din deaktiveres, med mindre vi vurderer at det må fjernes.",
           ],
         },
         {
-          title: "5. Forbudt oppførsel",
+          title: "5. Immaterielle rettigheter og opphavsrett",
           paragraphs: [
-            "Du må ikke: trakassere andre, publisere hatefulle eller ulovlige ytringer, spamme, forsøke å hacke eller forstyrre Tjenesten, eller misbruke likesystemet.",
-            "Vi kan fjerne innhold eller begrense kontoer etter eget skjønn for å beskytte Tjenesten og brukerne.",
+            "Du er ansvarlig for at innhold du publiserer ikke krenker andres rettigheter, inkludert opphavsrett og andre immaterielle rettigheter.",
+            "Du må ikke publisere innhold du ikke har rett til å bruke eller dele.",
+            "Hvis du mener at innhold på Tjenesten krenker dine rettigheter, kan du kontakte oss på contact@pundad.app med tilstrekkelig informasjon til å identifisere innholdet.",
+            "Vi kan fjerne eller begrense tilgang til innhold som vi mener bryter disse Vilkårene eller gjeldende lov.",
           ],
         },
         {
-          title: "6. Likes, rangeringer og topplister",
+          title: "6. Forbudt atferd",
           paragraphs: [
-            "Likes og rangeringer er ment som underholdning. Vi kan endre hvordan rangeringer fungerer når som helst.",
-            "Vi kan bruke tiltak mot misbruk (for eksempel rate limiting, svindeldeteksjon eller kontobegrensninger).",
+            "Du må ikke trakassere andre, publisere hatefullt eller ulovlig innhold, spamme, forsøke å hacke eller forstyrre Tjenesten, eller misbruke likesystemet.",
+            "Vi kan fjerne innhold, begrense synlighet eller begrense kontoer for å beskytte Tjenesten og brukerne.",
           ],
         },
         {
-          title: "7. Beta / tilgjengelighet",
+          title: "7. Likes, rangeringer og topplister",
           paragraphs: [
-            "Tjenesten kan være i beta. Funksjoner kan endres eller slutte å fungere, og vi kan midlertidig deaktivere deler av Tjenesten.",
+            "Likes og rangeringer er kun ment for underholdning og kan endres når som helst.",
+            "Vi kan bruke tiltak mot misbruk, inkludert rate limiting, svindeldeteksjon og kontobegrensninger.",
           ],
         },
         {
-          title: "8. Oppsigelse",
+          title: "8. Tilgjengelighet",
           paragraphs: [
-            "Du kan når som helst slutte å bruke Tjenesten.",
-            "Vi kan suspendere eller avslutte tilgangen din dersom du bryter disse vilkårene, eller hvis det kreves av sikkerhets- eller juridiske hensyn.",
+            "Tjenesten kan være i beta. Funksjoner kan endres, slutte å virke eller fjernes, og vi kan midlertidig deaktivere deler av Tjenesten.",
           ],
         },
         {
-          title: "9. Ansvarsfraskrivelser",
+          title: "9. Oppsigelse",
           paragraphs: [
-            "Tjenesten tilbys «som den er» uten garantier av noe slag.",
+            "Du kan når som helst slutte å bruke Tjenesten og deaktivere kontoen din fra profilen din.",
+            "Vi kan suspendere, deaktivere eller begrense kontoer ved brudd på Vilkårene, retningslinjene for fellesskapet eller av sikkerhetsmessige eller juridiske årsaker.",
+            "Deaktivering av konto innebærer ikke nødvendigvis full sletting av tilknyttede data.",
+          ],
+        },
+        {
+          title: "10. Ansvarsfraskrivelse",
+          paragraphs: [
+            "Tjenesten leveres «som den er» uten garantier av noe slag.",
             "Vi gjør vårt beste for å holde Tjenesten tilgjengelig og sikker, men vi kan ikke garantere uavbrutt tilgang.",
           ],
         },
         {
-          title: "10. Ansvar",
+          title: "11. Ansvar",
           paragraphs: [
-            "Så langt loven tillater, er vi ikke ansvarlige for indirekte tap eller tap av data, fortjeneste eller goodwill.",
+            "Så langt loven tillater det, er vi ikke ansvarlige for indirekte tap eller tap av data, fortjeneste eller goodwill.",
           ],
         },
         {
-          title: "11. Endringer i disse vilkårene",
+          title: "12. Endringer",
           paragraphs: [
-            "Vi kan oppdatere disse vilkårene fra tid til annen. Vi oppdaterer datoen for «Sist oppdatert» og versjonsnummeret når vi gjør det.",
-            "Hvis endringene er vesentlige, kan vi be deg godta de oppdaterte vilkårene på nytt.",
+            "Vi kan oppdatere Vilkårene fra tid til annen. Vi vil oppdatere versjonsnummeret og datoen for «Sist oppdatert» når vi gjør det.",
+            "Hvis endringene er vesentlige, kan vi be deg godta de oppdaterte Vilkårene på nytt.",
           ],
+        },
+        {
+          title: "13. Lovvalg",
+          paragraphs: ["Disse Vilkårene reguleres av norsk lov."],
         },
       ],
     },
@@ -1809,78 +1818,82 @@ Side-URL:
       versionText: "Versjon",
       version: "1.0",
       lastUpdatedText: "Sist oppdatert",
-      lastUpdated: "2026-02-10",
+      lastUpdated: "12-04-2026",
+
       intro:
-        "Denne personvernerklæringen forklarer hvilke personopplysninger vi samler inn, hvordan vi bruker dem og hvilke rettigheter du har etter personvernreglene i EU/EØS (GDPR).",
+        "Denne personvernerklæringen forklarer hvilke personopplysninger vi samler inn, hvordan vi bruker dem, og hvilke rettigheter du har etter personvernreglene i EU/EØS (GDPR).",
 
       sections: [
         {
           title: "1. Behandlingsansvarlig",
           paragraphs: [
-            "PunDad drives av Andresen Solutions (andresensolutions.no).",
-            "Kontakt: dadjokes@andresensolutions.no",
+            "Behandlingsansvarlig for PunDad er Andresen Solutions, et enkeltpersonforetak registrert i Norge (org. nr. 935 365 333).",
+            "Vi er ansvarlige for å fastsette formålene med og midlene for behandlingen av personopplysninger i forbindelse med Tjenesten.",
+            "Kontakt: contact@pundad.app",
           ],
         },
         {
           title: "2. Hva vi samler inn",
           bullets: [
-            "Kontodata: brukernavn, e-post, passordhash (aldri passordet ditt i klartekst).",
-            "Profildata du velger å legge til: avatarbilde.",
-            "Innhold du lager: vitser, kommentarer, likes.",
-            "Sikkerhetsdata: IP-adresse og user-agent for å forebygge misbruk, rate limiting og tokensikkerhet.",
+            "Kontodata: brukernavn, e-post og passordhash (aldri passordet ditt i klartekst).",
+            "Profilopplysninger du velger å legge til, som avatarbilde.",
+            "Innhold du lager: innlegg, kommentarer og likes. Slikt innhold kan være offentlig synlig.",
+            "Sikkerhetsdata: IP-adresse og brukeragent for å forebygge misbruk, håndheve rate limiting og sikre tokens.",
           ],
         },
         {
-          title: "3. Hvorfor vi behandler opplysningene dine (rettslig grunnlag)",
+          title: "3. Hvorfor vi behandler opplysningene dine",
           bullets: [
-            "For å levere Tjenesten (avtale): opprette kontoer, logge inn, publisere vitser/kommentarer, vise likes.",
-            "For å holde Tjenesten sikker (berettiget interesse): forhindre misbruk, oppdage mistenkelig aktivitet, rate limiting.",
-            "For å overholde loven (rettslig plikt) dersom det kreves.",
+            "For å levere Tjenesten, inkludert kontoopprettelse, innlogging, publisering av innhold og kjernefunksjonalitet.",
+            "For å holde Tjenesten sikker, inkludert forebygging av misbruk, oppdagelse av mistenkelig aktivitet og beskyttelse av systemet.",
+            "For å oppfylle juridiske forpliktelser der det er nødvendig.",
           ],
         },
         {
-          title: "4. Cookies og lignende teknologi",
-          paragraphs: [
-            "Vi bruker en cookie for å holde deg innlogget (refresh token). Dette er strengt nødvendig for autentisering.",
-            "Vi bruker ikke reklamecookies.",
-          ],
-        },
-        {
-          title: "5. Deling av data",
+          title: "4. Deling av data",
           paragraphs: [
             "Vi selger ikke personopplysningene dine.",
-            "Vi kan dele data med infrastrukturleverandører (hosting, databaser, e-postlevering) bare når det er nødvendig for å drifte Tjenesten.",
+            "Vi kan dele data med tjenesteleverandører, som hosting-, database- og e-postleverandører, bare der det er nødvendig for å drifte Tjenesten.",
+            "Vi kan utlevere data dersom det er pålagt ved lov eller nødvendig for å beskytte Tjenestens sikkerhet og integritet.",
           ],
         },
         {
-          title: "6. Lagringstid",
+          title: "5. Lagring av data",
           bullets: [
-            "Kontodata lagres så lenge kontoen din er aktiv.",
-            "Vitser/kommentarer/likes lagres med mindre de fjernes eller kontoen din slettes (avhengig av sletteregler).",
-            "Sikkerhetslogger lagres i en begrenset periode for å beskytte Tjenesten.",
+            "Kontodata lagres så lenge kontoen er aktiv.",
+            "Hvis kontoen deaktiveres, kan vi beholde konto- og tilknyttede data for sikkerhet, moderering, juridiske forpliktelser og tjenesteintegritet.",
+            "Brukergenerert innhold, som innlegg, kommentarer og likes, kan forbli synlig etter deaktivering med mindre fjerning er nødvendig.",
+            "Sikkerhets- og revisjonslogger, som IP-adresse og brukeragent, lagres i en begrenset periode ved behov for å forebygge misbruk og sikre systemets integritet.",
+            "Oppbevaringsperioder kan variere avhengig av formål, sikkerhetsbehov og juridiske krav.",
           ],
         },
         {
-          title: "7. Dine rettigheter (EØS/EU)",
+          title: "6. Dine rettigheter (EØS/EU)",
           bullets: [
-            "Innsyn: be om en kopi av opplysningene dine.",
-            "Rettelse: korrigere feilaktige opplysninger.",
-            "Sletting: be om sletting (med forbehold om juridiske/sikkerhetsmessige begrensninger).",
-            "Innsigelse/begrensning: begrense visse behandlinger i noen tilfeller.",
-            "Dataportabilitet: motta opplysningene dine i et strukturert format der det er aktuelt.",
+            "Innsyn: du kan be om en kopi av personopplysningene dine.",
+            "Retting: du kan be om korrigering av feilaktige opplysninger.",
+            "Sletting: du kan be om sletting av personopplysningene dine, med forbehold om juridiske, sikkerhetsmessige og tjenestemessige begrensninger.",
+            "Begrensning eller innsigelse: du kan i noen tilfeller be om begrenset behandling.",
+            "Dataportabilitet: du kan be om å få utlevert dataene dine i et strukturert og vanlig brukt format der det er relevant.",
+            "Forespørsler kan sendes ved å kontakte oss. Vi kan kreve identitetsbekreftelse før vi behandler forespørsler.",
           ],
         },
         {
-          title: "8. Sikkerhet",
+          title: "7. Sikkerhet",
           paragraphs: [
-            "Vi bruker hashing av passord, HTTPS (når løsningen er satt opp riktig) og tokenbasert autentisering for å beskytte kontoer.",
-            "Ingen systemer er perfekt sikre, men vi bruker rimelige tekniske og organisatoriske tiltak for å redusere risiko.",
+            "Vi bruker passordhashing, HTTPS og tokenbasert autentisering for å beskytte kontoer.",
+            "Tilgang til personopplysninger er begrenset til det som er nødvendig for drift, sikkerhet og vedlikehold av Tjenesten.",
+            "Ingen systemer er helt sikre, men vi gjennomfører rimelige tekniske og organisatoriske tiltak for å redusere risiko.",
           ],
         },
         {
-          title: "9. Kontakt",
+          title: "8. Kontakt",
+          paragraphs: ["Hvis du har spørsmål eller forespørsler om personvern, kontakt: contact@pundad.app"],
+        },
+        {
+          title: "9. Klager",
           paragraphs: [
-            "Hvis du har spørsmål eller ønsker knyttet til personvern, kontakt: dadjokes@andresensolutions.no",
+            "Hvis du mener at personopplysningene dine behandles i strid med gjeldende regelverk, kan du klage til relevant tilsynsmyndighet. I Norge er dette Datatilsynet.",
           ],
         },
       ],
@@ -1889,37 +1902,42 @@ Side-URL:
     cookies: {
       heading: "COOKIE-ERKLÆRING",
       versionText: "Versjon",
-      version: "1.0",
+      version: "1.1",
       lastUpdatedText: "Sist oppdatert",
-      lastUpdated: "2026-02-10",
+      lastUpdated: "12-04-2026",
 
-      intro:
-        "Denne siden forklarer hvilke cookies PunDad bruker og hvorfor.",
+      intro: "Denne siden forklarer hvilke cookies PunDad bruker og hvorfor.",
 
       sections: [
         {
           title: "1. Hva cookies er",
           paragraphs: [
-            "Cookies er små tekstfiler som lagres på enheten din. De hjelper nettsteder med å huske informasjon, som innloggingsøkter.",
+            "Cookies er små tekstfiler som lagres på enheten din. De hjelper nettsteder med å huske informasjon som innloggingsøkter.",
           ],
         },
         {
           title: "2. Cookies vi bruker",
           bullets: [
-            "Autentiseringscookie (refresh token): strengt nødvendig for å holde deg innlogget og for å utstede nye tilgangstoken på en sikker måte.",
+            "Autentiseringscookie (refresh token): strengt nødvendig for å holde deg innlogget og utstede nye tilgangstoken på en sikker måte.",
           ],
         },
         {
-          title: "3. Bruker vi analyse- eller reklamecookies?",
+          title: "3. Rettslig grunnlag",
           paragraphs: [
-            "Nei. PunDad bruker ikke reklamecookies.",
-            "Hvis vi senere legger til analyseverktøy, oppdaterer vi denne erklæringen og ber om samtykke dersom det kreves.",
+            "Autentiseringscookien er strengt nødvendig for at Tjenesten skal fungere og krever derfor ikke samtykke etter gjeldende regler i EU/EØS.",
           ],
         },
         {
-          title: "4. Håndtering av cookies",
+          title: "4. Bruker vi analyse- eller reklamecookies?",
           paragraphs: [
-            "Du kan styre cookies gjennom innstillingene i nettleseren din. Hvis du deaktiverer cookies, kan innlogging slutte å fungere.",
+            "Nei. PunDad bruker ikke analyse- eller reklamecookies.",
+            "Hvis vi senere innfører slike teknologier, vil vi oppdatere denne erklæringen og innhente samtykke der det er nødvendig.",
+          ],
+        },
+        {
+          title: "5. Håndtering av cookies",
+          paragraphs: [
+            "Du kan kontrollere cookies gjennom innstillingene i nettleseren din. Hvis du deaktiverer cookies, kan innloggingsfunksjonalitet slutte å virke.",
           ],
         },
       ],
@@ -1928,36 +1946,40 @@ Side-URL:
     rules: {
       heading: "SAMFUNNSREGLER",
       version: "1.0",
-      lastUpdated: "2026-02-10",
+      lastUpdated: "12-04-2026",
       intro:
-        "PunDad skal være morsomt og inkluderende. Disse reglene finnes for å holde stemningen god.",
+        "PunDad skal være morsomt og inkluderende. Disse reglene finnes for å holde opplevelsen trygg og positiv for alle.",
 
       sections: [
         {
           title: "1. Vis respekt",
           bullets: [
             "Ingen trakassering, trusler eller hatefulle ytringer.",
-            "Ingen målrettet mobbing eller doxxing.",
+            "Ingen målrettet mobbing.",
+            "Ingen deling av privat eller identifiserbar informasjon om andre uten samtykke (doxxing).",
           ],
         },
         {
           title: "2. Hold det lovlig og trygt",
           bullets: [
-            "Ikke legg ut ulovlig innhold eller instruksjoner for ulovlige handlinger.",
-            "Ingen ondsinnede lenker eller forsøk på å kompromittere kontoer eller systemer.",
+            "Ikke publiser ulovlig innhold eller instruksjoner for å utføre ulovlige handlinger.",
+            "Ikke publiser opphavsrettsbeskyttet materiale du ikke har tillatelse til å bruke.",
+            "Ingen ondsinnede lenker, utnyttelser eller forsøk på å kompromittere kontoer eller systemer.",
           ],
         },
         {
           title: "3. Ingen spam eller manipulering",
           bullets: [
-            "Ingen spam-innlegg/kommentarer.",
-            "Ingen manipulering av likes, falske kontoer eller automatiserte handlinger.",
+            "Ingen spam-innlegg eller kommentarer.",
+            "Ingen manipulering av likes, falske kontoer eller automatisert aktivitet.",
+            "Ingen forsøk på å omgå modereringssystemer eller håndhevingstiltak.",
           ],
         },
         {
           title: "4. Modereringstiltak",
           paragraphs: [
-            "Vi kan fjerne innhold eller begrense kontoer for å håndheve disse reglene.",
+            "Vi kan fjerne innhold, begrense synlighet eller begrense eller deaktivere kontoer for å håndheve disse reglene.",
+            "Modereringstiltak gjennomføres for å beskytte brukerne og Tjenestens integritet.",
           ],
         },
       ],
@@ -1976,10 +1998,8 @@ Side-URL:
       },
       moderationIntro: {
         paragraph1: "Administrer blokkerte termer brukt av modereringssystemet.",
-        paragraph2:
-          "Opprett, rediger, aktiver, deaktiver og slett modereringstermer.",
-        paragraph3:
-          "Last inn modereringscachen på nytt etter endringer ved behov.",
+        paragraph2: "Opprett, rediger, aktiver, deaktiver og slett modereringstermer.",
+        paragraph3: "Last inn modereringscachen på nytt etter endringer ved behov.",
       },
       userSection: {
         heading: "Brukeradministrasjon",
@@ -1996,10 +2016,8 @@ Side-URL:
       },
       toasts: {
         mustBeLoggedInFetch: "Du må være logget inn for å finne en bruker",
-        mustBeLoggedInReactivate:
-          "Du må være logget inn for å reaktivere en bruker",
-        mustBeLoggedInDeactivate:
-          "Du må være logget inn for å deaktivere en bruker",
+        mustBeLoggedInReactivate: "Du må være logget inn for å reaktivere en bruker",
+        mustBeLoggedInDeactivate: "Du må være logget inn for å deaktivere en bruker",
         requestFailed: "Forespørselen mislyktes",
         userFound: "Bruker funnet",
         userNotFound: "Bruker ikke funnet",
@@ -2039,19 +2057,16 @@ Side-URL:
       },
 
       avatar: {
-        help1:
-          "Maks størrelse: {{size}}MB. Støttede formater: JPG, JPEG, WEBP, PNG.",
+        help1: "Maks størrelse: {{size}}MB. Støttede formater: JPG, JPEG, WEBP, PNG.",
         help2: "Opplasting av ny avatar erstatter den nåværende.",
         previewAlt: "Forhåndsvisning av avatar",
         invalidType: "Kun JPG-, PNG- eller WEBP-bilder er tillatt.",
-        tooLarge:
-          "Avatarfilen er større enn {{size}}MB. Velg en mindre fil.",
+        tooLarge: "Avatarfilen er større enn {{size}}MB. Velg en mindre fil.",
       },
 
       modal: {
         title: "Slett bruker",
-        message:
-          "Er du sikker på at du vil slette denne brukeren? Handlingen kan ikke angres.",
+        message: "Er du sikker på at du vil slette denne brukeren? Handlingen kan ikke angres.",
         confirmText: "Slett",
         cancelText: "Avbryt",
       },
@@ -2071,8 +2086,7 @@ Side-URL:
         deleteFailed: "Kunne ikke slette profil",
         updateSuccess: "Profil oppdatert!",
         updateFailed: "Kunne ikke oppdatere profil",
-        avatarTooLarge:
-          "Avatarfilen overskrider grensen. Maks størrelse er 6MB.",
+        avatarTooLarge: "Avatarfilen overskrider grensen. Maks størrelse er 6MB.",
       },
     },
 
@@ -2131,13 +2145,12 @@ Side-URL:
       placeholders: {
         title: "Vitstittel her...",
         body: "Vitsens innhold her...",
-        tags: "Legg til tags (kommadelt)",
+        tags: "tag1,tag2,tag3...",
       },
 
       toasts: {
         mustBeLoggedInDraft: "Du må være logget inn for å lagre et utkast.",
-        mustBeLoggedInPublish:
-          "Du må være logget inn for å publisere en vits.",
+        mustBeLoggedInPublish: "Du må være logget inn for å publisere en vits.",
         titleAndBodyRequired: "Tittel og innhold er påkrevd.",
         draftSaved: "Utkast lagret!",
         jokePublished: "Vits publisert!",
@@ -2264,8 +2277,8 @@ Side-URL:
       },
     },
 
-    hallOfFame: {
-      heading: "Hall of Fame",
+    leaderboard: {
+      heading: "Toppliste",
 
       periods: {
         week: "Denne uken",
@@ -2289,7 +2302,7 @@ Side-URL:
 
       states: {
         empty: "Ingen rangeringer ennå.",
-        failed: "Kunne ikke laste Hall of Fame",
+        failed: "Kunne ikke laste Toppliste",
       },
     },
 
@@ -2322,8 +2335,7 @@ Side-URL:
       },
 
       toasts: {
-        mustBeLoggedIn:
-          "Du må være logget inn for å publisere en kommentar.",
+        mustBeLoggedIn: "Du må være logget inn for å publisere en kommentar.",
         empty: "Kommentaren kan ikke være tom",
         published: "Kommentar publisert!",
         sessionExpired: "Økten din har utløpt. Logg inn igjen.",
@@ -2374,7 +2386,7 @@ Side-URL:
           dailyJoke: "Dagens vits",
           random: "Tilfeldig",
           jokeVsJoke: "Vits mot vits",
-          hallOfFame: "Hall of Fame",
+          leaderboard: "Toppliste",
           topCreator: "Topp-skaper",
           trending: "Trending",
           mostCommented: "Mest kommentert",
@@ -2457,7 +2469,7 @@ Side-URL:
         jokes: "Vitser",
         dashboard: "Dashboard",
         register: "Registrer",
-        login: "Logg inn",
+        login: "Login",
         about: "Om",
         contact: "Kontakt",
       },
@@ -2484,8 +2496,7 @@ Side-URL:
       },
 
       toasts: {
-        mustBeLoggedInToLike:
-          "Du må være logget inn for å like en vits",
+        mustBeLoggedInToLike: "Du må være logget inn for å like en vits",
         cannotLikeOwn: "Du kan ikke like din egen vits",
         toggleLikeFailed: "Kunne ikke bytte like",
         postEdited: "Innlegg redigert!",
@@ -2502,8 +2513,7 @@ Side-URL:
 
       modal: {
         deleteTitle: "Slett vits",
-        deleteMessage:
-          "Er du sikker på at du vil slette denne vitsen? Handlingen kan ikke angres.",
+        deleteMessage: "Er du sikker på at du vil slette denne vitsen? Handlingen kan ikke angres.",
         deleteConfirm: "Slett",
         cancel: "Avbryt",
       },

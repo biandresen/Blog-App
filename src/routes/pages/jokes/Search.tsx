@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import PostCard from "../../../components/molecules/PostCard";
+import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
 import Searchbar from "../../../components/molecules/Searchbar";
 import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
@@ -18,9 +18,8 @@ function computeMatches(post: PostType, q: string, filters: SearchFilters): stri
   const input = q.trim().toLowerCase();
   if (!input) return [];
 
-  console.log(filters)
-  console.log(post)
-
+  console.log(filters);
+  console.log(post);
 
   const matches: string[] = [];
 
@@ -36,12 +35,7 @@ function computeMatches(post: PostType, q: string, filters: SearchFilters): stri
     matches.push("comment");
   }
 
-  if (
-    filters.tags &&
-    post.tags?.some((tag) =>
-      tag.name?.toLowerCase().includes(input)
-    )
-  ) {
+  if (filters.tags && post.tags?.some((tag) => tag.name?.toLowerCase().includes(input))) {
     matches.push("tag");
   }
 
@@ -73,8 +67,7 @@ const Search = () => {
     };
   }, [query]);
 
-  const hasActiveFilters =
-    filters.title || filters.body || filters.comments || filters.tags;
+  const hasActiveFilters = filters.title || filters.body || filters.comments || filters.tags;
 
   const searchEnabled = Boolean(debouncedQuery) && hasActiveFilters;
 
@@ -190,43 +183,28 @@ const Search = () => {
         </div>
       )}
 
-      {error && (
-        <div className="mt-4 text-center text-[var(--error)]">
-          {error}
-        </div>
-      )}
+      {error && <div className="mt-4 text-center text-[var(--error)]">{error}</div>}
 
       <section className="posts-section">
         {loading && postsToShow.length === 0 && <Spinner />}
 
         {!loading && searchEnabled && postsToShow.length === 0 && !error && (
           <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">
-              {t("search.states.noResults")}
-            </h3>
+            <h3 className="posts-section-heading text-[var(--text1)]">{t("search.states.noResults")}</h3>
           </div>
         )}
 
-        <div className="flex w-full flex-wrap justify-center gap-4">
+        <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
           {postsToShow.map((post) => (
-            <div
-              key={post.id}
-              className="flex flex-col items-center flex-[1_1_240px] min-w-[220px] max-w-[360px]"
-            >
-              <div className="w-full min-w-0">
-                <PostCard id={post.id} title={post.title} />
-              </div>
+            <div key={post.id} className="flex flex-col">
+              <JokePreviewCard id={post.id} title={post.title} likes={post.likes.length} />
 
-              {post.matches?.length ? (
-                <p className="mt-2 text-center text-sm text-[var(--text1)] opacity-70">
+              {post.matches?.length ?
+                <p className="mt-2 text-sm text-[var(--text1)] opacity-70">
                   {t("search.states.foundIn")}:{" "}
-                  {post.matches
-                    .map((match) => t(`search.matchLabels.${match}`, match))
-                    .join(", ")}
+                  {post.matches.map((match) => t(`search.matchLabels.${match}`, match)).join(", ")}
                 </p>
-              ) : (
-                <div className="h-6" />
-              )}
+              : null}
             </div>
           ))}
         </div>

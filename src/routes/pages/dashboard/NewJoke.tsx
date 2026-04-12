@@ -48,7 +48,7 @@ const NewJoke = () => {
 
   const { title, body, tags } = state;
 
-  const invalidForm = !title.trim() || !body.trim();
+  const invalidForm = !title.trim() && !body.trim();
 
   const parsedTags = useMemo(
     () =>
@@ -69,7 +69,6 @@ const NewJoke = () => {
       toast.error(t("newPost.toasts.mustBeLoggedInDraft"));
       return;
     }
-
       const moderation = moderateFields(
     {
       title,
@@ -199,21 +198,21 @@ const NewJoke = () => {
             maxLength={MAX_CHARS.TITLE}
             required
           />
-          <span className="absolute bottom-2 right-2 opacity-80 text-xs">
+          <span className="characters-left bottom-2!">
             {getCharactersLeft(title, MAX_CHARS.TITLE)}
           </span>
         </div>
 
         <label
           htmlFor="body"
-          className="text-[var(--text2)] md:text-2xl font-bold md:my-2"
+          className="text-[var(--text2)] md:text-2xl font-semibold mb-2"
         >
           {t("newPost.fields.body")}
         </label>
 
         <div className="relative">
           <textarea
-            className="md:text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] px-3 font-normal md:h-50 py-2"
+            className="md:text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] px-3 font-normal md:h-50 py-2 min-h-12 outline-none"
             title={t("newPost.fields.body")}
             value={body}
             onChange={(e) => {
@@ -224,15 +223,16 @@ const NewJoke = () => {
             placeholder={t("newPost.placeholders.body")}
             id="body"
             maxLength={MAX_CHARS.BODY}
+            required
           />
-          <span className="absolute bottom-2 right-5 opacity-80 text-xs">
+          <span className="characters-left bottom-2!">
             {getCharactersLeft(body, MAX_CHARS.BODY)}
           </span>
         </div>
 
         <div className="relative">
           <Input
-            className="text-[var(--text2)] rounded-xl text-sm md:text-xl! mb-2 font-normal!"
+            className="text-[var(--text2)] rounded-xl text-sm md:text-xl! mb-2"
             id="tags"
             label={t("newPost.fields.tags")}
             type="text"
@@ -245,7 +245,7 @@ const NewJoke = () => {
             maxLength={MAX_CHARS.TAGS}
             placeholder={t("newPost.placeholders.tags")}
           />
-          <span className="absolute bottom-2 right-2 opacity-80 text-xs">
+          <span className="characters-left bottom-2!">
             {getCharactersLeft(tags, MAX_CHARS.TAGS)}
           </span>
         </div>

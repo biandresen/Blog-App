@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { toast } from "react-toastify";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-const EMAIL = "dadjokes@andresensolutions.no";
+const EMAIL = "contact@pundad.app";
 
 type Topic = "BUG" | "FEATURE" | "SUGGESTION" | "FEEDBACK";
 
@@ -11,19 +11,19 @@ const getClientInfo = () => {
   const platform = navigator.platform || "";
 
   const os =
-    /Win/.test(platform) ? "Windows" :
-    /Mac/.test(platform) ? "macOS" :
-    /Linux/.test(platform) ? "Linux" :
-    /Android/.test(ua) ? "Android" :
-    /iPhone|iPad|iPod/.test(ua) ? "iOS" :
-    "Unknown OS";
+    /Win/.test(platform) ? "Windows"
+    : /Mac/.test(platform) ? "macOS"
+    : /Linux/.test(platform) ? "Linux"
+    : /Android/.test(ua) ? "Android"
+    : /iPhone|iPad|iPod/.test(ua) ? "iOS"
+    : "Unknown OS";
 
   const browser =
-    /Edg\//.test(ua) ? "Edge" :
-    /Chrome\//.test(ua) && !/Edg\//.test(ua) ? "Chrome" :
-    /Safari\//.test(ua) && !/Chrome\//.test(ua) ? "Safari" :
-    /Firefox\//.test(ua) ? "Firefox" :
-    "Unknown Browser";
+    /Edg\//.test(ua) ? "Edge"
+    : /Chrome\//.test(ua) && !/Edg\//.test(ua) ? "Chrome"
+    : /Safari\//.test(ua) && !/Chrome\//.test(ua) ? "Safari"
+    : /Firefox\//.test(ua) ? "Firefox"
+    : "Unknown Browser";
 
   return { os, browser, ua };
 };
@@ -49,7 +49,7 @@ export default function ContactTemplate() {
       { topic: "SUGGESTION" as const },
       { topic: "FEEDBACK" as const },
     ],
-    []
+    [],
   );
 
   const buildSubject = (topic: Topic) => {
@@ -67,9 +67,7 @@ export default function ContactTemplate() {
 
   return (
     <section className="mt-4 rounded-xl border border-[var(--text1)]/10 bg-[var(--button1)] p-4">
-      <p className="text-sm font-semibold text-[var(--text2)]">
-        {t("contactTemplate.heading")}
-      </p>
+      <p className="text-sm font-semibold text-[var(--text2)]">{t("contactTemplate.heading")}</p>
 
       <div className="mt-3 flex flex-col gap-2">
         {topics.map(({ topic }) => {
@@ -92,9 +90,7 @@ export default function ContactTemplate() {
                 onClick={async () => {
                   try {
                     await copySupportEmail(EMAIL, subject, body);
-                    toast.success(
-                      tf("contactTemplate.copySuccess", { label })
-                    );
+                    toast.success(tf("contactTemplate.copySuccess", { label }));
                   } catch {
                     toast.error(t("contactTemplate.copyError"));
                   }
@@ -109,9 +105,7 @@ export default function ContactTemplate() {
         })}
       </div>
 
-      <p className="mt-3 text-xs opacity-80 text-[var(--text2)]">
-        {t("contactTemplate.fallbackInfo")}
-      </p>
+      <p className="mt-3 text-xs opacity-80 text-[var(--text2)]">{t("contactTemplate.fallbackInfo")}</p>
     </section>
   );
 }

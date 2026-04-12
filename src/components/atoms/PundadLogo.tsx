@@ -1,13 +1,13 @@
 import type { SVGProps } from "react";
 
-export default function DadJokesLogo(props: SVGProps<SVGSVGElement>) {
+export default function PundadLogo(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 64 64"
       fill="none"
       role="img"
-      aria-label="DadJokes logo"
+      aria-label="Pundad logo"
       {...props}
     >
       <path

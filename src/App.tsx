@@ -43,7 +43,7 @@ const TrendingWeek = lazy(() => import("./routes/pages/jokes/TrendingWeek"));
 const MostCommentedWeek = lazy(() => import("./routes/pages/jokes/MostCommentedWeek"));
 const FastestGrowing = lazy(() => import("./routes/pages/jokes/FastestGrowing"));
 const TopCreatorMonth = lazy(() => import("./routes/pages/jokes/TopCreatorMonth"));
-const HallOfFame = lazy(() => import("./routes/pages/jokes/HallOfFame"));
+const Leaderboard = lazy(() => import("./routes/pages/jokes/Leaderboard"));
 
 const App = () => {
   useAuthInitializer();
@@ -85,7 +85,6 @@ const App = () => {
             <Route path="/legal/cookies" element={<Cookies />} />
             <Route path="/legal/rules" element={<CommunityRules />} />
 
-
             {/* Protected dashboard */}
             <Route
               path="/dashboard"
@@ -115,7 +114,7 @@ const App = () => {
               <Route path="fastest-growing" element={<FastestGrowing />} />
               <Route path="top-creator-month" element={<TopCreatorMonth />} />
               <Route path="popular" element={<Popular />} />
-              <Route path="hall-of-fame" element={<HallOfFame />} />
+              <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="my-jokes" element={<MyJokes />} />
               <Route path=":id" element={<SingleJoke />} />
             </Route>

@@ -29,7 +29,7 @@ const JokesLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
       const shouldShow = container.scrollTop > SCROLL_THRESHOLD;
 
       // Only update state if value actually changes
-      setShowScrollTop(prev => (prev !== shouldShow ? shouldShow : prev));
+      setShowScrollTop((prev) => (prev !== shouldShow ? shouldShow : prev));
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
@@ -48,21 +48,20 @@ const JokesLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
           <Outlet />
         </div>
 
-
-          <button
-            type="button"
-            aria-label={t("extra.aria.scrollButton")}
-            onClick={scrollToTop}
-            className={`fixed bottom-2 right-6 z-[60]
+        <button
+          type="button"
+          aria-label={t("extra.aria.scrollButton")}
+          onClick={scrollToTop}
+          className={`fixed bottom-2 right-6 z-[60]
                        w-8 h-8 text-xl md:sticky md:ml-[-20px] xl:ml-0
                        xl:w-12 xl:h-12 xl:text-4xl rounded-full
                        bg-[var(--button3)] text-[var(--text0)] font-bold
                        flex items-center justify-center
                        hover:brightness-110 ${showScrollTop ? "opacity-100" : "opacity-0"}
                        transition-opacity duration-200`}
-          >
-            ↑
-          </button>
+        >
+          ↑
+        </button>
       </div>
 
       {sidebars.right && <RightSidebar />}

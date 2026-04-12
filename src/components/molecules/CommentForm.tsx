@@ -98,11 +98,11 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
           }}
           placeholder={t("commentForm.placeholder")}
           onKeyDown={handleKeyDown}
-          className="rounded-2xl p-3 w-full bg-[var(--bg)] mb-3 text-sm md:text-lg/6"
+          className="rounded-2xl p-3 w-full bg-[var(--bg)] mb-3 text-sm md:text-lg/6 min-h-12 outline-none"
           aria-label={t("commentForm.placeholder")}
         />
 
-        <span className="absolute bottom-5 right-5 opacity-80 text-xs text-[var(--text1)]">
+        <span className="characters-left bottom-5!">
           {getCharactersLeft(body, MAX_CHARS.BODY)}
         </span>
       </div>

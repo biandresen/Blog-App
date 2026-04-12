@@ -18,52 +18,53 @@ const Terms = () => {
   const sections = tr<TermsSection[]>("terms.sections", []);
 
   return (
-    <div className="container max-w-235 text-[var(--text1)]">
-      <h2 className="about-heading">{t("terms.heading")}</h2>
+    <div className="container max-w-4xl px-4 py-8 md:px-6 md:py-10 text-[var(--text1)]">
+      <header className="mb-8">
+        <h1 className="text-center text-3xl font-bold uppercase tracking-wide md:text-4xl">
+          {t("terms.heading")}
+        </h1>
 
-      <p className="text-sm opacity-70">
-        {t("terms.versionText")} {t("terms.version")} • {t("terms.lastUpdatedText")}:{" "}
-        {t("terms.lastUpdated")}
-      </p>
+        <p className="mt-5 text-xs uppercase tracking-wide opacity-70 md:text-sm">
+          {t("terms.versionText")} {t("terms.version")} • {t("terms.lastUpdatedText")}:{" "}
+          {t("terms.lastUpdated")}
+        </p>
 
-      <p className="about-paragraph mt-4">{t("terms.intro")}</p>
+        <p className="mt-4 text-base leading-8 md:text-lg">{t("terms.intro")}</p>
+      </header>
 
-      <section className="rounded-xl border border-[var(--text1)]/30 p-4">
-        <p className="text-sm font-semibold">{t("terms.relatedPolicies")}</p>
-        <ul className="mt-2 flex flex-col gap-1 text-sm">
-          {incorporatedPolicies.map((policy) => (
-            <li key={policy.path}>
-              <Link className="underline opacity-90 hover:opacity-100" to={policy.path}>
-                {policy.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <div className="mt-6 flex flex-col gap-6">
+      <div className="flex flex-col gap-5 md:gap-6">
         {sections.map((section) => (
           <section
             key={section.title}
-            className="rounded-xl border border-[var(--text1)]/30 p-4"
+            className="rounded-2xl border border-[var(--text1)]/20 bg-[var(--background)]/30 px-4 py-4 md:px-5 md:py-5"
           >
-            <h3 className="text-lg font-semibold">{section.title}</h3>
+            <h2 className="text-lg font-semibold leading-7 md:text-xl">{section.title}</h2>
 
-            <div className="mt-2 flex flex-col gap-2">
+            <div className="mt-3 space-y-4">
               {section.paragraphs.map((paragraph) => (
-                <p key={paragraph} className="about-paragraph">
+                <p key={paragraph} className="text-sm leading-7 opacity-95 md:text-base">
                   {paragraph}
+                  <div className="mt-3">
+                    {paragraph.includes("contact@pundad.app") && (
+                      <Link
+                        to={"/contact"}
+                        className="rounded-full border border-[var(--text1)]/25 bg-[var(--primary)]/25 px-3 py-1.5 text-sm  transition-opacity opacity-90 hover:opacity-100"
+                      >
+                        {"Contact"}
+                      </Link>
+                    )}
+                  </div>
                 </p>
               ))}
             </div>
 
             {section.title.startsWith("2.") && (
-              <div className="mt-3 flex flex-wrap gap-3 text-sm">
+              <div className="mt-4 flex flex-wrap gap-2 md:gap-3">
                 {incorporatedPolicies.map((policy) => (
                   <Link
                     key={policy.path}
                     to={policy.path}
-                    className="rounded-full border border-[var(--text1)]/30 bg-[var(--primary)] px-3 py-1 underline opacity-90 hover:opacity-100 text-[var(--text2)]"
+                    className="rounded-full border border-[var(--text1)]/25 bg-[var(--primary)]/25 px-3 py-1.5 text-sm  transition-opacity opacity-90 hover:opacity-100"
                   >
                     {policy.label}
                   </Link>

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import Post from "../../../components/organisms/Post";
 import Spinner from "../../../components/atoms/Spinner";
-import PostCard from "../../../components/molecules/PostCard";
+import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
 import Button from "../../../components/atoms/Button";
 
 import { usePagination } from "../../../hooks/usePagination";
@@ -66,15 +66,9 @@ const AllJokes = () => {
           size="md"
           variant="primary"
           disabled={loading}
-          label={
-            showMiniPosts
-              ? t("allJokes.actions.showTitles")
-              : t("allJokes.actions.showFull")
-          }
+          label={showMiniPosts ? t("allJokes.actions.showTitles") : t("allJokes.actions.showFull")}
         >
-          {showMiniPosts
-            ? t("allJokes.actions.showTitles")
-            : t("allJokes.actions.showFull")}
+          {showMiniPosts ? t("allJokes.actions.showTitles") : t("allJokes.actions.showFull")}
         </Button>
 
         <Button
@@ -85,9 +79,7 @@ const AllJokes = () => {
           disabled={loading}
           label={t("allJokes.actions.reload")}
         >
-          {loading
-            ? t("allJokes.states.loading")
-            : t("allJokes.actions.reload")}
+          {loading ? t("allJokes.states.loading") : t("allJokes.actions.reload")}
         </Button>
       </div>
 
@@ -104,16 +96,14 @@ const AllJokes = () => {
 
         {!posts.length && !error && (
           <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">
-              {t("allJokes.states.empty")}
-            </h3>
+            <h3 className="posts-section-heading text-[var(--text1)]">{t("allJokes.states.empty")}</h3>
           </div>
         )}
 
         {/* POSTS */}
 
         {posts.map((post) =>
-          showMiniPosts ? (
+          showMiniPosts ?
             <Post
               key={post.id}
               post={post}
@@ -126,14 +116,7 @@ const AllJokes = () => {
               }}
               onPostDeleted={(id) => removeItem(id)}
             />
-          ) : (
-            <PostCard
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              likes={post.likes.length}
-            />
-          )
+          : <JokePreviewCard key={post.id} id={post.id} title={post.title} likes={post.likes.length} />,
         )}
 
         {/* INFINITE SCROLL SENTINEL */}
@@ -152,9 +135,7 @@ const AllJokes = () => {
               disabled={loading}
               label={t("allJokes.actions.loadMore")}
             >
-              {loading
-                ? t("allJokes.states.loading")
-                : t("allJokes.actions.loadMore")}
+              {loading ? t("allJokes.states.loading") : t("allJokes.actions.loadMore")}
             </Button>
           </div>
         )}

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { postDeletedEvent } from "../../lib/events";
 
-import PostCard from "./PostCard";
+import JokePreviewCard from "./JokePreviewCard";
 import Button from "../atoms/Button";
 
 import { usePagination } from "../../hooks/usePagination";
@@ -44,7 +44,7 @@ const RightSidebar = () => {
 
   const visiblePosts = useMemo(
     () => posts.filter((post) => !hiddenPostIds.includes(post.id)),
-    [posts, hiddenPostIds]
+    [posts, hiddenPostIds],
   );
 
   const showInitialLoading = loading && visiblePosts.length === 0;
@@ -74,9 +74,7 @@ const RightSidebar = () => {
       if (typeof deletedPostId !== "number") return;
 
       // Remove instantly from UI
-      setHiddenPostIds((prev) =>
-        prev.includes(deletedPostId) ? prev : [...prev, deletedPostId]
-      );
+      setHiddenPostIds((prev) => (prev.includes(deletedPostId) ? prev : [...prev, deletedPostId]));
 
       // Then refetch current page so another post can fill the slot
       reload();
@@ -91,31 +89,23 @@ const RightSidebar = () => {
 
   useEffect(() => {
     // Clean up any ids that no longer exist in fetched results
-    setHiddenPostIds((prev) =>
-      prev.filter((hiddenId) => posts.some((post) => post.id === hiddenId))
-    );
+    setHiddenPostIds((prev) => prev.filter((hiddenId) => posts.some((post) => post.id === hiddenId)));
   }, [posts]);
 
   return (
     <aside className="bg-[var(--primary-shade)] absolute right-0 w-full h-[calc(100vh-3.8rem)] md:max-w-55 lg:max-w-65 md:static overflow-y-auto z-40">
-      <h3 className="text-center text-3xl md:text-2xl mt-8 md:mt-16">
-        {t("rightSidebar.heading")}
-      </h3>
+      <h3 className="text-center text-3xl md:text-2xl mt-8 md:mt-16">{t("rightSidebar.heading")}</h3>
 
       <div className="flex md:flex-col flex-wrap items-center justify-center px-4 py-8 gap-4">
         {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
 
         {showInitialLoading && (
-          <p className="text-[var(--text2)] opacity-70">
-            {t("rightSidebar.loading", "Loading...")}
-          </p>
+          <p className="text-[var(--text2)] opacity-70">{t("rightSidebar.loading", "Loading...")}</p>
         )}
 
         {showEmptyState && (
           <div className="text-center">
-            <h3 className="text-[var(--text2)] font-normal mb-5">
-              {t("rightSidebar.empty.title")}
-            </h3>
+            <h3 className="text-[var(--text2)] font-normal mb-5">{t("rightSidebar.empty.title")}</h3>
 
             <Button
               onClick={handleReload}
@@ -124,16 +114,14 @@ const RightSidebar = () => {
               variant="primary"
               disabled={loading}
             >
-              {loading
-                ? t("rightSidebar.loading", "Loading...")
-                : t("rightSidebar.empty.action")}
+              {loading ? t("rightSidebar.loading", "Loading...") : t("rightSidebar.empty.action")}
             </Button>
           </div>
         )}
 
         {showPosts &&
           visiblePosts.map((post) => (
-            <PostCard key={post.id} id={post.id} title={post.title} />
+            <JokePreviewCard key={post.id} id={post.id} title={post.title} likes={post.likes.length} />
           ))}
 
         {meta && showPosts && (

@@ -30,28 +30,28 @@ const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
         <ul onClick={handleLinkClick} className="flex flex-col gap-3 w-43">
 
           <NavLink to="/dashboard/new-joke" className={navClass}>
-            <MdNoteAdd size={30} />
+            <MdNoteAdd size={20} />
             <span className="text-xl font-medium">
               {t("sidebar.dashboard.newJoke")}
             </span>
           </NavLink>
 
           <NavLink to="/dashboard/drafts" className={navClass}>
-            <GrNotes size={30} />
+            <GrNotes size={20} />
             <span className="text-xl font-medium">
               {t("sidebar.dashboard.drafts")}
             </span>
           </NavLink>
 
           <NavLink to="/dashboard/profile" className={navClass}>
-            <CgProfile size={30} />
+            <CgProfile size={20} />
             <span className="text-xl font-medium">
               {t("sidebar.dashboard.profile")}
             </span>
           </NavLink>
 
           <NavLink to="/dashboard/badges" className={navClass}>
-            <TbAward size={30} />
+            <TbAward size={20} />
             <span className="text-xl font-medium">
               {t("sidebar.dashboard.badges")}
             </span>
@@ -59,7 +59,7 @@ const LeftSidebar = ({ setSidebars }: LeftSidebarProps) => {
 
           {user && user.role === "ADMIN" && (
             <NavLink to="/dashboard/admin" className={navClass}>
-              <GrUserAdmin size={30} />
+              <GrUserAdmin size={20} />
               <span className="text-xl font-medium">
                 {t("sidebar.dashboard.admin")}
               </span>

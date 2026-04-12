@@ -182,7 +182,9 @@
   .input-heading {
     @apply text-[var(--text1)] text-3xl text-center my-3;
   }
-
+  .characters-left {
+    @apply absolute bottom-0.5 right-2 opacity-80 text-[0.55rem] md:text-xs;
+  }
   .posts-heading {
     @apply text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10;
   }
@@ -194,9 +196,9 @@
   }
 
   .outlet-container {
-  @apply flex-1 p-6 overflow-y-auto relative;
-  height: calc(100vh - 3.8rem);
-}
+    @apply flex-1 p-6 overflow-y-auto relative;
+    height: calc(100vh - 3.8rem);
+  }
   .about-heading {
     @apply text-[var(--text1)] text-3xl md:text-4xl text-center mt-3 mb-5;
   }

@@ -135,7 +135,7 @@ const Comment = ({
               <textarea
                 ref={textRef}
                 aria-label={t("comment.aria.edit")}
-                className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-sm md:text-lg/6"
+                className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-sm md:text-lg/6 min-h-8 outline-none"
                 value={editedComment}
                 onKeyDown={handleKeyDown}
                 onChange={(e) => {
@@ -146,7 +146,7 @@ const Comment = ({
                 }}
               />
 
-              <span className="absolute bottom-5 left-0 opacity-80 text-xs text-[var(--text1)]">
+              <span className="characters-left bottom-5 left-0">
                 {getCharactersLeft(editedComment, MAX_CHARS.COMMENT)}
               </span>
             </div>
