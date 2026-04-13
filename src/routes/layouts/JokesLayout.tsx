@@ -64,7 +64,7 @@ const JokesLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
         </button>
       </div>
 
-      {sidebars.right && <RightSidebar />}
+      {sidebars.right && <RightSidebar setSidebars={setSidebars} />}
     </div>
   );
 };

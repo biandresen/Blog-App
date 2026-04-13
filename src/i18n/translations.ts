@@ -1152,13 +1152,12 @@ Page URL:
     },
 
     rightSidebar: {
-      heading: "Navigation",
-
+      heading: "Popular now",
+      loading: "Loading...",
       empty: {
-        title: "No jokes found",
-        action: "Get jokes",
+        title: "No popular jokes yet.",
+        action: "Reload",
       },
-
       pagination: {
         previous: "Prev",
         next: "Next",
@@ -2429,13 +2428,12 @@ Side-URL:
     },
 
     rightSidebar: {
-      heading: "Navigasjon",
-
+      heading: "Populære nå",
+      loading: "Laster...",
       empty: {
-        title: "Ingen vitser funnet",
-        action: "Hent vitser",
+        title: "Ingen populære vitser ennå.",
+        action: "Last inn på nytt",
       },
-
       pagination: {
         previous: "Forrige",
         next: "Neste",

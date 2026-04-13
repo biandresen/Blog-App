@@ -31,19 +31,14 @@ const NewJoke = () => {
   const { language, t } = useLanguage();
   const { terms } = useModeration();
 
-  const {
-    state,
-    setState,
-    resetDraft,
-    isSaved,
-  } = useAutosaveDraft(
+  const { state, setState, resetDraft, isSaved } = useAutosaveDraft(
     "new-joke-draft",
     {
       title: "",
       body: "",
       tags: "",
     },
-    { debounceMs: 1200 }
+    { debounceMs: 1200 },
   );
 
   const { title, body, tags } = state;
@@ -56,7 +51,7 @@ const NewJoke = () => {
         .split(",")
         .map((tag) => tag.trim())
         .filter(Boolean),
-    [tags]
+    [tags],
   );
 
   const hasUnsavedContent = Boolean(title || body || tags);
@@ -69,18 +64,19 @@ const NewJoke = () => {
       toast.error(t("newPost.toasts.mustBeLoggedInDraft"));
       return;
     }
-      const moderation = moderateFields(
-    {
-      title,
-      body,
-      tags: parsedTags.join(" "),
-    }, terms,
-  );
+    const moderation = moderateFields(
+      {
+        title,
+        body,
+        tags: parsedTags.join(" "),
+      },
+      terms,
+    );
 
-  if (moderation.blocked) {
-    toast.error(t("validation.blockedContent"));
-    return;
-  }
+    if (moderation.blocked) {
+      toast.error(t("validation.blockedContent"));
+      return;
+    }
 
     try {
       setIsSavingDraft(true);
@@ -93,7 +89,7 @@ const NewJoke = () => {
         title.trim(),
         body.trim(),
         parsedTags,
-        language
+        language,
       );
 
       if (res.statusCode !== 200) {
@@ -127,17 +123,18 @@ const NewJoke = () => {
     }
 
     const moderation = moderateFields(
-    {
-      title,
-      body,
-      tags: parsedTags.join(" "),
-    }, terms,
-  );
+      {
+        title,
+        body,
+        tags: parsedTags.join(" "),
+      },
+      terms,
+    );
 
-  if (moderation.blocked) {
-    toast.error(t("validation.blockedContent"));
-    return;
-  }
+    if (moderation.blocked) {
+      toast.error(t("validation.blockedContent"));
+      return;
+    }
 
     try {
       setIsPublishing(true);
@@ -150,7 +147,7 @@ const NewJoke = () => {
         title.trim(),
         body.trim(),
         parsedTags,
-        language
+        language,
       );
 
       if (res.statusCode !== 200) {
@@ -177,11 +174,14 @@ const NewJoke = () => {
 
   return (
     <div className="bg-[var(--primary)] p-3 md:p-8 rounded-2xl max-w-120 md:min-w-1/2 mx-auto md:mt-10">
-      <h2 className="text-3xl md:text-5xl text-center my-5">
-        {t("newPost.heading")}
-      </h2>
+      <h2 className="text-3xl md:text-5xl text-center my-5">{t("newPost.heading")}</h2>
 
-      <form onSubmit={(e) => {e.preventDefault(); handlePublishPost()}}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handlePublishPost();
+        }}
+      >
         <div className="relative">
           <Input
             className="text-[var(--text2)] rounded-xl md:text-2xl! mb-2"
@@ -198,21 +198,17 @@ const NewJoke = () => {
             maxLength={MAX_CHARS.TITLE}
             required
           />
-          <span className="characters-left bottom-2!">
-            {getCharactersLeft(title, MAX_CHARS.TITLE)}
-          </span>
+          <span className="characters-left bottom-2!">{getCharactersLeft(title, MAX_CHARS.TITLE)}</span>
         </div>
 
-        <label
-          htmlFor="body"
-          className="text-[var(--text2)] md:text-2xl font-semibold mb-2"
-        >
+        <label htmlFor="body" className="text-[var(--text2)] md:text-2xl font-semibold mb-2">
           {t("newPost.fields.body")}
         </label>
 
         <div className="relative">
           <textarea
-            className="md:text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] px-3 font-normal md:h-50 py-2 min-h-12 outline-none"
+            className="md:text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] px-3 font-normal md:h-50 py-2 min-h-12 outline-none placeholder:text-[0.7rem]
+            md:placeholder:text-[1rem]"
             title={t("newPost.fields.body")}
             value={body}
             onChange={(e) => {
@@ -225,9 +221,7 @@ const NewJoke = () => {
             maxLength={MAX_CHARS.BODY}
             required
           />
-          <span className="characters-left bottom-2!">
-            {getCharactersLeft(body, MAX_CHARS.BODY)}
-          </span>
+          <span className="characters-left bottom-2!">{getCharactersLeft(body, MAX_CHARS.BODY)}</span>
         </div>
 
         <div className="relative">
@@ -245,17 +239,15 @@ const NewJoke = () => {
             maxLength={MAX_CHARS.TAGS}
             placeholder={t("newPost.placeholders.tags")}
           />
-          <span className="characters-left bottom-2!">
-            {getCharactersLeft(tags, MAX_CHARS.TAGS)}
-          </span>
+          <span className="characters-left bottom-2!">{getCharactersLeft(tags, MAX_CHARS.TAGS)}</span>
         </div>
 
         <div className="mb-2 text-right text-xs opacity-80">
-          {hasUnsavedContent
-            ? isSaved
-              ? t("newPost.draftSaved", "Draft saved")
-              : t("newPost.savingDraft", "Saving draft...")
-            : ""}
+          {hasUnsavedContent ?
+            isSaved ?
+              t("newPost.draftSaved", "Draft saved")
+            : t("newPost.savingDraft", "Saving draft...")
+          : ""}
         </div>
 
         <ul className="text-[0.9rem] text-[var(--error)] my-2">
@@ -273,9 +265,7 @@ const NewJoke = () => {
             disabled={invalidForm || isSavingDraft || isPublishing}
             label={t("newPost.actions.saveDraft")}
           >
-            {isSavingDraft
-              ? t("common.loading")
-              : t("newPost.actions.saveDraft")}
+            {isSavingDraft ? t("common.loading") : t("newPost.actions.saveDraft")}
           </Button>
 
           <Button
@@ -285,9 +275,7 @@ const NewJoke = () => {
             disabled={invalidForm || isPublishing || isSavingDraft}
             label={t("newPost.actions.publishJoke")}
           >
-            {isPublishing
-              ? t("common.loading")
-              : t("newPost.actions.publishJoke")}
+            {isPublishing ? t("common.loading") : t("newPost.actions.publishJoke")}
           </Button>
         </div>
       </form>

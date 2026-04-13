@@ -21,6 +21,14 @@ type LoginUser = {
   password: string;
 };
 
+type ApiSuccessResponse<T> = {
+  status: string;
+  statusCode: number;
+  message: string;
+  data: T;
+  count: number;
+};
+
 export const verifyEmail = async (token: string) => {
   try {
     const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.VERIFY_EMAIL}`, {
@@ -283,11 +291,12 @@ export const getPost = async (accessToken: token, postId: number, language?: App
   }
 };
 
-export const getPopularPosts = async (language?: AppLanguage) => {
+export const getPopularPosts = async (language?: AppLanguage): Promise<ApiSuccessResponse<PostType[]>> => {
   try {
     const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.POPULAR, {
       headers: { ...languageHeaders(language) },
     });
+
     return res.data;
   } catch (err: any) {
     throw normalizeApiError(err);

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { ImSearch } from "react-icons/im";
 import { CgNotes, CgProfile } from "react-icons/cg";
 import { TbChartBarPopular } from "react-icons/tb";
@@ -106,8 +106,8 @@ export default function LeftSidebar2({ setSidebars }: any) {
   );
 
   return (
-    <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-[calc(100vh-3.8rem)] md:max-w-64 md:static z-40">
-      <div className="ml-8 mt-5 md:mt-16 flex flex-col gap-3 w-54">
+    <aside className="bg-[var(--primary-shade)] absolute left-0 w-full h-[calc(100vh-3.8rem)] md:max-w-59 md:static z-40">
+      <div className="ml-8 mt-5 md:mt-16 flex flex-col gap-3 max-w-48">
         <NavLink
           to="/jokes/search"
           onClick={handleNavigate}
