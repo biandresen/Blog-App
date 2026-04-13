@@ -3,7 +3,11 @@ import { NavLink } from "react-router-dom";
 import { HiOutlineDocumentText } from "react-icons/hi2";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-export default function LegalMenu() {
+type LegalMenuProps = {
+  onNavigate?: () => void;
+};
+
+export default function LegalMenu({ onNavigate }: LegalMenuProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
@@ -17,6 +21,11 @@ export default function LegalMenu() {
     document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
+
+  const handleNavigate = () => {
+    setOpen(false);
+    onNavigate?.();
+  };
 
   return (
     <div ref={rootRef} className="relative inline-block md:ml-[-20px]">
@@ -52,7 +61,7 @@ export default function LegalMenu() {
 
           <NavLink
             to="/legal/terms"
-            onClick={() => setOpen(false)}
+            onClick={handleNavigate}
             className="block rounded-lg px-3 py-2 hover:bg-white/5"
             role="menuitem"
           >
@@ -61,7 +70,7 @@ export default function LegalMenu() {
 
           <NavLink
             to="/legal/privacy"
-            onClick={() => setOpen(false)}
+            onClick={handleNavigate}
             className="block rounded-lg px-3 py-2 hover:bg-white/5"
             role="menuitem"
           >
@@ -70,7 +79,7 @@ export default function LegalMenu() {
 
           <NavLink
             to="/legal/cookies"
-            onClick={() => setOpen(false)}
+            onClick={handleNavigate}
             className="block rounded-lg px-3 py-2 hover:bg-white/5"
             role="menuitem"
           >
@@ -79,7 +88,7 @@ export default function LegalMenu() {
 
           <NavLink
             to="/legal/rules"
-            onClick={() => setOpen(false)}
+            onClick={handleNavigate}
             className="block rounded-lg px-3 py-2 hover:bg-white/5"
             role="menuitem"
           >

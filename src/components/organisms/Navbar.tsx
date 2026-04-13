@@ -40,73 +40,47 @@ const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
       `}
     >
       <ul className="flex flex-col text-[calc(0.85rem+0.25vw)] gap-4 ml-8 md:flex-row md:items-center md:gap-6 md:ml-0 w-25 md:w-auto">
-
         <li className="pt-3 md:pt-0">
-          <NavLink
-            to="/jokes/daily-joke"
-            onClick={closeMobileNav}
-            className={navClass}
-          >
+          <NavLink to="/jokes/daily-joke" onClick={closeMobileNav} className={navClass}>
             {t("navbar.links.jokes")}
           </NavLink>
         </li>
 
-        {user ? (
+        {user ?
           <li>
-            <NavLink
-              to="/dashboard"
-              onClick={closeMobileNav}
-              className={navClass}
-            >
+            <NavLink to="/dashboard" onClick={closeMobileNav} className={navClass}>
               {t("navbar.links.dashboard")}
             </NavLink>
           </li>
-        ) : (
-          <>
+        : <>
             <li>
-              <NavLink
-                to="/register"
-                onClick={closeMobileNav}
-                className={navClass}
-              >
+              <NavLink to="/register" onClick={closeMobileNav} className={navClass}>
                 {t("navbar.links.register")}
               </NavLink>
             </li>
 
             <li>
-              <NavLink
-                to="/login"
-                onClick={closeMobileNav}
-                className={navClass}
-              >
+              <NavLink to="/login" onClick={closeMobileNav} className={navClass}>
                 {t("navbar.links.login")}
               </NavLink>
             </li>
           </>
-        )}
+        }
 
         <li>
-          <NavLink
-            to="/about"
-            onClick={closeMobileNav}
-            className={navClass}
-          >
+          <NavLink to="/about" onClick={closeMobileNav} className={navClass}>
             {t("navbar.links.about")}
           </NavLink>
         </li>
 
         <li>
-          <NavLink
-            to="/contact"
-            onClick={closeMobileNav}
-            className={navClass}
-          >
+          <NavLink to="/contact" onClick={closeMobileNav} className={navClass}>
             {t("navbar.links.contact")}
           </NavLink>
         </li>
 
         <li className="md:ml-2 md:mt-2 pb-4 md:pb-0">
-          <LegalMenu />
+          <LegalMenu onNavigate={closeMobileNav} />
         </li>
 
         <li className="pb-3 md:pb-0 mt-[-10px] md:mt-0">
@@ -114,23 +88,25 @@ const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
             type="button"
             title={t("navbar.actions.toggleTheme")}
             aria-label={t("navbar.actions.toggleTheme")}
-            onClick={toggleTheme}
+            onClick={() => {
+              toggleTheme();
+              closeMobileNav();
+            }}
             className="flex items-center"
           >
-            {colorTheme === "dark"
-              ? <MdOutlineLightMode size={25} />
-              : <MdOutlineDarkMode size={25} />}
+            {colorTheme === "dark" ?
+              <MdOutlineLightMode size={25} />
+            : <MdOutlineDarkMode size={25} />}
           </button>
         </li>
 
         <li>
-          <LanguageToggle />
+          <LanguageToggle onNavigate={closeMobileNav} />
         </li>
 
         <li className="md:ml-2 md:mt-2 pb-4 md:pb-0">
-          <UserMenu />
+          <UserMenu onNavigate={closeMobileNav} />
         </li>
-
       </ul>
     </nav>
   );

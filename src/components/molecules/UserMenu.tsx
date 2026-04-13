@@ -8,7 +8,11 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { logoutUser } from "../../lib/axios";
 
-export default function UserMenu() {
+type UserMenuProps = {
+  onNavigate?: () => void;
+};
+
+export default function UserMenu({ onNavigate }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -27,11 +31,17 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
+  const handleProfileNavigate = () => {
+    setOpen(false);
+    onNavigate?.();
+  };
+
   const handleLogout = () => {
     setUser(null);
     setAccessToken(null);
     logoutUser();
     setOpen(false);
+    onNavigate?.();
     navigate("/login");
     toast.info(t("userMenu.loggedOut"));
   };
@@ -70,7 +80,7 @@ export default function UserMenu() {
 
           <NavLink
             to="/dashboard/profile"
-            onClick={() => setOpen(false)}
+            onClick={handleProfileNavigate}
             className="block rounded-lg px-3 py-2 hover:bg-white/5"
             role="menuitem"
           >

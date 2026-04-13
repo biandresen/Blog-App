@@ -6,7 +6,11 @@ import { getApiErrorMessage } from "../../lib/apiErrors";
 import { safeRequest } from "../../lib/auth";
 import { getMe, updateUser } from "../../lib/axios";
 
-export function LanguageToggle() {
+type LanguageToggleProps = {
+  onNavigate?: () => void;
+};
+
+export function LanguageToggle({ onNavigate }: LanguageToggleProps) {
   const { language, setLanguage } = useLanguage();
   const { accessToken, setAccessToken, setIsAuthenticated } = useAuth();
   const { user, setUser } = useUser();
@@ -18,6 +22,7 @@ export function LanguageToggle() {
 
     // Always update local UI and localStorage immediately
     setLanguage(lang);
+    onNavigate?.();
 
     // Logged-out mode: local language only
     if (!user || !accessToken) return;
@@ -42,14 +47,11 @@ export function LanguageToggle() {
       }
 
       const status =
-        error?.status ??
-        error?.statusCode ??
-        error?.response?.status ??
-        error?.response?.data?.statusCode;
+        error?.status ?? error?.statusCode ?? error?.response?.status ?? error?.response?.data?.statusCode;
 
       if (status === 429) {
         toast.info(
-          "Language changed locally. Account preference could not be updated yet because you made too many requests."
+          "Language changed locally. Account preference could not be updated yet because you made too many requests.",
         );
         return;
       }
