@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { ImSearch } from "react-icons/im";
 
@@ -7,10 +7,12 @@ import { useLanguage } from "../../contexts/LanguageContext";
 
 type SearchbarProps = {
   handleSearch: (input: string) => void;
+  blurSignal?: number;
 };
 
-const Searchbar = ({ handleSearch }: SearchbarProps) => {
+const Searchbar = ({ handleSearch, blurSignal = 0 }: SearchbarProps) => {
   const [searchInput, setSearchInput] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const { t } = useLanguage();
 
   const handleChange = (value: string) => {
@@ -23,7 +25,14 @@ const Searchbar = ({ handleSearch }: SearchbarProps) => {
   const resetSearch = () => {
     setSearchInput("");
     handleSearch("");
+    inputRef.current?.focus();
   };
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      inputRef.current?.blur();
+    }
+  }, [blurSignal]);
 
   return (
     <div className="flex items-center bg-[var(--primary)] p-4 rounded-full max-w-[100%] xl:w-1/2 mx-auto">
@@ -39,6 +48,7 @@ const Searchbar = ({ handleSearch }: SearchbarProps) => {
           </button>
 
           <input
+            ref={inputRef}
             value={searchInput}
             onChange={(e) => handleChange(e.target.value)}
             type="text"

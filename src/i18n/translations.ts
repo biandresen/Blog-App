@@ -944,6 +944,21 @@ Page URL:
       login: "Login",
     },
 
+    singleJoke: {
+      heading: "Joke details",
+      actions: {
+        goToAllJokes: "Go to all jokes",
+      },
+      states: {
+        failed: "Failed to load joke",
+        notFound: "Joke not found",
+        invalidId: "Invalid joke id",
+        privateDraft: "This draft is private",
+        notAvailableInLanguage: "This joke is not available in the selected language, or deleted.",
+        tryAnotherLanguage: "Try switching language or go back to the jokes list.",
+      },
+    },
+
     allJokes: {
       heading: "ALL JOKES",
 
@@ -1379,7 +1394,7 @@ Page URL:
 
     layout: {
       report: {
-        button: "Rapporter",
+        button: "Report",
         aria: "Rapporter et problem",
         title: "Rapporter et problem",
       },
@@ -1482,7 +1497,7 @@ Side-URL:
     home: {
       heading: "Et fellesskap for klassisk pappa-humor",
       paragraph:
-        "Send inn dad jokes, lik de beste, og se samlingen vokse til et rangert arkiv av tidløse ordspill.",
+        "Skriv dad jokes, lik de beste og se samlingen vokse til et rangert arkiv av tidløse vitser.",
       button0: "DASHBOARD",
       button1: "REGISTRER",
       button2: "FINN VITSER",
@@ -2217,6 +2232,21 @@ Side-URL:
       showing: "Viser {{shown}} av {{total}}",
 
       login: "Logg inn",
+    },
+
+    singleJoke: {
+      heading: "Vitsdetaljer",
+      actions: {
+        goToAllJokes: "Gå til alle vitser",
+      },
+      states: {
+        failed: "Kunne ikke laste vitsen",
+        notFound: "Fant ikke vitsen",
+        invalidId: "Ugyldig id på vitsen",
+        privateDraft: "Dette utkastet er privat",
+        notAvailableInLanguage: "Denne vitsen er ikke tilgjengelig på valgt språk, eller slettet.",
+        tryAnotherLanguage: "Prøv å bytte språk eller gå tilbake til listen over vitser.",
+      },
     },
 
     allJokes: {

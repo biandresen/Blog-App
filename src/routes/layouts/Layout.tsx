@@ -16,18 +16,10 @@ const Layout = ({ setSidebars, children }: LayoutProps) => {
     const isBigScreen = window.matchMedia("(min-width: 768px)");
 
     const handleChange = (e: MediaQueryListEvent) => {
-      setSidebars(
-        e.matches
-          ? { left: true, right: true }
-          : { left: false, right: false }
-      );
+      setSidebars(e.matches ? { left: true, right: true } : { left: false, right: false });
     };
 
-    setSidebars(
-      isBigScreen.matches
-        ? { left: true, right: true }
-        : { left: false, right: false }
-    );
+    setSidebars(isBigScreen.matches ? { left: true, right: true } : { left: false, right: false });
 
     isBigScreen.addEventListener("change", handleChange);
     return () => isBigScreen.removeEventListener("change", handleChange);
@@ -37,9 +29,7 @@ const Layout = ({ setSidebars, children }: LayoutProps) => {
     <div className="flex flex-col min-h-screen bg-[var(--bg)]">
       <Header setSidebars={setSidebars} />
 
-      <main className="flex flex-col mx-auto relative w-full flex-100">
-        {children}
-      </main>
+      <main className="flex flex-col mx-auto relative w-full flex-100">{children}</main>
 
       {/* Sticky report button */}
       <button

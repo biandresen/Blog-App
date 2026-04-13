@@ -37,7 +37,7 @@ const SingleJoke = () => {
     const fetchSinglePost = async () => {
       if (!postId || Number.isNaN(parsedPostId)) {
         setLocalPost(null);
-        setError(t("singleJoke.states.invalidId", "Invalid joke id"));
+        setError(t("singleJoke.states.invalidId"));
         setNotAvailableInLanguage(false);
         return;
       }
@@ -74,10 +74,7 @@ const SingleJoke = () => {
           setNotAvailableInLanguage(true);
           setError(null);
         } else {
-          const message =
-            err?.response?.data?.message ||
-            err?.message ||
-            t("singleJoke.states.failed", "Failed to load joke");
+          const message = err?.response?.data?.message || err?.message || t("singleJoke.states.failed");
 
           setError(message);
           setNotAvailableInLanguage(false);
@@ -98,8 +95,7 @@ const SingleJoke = () => {
 
   const post = localPost;
 
-  const isAuthor =
-    post && post.authorId?.toString() === user?.id?.toString();
+  const isAuthor = post && post.authorId?.toString() === user?.id?.toString();
 
   const isDraft = post?.published === false;
 
@@ -119,57 +115,39 @@ const SingleJoke = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">
-        {t("singleJoke.heading", "Joke details")}
-      </h2>
+      <h2 className="posts-heading">{t("singleJoke.heading")}</h2>
 
       <section className="posts-section">
         {error && (
           <div className="text-center text-[var(--text1)]">
-            <h3 className="posts-section-heading text-[var(--error)]">
-              {t("singleJoke.states.failed", "Failed to load joke")}
-            </h3>
+            <h3 className="posts-section-heading text-[var(--error)]">{t("singleJoke.states.failed")}</h3>
             <p className="opacity-70 mt-2">{error}</p>
           </div>
         )}
 
         {!error && notAvailableInLanguage && (
           <div className="text-center text-[var(--text1)]">
-            <h3 className="posts-section-heading">
-              {t(
-                "singleJoke.states.notAvailableInLanguage",
-                "This joke is not available in the selected language."
-              )}
-            </h3>
+            <h3 className="posts-section-heading">{t("singleJoke.states.notAvailableInLanguage")}</h3>
 
-            <p className="opacity-70 mt-2">
-              {t(
-                "singleJoke.states.tryAnotherLanguage",
-                "Try switching language or go back to the jokes list."
-              )}
-            </p>
+            <p className="opacity-70 mt-2">{t("singleJoke.states.tryAnotherLanguage")}</p>
 
             <div className="mt-4 flex justify-center">
               <NavLink
                 to="/jokes"
                 className="inline-block rounded-full px-4 py-2 bg-[var(--primary)] text-[var(--text2)]"
               >
-                {t("singleJoke.actions.goToAllJokes", "Go to all jokes")}
+                {t("singleJoke.actions.goToAllJokes")}
               </NavLink>
             </div>
           </div>
         )}
 
         {!error && !notAvailableInLanguage && !post && (
-          <h3 className="posts-section-heading text-[var(--text1)]">
-            {t("singleJoke.states.notFound", "Joke not found")}
-          </h3>
+          <h3 className="posts-section-heading text-[var(--text1)]">{t("singleJoke.states.notFound")}</h3>
         )}
 
         {!error && !notAvailableInLanguage && post && isDraft && !isAuthor && (
-          <h3 className="posts-section-heading text-[var(--text1)]">
-            {t("singleJoke.states.privateDraft", "This draft is private")}
-          </h3>
+          <h3 className="posts-section-heading text-[var(--text1)]">{t("singleJoke.states.privateDraft")}</h3>
         )}
 
         {!error && !notAvailableInLanguage && post && (!isDraft || isAuthor) && (

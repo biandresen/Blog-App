@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
 import Searchbar from "../../../components/molecules/Searchbar";
@@ -17,9 +17,6 @@ const LIMIT = 15;
 function computeMatches(post: PostType, q: string, filters: SearchFilters): string[] {
   const input = q.trim().toLowerCase();
   if (!input) return [];
-
-  console.log(filters);
-  console.log(post);
 
   const matches: string[] = [];
 
@@ -47,6 +44,8 @@ const Search = () => {
 
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [blurSignal, setBlurSignal] = useState(0);
+
   const [filters, setFilters] = useState<SearchFilters>({
     title: true,
     body: true,
@@ -54,13 +53,12 @@ const Search = () => {
     tags: true,
   });
 
-  // --------------------------------------------------
-  // Debounce raw search input to avoid excessive requests
-  // --------------------------------------------------
+  const lastBlurredQueryRef = useRef<string | null>(null);
+
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       setDebouncedQuery(query.trim());
-    }, 250);
+    }, 600);
 
     return () => {
       window.clearTimeout(timeout);
@@ -68,7 +66,6 @@ const Search = () => {
   }, [query]);
 
   const hasActiveFilters = filters.title || filters.body || filters.comments || filters.tags;
-
   const searchEnabled = Boolean(debouncedQuery) && hasActiveFilters;
 
   const args = useMemo<[string, SearchFilters, "desc", string] | []>(() => {
@@ -111,6 +108,26 @@ const Search = () => {
       matches: computeMatches(post, debouncedQuery, filters),
     }));
   }, [items, debouncedQuery, filters, searchEnabled]);
+
+  useEffect(() => {
+    if (!debouncedQuery) {
+      lastBlurredQueryRef.current = null;
+    }
+  }, [debouncedQuery]);
+
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+
+    if (!isMobile) return;
+    if (!searchEnabled) return;
+    if (loading) return;
+    if (error) return;
+    if (postsToShow.length === 0) return;
+    if (lastBlurredQueryRef.current === debouncedQuery) return;
+
+    lastBlurredQueryRef.current = debouncedQuery;
+    setBlurSignal((prev) => prev + 1);
+  }, [searchEnabled, loading, error, postsToShow.length, debouncedQuery]);
 
   const filterEntries: Array<{ key: keyof SearchFilters; label: string }> = [
     { key: "title", label: t("search.filters.title") },
@@ -156,7 +173,7 @@ const Search = () => {
         ))}
       </div>
 
-      <Searchbar handleSearch={setQuery} />
+      <Searchbar handleSearch={setQuery} blurSignal={blurSignal} />
 
       <div className="flex justify-center gap-3 mt-4">
         <Button
@@ -185,7 +202,7 @@ const Search = () => {
 
       {error && <div className="mt-4 text-center text-[var(--error)]">{error}</div>}
 
-      <section className="posts-section">
+      <section className="posts-section flex-col items-center">
         {loading && postsToShow.length === 0 && <Spinner />}
 
         {!loading && searchEnabled && postsToShow.length === 0 && !error && (
