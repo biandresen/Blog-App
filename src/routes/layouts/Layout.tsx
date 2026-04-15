@@ -6,6 +6,7 @@ import ContactTemplate from "../../components/organisms/ContactTemplate";
 
 import { type LayoutProps } from "../../types/layout.types";
 import { useLanguage } from "../../contexts/LanguageContext";
+import LanguageRouteGate from "../../components/molecules/LanguageRouteGate";
 
 const Layout = ({ setSidebars, children }: LayoutProps) => {
   const [reportOpen, setReportOpen] = useState(false);
@@ -29,7 +30,9 @@ const Layout = ({ setSidebars, children }: LayoutProps) => {
     <div className="flex flex-col min-h-screen bg-[var(--bg)]">
       <Header setSidebars={setSidebars} />
 
-      <main className="flex flex-col mx-auto relative w-full flex-100">{children}</main>
+      <LanguageRouteGate>
+        <main className="flex flex-col mx-auto relative w-full flex-100">{children}</main>
+      </LanguageRouteGate>
 
       {/* Sticky report button */}
       <button

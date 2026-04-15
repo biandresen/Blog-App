@@ -2,25 +2,29 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 import { translations, type AppLanguage } from "../i18n/translations";
 import { getByPath } from "../i18n/getByPath";
 import { useUser } from "./UserContext";
+import { normalizeLanguage } from "../lib/utils";
 
 type LanguageContextType = {
   language: AppLanguage;
   setLanguage: (lang: AppLanguage) => void;
   t: (key: string, fallback?: string) => string;
   tr: <T = unknown>(key: string, fallback?: T) => T;
-  tf: (
-    key: string,
-    vars?: Record<string, string | number>,
-    fallback?: string
-  ) => string;
+  tf: (key: string, vars?: Record<string, string | number>, fallback?: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const LANGUAGE_STORAGE_KEY = "appLanguage";
 
-function normalizeLanguage(input?: string | null): AppLanguage {
-  return String(input ?? "").toUpperCase() === "EN" ? "EN" : "NO";
+function readUrlLanguage(): AppLanguage | null {
+  if (typeof window === "undefined") return null;
+
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get("lang");
+
+  if (!raw) return null;
+
+  return normalizeLanguage(raw);
 }
 
 function readLocalLanguage(): AppLanguage {
@@ -28,15 +32,22 @@ function readLocalLanguage(): AppLanguage {
   return normalizeLanguage(localStorage.getItem(LANGUAGE_STORAGE_KEY));
 }
 
+function readInitialLanguage(): AppLanguage {
+  const urlLanguage = readUrlLanguage();
+  if (urlLanguage) return urlLanguage;
+
+  return readLocalLanguage();
+}
+
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useUser();
 
-  // Initial language for logged-out state / first render
-  const [language, setLanguageState] = useState<AppLanguage>(() => readLocalLanguage());
+  const [language, setLanguageState] = useState<AppLanguage>(() => readInitialLanguage());
 
-  // Sync language when authenticated user preference changes.
-  // Logged-in user's preferredLanguage is the source of truth.
   useEffect(() => {
+    const urlLanguage = readUrlLanguage();
+    if (urlLanguage) return;
+
     if (!user?.preferredLanguage) return;
 
     const preferred = normalizeLanguage(user.preferredLanguage);
@@ -45,11 +56,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem(LANGUAGE_STORAGE_KEY, preferred);
   }, [user?.preferredLanguage]);
 
-  // Manual language switch for current UI state.
-  // Also persists to localStorage so logged-out users keep their choice.
   const setLanguage = (lang: AppLanguage) => {
     const normalized = normalizeLanguage(lang);
-    setLanguageState(normalized);
+    setLanguageState((prev) => (prev === normalized ? prev : normalized));
     localStorage.setItem(LANGUAGE_STORAGE_KEY, normalized);
   };
 
@@ -68,11 +77,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language]);
 
   const tf = useMemo(() => {
-    return (
-      key: string,
-      vars: Record<string, string | number> = {},
-      fallback?: string
-    ) => {
+    return (key: string, vars: Record<string, string | number> = {}, fallback?: string) => {
       const raw = getByPath(translations[language], key);
       if (typeof raw !== "string") return fallback ?? key;
 
@@ -88,7 +93,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       tr,
       tf,
     }),
-    [language, t, tr, tf]
+    [language, t, tr, tf],
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

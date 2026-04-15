@@ -948,6 +948,7 @@ Page URL:
       heading: "Joke details",
       actions: {
         goToAllJokes: "Go to all jokes",
+        changeLanguage: "Change language",
       },
       states: {
         failed: "Failed to load joke",
@@ -2238,6 +2239,7 @@ Side-URL:
       heading: "Vitsdetaljer",
       actions: {
         goToAllJokes: "Gå til alle vitser",
+        changeLanguage: "Bytt språk",
       },
       states: {
         failed: "Kunne ikke laste vitsen",

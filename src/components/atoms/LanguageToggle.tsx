@@ -1,17 +1,17 @@
 import { toast } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext";
-import { useLanguage } from "../../contexts/LanguageContext";
 import { useUser } from "../../contexts/UserContext";
 import { getApiErrorMessage } from "../../lib/apiErrors";
 import { safeRequest } from "../../lib/auth";
 import { getMe, updateUser } from "../../lib/axios";
+import { useAppLanguage } from "../../hooks/useAppLanguage";
 
 type LanguageToggleProps = {
   onNavigate?: () => void;
 };
 
 export function LanguageToggle({ onNavigate }: LanguageToggleProps) {
-  const { language, setLanguage } = useLanguage();
+  const { language, setAppLanguage } = useAppLanguage();
   const { accessToken, setAccessToken, setIsAuthenticated } = useAuth();
   const { user, setUser } = useUser();
 
@@ -20,8 +20,8 @@ export function LanguageToggle({ onNavigate }: LanguageToggleProps) {
 
     const previousLanguage = language;
 
-    // Always update local UI and localStorage immediately
-    setLanguage(lang);
+    // Always update local UI + URL immediately
+    setAppLanguage(lang);
     onNavigate?.();
 
     // Logged-out mode: local language only
@@ -36,7 +36,7 @@ export function LanguageToggle({ onNavigate }: LanguageToggleProps) {
 
       if (me?.data) {
         setUser(me.data);
-        setLanguage(me.data.preferredLanguage ?? lang);
+        setAppLanguage(me.data.preferredLanguage ?? lang);
       }
     } catch (error: any) {
       if (error?.code === "SESSION_EXPIRED") {
@@ -56,7 +56,7 @@ export function LanguageToggle({ onNavigate }: LanguageToggleProps) {
         return;
       }
 
-      setLanguage(previousLanguage);
+      setAppLanguage(previousLanguage);
       console.error("Failed to update user language:", error);
       toast.error(getApiErrorMessage(error, "Failed to update language."));
     }

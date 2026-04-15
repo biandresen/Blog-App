@@ -15,11 +15,11 @@ createRoot(document.getElementById("root")!).render(
   <ColorThemeProvider>
     <AuthProvider>
       <UserProvider>
-       <LanguageProvider>
-        <PostsProvider>
-          <ModerationProvider>
-          <App />
-             <ToastContainer
+        <LanguageProvider>
+          <PostsProvider>
+            <ModerationProvider>
+              <App />
+              <ToastContainer
                 position="bottom-center"
                 autoClose={3500}
                 newestOnTop
@@ -28,11 +28,11 @@ createRoot(document.getElementById("root")!).render(
                 draggable
                 theme="colored"
               />
-          </ModerationProvider>
-        </PostsProvider>
-       </LanguageProvider>
+            </ModerationProvider>
+          </PostsProvider>
+        </LanguageProvider>
       </UserProvider>
     </AuthProvider>
-  </ColorThemeProvider>
+  </ColorThemeProvider>,
   // </StrictMode>
 );

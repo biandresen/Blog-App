@@ -11,6 +11,8 @@ import Post from "../../../components/organisms/Post";
 import { getPost } from "../../../lib/axios";
 import type { PostType } from "../../../types/post.types";
 import { useAuth } from "../../../contexts/AuthContext";
+import Button from "../../../components/atoms/Button";
+import { useAppLanguage } from "../../../hooks/useAppLanguage";
 
 const SingleJoke = () => {
   const [localPost, setLocalPost] = useState<PostType | null>(null);
@@ -23,6 +25,7 @@ const SingleJoke = () => {
   const { posts } = usePosts();
   const { user } = useUser();
   const { language, t } = useLanguage();
+  const { setAppLanguage } = useAppLanguage();
 
   const parsedPostId = Number(postId);
 
@@ -132,12 +135,15 @@ const SingleJoke = () => {
             <p className="opacity-70 mt-2">{t("singleJoke.states.tryAnotherLanguage")}</p>
 
             <div className="mt-4 flex justify-center">
-              <NavLink
-                to="/jokes"
-                className="inline-block rounded-full px-4 py-2 bg-[var(--primary)] text-[var(--text2)]"
+              <Button
+                onClick={() => setAppLanguage(language === "EN" ? "NO" : "EN")}
+                label="language change button"
               >
-                {t("singleJoke.actions.goToAllJokes")}
-              </NavLink>
+                {t("singleJoke.actions.changeLanguage")}
+              </Button>
+              <Button label="go to all jokes" className="ml-4">
+                <NavLink to="/jokes">{t("singleJoke.actions.goToAllJokes")}</NavLink>
+              </Button>
             </div>
           </div>
         )}
