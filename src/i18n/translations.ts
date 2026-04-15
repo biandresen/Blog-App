@@ -1221,7 +1221,6 @@ Page URL:
       status: {
         draft: "DRAFT",
       },
-
       actions: {
         openComments: "SHOW COMMENTS",
         closeComments: "CLOSE COMMENTS",
@@ -1234,6 +1233,8 @@ Page URL:
       },
 
       toasts: {
+        linkCopied: "Link copied",
+        shareFailed: "Failed to share joke",
         mustBeLoggedInToLike: "You must be logged in to like a joke",
         cannotLikeOwn: "You cannot like your own joke",
         toggleLikeFailed: "Failed to toggle like",
@@ -1258,6 +1259,7 @@ Page URL:
 
       aria: {
         editJoke: "Edit joke",
+        shareJoke: "Share joke",
         deleteJoke: "Delete joke",
         likeJoke: "Like joke",
         goToJoke: "Go to joke",
@@ -2526,6 +2528,8 @@ Side-URL:
       },
 
       toasts: {
+        linkCopied: "Lenke kopiert",
+        shareFailed: "Kunne ikke dele vitsen",
         mustBeLoggedInToLike: "Du må være logget inn for å like en vits",
         cannotLikeOwn: "Du kan ikke like din egen vits",
         toggleLikeFailed: "Kunne ikke bytte like",
@@ -2549,6 +2553,7 @@ Side-URL:
       },
 
       aria: {
+        shareJoke: "Del vits",
         editJoke: "Rediger vits",
         deleteJoke: "Slett vits",
         likeJoke: "Lik vits",
