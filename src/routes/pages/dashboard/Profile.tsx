@@ -13,17 +13,13 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { useModeration } from "../../../contexts/ModerationContext";
 
-import { deleteUser, updateUser } from "../../../lib/axios";
+import { deleteUser, resendEmailChangeVerification, updateUser } from "../../../lib/axios";
 import { safeRequest } from "../../../lib/auth";
 import { logoutAndRedirect } from "../../../lib/logout";
 import { formatDateProfile } from "../../../lib/utils";
 import { getApiErrorMessage, toastApiError } from "../../../lib/apiErrors";
 
-import {
-  passwordValidator,
-  usernameValidator,
-  emailValidator,
-} from "../../../validators/auth";
+import { passwordValidator, usernameValidator, emailValidator } from "../../../validators/auth";
 
 import type { User } from "../../../types/context.types";
 import { moderateFields } from "../../../lib/moderation";
@@ -34,7 +30,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const Profile = () => {
   const { user, setUser } = useUser();
   const { accessToken, setAccessToken } = useAuth();
-  const { t, tf} = useLanguage();
+  const { t, tf } = useLanguage();
   const { terms } = useModeration();
   const navigate = useNavigate();
 
@@ -42,18 +38,21 @@ const Profile = () => {
   // Local UI state
   // --------------------------------------------------
   const [showModal, setShowModal] = useState(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState<boolean>(false);
+  const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
 
   // Prevent duplicate requests
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isResendingVerification, setIsResendingVerification] = useState(false);
 
   // --------------------------------------------------
   // Form state
   // --------------------------------------------------
   const [username, setUsername] = useState<string>(user?.username || "");
   const [email, setEmail] = useState<string>(user?.email || "");
-  const [password, setPassword] = useState<string>("");
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<File | null>(null);
 
   // --------------------------------------------------
@@ -65,30 +64,54 @@ const Profile = () => {
   const [input2Valid, setInput2Valid] = useState<boolean>(true);
   const [errorMsg2, setErrorMsg2] = useState<string>("");
 
+  const [currentPasswordError, setCurrentPasswordError] = useState<string>("");
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState<string>("");
 
+  const [emailPendingVerification, setEmailPendingVerification] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
+
   // --------------------------------------------------
   // Derived state
   // --------------------------------------------------
+  const normalizedCurrentEmail = (user?.email || "").trim().toLowerCase();
+  const normalizedNextEmail = email.trim().toLowerCase();
+
+  const emailChanged = normalizedNextEmail !== normalizedCurrentEmail;
+  const passwordChangeRequested = newPassword.trim().length > 0;
+  const sensitiveChangeRequested = emailChanged || passwordChangeRequested;
+  const currentPasswordMissing = sensitiveChangeRequested && !currentPassword.trim();
+
   const invalidForm =
     !input1Valid ||
     !input2Valid ||
     passwordErrors.length > 0 ||
+    !!currentPasswordError ||
     !!avatarError ||
     !username ||
-    !email;
+    !email ||
+    currentPasswordMissing;
 
   // --------------------------------------------------
   // Keep form values in sync if user context changes
-  // Useful after successful profile update
   // --------------------------------------------------
   useEffect(() => {
     setUsername(user?.username || "");
     setEmail(user?.email || "");
+    setPendingEmail("");
+    setEmailPendingVerification(false);
   }, [user?.username, user?.email]);
+
+  // --------------------------------------------------
+  // Clear current password error when no longer relevant
+  // --------------------------------------------------
+  useEffect(() => {
+    if (!sensitiveChangeRequested) {
+      setCurrentPasswordError("");
+    }
+  }, [sensitiveChangeRequested]);
 
   // --------------------------------------------------
   // Clean up object URL previews to avoid memory leaks
@@ -118,7 +141,7 @@ const Profile = () => {
   };
 
   // --------------------------------------------------
-  // Delete profile (soft delete / delete endpoint)
+  // Delete profile
   // --------------------------------------------------
   const handleDeleteProfile = async () => {
     if (isDeleting) return;
@@ -128,12 +151,7 @@ const Profile = () => {
 
       setIsDeleting(true);
 
-      const res = await safeRequest(
-        deleteUser,
-        accessToken,
-        setAccessToken,
-        Number(user.id)
-      );
+      const res = await safeRequest(deleteUser, accessToken, setAccessToken, Number(user.id));
 
       if (res.statusCode !== 200) {
         throw new Error(res.message || t("profile.toasts.deleteFailed"));
@@ -152,8 +170,29 @@ const Profile = () => {
   };
 
   // --------------------------------------------------
+  // Resend pending email verification
+  // --------------------------------------------------
+  const handleResendEmailChangeVerification = async () => {
+    if (!accessToken || isResendingVerification) return;
+
+    try {
+      setIsResendingVerification(true);
+
+      const res = await safeRequest(resendEmailChangeVerification, accessToken, setAccessToken);
+
+      setEmailPendingVerification(true);
+      setPendingEmail(res?.data?.pendingEmail || pendingEmail);
+
+      toast.success(t("profile.toasts.resendEmailChangeVerificationSuccess"));
+    } catch (err: any) {
+      toastApiError(err, t("profile.toasts.resendEmailChangeVerificationFailed"));
+    } finally {
+      setIsResendingVerification(false);
+    }
+  };
+
+  // --------------------------------------------------
   // Update profile
-  // Uses form onSubmit to avoid submit/onClick duplication issues
   // --------------------------------------------------
   const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -161,10 +200,10 @@ const Profile = () => {
     if (invalidForm || isSubmitting) return;
     if (!accessToken || !user?.id) return;
 
-        const usernameModeration = moderateFields(
-      { username: username.trim() },
-      terms,
-    );
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+
+    const usernameModeration = moderateFields({ username: trimmedUsername }, terms);
 
     if (usernameModeration.blocked) {
       setInput1Valid(false);
@@ -174,12 +213,16 @@ const Profile = () => {
     }
 
     const updates: Record<string, unknown> = {
-      username: username.trim(),
-      email: email.trim(),
+      username: trimmedUsername,
+      email: trimmedEmail,
     };
 
-    if (password.trim().length > 0) {
-      updates.password = password;
+    if (sensitiveChangeRequested) {
+      updates.currentPassword = currentPassword;
+    }
+
+    if (newPassword.trim().length > 0) {
+      updates.password = newPassword;
     }
 
     if (avatar) {
@@ -189,21 +232,18 @@ const Profile = () => {
     try {
       setIsSubmitting(true);
 
-      const res = await safeRequest(
-        updateUser,
-        accessToken,
-        setAccessToken,
-        Number(user.id),
-        updates
-      );
+      const res = await safeRequest(updateUser, accessToken, setAccessToken, Number(user.id), updates);
 
       if (res.statusCode !== 200) {
         throw new Error(res.message || t("profile.toasts.updateFailed"));
       }
 
       setUser(res.data);
-      setPassword("");
+
+      setCurrentPassword("");
+      setNewPassword("");
       setPasswordErrors([]);
+      setCurrentPasswordError("");
 
       if (avatarPreview) {
         URL.revokeObjectURL(avatarPreview);
@@ -213,8 +253,28 @@ const Profile = () => {
       setAvatarPreview(null);
       setAvatarError("");
 
+      if (emailChanged) {
+        setEmailPendingVerification(true);
+        setPendingEmail(trimmedEmail);
+        toast.success(t("profile.toasts.emailChangePendingVerification"));
+        return;
+      }
+
       toast.success(t("profile.toasts.updateSuccess"));
     } catch (err: any) {
+      const backendErrors = err?.response?.data?.errors;
+
+      const currentPasswordFieldError =
+        Array.isArray(backendErrors) ?
+          backendErrors.find((error: any) => error?.field === "currentPassword")
+        : null;
+
+      if (currentPasswordFieldError?.message) {
+        setCurrentPasswordError(currentPasswordFieldError.message);
+      } else {
+        setCurrentPasswordError("");
+      }
+
       const message = getApiErrorMessage(err, t("profile.toasts.updateFailed"));
 
       if (err?.response?.data?.message === "File too large") {
@@ -356,10 +416,7 @@ const Profile = () => {
                   return;
                 }
 
-                const moderation = moderateFields(
-                  { username: value.trim() },
-                  terms,
-                );
+                const moderation = moderateFields({ username: value.trim() }, terms);
 
                 if (moderation.blocked) {
                   setInput1Valid(false);
@@ -385,41 +442,107 @@ const Profile = () => {
                 const value = e.target.value;
                 setEmail(value);
 
+                if (emailPendingVerification) {
+                  setEmailPendingVerification(false);
+                  setPendingEmail("");
+                }
+
                 const validationKey = emailValidator(value);
                 setInput2Valid(!validationKey);
                 setErrorMsg2(validationKey ? t(validationKey) : "");
               }}
             />
 
+            {emailPendingVerification && pendingEmail && (
+              <div className="mb-4 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4">
+                <p className="text-sm opacity-90 break-words [overflow-wrap:anywhere]">
+                  {tf("profile.pendingEmail.message", { email: pendingEmail })}
+                </p>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="mt-3 text-[0.6rem] md:text-sm! "
+                  label={t("profile.actions.resendEmailChangeVerification")}
+                  onClick={handleResendEmailChangeVerification}
+                  disabled={isResendingVerification || isSubmitting || isDeleting}
+                >
+                  {isResendingVerification ?
+                    t("common.loading")
+                  : t("profile.actions.resendEmailChangeVerification")}
+                </Button>
+              </div>
+            )}
+
+            {sensitiveChangeRequested && (
+              <>
+                <div className="flex flex-col relative">
+                  <Input
+                    id="currentPassword"
+                    type={showCurrentPassword ? "text" : "password"}
+                    label={t("profile.fields.currentPassword")}
+                    value={currentPassword}
+                    errorMsg={currentPasswordError}
+                    placeholder={t("profile.placeholders.currentPassword")}
+                    inputValid={!currentPasswordError}
+                    onChange={(e) => {
+                      setCurrentPassword(e.target.value);
+                      if (currentPasswordError) setCurrentPasswordError("");
+                    }}
+                  />
+
+                  <Button
+                    type="button"
+                    aria-label={
+                      showCurrentPassword ? t("profile.aria.hidePassword") : t("profile.aria.showPassword")
+                    }
+                    label={
+                      showCurrentPassword ? t("profile.aria.hidePassword") : t("profile.aria.showPassword")
+                    }
+                    size="zero"
+                    className="bg-transparent absolute left-38 md:left-51 top-2"
+                    onClick={() => setShowCurrentPassword((prev) => !prev)}
+                    disabled={isSubmitting || isDeleting}
+                  >
+                    {showCurrentPassword ?
+                      <FaEye size={20} className="text-[var(--text1)]" />
+                    : <FaEyeSlash size={20} className="text-[var(--text1)]" />}
+                  </Button>
+                </div>
+
+                <p className="text-xs text-gray-500 mb-3 mt-[-5px]">
+                  {t("profile.help.currentPasswordRequired")}
+                </p>
+              </>
+            )}
+
             <div className="flex flex-col relative">
               <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                label={t("profile.fields.password")}
-                value={password}
-                placeholder={t("profile.placeholders.password")}
+                id="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                label={t("profile.fields.newPassword")}
+                value={newPassword}
+                placeholder={t("profile.placeholders.newPassword")}
                 inputValid={passwordErrors.length === 0}
                 onChange={(e) => {
                   const value = e.target.value;
-                  setPassword(value);
+                  setNewPassword(value);
                   setPasswordErrors(passwordValidator(value));
                 }}
               />
 
               <Button
                 type="button"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showNewPassword ? t("profile.aria.hidePassword") : t("profile.aria.showPassword")}
+                label={showNewPassword ? t("profile.aria.hidePassword") : t("profile.aria.showPassword")}
                 size="zero"
-                className="bg-transparent absolute left-21 md:left-28 top-2"
-                onClick={() => setShowPassword((prev) => !prev)}
+                className="bg-transparent absolute left-32 md:left-42 top-2"
+                onClick={() => setShowNewPassword((prev) => !prev)}
                 disabled={isSubmitting || isDeleting}
               >
-                {showPassword ? (
+                {showNewPassword ?
                   <FaEye size={20} className="text-[var(--text1)]" />
-                ) : (
-                  <FaEyeSlash size={20} className="text-[var(--text1)]" />
-                )}
+                : <FaEyeSlash size={20} className="text-[var(--text1)]" />}
               </Button>
             </div>
 
@@ -470,7 +593,7 @@ const Profile = () => {
                   setAvatarError(
                     tf("profile.avatar.tooLarge", {
                       size: String(MAX_AVATAR_SIZE / (1024 * 1024)),
-                    })
+                    }),
                   );
                   return;
                 }
@@ -491,9 +614,7 @@ const Profile = () => {
               })}
             </p>
 
-            <p className="text-xs text-gray-500 mb-3 mt-[-10px]">
-              {t("profile.avatar.help2")}
-            </p>
+            <p className="text-xs text-gray-500 mb-3 mt-[-10px]">{t("profile.avatar.help2")}</p>
 
             {avatarPreview && (
               <img

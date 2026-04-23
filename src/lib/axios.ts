@@ -673,3 +673,23 @@ export const searchPosts = async (
     throw normalizeApiError(err);
   }
 };
+
+export const resendEmailChangeVerification = async (accessToken: string | null) => {
+  if (!accessToken) throw new Error("No access token provided");
+
+  try {
+    const res = await axios.post(
+      `${BLOG_API.BASE}${BLOG_API.USER}/resend-email-change-verification`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return res.data;
+  } catch (err: any) {
+    throw normalizeApiError(err);
+  }
+};

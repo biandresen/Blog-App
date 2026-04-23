@@ -307,10 +307,10 @@ Page URL:
       passwordLabel: "Password",
       confirmPasswordLabel: "Confirm Password",
 
-      usernamePlaceholder: "John92",
-      emailPlaceholder: "john92@gmail.com",
-      passwordPlaceholder: "********",
-      confirmPasswordPlaceholder: "********",
+      usernamePlaceholder: "Enter username",
+      emailPlaceholder: "Enter email",
+      passwordPlaceholder: "Enter password",
+      confirmPasswordPlaceholder: "Enter password",
 
       passwordsDoNotMatch: "Passwords do not match",
       agreeTo: "I agree to",
@@ -335,16 +335,16 @@ Page URL:
 
       inputHeading: "WELCOME BACK",
       userInputLabel: "Username/Email",
-      userInputPlaceholder: "John92/john@gmail.com",
+      userInputPlaceholder: "Username or Email",
       passwordLabel: "Password",
-      passwordPlaceholder: "********",
+      passwordPlaceholder: "Enter password",
 
       button: "LOGIN",
       forgotPassword: "Forgot your password?",
       link2: "Reset password",
       goToRegister: "New here?",
       link: "Create account",
-      resendVerificationLink: "Resend verification email",
+      resendVerificationLink: "Resend verification",
     },
 
     resetPassword: {
@@ -422,6 +422,7 @@ Page URL:
       heading: "Verify email",
       success: "Your email has been verified successfully.",
       goToLogin: "Go to login",
+      goToProfile: "Go to profile",
       resend: "Send new verification email",
     },
 
@@ -773,11 +774,15 @@ Page URL:
         username: "Username",
         email: "Email",
         password: "Password",
+        currentPassword: "Current password",
+        newPassword: "New password",
         avatar: "Avatar",
       },
 
       placeholders: {
         password: "optional - only fill to change",
+        currentPassword: "Enter current password",
+        newPassword: "Enter new password",
       },
 
       avatar: {
@@ -799,10 +804,20 @@ Page URL:
         text: "Deleting your account disables it and removes your access.",
       },
 
+      help: {
+        currentPasswordRequired: "Current password is required to change email or password.",
+      },
+
+      pendingEmail: {
+        message:
+          "Your email change to {{email}} is pending verification. Check your inbox and verify the new email address.",
+      },
+
       actions: {
         logout: "LOGOUT",
         deleteProfile: "DELETE PROFILE",
         update: "UPDATE",
+        resendEmailChangeVerification: "RESEND VERIFICATION",
       },
 
       toasts: {
@@ -811,6 +826,15 @@ Page URL:
         updateSuccess: "Profile updated successfully!",
         updateFailed: "Failed to update profile",
         avatarTooLarge: "Avatar file size exceeds the limit. Max size is 6MB.",
+        emailChangePendingVerification:
+          "Profile updated. Verify your new email to complete the email change.",
+        resendEmailChangeVerificationSuccess: "Verification email sent again.",
+        resendEmailChangeVerificationFailed: "Failed to resend verification email.",
+      },
+
+      aria: {
+        showPassword: "Show password",
+        hidePassword: "Hide password",
       },
     },
 
@@ -1596,14 +1620,14 @@ Side-URL:
 
       inputHeading: "REGISTRER",
       usernameLabel: "Brukernavn",
-      emailLabel: "E-post",
+      emailLabel: "Epost",
       passwordLabel: "Passord",
       confirmPasswordLabel: "Bekreft passord",
 
-      usernamePlaceholder: "John92",
-      emailPlaceholder: "john92@gmail.com",
-      passwordPlaceholder: "********",
-      confirmPasswordPlaceholder: "********",
+      usernamePlaceholder: "Skriv brukernavn",
+      emailPlaceholder: "Skriv epost",
+      passwordPlaceholder: "Skriv passord",
+      confirmPasswordPlaceholder: "Skriv passord",
 
       passwordsDoNotMatch: "Passordene er ikke like",
       agreeTo: "Jeg godtar",
@@ -1627,10 +1651,10 @@ Side-URL:
       infoListItems: ["Fellesskapsrangerte dad jokes", "Send inn dine egne legendariske ordspill"],
 
       inputHeading: "VELKOMMEN TILBAKE",
-      userInputLabel: "Brukernavn/E-post",
-      userInputPlaceholder: "John92/john@gmail.com",
+      userInputLabel: "Brukernavn/Epost",
+      userInputPlaceholder: "Brukernavn eller epost",
       passwordLabel: "Passord",
-      passwordPlaceholder: "********",
+      passwordPlaceholder: "Skriv passord",
 
       button: "LOGG INN",
       forgotPassword: "Glemt passordet ditt?",
@@ -1715,6 +1739,7 @@ Side-URL:
       heading: "Bekreft e-post",
       success: "E-posten din er bekreftet.",
       goToLogin: "Gå til innlogging",
+      goToProfile: "Gå til profil",
       resend: "Send ny verifiseringsmail",
     },
 
@@ -2057,7 +2082,7 @@ Side-URL:
         role: "Rolle",
         created: "Opprettet",
         updated: "Oppdatert",
-        termsAccepted: "Vilkår godtatt",
+        termsAccepted: "Vilkår akseptert",
         termsVersion: "Vilkårsversjon",
         notAvailable: "Ikke tilgjengelig",
       },
@@ -2066,44 +2091,67 @@ Side-URL:
         username: "Brukernavn",
         email: "E-post",
         password: "Passord",
-        avatar: "Avatar",
+        currentPassword: "Nåværende passord",
+        newPassword: "Nytt passord",
+        avatar: "Profilbilde",
       },
 
       placeholders: {
-        password: "valgfritt - fyll kun ut for å endre",
+        password: "valgfritt - fyll kun inn for å endre",
+        currentPassword: "Skriv inn nåværende passord",
+        newPassword: "Skriv inn nytt passord",
       },
 
       avatar: {
         help1: "Maks størrelse: {{size}}MB. Støttede formater: JPG, JPEG, WEBP, PNG.",
-        help2: "Opplasting av ny avatar erstatter den nåværende.",
-        previewAlt: "Forhåndsvisning av avatar",
+        help2: "Opplasting av nytt profilbilde erstatter det nåværende.",
+        previewAlt: "Forhåndsvisning av profilbilde",
         invalidType: "Kun JPG-, PNG- eller WEBP-bilder er tillatt.",
-        tooLarge: "Avatarfilen er større enn {{size}}MB. Velg en mindre fil.",
+        tooLarge: "Profilbildet er større enn {{size}}MB. Velg en mindre fil.",
       },
 
       modal: {
         title: "Slett bruker",
-        message: "Er du sikker på at du vil slette denne brukeren? Handlingen kan ikke angres.",
+        message: "Er du sikker på at du vil slette denne brukeren? Denne handlingen kan ikke angres.",
         confirmText: "Slett",
         cancelText: "Avbryt",
       },
 
       deleteBox: {
-        text: "Sletting av kontoen din deaktiverer den og fjerner tilgangen din.",
+        text: "Sletting av kontoen deaktiverer den og fjerner tilgangen din.",
+      },
+
+      help: {
+        currentPasswordRequired: "Nåværende passord er påkrevd for å endre e-post eller passord.",
+      },
+
+      pendingEmail: {
+        message:
+          "Endring av e-post til {{email}} venter på bekreftelse. Sjekk innboksen din og bekreft den nye e-postadressen.",
       },
 
       actions: {
         logout: "LOGG UT",
         deleteProfile: "SLETT PROFIL",
         update: "OPPDATER",
+        resendEmailChangeVerification: "SEND BEKREFTELSESMAIL PÅ NYTT",
       },
 
       toasts: {
-        deleteSuccess: "Profilen din ble slettet.",
+        deleteSuccess: "Profilen din har blitt slettet.",
         deleteFailed: "Kunne ikke slette profil",
         updateSuccess: "Profil oppdatert!",
         updateFailed: "Kunne ikke oppdatere profil",
-        avatarTooLarge: "Avatarfilen overskrider grensen. Maks størrelse er 6MB.",
+        avatarTooLarge: "Profilbildet er for stort. Maks størrelse er 6MB.",
+        emailChangePendingVerification:
+          "Profilen ble oppdatert. Bekreft den nye e-posten for å fullføre e-postendringen.",
+        resendEmailChangeVerificationSuccess: "Bekreftelsesmail sendt på nytt.",
+        resendEmailChangeVerificationFailed: "Kunne ikke sende bekreftelsesmail på nytt.",
+      },
+
+      aria: {
+        showPassword: "Vis passord",
+        hidePassword: "Skjul passord",
       },
     },
 
