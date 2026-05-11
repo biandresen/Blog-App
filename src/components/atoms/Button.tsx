@@ -5,12 +5,12 @@ import { type ButtonProps, type ButtonVariant, type ButtonSize } from "../../typ
 const variantStyles: Record<ButtonVariant, string> = {
   shade: "bg-[var(--primary-shade)] text-[var(--text2)] hover:brightness-90",
   primary: "bg-[var(--button1)] button-style",
-  secondary: "bg-[var(--button2)] button-style",
-  tertiary: "bg-[var(--button3)] button-style",
+  secondary: "bg-[var(--button2)] button-style border-1 border-[var(--text3)] text-[var(--text3)]!",
+  tertiary: "bg-[var(--button3)] text-[var(--text0)]! button-style",
   outline:
     "bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text1)] hover:bg-[var(--button1)] hover:text-[var(--text2)] transition-colors duration-100",
   success: "bg-[var(--success)] button-style",
-  error: "bg-[var(--error)] button-style",
+  error: "bg-[var(--error)] text-[var(--text0)]! button-style",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -29,7 +29,7 @@ const Button = ({ children, label, variant = "primary", size = "md", className, 
         "rounded-full font-semibold transition-colors duration-200",
         variantStyles[variant],
         sizeStyles[size],
-        className
+        className,
       )}
       {...props}
     >

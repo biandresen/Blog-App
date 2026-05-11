@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 import { type CommentType, type PostType } from "../../types/post.types";
 import Button from "../../components/atoms/Button";
@@ -7,32 +7,48 @@ import CommentForm from "../molecules/CommentForm";
 import { capitalizeFirstLetter, formatDate, getCharactersLeft } from "../../lib/utils";
 import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
-import { deleteComment, deletePost, editComment, editPost, toggleLike } from "../../lib/axios";
+import {
+  deleteComment,
+  deletePost,
+  editComment,
+  editPost,
+  getPostComments,
+  toggleLike,
+} from "../../lib/axios";
 import { toast } from "react-toastify";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoSend } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { usePosts } from "../../contexts/PostsContext";
+import { FiShare2 } from "react-icons/fi";
 import { safeRequest } from "../../lib/auth";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
-import Avatar from "../atoms/Avatar";
-import { NavLink, useNavigate } from "react-router-dom";
+import AvatarWithBadges from "../atoms/AvatarWithBadges";
+import { NavLink } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
 import TagsCard from "../molecules/TagsCard";
-import LinkifiedText from "../atoms/LinkifiedText";
+import type { User } from "../../types/context.types";
+import { usePagination } from "../../hooks/usePagination";
+import { useLanguage } from "../../contexts/LanguageContext";
+import Spinner from "../atoms/Spinner";
+import { postDeletedEvent } from "../../lib/events";
+import { moderateFields } from "../../lib/moderation";
+import { getApiErrorMessage } from "../../lib/apiErrors";
+import { useModeration } from "../../contexts/ModerationContext";
 
 const Post = ({
   post,
   onPostUpdated,
+  onPostDeleted,
 }: {
   post: PostType;
   onPostUpdated?: (updated: PostType) => void;
+  onPostDeleted?: (id: number) => void;
 }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
-  const [comments, setComments] = useState(post.comments);
+  // const [comments, setComments] = useState(post.comments);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(post.title);
   const [editedBody, setEditedBody] = useState(post.body);
@@ -43,26 +59,62 @@ const Post = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditMenu, setShowEditMenu] = useState<boolean>(false);
   const [isBodyExpanded, setIsBodyExpanded] = useState(false);
+  const [avatarSize, setAvatarSize] = useState(63);
+
+  const { language, t } = useLanguage();
+  const { terms } = useModeration();
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (window.innerWidth >= 1280) setAvatarSize(63);
+      else if (window.innerWidth >= 768) setAvatarSize(50);
+      else setAvatarSize(40);
+    };
+
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
 
   const { user } = useUser();
   const { accessToken, setAccessToken } = useAuth();
-  const { refreshPosts } = usePosts();
   const { ref: textRef, handleInput } = useAutoResizeTextarea(editedBody, isEditing);
 
+  const COMMENTS_LIMIT = 10;
+
+  const args = useMemo<any[]>(() => [post.id, "desc", language], [post.id, language]);
+  const noopSetAccessToken = useMemo(() => () => {}, []);
+
+  const {
+    items: comments,
+    loading: commentsLoading,
+    error: commentsError,
+    canNext,
+    next: loadMoreComments,
+    reload: reloadComments,
+  } = usePagination<CommentType>(getPostComments, {
+    accessToken: null,
+    setAccessToken: noopSetAccessToken,
+    limit: COMMENTS_LIMIT,
+    args,
+    resetKey: `comments:${post.id}:${language}`,
+    enabled: commentsIsOpen,
+    mode: "infinite",
+    autoLoadMore: false,
+  });
+
   const inputRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
 
   const isAuthor = user?.id != null && post.authorId === Number(user.id);
   const isAdmin = user?.role === "ADMIN";
   const canEdit = isAuthor || isAdmin;
-  const buttonText = `${commentsIsOpen ? "CLOSE COMMENTS" : "SHOW COMMENTS"}`;
+  const buttonText = commentsIsOpen ? t("post.actions.closeComments") : t("post.actions.openComments");
 
   const BODY_PREVIEW_LIMIT = 600;
   const bodyIsLong = post.body.length > BODY_PREVIEW_LIMIT;
 
-  const displayedBody = bodyIsLong && !isBodyExpanded
-  ? post.body.slice(0, BODY_PREVIEW_LIMIT) + "..."
-  : post.body;
+  const displayedBody =
+    bodyIsLong && !isBodyExpanded ? post.body.slice(0, BODY_PREVIEW_LIMIT) + "..." : post.body;
 
   useEffect(() => {
     // reset when post changes
@@ -78,19 +130,22 @@ const Post = ({
   }, [post, user]);
 
   useEffect(() => {
-  if (isEditing) {
-    inputRef.current?.focus();
-  }
-}, [isEditing]);
+    if (isEditing) {
+      inputRef.current?.focus();
+    }
+  }, [isEditing]);
 
+  const toggleComments = () => {
+    setCommentsIsOpen((prev) => !prev);
+  };
 
   const handleTitleEnter = useSubmitOnEnter(() =>
     handleEditPost(
       post.id,
       editedTitle,
       editedBody,
-      editedTags.split(",").map((t) => t.trim())
-    )
+      editedTags.split(",").map((t) => t.trim()),
+    ),
   );
 
   const handleBodyEnter = useSubmitOnEnter(() =>
@@ -98,8 +153,8 @@ const Post = ({
       post.id,
       editedTitle,
       editedBody,
-      editedTags.split(",").map((t) => t.trim())
-    )
+      editedTags.split(",").map((t) => t.trim()),
+    ),
   );
 
   const handleTagsEnter = useSubmitOnEnter(() =>
@@ -107,13 +162,13 @@ const Post = ({
       post.id,
       editedTitle,
       editedBody,
-      editedTags.split(",").map((t) => t.trim())
-    )
+      editedTags.split(",").map((t) => t.trim()),
+    ),
   );
 
   const handleEditInput = () => {
     setCommentsIsOpen(false);
-    setIsEditing(prev => !prev);
+    setIsEditing((prev) => !prev);
     setEditedBody(post.body);
     setEditedTitle(post.title);
     setEditedTags(post.tags.map((tag) => tag.name).join(", "));
@@ -121,15 +176,44 @@ const Post = ({
 
   const handleOpenEditMenu = () => {
     setShowEditMenu(!showEditMenu);
-  }
+  };
+
+  const handleSharePost = async () => {
+    const shareUrl = `${window.location.origin}/jokes/${post.id}?lang=${language.toLowerCase()}`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: post.title,
+          text: post.body?.slice(0, 120) || post.title,
+          url: shareUrl,
+        });
+        return;
+      }
+
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success(t("post.toasts.linkCopied"));
+    } catch (err: any) {
+      // Ignore cancelled native share
+      if (err?.name === "AbortError") return;
+
+      toast.error(t("post.toasts.shareFailed"));
+      console.error("Failed to share joke", err);
+    }
+  };
 
   const handleToggleLike = async () => {
-    try {
-      if (!accessToken) {
-        toast.error("You must be logged in to like a post");
-        return;
-      };
+    if (!accessToken || !user) {
+      toast.error(t("post.toasts.mustBeLoggedInToLike"));
+      return;
+    }
 
+    if (Number(user.id) == Number(post.authorId)) {
+      toast.error(t("post.toasts.cannotLikeOwn"));
+      return;
+    }
+
+    try {
       const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
       if (res.statusCode === 200 || res.statusCode === 201) {
         setLikedList((prev) => {
@@ -146,7 +230,7 @@ const Post = ({
 
       // await refreshPosts();
     } catch (err: any) {
-      toast.error("Failed to toggle like");
+      toast.error(t("post.toasts.toggleLikeFailed"));
       console.error("Failed to toggle like", err.message);
     }
   };
@@ -154,6 +238,20 @@ const Post = ({
   const handleEditPost = async (postId: number, newTitle: string, newBody: string, editedTags: string[]) => {
     try {
       if (!accessToken) return;
+
+      const moderation = moderateFields(
+        {
+          title: newTitle,
+          body: newBody,
+          tags: editedTags.join(" "),
+        },
+        terms,
+      );
+
+      if (moderation.blocked) {
+        toast.error(t("validation.blockedContent"));
+        return;
+      }
 
       const res = await safeRequest(
         editPost,
@@ -163,87 +261,116 @@ const Post = ({
         newTitle,
         newBody,
         published,
-        editedTags
+        editedTags,
+        language,
       );
 
-      if (res.statusCode !== 200) throw new Error("Request failed");
-      console.log(res)
-      const updatedPost = res.data; // or res.data.post depending on API
-      onPostUpdated?.(updatedPost);
+      if (res.statusCode !== 200) {
+        throw new Error(res.message || t("post.toasts.editJokeFailed"));
+      }
+
+      const updatedPost: PostType = res.data;
 
       setIsEditing(false);
-      toast.success(`Post edited! ${published ? "Published" : "Unpublished"}`);
-      await refreshPosts();
+      setEditedTitle(updatedPost.title);
+      setEditedBody(updatedPost.body);
+      setEditedTags(updatedPost.tags.map((t) => t.name).join(", "));
+      setPublished(updatedPost.published);
+
+      onPostUpdated?.(updatedPost);
+
+      toast.success(
+        `${t("post.toasts.postEdited")} ${
+          updatedPost.published ? t("post.toasts.published") : t("post.toasts.unpublished")
+        }`,
+      );
     } catch (err: any) {
-      toast.error("Failed to edit post");
-      console.error("Failed to edit post", err.response.data.errors || err.message);
+      const backendFieldErrors = err?.response?.data?.errors;
+      const blockedContentError =
+        Array.isArray(backendFieldErrors) ?
+          backendFieldErrors.find((error: any) => error?.field === "content")
+        : null;
+
+      const message =
+        blockedContentError?.message || getApiErrorMessage(err, t("post.toasts.editJokeFailed"));
+
+      toast.error(message);
+      console.error("Failed to edit joke", err?.response?.data || err?.message);
     }
   };
 
   const handleDeletePost = async (postId: number) => {
     try {
       if (!accessToken) return;
+      console.log("Deleting post with ID:", postId);
 
-      const res = await safeRequest(deletePost, accessToken, setAccessToken, postId);
+      const res = await safeRequest(deletePost, accessToken, setAccessToken, postId, language);
       if (res.statusCode !== 200) throw new Error("Request failed");
 
       setShowModal(false);
-      toast.success("Post deleted!");
-      await refreshPosts();
-      navigate("/posts");
+      toast.success(t("post.toasts.postDeleted"));
+
+      // ✅ Tell parent to remove it from its list
+      onPostDeleted?.(postId);
+
+      window.dispatchEvent(
+        new CustomEvent(postDeletedEvent, {
+          detail: { postId },
+        }),
+      );
     } catch (err: any) {
-      toast.error("Failed to delete post");
-      console.error("Failed to delete post", err.message);
+      toast.error(t("post.toasts.deleteJokeFailed"));
+      console.error("Failed to delete joke", err.message);
     }
   };
 
   const handleEditComment = async (commentId: number, newBody: string) => {
     try {
       if (!accessToken) return;
-      if (commentId === null) return;
+
+      const moderation = moderateFields({ comment: newBody }, terms);
+
+      if (moderation.blocked) {
+        toast.error(t("validation.blockedComment"));
+        return;
+      }
 
       const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody);
-      if (res.statusCode !== 200) throw new Error("Request failed");
 
-      setComments((prev) =>
-        prev.map((comment) => (comment.id === commentId ? { ...comment, body: newBody } : comment))
-      );
+      if (res.statusCode !== 200) {
+        throw new Error(res.message || t("post.toasts.editCommentFailed"));
+      }
 
-      toast.success("Comment edited!");
-      setIsEditing(false);
+      toast.success(t("post.toasts.commentEdited"));
+      reloadComments();
     } catch (err: any) {
-      toast.error("Failed to edit comment");
-      console.error("Failed to edit comment", err.message);
+      const backendFieldErrors = err?.response?.data?.errors;
+      const blockedCommentError =
+        Array.isArray(backendFieldErrors) ?
+          backendFieldErrors.find((error: any) => error?.field === "comment")
+        : null;
+
+      const message =
+        blockedCommentError?.message || getApiErrorMessage(err, t("post.toasts.editCommentFailed"));
+
+      toast.error(message);
+      console.error("Failed to edit comment", err?.response?.data || err?.message);
     }
   };
 
-  const handleDeleteComment = async (authorId: number, commentId: number) => {
+  const handleDeleteComment = async (commentId: number) => {
     try {
       if (!accessToken) return;
-      if (authorId === null) return;
 
       const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId);
       if (res.statusCode !== 200) throw new Error("Request failed");
 
-      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
-      toast.success("Comment deleted!");
+      toast.success(t("post.toasts.commentDeleted"));
+      reloadComments(); // ✅ refresh list
     } catch (err: any) {
-      toast.error("Failed to delete comment");
+      toast.error(t("post.toasts.deleteCommentFailed"));
       console.error("Failed to delete comment", err.message);
     }
-  };
-
-  const toggleComments = () => {
-    setCommentsIsOpen(!commentsIsOpen);
-  };
-
-  const addNewComment = (newComment: CommentType) => {
-    // Ensure the new comment has a user object
-    const normalizedComment = {
-      ...newComment,
-      user: newComment.user || { id: user?.id, username: user?.username, avatar: user?.avatar },
-    };
-    setComments((prev) => [...prev, normalizedComment]);
   };
 
   return (
@@ -252,101 +379,137 @@ const Post = ({
     >
       <Modal
         isOpen={showModal}
-        title="Delete post"
-        message="Are you sure you want to delete this post? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t("post.modal.deleteTitle")}
+        message={t("post.modal.deleteMessage")}
+        confirmText={t("post.modal.deleteConfirm")}
+        cancelText={t("post.modal.cancel")}
         onConfirm={() => handleDeletePost(post.id)}
         onCancel={() => setShowModal(false)}
       />
-
       {published ? null : (
-        <div className="text-[var(--text1)] absolute top-5 md:top-4.5 right-14 xl:right-19 text-sm md:text-lg">DRAFT</div>
+        <div className="text-[var(--text1)] absolute top-5 md:top-4.5 right-14 xl:right-19 text-sm md:text-lg">
+          {t("post.status.draft")}
+        </div>
       )}
       <div className="flex absolute gap-2 top-4 right-5 xl:right-10">
-        {canEdit && <button
+        {canEdit && (
+          <button
             onClick={handleOpenEditMenu}
             type="button"
-            title="Edit post"
-            className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
+            title={t("post.aria.editJoke")}
+            className="hover:bg-[var(--bg)] py-1 rounded-full px-1 mr-[-6px]"
           >
-           <BsThreeDotsVertical size={20} color="var(--text3)" />
-          </button>}
-        {showEditMenu && (
-          <div className="absolute flex top-9 right-0 bg-[var(--bg-input)] border-1 border-[var(--text1)]/20 rounded-full px-1 py-0.5 z-50 opacity-80 ">
-        {isAuthor && (
-          <button
-            onClick={handleEditInput}
-            type="button"
-            title="Edit post"
-            className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
-          >
-            <MdEdit size={15} color="var(--text3)" />
+            <BsThreeDotsVertical size={20} color="var(--text3)" />
           </button>
         )}
-        {(isAuthor || isAdmin) && (
-          <button
-            onClick={() => setShowModal(true)}
-            type="button"
-            title="Delete post"
-            className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
-          >
-            <MdDelete size={15} color="var(--text3)" />
-          </button>
-        )}</div>
-      )}
-      {!published ? null : (
-        <div className="group">
-          <button
-            aria-label="Like post"
-            title="Like post"
-            type="button"
-            onClick={handleToggleLike}
-            className="flex cursor-pointer px-2.5 pt-1 min-w-14 rounded-full transition-colors duration-200 bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text3)] hover:bg-[var(--button1)] hover:text-[var(--text2)]! transition-colors duration-100 text-md
-            "
-            style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
-          >
-            {hasLiked ? <AiFillLike /> : <AiOutlineLike className="mt-0.5" />}
-            <span className="ml-1 font-bold">
-              {likedList?.length > 0 ? likedList?.length : hasLiked ? 1 : 0}
-            </span>
-          </button>
 
-          {likedList?.length > 0 && (
-            <div
-              className="
-              absolute right-0 xl:right-0 top-8 border max-h-300 overflow-y-auto
-              w-32 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
-              opacity-0 pointer-events-none
-              group-hover:opacity-100 group-hover:pointer-events-auto
-              transition-opacity duration-200
-              z-50"
+        {showEditMenu && (
+          <div className="absolute flex top-9 right-0 bg-[var(--bg-input)] border-1 border-[var(--text1)]/20 rounded-full px-1 py-0.5 z-50 opacity-80">
+            {isAuthor && (
+              <button
+                onClick={handleEditInput}
+                type="button"
+                title={t("post.aria.editJoke")}
+                className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
+              >
+                <MdEdit size={15} color="var(--text3)" />
+              </button>
+            )}
+
+            {(isAuthor || isAdmin) && (
+              <button
+                onClick={() => setShowModal(true)}
+                type="button"
+                title={t("post.aria.deleteJoke")}
+                className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
+              >
+                <MdDelete size={15} color="var(--text3)" />
+              </button>
+            )}
+          </div>
+        )}
+
+        {!published ? null : (
+          <button
+            type="button"
+            onClick={handleSharePost}
+            aria-label={t("post.aria.shareJoke")}
+            title={t("post.aria.shareJoke")}
+            className="hover:bg-[var(--bg)] py-1 rounded-full px-2"
+          >
+            <FiShare2 className="mt-0.5" />
+          </button>
+        )}
+        {!published ? null : (
+          <div className="group">
+            <button
+              aria-label={t("post.aria.likeJoke")}
+              title={t("post.aria.likeJoke")}
+              type="button"
+              onClick={handleToggleLike}
+              className="flex cursor-pointer px-2.5 pt-1 min-w-14 rounded-full transition-colors duration-200 bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text3)] text-md hover:bg-[var(--bg)]"
+              style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
             >
-              {likedList.map((username, index) => (
-                <div key={index + username} className="text-sm border-b last:border-b-0 py-1">
-                  {username}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+              {hasLiked ?
+                <AiFillLike />
+              : <AiOutlineLike className="mt-0.5" />}
+              <span className="ml-1 font-bold">
+                {likedList?.length > 0 ?
+                  likedList?.length
+                : hasLiked ?
+                  1
+                : 0}
+              </span>
+            </button>
+
+            {likedList?.length > 0 && (
+              <div
+                className="
+                absolute right-0 xl:right-0 top-8 border max-h-300 overflow-y-auto
+                w-32 p-2 rounded bg-[var(--bg-input)] shadow-lg text-[var(--text1)]
+                opacity-0 pointer-events-none
+                group-hover:opacity-100 group-hover:pointer-events-auto
+                transition-opacity duration-200
+                z-50"
+              >
+                {likedList.map((username, index) => (
+                  <div key={index + username} className="text-sm border-b last:border-b-0 py-1">
+                    {username}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      <div className="flex xl:mb-0 md:ml-auto absolute top-4 left-5 xl:left-10">
-        <Avatar avatarUrl={post.user?.avatar} size={60} />
-        <div className="flex flex-col justify-center ml-2">
-          <p title="Username" className="font-bold text-[1rem]">{capitalizeFirstLetter(post.user.username)}</p>
-          <p title="Date of post" className="text-[0.7rem] mt-[-0.2rem] opacity-80">{formatDate(post.createdAt)}</p>
+      <div className="flex xl:mb-0 md:ml-auto absolute top-3 left-5 xl:left-10">
+        <AvatarWithBadges
+          size={avatarSize}
+          avatarUrl={post.user?.avatar}
+          username={post.user?.username}
+          user={post.user as User}
+        />
+        <div className="flex flex-col justify-center ml-2 max-w-[calc(20px+30vw)] mt-2">
+          <p
+            title={t("post.labels.username")}
+            className="font-bold text-[0.8rem]/3.5 md:text-[1rem] [overflow-wrap:anywhere] max-w-[calc(5px+30vw)]"
+          >
+            {capitalizeFirstLetter(post.user.username)}
+          </p>
+          <p title={t("post.labels.postDate")} className="text-[0.7rem] mt-0 opacity-80">
+            {formatDate(post.createdAt)}
+          </p>
         </div>
       </div>
+
       <hr className="text-[var(--text1)] opacity-10 mt-23" />
       <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-4">
-        {isEditing ? (
+        {isEditing ?
           <div className="bg-[var(--bg)] rounded-lg p-1 w-full relative">
             <input
               ref={inputRef}
-              title="Edit post title"
+              title={t("post.aria.editJokeTitle")}
               type="text"
               value={editedTitle}
               maxLength={MAX_CHARS.TITLE}
@@ -356,20 +519,25 @@ const Post = ({
               }}
               className="w-full text-xl xl:text-3xl md:text-3xl/8 p-4 bg-transparent outline-none"
             />
-            <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTitle, MAX_CHARS.TITLE)}</span>
+            <span className="characters-left">{getCharactersLeft(editedTitle, MAX_CHARS.TITLE)}</span>
           </div>
-        ) : (
-          <NavLink aria-label="Go to post" to={`/posts/${post.id}`}>
-            <h3 title="Post title" className="text-xl xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]">{post.title}</h3>
+        : <NavLink aria-label="Go to joke" to={`/jokes/${post.id}`}>
+            <h3
+              title="Joke title"
+              className="text-xl/5 xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]"
+            >
+              {post.title}
+            </h3>
           </NavLink>
-        )}
+        }
       </div>
-      {isEditing ? (
+
+      {isEditing ?
         <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg relative">
           <textarea
             ref={textRef}
-            aria-label="Edit post body"
-            title="Edit post body"
+            aria-label={t("post.aria.editJokeBody")}
+            title={t("post.aria.editJokeBody")}
             value={editedBody}
             maxLength={MAX_CHARS.BODY}
             onKeyDown={handleBodyEnter}
@@ -379,14 +547,17 @@ const Post = ({
             }}
             className="text-sm md:text-lg p-5 resize-none w-full overflow-hidden outline-none"
           />
-          <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
+          <span className="characters-left">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
         </div>
-      ) : (
-        <div className="px-5 xl:px-10 pb-4 pt-1">
-          <LinkifiedText
+      : <div className="px-5 xl:px-10 pb-4 pt-1">
+          <p className="text-sm md:text-lg/7 xl:text-lg whitespace-pre-wrap [overflow-wrap:anywhere] [word-break:break-word]">
+            {displayedBody}
+          </p>
+          {/* If I want to add links */}
+          {/* <LinkifiedText
             className="text-sm md:text-lg/7 xl:text-lg whitespace-pre-wrap [overflow-wrap:anywhere] [word-break:break-word]"
             text={displayedBody}
-          />
+          /> */}
 
           {bodyIsLong && (
             <button
@@ -395,66 +566,67 @@ const Post = ({
               className="mt-2 text-sm md:text-lg opacity-80 hover:opacity-100 underline"
               aria-expanded={isBodyExpanded}
             >
-              {isBodyExpanded ? "Show less" : "Read more"}
+              {isBodyExpanded ? t("post.actions.showLess") : t("post.actions.readMore")}
             </button>
           )}
         </div>
-      )}
+      }
       <hr className="text-[var(--text1)] opacity-10" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-4">
-        {isEditing ? (
+        {isEditing ?
           <div className="mb-8 w-full bg-[var(--bg)] rounded-lg relative">
             <input
-            type="text"
-            aria-label="Edit post tags"
-            title="Edit post tags"
-            value={editedTags}
-            maxLength={MAX_CHARS.TAGS}
-            onKeyDown={handleTagsEnter}
-            onChange={(e) =>
-              { if (e.target.value.length <= MAX_CHARS.TAGS) setEditedTags(e.target.value);}}
-            className="w-full text-sm md:text-lg p-5"
+              type="text"
+              aria-label={t("post.aria.editJokeTags")}
+              title={t("post.aria.editJokeTags")}
+              value={editedTags}
+              maxLength={MAX_CHARS.TAGS}
+              onKeyDown={handleTagsEnter}
+              onChange={(e) => {
+                if (e.target.value.length <= MAX_CHARS.TAGS) setEditedTags(e.target.value);
+              }}
+              className="w-full text-sm md:text-lg p-5 outline-none"
             />
-            <span className="absolute bottom-0.5 right-2 opacity-80 text-xs">{getCharactersLeft(editedTags, MAX_CHARS.TAGS)}</span>
+            <span className="characters-left">{getCharactersLeft(editedTags, MAX_CHARS.TAGS)}</span>
           </div>
-        ) : post.tags[0].name.length >= 1 ? (
+        : post.tags[0]?.name.length >= 1 ?
           <TagsCard tags={post?.tags} />
-        ) : <p className="opacity-0 mb-[-10px]"></p>}
+        : <p className="opacity-0 mb-[-10px]"></p>}
 
         {isEditing && (
           <div className="flex items-center absolute bottom-3.5 right-15">
             <label htmlFor="publish/unpublish" className="mr-2">
-              <b>Publish</b>
+              <b>{t("post.actions.publish")}</b>
             </label>
             <input
               className="w-4 h-4 cursor-pointer accent-[var(--text1)]"
               onChange={() => setPublished((prev) => !prev)}
               id="publish/unpublish"
-              aria-label="Publish/Unpublish"
+              aria-label={t("post.aria.publishUnpublish")}
               type="checkbox"
               checked={published}
             />
           </div>
         )}
-        {isEditing ? (
+        {isEditing ?
           <button
             type="button"
-            aria-label="Edit Message"
-            className="absolute bottom-2 right-2 p-2 rounded-full hover:bg-[var(--primary)] text-[var(--button3)]"
+            aria-label={t("post.aria.editMessage")}
+            title={t("post.aria.editMessage")}
+            className="absolute bottom-2 right-2 p-2 rounded-full hover:bg-[var(--bg)] text-[var(--button3)]"
             onClick={() => {
               handleEditPost(
                 post.id,
                 editedTitle,
                 editedBody,
-                editedTags.split(",").map((tag) => tag.trim())
+                editedTags.split(",").map((tag) => tag.trim()),
               );
             }}
           >
             <IoSend size={20} />
           </button>
-        ) : (
-          <Button
-            className="w-full xl:w-auto xl:min-w-[180px] max-h-10 mt-auto"
+        : <Button
+            className="w-full xl:w-auto xl:min-w-[180px] max-h-10 mt-auto hover:bg-[var(--bg)]! hover:text-[var(--text1)]!"
             onClick={toggleComments}
             size="sm"
             variant="outline"
@@ -463,28 +635,67 @@ const Post = ({
           >
             {buttonText}
           </Button>
-        )}
+        }
       </div>
       {commentsIsOpen && (
         <div className={`bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl`}>
-          <h3 className="text-lg md:text-2xl mb-0">COMMENTS</h3>
-          {comments.length === 0 && <p className="text-xs md:text-sm opacity-70">No comments yet.
-            {published ? ` Be the first to comment!` : ``} </p>}
-          {comments.length > 0 &&
-            comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                commentId={comment.id}
-                username={comment.user?.username || "Unknown"}
-                authorId={comment.user?.id || null}
-                avatar={comment.user?.avatar || null}
-                date={formatDate(comment.createdAt)}
-                comment={comment.body}
-                onEdit={handleEditComment}
-                onDelete={handleDeleteComment}
-              />
-            ))}
-            {user && published ? (<CommentForm postId={post.id} onCommentAdded={addNewComment} />) : (null)}
+          <h3 className="text-lg md:text-2xl mb-0">{t("post.labels.comments")}</h3>
+
+          {user && published ?
+            <CommentForm postId={post.id} onCommentAdded={() => reloadComments()} />
+          : null}
+
+          {commentsLoading && comments.length === 0 && <Spinner />}
+
+          {commentsError && (
+            <p className="text-center text-sm text-red-400 mt-2">
+              {typeof commentsError === "string" ? commentsError : t("post.labels.failedToLoadComments")}
+            </p>
+          )}
+
+          {!commentsLoading && comments.length === 0 && (
+            <div className="text-xs md:text-sm opacity-70">
+              <p>
+                {t("post.labels.noComments")}
+                {published && user ? ` ${t("post.labels.beFirstToComment")}` : ""}
+                {published && !user ? ` ${t("post.labels.logInToComment")}` : ""}
+              </p>
+
+              {published && !user && (
+                <NavLink to="/login" className="inline-block mt-2 underline text-[var(--text2)] opacity-100">
+                  {t("post.actions.goToLogin")}
+                </NavLink>
+              )}
+            </div>
+          )}
+
+          {comments.map((comment) => (
+            <Comment
+              key={comment.id}
+              commentId={comment.id}
+              username={comment.user?.username || "Unknown"}
+              authorId={Number(comment.user?.id) || null}
+              avatar={comment.user?.avatar || null}
+              date={formatDate(comment.createdAt)}
+              comment={comment.body}
+              onEdit={handleEditComment}
+              onDelete={handleDeleteComment}
+            />
+          ))}
+
+          {canNext && (
+            <div className="mt-5 flex justify-center">
+              <Button
+                label={t("post.actions.loadMoreComments")}
+                onClick={loadMoreComments}
+                size="sm"
+                variant="secondary"
+                disabled={commentsLoading}
+              >
+                {commentsLoading ? t("post.actions.loading") : t("post.actions.loadMoreComments")}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

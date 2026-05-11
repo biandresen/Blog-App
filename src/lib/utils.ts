@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import type { AppLanguage } from "../i18n/translations"
 
 export const formatDate = (date: string) => {
   const year = date.split("-")[0];
@@ -7,6 +8,12 @@ export const formatDate = (date: string) => {
   return `${day}.${month}.${year}`;
 };
 // 2025-09-20T13:22:01.506Z
+
+export const formatDateProfile = (iso?: string | null) => {
+  if (!iso) return "N/A";
+  return new Date(iso).toLocaleDateString();
+};
+
 
 export const override: CSSProperties = {
   color: "var(--text1)",
@@ -216,4 +223,20 @@ function mergeAdjacentText(parts: TextPart[]): TextPart[] {
     }
   }
   return out;
+}
+
+export function normalizeLanguage(input?: string | null): AppLanguage {
+  const v = String(input ?? "").toUpperCase();
+  return v === "EN" ? "EN" : "NO";
+}
+
+export function getStoredLanguage(): AppLanguage {
+  return normalizeLanguage(localStorage.getItem("appLanguage"));
+}
+
+export function languageHeaders(language?: AppLanguage) {
+  const lang = language ?? getStoredLanguage();
+  return {
+    "X-App-Language": lang,
+  };
 }

@@ -16,7 +16,6 @@ const Avatar = ({ avatarUrl, size }: AvatarProps) => {
 
   return (
     <div
-      title="Profile picture"
       style={{ width: size, height: size }}
       className="overflow-hidden rounded-full"
     >

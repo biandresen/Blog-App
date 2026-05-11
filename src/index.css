@@ -7,19 +7,24 @@
 :root {
   --bg: #b8bad6;
   --bg-input: #e0e0e0;
+  --text0: #1a1a1a;
   --text1: #1a1a1a;
   --text2: #e0e0e0;
   --text3: #2b2f52;
+  --text4: #e0e0e0;
   --button1: #2b2f52;
-  --button2: #555975;
-  --button3: #f2523f;
+  /* --button2: #555975; */
+  --button2: transparent;
+  /* --button3: #f2523f; */
+  --button3: #d9714a;
   --button4: #1a1a1a;
+  --button5: #ffc430;
   --primary: #2b2f52;
   --primary-shade: #222642;
   --primary-tint: #555975;
   --secondary: #2aa9a1;
   --success: #247546;
-  --warning: #f1c40f;
+  --warning: #ffc430;
   --error: #e74c3c;
   --info: #3498db;
 
@@ -33,19 +38,24 @@
 .dark {
   --bg: hsl(230, 38%, 6%);
   --bg-input: #222642;
+  --text0: #1a1a1a;
   --text1: #c1cffa;
   --text2: #c1cffa;
   --text3: #a7b2ff;
+  --text4: #1a1a1a;
   --button1: #2b2f52;
-  --button2: #555975;
-  --button3: #f2523f;
+  /* --button2: #555975; */
+  --button2: transparent;
+  /* --button3: #f2523f; */
+  --button3: #d9714a;
   --button4: #fdfdfd;
+  --button5: #ffc430;
   --primary: #2b2f52;
   --primary-shade: #222642;
   --primary-tint: #555975;
   --secondary: #2aa9a1;
   --success: #247546;
-  --warning: #f1c40f;
+  --warning: #ffc430;
   --error: #f2523f;
   --info: #3498db;
 }
@@ -168,10 +178,15 @@
   .input-container {
     @apply bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6 sm:py-8 sm:rounded-tl-none sm:rounded-bl-none;
   }
+  .single-container {
+    @apply bg-[var(--bg-input)] px-4 py-8 rounded-xl sm:px-6;
+  }
   .input-heading {
     @apply text-[var(--text1)] text-3xl text-center my-3;
   }
-
+  .characters-left {
+    @apply absolute bottom-0.5 right-2 opacity-80 text-[0.55rem] md:text-xs;
+  }
   .posts-heading {
     @apply text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10;
   }
@@ -183,13 +198,14 @@
   }
 
   .outlet-container {
-    @apply flex-1 p-6 overflow-y-auto;
+    @apply flex-1 p-6 overflow-y-auto relative;
+    height: calc(100vh - 3.8rem);
   }
   .about-heading {
     @apply text-[var(--text1)] text-3xl md:text-4xl text-center mt-3 mb-5;
   }
   .about-paragraph {
-    @apply text-[var(--text1)] text-lg md:text-xl mb-4;
+    @apply text-[var(--text1)] text-lg/5.5 md:text-xl mb-4;
   }
   .spinner-position {
     @apply absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%];

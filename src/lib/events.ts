@@ -1,0 +1,1 @@
+  export const postDeletedEvent = "post-deleted";

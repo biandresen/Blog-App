@@ -1,114 +1,142 @@
-import { useEffect, useState } from "react";
-import DraftCard from "../../../components/molecules/DraftCard";
-import draftsContent from "../../../text-content/drafts-page";
-import { getCurrentUserDrafts } from "../../../lib/axios";
-import { useAuth } from "../../../contexts/AuthContext";
-import { toast } from "react-toastify";
-import Spinner from "../../../components/atoms/Spinner";
-import { safeRequest } from "../../../lib/auth";
-import Button from "../../../components/atoms/Button";
-import Post from "../../../components/organisms/Post";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+
+import { useAuth } from "../../../contexts/AuthContext";
+import { useLanguage } from "../../../contexts/LanguageContext";
+import { usePagination } from "../../../hooks/usePagination";
+import { getCurrentUserDrafts } from "../../../lib/axios";
+
+import Spinner from "../../../components/atoms/Spinner";
+import Button from "../../../components/atoms/Button";
+import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
+import Post from "../../../components/organisms/Post";
+
 import type { PostType } from "../../../types/post.types";
 
+const LIMIT = 15;
+
 const Drafts = () => {
-  const [drafts, setDrafts] = useState<PostType[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showMiniPosts, setShowMiniPosts] = useState<boolean>(true);
-
-  const postPresentation = showMiniPosts ? "Show full drafts" : "Show mini drafts";
-
   const { accessToken, setAccessToken } = useAuth();
+  const { language, t, tf } = useLanguage();
+  const [showMiniPosts, setShowMiniPosts] = useState(true);
 
+  // If the user is not authenticated, do not initialize pagination requests.
   if (!accessToken) {
-    return <p className="text-center mt-10 text-[var(--text1)]">Please log in to view your drafts.</p>;
+    return <p className="text-center mt-10 text-[var(--text1)]">{t("drafts.authRequired")}</p>;
   }
 
-  const fetchDrafts = async () => {
-    setLoading(true);
+  // Stable pagination config values.
+  const args = useMemo(() => [language], [language]);
+  const resetKey = useMemo(() => `my-drafts:${language}`, [language]);
 
-    if (!accessToken) {
-      toast.error("You must be logged in to fetch drafts.");
-      setLoading(false);
-      return;
-    }
+  const {
+    items: drafts,
+    meta,
+    loading,
+    error,
+    sentinelRef,
+    reload,
+    replaceItem,
+    removeItem,
+  } = usePagination<PostType>(getCurrentUserDrafts, {
+    accessToken,
+    setAccessToken,
+    limit: LIMIT,
+    args,
+    mode: "infinite",
+    autoLoadMore: true,
+    rootMargin: "700px",
+    resetKey,
+  });
 
-    try {
-      // Use safeRequest to auto-refresh token if expired
-      const res = await safeRequest(
-        getCurrentUserDrafts, // your API function
-        accessToken,
-        setAccessToken, // your state updater
-        1, // page
-        10 // limit
-      );
-
-      if (res.statusCode === 200) {
-        setDrafts(res.data);
-        setError(null);
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to fetch drafts.");
-      console.error("Failed to fetch drafts", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-    const handleTogglePresentation = () => {
+  const handleTogglePresentation = () => {
     setShowMiniPosts((prev) => !prev);
   };
 
-  useEffect(() => {
-    if (!accessToken) return;
-    fetchDrafts();
-  }, [accessToken]);
-
-  if (loading) return <Spinner />;
-
-  if (error) return <div className="text-[var(--text1)]">No posts found</div>;
+  // Initial page load only
+  if (loading && drafts.length === 0) {
+    return <Spinner />;
+  }
 
   return (
     <div className="md:mt-8">
       <h2 className="text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10">
-        {draftsContent.heading1}
+        {t("drafts.heading")}
       </h2>
 
-      {drafts.length > 0 && <Button
-        className="block mx-auto"
-        onClick={handleTogglePresentation}
-        type="button"
-        size="md"
-        variant="primary"
-        label="toggle post presentation"
-      >
-        {postPresentation}
-      </Button>
-      }
-
-        <section className="posts-section">
-        {drafts.length === 0 && <div className="text-center posts-section-heading text-[var(--text1)]">
-          <p className="text-sm md:text-lg">You haven't created any drafts yet.</p>
-          <Button label="Make draft" className="text-sm mt-3">
-            <Link to="/dashboard" className="">Create Draft</Link>
+      {drafts.length > 0 && (
+        <div className="flex gap-3 justify-center">
+          <Button
+            onClick={handleTogglePresentation}
+            type="button"
+            size="md"
+            variant="primary"
+            label={showMiniPosts ? t("drafts.toggleShowTitles") : t("drafts.toggleShowFull")}
+            disabled={loading}
+          >
+            {showMiniPosts ? t("drafts.toggleShowTitles") : t("drafts.toggleShowFull")}
           </Button>
-        </div>}
 
-        {showMiniPosts
-          ? drafts &&
-            drafts.map((draft) => (
-              <DraftCard key={draft.id} id={draft.id} draftTitle={draft.title} />)
-              )
-          : drafts && drafts.map((draft) => <Post
+          <Button
+            onClick={reload}
+            type="button"
+            size="md"
+            variant="secondary"
+            label={t("drafts.reload")}
+            disabled={loading}
+          >
+            {loading ? t("common.loading") : t("drafts.reload")}
+          </Button>
+        </div>
+      )}
+
+      {error && (
+        <div className="mt-4 text-center">
+          <p className="text-red-500">{error}</p>
+        </div>
+      )}
+
+      <section className="posts-section">
+        {drafts.length === 0 && !loading && !error && (
+          <div className="text-center posts-section-heading text-[var(--text1)]">
+            <p className="text-sm md:text-lg">{t("drafts.empty")}</p>
+
+            <Link to="/dashboard" className="inline-block mt-3">
+              <Button type="button" label={t("drafts.createDraft")} className="text-sm">
+                {t("drafts.createDraft")}
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        {drafts.map((draft) =>
+          showMiniPosts ?
+            <Post
               key={draft.id}
               post={draft}
               onPostUpdated={(updated) => {
-                setDrafts((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
+                if (updated.published) {
+                  removeItem(updated.id);
+                } else {
+                  replaceItem(updated.id, updated);
+                }
               }}
+              onPostDeleted={(id) => removeItem(id)}
             />
-            )}
+          : <JokePreviewCard key={draft.id} id={draft.id} title={draft.title} />,
+        )}
+
+        <div ref={sentinelRef} className="w-full h-px opacity-0 pointer-events-none" />
       </section>
+
+      {meta && (
+        <div className="mt-4 text-center text-sm opacity-70 text-[var(--text1)]">
+          {tf("drafts.showing", {
+            shown: String(drafts.length),
+            total: String(meta.total),
+          })}
+        </div>
+      )}
     </div>
   );
 };

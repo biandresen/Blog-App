@@ -1,0 +1,160 @@
+const ZERO_WIDTH_REGEX = /[\u200B-\u200D\uFEFF]/g;
+const DIACRITICS_REGEX = /[\u0300-\u036f]/g;
+const NON_ALNUM_REGEX = /[^\p{L}\p{N}\s]/gu;
+const NON_ALNUM_NO_SPACE_REGEX = /[^\p{L}\p{N}]/gu;
+const MULTISPACE_REGEX = /\s+/g;
+
+const LEET_MAP: Record<string, string> = {
+  "0": "o",
+  "1": "i",
+  "3": "e",
+  "4": "a",
+  "5": "s",
+  "7": "t",
+  "@": "a",
+  "$": "s",
+};
+
+function escapeRegex(str: string) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function normalizeUnicode(input = "") {
+  return input
+    .normalize("NFKD")
+    .replace(DIACRITICS_REGEX, "")
+    .replace(ZERO_WIDTH_REGEX, "");
+}
+
+function basicNormalize(input = "") {
+  return normalizeUnicode(input)
+    .toLowerCase()
+    .replace(NON_ALNUM_REGEX, " ")
+    .replace(MULTISPACE_REGEX, " ")
+    .trim();
+}
+
+function joinedNormalize(input = "") {
+  return normalizeUnicode(input)
+    .toLowerCase()
+    .replace(NON_ALNUM_NO_SPACE_REGEX, "");
+}
+
+function applyLeetMap(input = "") {
+  return input
+    .split("")
+    .map((char) => LEET_MAP[char] ?? char)
+    .join("");
+}
+
+function collapseRepeatedChars(input = "") {
+  return input.replace(/(.)\1{2,}/g, "$1");
+}
+
+function buildBoundaryRegex(term: string) {
+  const escaped = escapeRegex(term);
+  return new RegExp(`(^|\\s)${escaped}(\\s|$)`, "i");
+}
+
+function buildTermVariants(term: string) {
+  const normalized = basicNormalize(term);
+  const joined = joinedNormalize(term);
+  const leet = joinedNormalize(applyLeetMap(term));
+  const collapsed = collapseRepeatedChars(joined);
+
+  return Array.from(
+    new Set([normalized, joined, leet, collapsed].filter(Boolean))
+  );
+}
+
+function buildInputVariants(input: string) {
+  const basic = basicNormalize(input);
+  const joined = joinedNormalize(input);
+  const leet = joinedNormalize(applyLeetMap(input));
+  const collapsed = collapseRepeatedChars(joined);
+  const leetCollapsed = collapseRepeatedChars(leet);
+
+  return {
+    basic,
+    joined,
+    leet,
+    collapsed,
+    leetCollapsed,
+  };
+}
+
+function matchesBlockedTerm(
+  input: string,
+  term: string,
+  { aggressive = false }: { aggressive?: boolean } = {}
+) {
+  const variants = buildInputVariants(input);
+  const termVariants = buildTermVariants(term);
+
+  for (const variant of termVariants) {
+    if (!variant) continue;
+
+    const regex = buildBoundaryRegex(variant);
+    if (regex.test(variants.basic)) {
+      return true;
+    }
+  }
+
+  if (aggressive) {
+    for (const variant of termVariants) {
+      if (!variant) continue;
+
+      if (
+        variants.joined.includes(variant) ||
+        variants.leet.includes(variant) ||
+        variants.collapsed.includes(variant) ||
+        variants.leetCollapsed.includes(variant)
+      ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+export function findBlockedTerms(
+  input: string,
+  blockedTerms: string[],
+  { aggressive = false }: { aggressive?: boolean } = {}
+) {
+  return blockedTerms.filter((term) =>
+    matchesBlockedTerm(input, term, { aggressive })
+  );
+}
+
+export function moderateFields(
+  fields: Record<string, string>,
+  blockedTerms: string[]
+) {
+  const result: Record<string, string[]> = {};
+
+  const aggressiveFields = new Set([
+    "username",
+    "title",
+    "body",
+    "comment",
+    "tags",
+  ]);
+
+  for (const [field, value] of Object.entries(fields)) {
+    if (!value?.trim()) continue;
+
+    const aggressive = aggressiveFields.has(field);
+    const matches = findBlockedTerms(value, blockedTerms, { aggressive });
+
+    if (matches.length > 0) {
+      result[field] = matches;
+    }
+  }
+
+  return {
+    blocked: Object.keys(result).length > 0,
+    matches: result,
+  };
+}

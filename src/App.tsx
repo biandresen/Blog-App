@@ -15,21 +15,35 @@ const Login = lazy(() => import("./routes/pages/Login"));
 const Register = lazy(() => import("./routes/pages/Register"));
 const ForgotPassword = lazy(() => import("./routes/pages/ForgotPassord"));
 const ResetPassword = lazy(() => import("./routes/pages/ResetPassword"));
+const VerifyEmail = lazy(() => import("./routes/pages/VerifyEmail"));
+const ResendVerification = lazy(() => import("./routes/pages/ResendVerification"));
 const About = lazy(() => import("./routes/pages/About"));
 const Contact = lazy(() => import("./routes/pages/Contact"));
+const Terms = lazy(() => import("./routes/pages/legal/Terms"));
+const Privacy = lazy(() => import("./routes/pages/legal/Privacy"));
+const Cookies = lazy(() => import("./routes/pages/legal/Cookies"));
+const CommunityRules = lazy(() => import("./routes/pages/legal/CommunityRules"));
 
 const DashboardLayout = lazy(() => import("./routes/layouts/DashboardLayout"));
-const NewPost = lazy(() => import("./routes/pages/dashboard/NewPost"));
+const NewJoke = lazy(() => import("./routes/pages/dashboard/NewJoke"));
 const Drafts = lazy(() => import("./routes/pages/dashboard/Drafts"));
 const Profile = lazy(() => import("./routes/pages/dashboard/Profile"));
 const Admin = lazy(() => import("./routes/pages/dashboard/Admin"));
+const Badges = lazy(() => import("./routes/pages/dashboard/Badges"));
 
-const PostsLayout = lazy(() => import("./routes/layouts/PostsLayout"));
-const AllPosts = lazy(() => import("./routes/pages/posts/AllPosts"));
-const MyPosts = lazy(() => import("./routes/pages/posts/MyPosts"));
-const Popular = lazy(() => import("./routes/pages/posts/Popular"));
-const Search = lazy(() => import("./routes/pages/posts/Search"));
-const SingelPost = lazy(() => import("./routes/pages/posts/SingelPost"));
+const JokesLayout = lazy(() => import("./routes/layouts/JokesLayout"));
+const AllJokes = lazy(() => import("./routes/pages/jokes/AllJokes"));
+const MyJokes = lazy(() => import("./routes/pages/jokes/MyJokes"));
+const Popular = lazy(() => import("./routes/pages/jokes/Popular"));
+const Search = lazy(() => import("./routes/pages/jokes/Search"));
+const SingleJoke = lazy(() => import("./routes/pages/jokes/SingleJoke"));
+const RandomJoke = lazy(() => import("./routes/pages/jokes/RandomJoke"));
+const DailyJoke = lazy(() => import("./routes/pages/jokes/DailyJoke"));
+const TrendingWeek = lazy(() => import("./routes/pages/jokes/TrendingWeek"));
+const MostCommentedWeek = lazy(() => import("./routes/pages/jokes/MostCommentedWeek"));
+const FastestGrowing = lazy(() => import("./routes/pages/jokes/FastestGrowing"));
+const TopCreatorMonth = lazy(() => import("./routes/pages/jokes/TopCreatorMonth"));
+const Leaderboard = lazy(() => import("./routes/pages/jokes/Leaderboard"));
 
 const App = () => {
   useAuthInitializer();
@@ -61,8 +75,15 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/forgotPassword" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/resend-verification" element={<ResendVerification />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+
+            <Route path="/legal/terms" element={<Terms />} />
+            <Route path="/legal/privacy" element={<Privacy />} />
+            <Route path="/legal/cookies" element={<Cookies />} />
+            <Route path="/legal/rules" element={<CommunityRules />} />
 
             {/* Protected dashboard */}
             <Route
@@ -73,21 +94,29 @@ const App = () => {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<NewPost />} />
-              <Route path="new-post" element={<NewPost />} />
+              <Route index element={<NewJoke />} />
+              <Route path="new-joke" element={<NewJoke />} />
               <Route path="drafts" element={<Drafts />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="badges" element={<Badges />} />
               <Route path="admin" element={<Admin />} />
             </Route>
 
-            {/* Posts */}
-            <Route path="/posts" element={<PostsLayout sidebars={sidebars} setSidebars={setSidebars} />}>
-              <Route index element={<AllPosts />} />
+            {/* Jokes */}
+            <Route path="/jokes" element={<JokesLayout sidebars={sidebars} setSidebars={setSidebars} />}>
+              <Route index element={<AllJokes />} />
               <Route path="search" element={<Search />} />
-              <Route path="all-posts" element={<AllPosts />} />
+              <Route path="all-jokes" element={<AllJokes />} />
+              <Route path="random-joke" element={<RandomJoke />} />
+              <Route path="daily-joke" element={<DailyJoke />} />
+              <Route path="trending-week" element={<TrendingWeek />} />
+              <Route path="most-commented-week" element={<MostCommentedWeek />} />
+              <Route path="fastest-growing" element={<FastestGrowing />} />
+              <Route path="top-creator-month" element={<TopCreatorMonth />} />
               <Route path="popular" element={<Popular />} />
-              <Route path="my-posts" element={<MyPosts />} />
-              <Route path=":id" element={<SingelPost />} />
+              <Route path="leaderboard" element={<Leaderboard />} />
+              <Route path="my-jokes" element={<MyJokes />} />
+              <Route path=":id" element={<SingleJoke />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

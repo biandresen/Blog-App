@@ -1,16 +1,19 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
-import Avatar from "../atoms/Avatar";
 import { CgProfile } from "react-icons/cg";
+
+import Avatar from "../atoms/Avatar";
+import LinkifiedText from "../atoms/LinkifiedText";
+
 import { type CommentProps } from "../../types/components.types";
 import { useUser } from "../../contexts/UserContext";
+import { useLanguage } from "../../contexts/LanguageContext";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { useSubmitOnEnter } from "../../hooks/useSubmitOnEnter";
 import { capitalizeFirstLetter, getCharactersLeft } from "../../lib/utils";
 import { MAX_CHARS } from "../../lib/constants";
-import LinkifiedText from "../atoms/LinkifiedText";
 
 const Comment = ({
   commentId,
@@ -22,29 +25,63 @@ const Comment = ({
   onEdit,
   onDelete,
 }: CommentProps) => {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editedComment, setEditedComment] = useState<string>(comment);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedComment, setEditedComment] = useState(comment);
 
   const { user } = useUser();
+  const { t } = useLanguage();
 
-  const { ref: textRef, handleInput } = useAutoResizeTextarea(editedComment, isEditing);
+  const { ref: textRef, handleInput } = useAutoResizeTextarea(
+    editedComment,
+    isEditing
+  );
 
-  const isAuthor = authorId?.toString() === user?.id.toString();
-  const isAdmin = user?.role.toString() === "ADMIN";
+  const isAuthor =
+    authorId != null &&
+    user?.id != null &&
+    authorId.toString() === user.id.toString();
 
-    useEffect(() => {
+  const isAdmin = user?.role === "ADMIN";
+
+  // Sync local state if parent updates comment
+  useEffect(() => {
+    setEditedComment(comment);
+  }, [comment]);
+
+  // Focus textarea when editing
+  useEffect(() => {
     if (isEditing) {
       textRef.current?.focus();
     }
-  }, [isEditing]);
+  }, [isEditing, textRef]);
+
+  const handleStartOrStopEditing = () => {
+    setIsEditing((prev) => !prev);
+  };
 
   const handleSubmit = () => {
-    if (comment === editedComment) {
+    const trimmedEdited = editedComment.trim();
+    const trimmedOriginal = comment.trim();
+
+    // Prevent empty comment
+    if (!trimmedEdited) {
+      setEditedComment(comment);
       setIsEditing(false);
       return;
     }
-    onEdit(commentId, editedComment);
+
+    // If unchanged, just close edit mode
+    if (trimmedEdited === trimmedOriginal) {
+      setIsEditing(false);
+      return;
+    }
+
+    onEdit(commentId, trimmedEdited);
     setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    onDelete(commentId);
   };
 
   const handleKeyDown = useSubmitOnEnter(handleSubmit);
@@ -53,66 +90,79 @@ const Comment = ({
     <div className="px-0 pb-6 mt-3">
       <div className="text-[var(--text1)]">
         <div className="flex bg-[var(--bg)] w-full px-3 pt-2 xl:w-fit rounded-tl-3xl rounded-tr-3xl">
-          {avatar ? <Avatar size={40} avatarUrl={avatar} /> : <CgProfile size={40} />}
+          {avatar ? (
+            <Avatar size={40} avatarUrl={avatar} />
+          ) : (
+            <CgProfile size={40} />
+          )}
+
           <div className="ml-2">
-            <p className="font-bold text-[0.8rem] md:text-[1rem] mb-[-0.2rem]">{capitalizeFirstLetter(username)}</p>
+            <p className="font-bold text-[0.8rem] md:text-[1rem] mb-[-0.2rem]">
+              {capitalizeFirstLetter(username)}
+            </p>
+
             <p className="text-[0.6rem] md:text-[0.7rem] opacity-80">{date}</p>
           </div>
+
           <div className="ml-auto xl:ml-3 flex gap-2">
             {isAuthor && (
               <button
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={handleStartOrStopEditing}
                 type="button"
-                title="Edit comment"
+                title={t("comment.actions.edit")}
                 className="hover:bg-[var(--primary-tint)] rounded-full px-1"
               >
-                <MdEdit size={18} color="text-[var(--button3)]" />
+                <MdEdit size={18} className="text-[var(--button3)]" />
               </button>
             )}
+
             {(isAuthor || isAdmin) && (
               <button
-                onClick={() => onDelete(authorId || 0, commentId)}
+                onClick={handleDelete}
                 type="button"
-                title="Delete comment"
+                title={t("comment.actions.delete")}
                 className="hover:bg-[var(--primary-tint)] rounded-full px-1"
               >
-                <MdDelete size={18} color="text-[var(--button3)]" />
+                <MdDelete size={18} className="text-[var(--button3)]" />
               </button>
             )}
           </div>
         </div>
+
         <div className="flex bg-[var(--bg)] px-4 py-3 rounded-2xl rounded-tr-none xl:rounded-tr-2xl rounded-tl-none w-full relative">
           {isEditing ? (
             <div className="relative w-full">
               <textarea
                 ref={textRef}
-                aria-label="Edit comment"
-                className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-sm md:text-lg/6"
+                aria-label={t("comment.aria.edit")}
+                className="w-full h-full text-[var(--text1)] p-1 rounded-l mb-8 text-sm md:text-lg/6 min-h-8 outline-none"
                 value={editedComment}
                 onKeyDown={handleKeyDown}
                 onChange={(e) => {
-                  if (e.target.value.length <= MAX_CHARS.COMMENT) setEditedComment(e.target.value);
+                  if (e.target.value.length <= MAX_CHARS.COMMENT) {
+                    setEditedComment(e.target.value);
+                  }
                   handleInput();
                 }}
               />
-              <span className="absolute bottom-5 left-0 opacity-80 text-xs text-[var(--text1)]">{getCharactersLeft(editedComment, MAX_CHARS.COMMENT)}</span>
+
+              <span className="characters-left bottom-5 left-0">
+                {getCharactersLeft(editedComment, MAX_CHARS.COMMENT)}
+              </span>
             </div>
           ) : (
-            <LinkifiedText className="text-wrap text-sm md:text-lg/6 whitespace-break-spaces" text={comment} />
+            <LinkifiedText
+              className="text-wrap text-sm md:text-lg/6 whitespace-break-spaces"
+              text={comment}
+            />
           )}
+
           {isEditing && (
             <button
               type="button"
-              aria-label="Edit Message"
+              aria-label={t("comment.aria.editMessage")}
               className="absolute bottom-1 right-2 p-2 rounded-full hover:bg-[var(--primary)] text-[var(--button3)]"
-              onClick={() => {
-                if (comment === editedComment) {
-                  setIsEditing(false);
-                  return;
-                }
-                onEdit(commentId, editedComment);
-                setIsEditing(false);
-              }}
+              onClick={handleSubmit}
             >
               <IoSend size={20} />
             </button>

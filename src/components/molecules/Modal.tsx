@@ -1,58 +1,126 @@
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
+import { useLanguage } from "../../contexts/LanguageContext";
+
+type ModalVariant = "confirm" | "info" | "custom";
 
 type ModalProps = {
   isOpen: boolean;
   title?: string;
-  message: string;
+
+  message?: string;
+  children?: ReactNode;
+
+  onClose?: () => void;
+  onCancel?: () => void;
+  closeOnBackdrop?: boolean;
+
+  onConfirm?: () => void;
   confirmText?: string;
   cancelText?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+
+  variant?: ModalVariant;
+  autoCloseMs?: number;
 };
 
 const Modal = ({
   isOpen,
-  title = "Confirm Action",
+  title,
   message,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-  onConfirm,
+  children,
+
+  onClose,
   onCancel,
+  closeOnBackdrop = true,
+
+  onConfirm,
+  confirmText,
+  cancelText,
+
+  variant = "confirm",
+  autoCloseMs,
 }: ModalProps) => {
+  const { t } = useLanguage();
+
+  const close = onClose ?? onCancel ?? (() => {});
+  const resolvedConfirmText = confirmText ?? t("modal.confirm");
+  const resolvedCancelText = cancelText ?? t("modal.cancel");
+  const resolvedCloseText = t("modal.close");
+
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
+      if (e.key === "Escape") close();
     };
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
+
+    document.addEventListener("keydown", handleEscape);
+
+    let timeoutId: number | undefined;
+    if (variant === "info" && autoCloseMs) {
+      timeoutId = window.setTimeout(() => close(), autoCloseMs);
     }
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onCancel]);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, [isOpen, close, variant, autoCloseMs]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-100" onClick={onCancel}>
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/50 z-[100]"
+      onClick={closeOnBackdrop ? close : undefined}
+    >
       <div
-        className="bg-[var(--bg)] text-[var(--text1)] rounded-2xl p-6 max-w-sm w-full shadow-2xl"
-        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+        className="bg-[var(--primary-shade)] text-[var(--text2)] rounded-2xl p-6 shadow-2xl
+                   w-[min(92vw,32rem)] max-h-[80vh] overflow-auto"
+        onClick={(e) => e.stopPropagation()}
       >
-        {title && <h2 className="text-xl font-semibold mb-2">{title}</h2>}
-        <p className="mb-4">{message}</p>
-        <div className="flex justify-end gap-3">
+        <div className="flex items-start justify-between gap-4 mb-3">
+          {title ? <h2 className="text-xl font-semibold">{title}</h2> : <span />}
           <button
-            onClick={onCancel}
-            className="px-4 py-2 rounded-xl bg-[var(--primary-shade)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition"
+            type="button"
+            onClick={close}
+            className="rounded-lg px-2 py-1 hover:bg-white/5"
+            aria-label={t("modal.closeAria")}
+            title={t("modal.closeTitle")}
           >
-            {cancelText}
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 rounded-xl bg-[var(--error)] text-white hover:bg-red-400 transition"
-          >
-            {confirmText}
+            ✕
           </button>
         </div>
+
+        {message ? <p className="mb-4 whitespace-pre-wrap">{message}</p> : null}
+        {children}
+
+        {variant === "confirm" && (
+          <div className="flex justify-end gap-3 mt-4">
+            <button
+              onClick={close}
+              className="px-4 py-2 rounded-xl bg-[var(--primary)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition"
+            >
+              {resolvedCancelText}
+            </button>
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 rounded-xl bg-[var(--error)] text-white hover:bg-red-400 transition"
+            >
+              {resolvedConfirmText}
+            </button>
+          </div>
+        )}
+
+        {variant === "info" && (
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={close}
+              className="px-4 py-2 rounded-xl bg-[var(--primary-shade)] text-[var(--text2)] hover:bg-[var(--primary-tint)] transition"
+            >
+              {resolvedCloseText}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
