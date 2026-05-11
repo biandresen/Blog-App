@@ -1525,7 +1525,7 @@ Side-URL:
       heading: "Et fellesskap for klassisk pappa-humor",
       paragraph:
         "Skriv dad jokes, lik de beste og se samlingen vokse til et rangert arkiv av tidløse vitser.",
-      button0: "DASHBOARD",
+      button0: "MIN SIDE",
       button1: "REGISTRER",
       button2: "FINN VITSER",
     },
@@ -2547,7 +2547,7 @@ Side-URL:
     navbar: {
       links: {
         jokes: "Vitser",
-        dashboard: "Dashboard",
+        dashboard: "Min side",
         register: "Registrer",
         login: "Login",
         about: "Om",

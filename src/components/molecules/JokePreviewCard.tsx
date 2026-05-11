@@ -48,7 +48,7 @@ const JokePreviewCard = ({ id, title, likes, to, onNavigate }: JokePreviewCardPr
 
       <h3
         className="
-          mt-2 text-sm font-semibold text-[var(--text1)]
+          mt-2 text-sm font-semibold text-[var(--text2)]
           [overflow-wrap:anywhere] line-clamp-2
         "
       >

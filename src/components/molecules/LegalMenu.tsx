@@ -48,21 +48,21 @@ export default function LegalMenu({ onNavigate }: LegalMenuProps) {
         <div
           role="menu"
           className="
-            absolute z-[200] w-52 rounded-xl border border-white/10
+            absolute z-[200] w-52 rounded-xl border border-[var(--text1)]/50
             bg-[var(--bg-input)] shadow-xl
             p-2 text-sm text-[var(--text1)]
             left-full top-0 ml-3
             md:left-auto md:top-full md:ml-0 md:mt-2 md:right-0
           "
         >
-          <div className="px-3 py-2 text-xs opacity-70 border-b border-white/10">
+          <div className="px-3 py-2 text-xs opacity-70 border-b border-[var(--text1)]/50">
             {t("legalMenu.heading")}
           </div>
 
           <NavLink
             to="/legal/terms"
             onClick={handleNavigate}
-            className="block rounded-lg px-3 py-2 hover:bg-white/5"
+            className="block rounded-lg px-3 py-2 hover:bg-[var(--text1)]/10"
             role="menuitem"
           >
             {t("legalMenu.links.terms")}
@@ -71,7 +71,7 @@ export default function LegalMenu({ onNavigate }: LegalMenuProps) {
           <NavLink
             to="/legal/privacy"
             onClick={handleNavigate}
-            className="block rounded-lg px-3 py-2 hover:bg-white/5"
+            className="block rounded-lg px-3 py-2 hover:bg-[var(--text1)]/10"
             role="menuitem"
           >
             {t("legalMenu.links.privacy")}
@@ -80,7 +80,7 @@ export default function LegalMenu({ onNavigate }: LegalMenuProps) {
           <NavLink
             to="/legal/cookies"
             onClick={handleNavigate}
-            className="block rounded-lg px-3 py-2 hover:bg-white/5"
+            className="block rounded-lg px-3 py-2 hover:bg-[var(--text1)]/10"
             role="menuitem"
           >
             {t("legalMenu.links.cookies")}
@@ -89,7 +89,7 @@ export default function LegalMenu({ onNavigate }: LegalMenuProps) {
           <NavLink
             to="/legal/rules"
             onClick={handleNavigate}
-            className="block rounded-lg px-3 py-2 hover:bg-white/5"
+            className="block rounded-lg px-3 py-2 hover:bg-[var(--text1)]/10"
             role="menuitem"
           >
             {t("legalMenu.links.rules")}

@@ -67,21 +67,21 @@ export default function UserMenu({ onNavigate }: UserMenuProps) {
         <div
           role="menu"
           className="
-            absolute z-[200] w-44 rounded-xl border border-white/10
-            bg-[var(--bg-input)] shadow-xl
+            absolute z-[200] w-44 rounded-xl border border-[var(--text1)]/50
+            bg-[var(--bg-input)] shadow-lg
             p-2 text-sm text-[var(--text1)]
             left-full top-0 ml-3
             md:left-auto md:top-full md:ml-0 md:mt-2 md:right-0
           "
         >
-          <div className="px-3 py-2 text-xs opacity-70 border-b border-white/10">
+          <div className="px-3 py-2 text-xs opacity-70 border-b border-[var(--text1)]/50">
             {t("userMenu.signedInAs")} <span className="font-semibold">{user.username}</span>
           </div>
 
           <NavLink
             to="/dashboard/profile"
             onClick={handleProfileNavigate}
-            className="block rounded-lg px-3 py-2 hover:bg-white/5"
+            className="block rounded-lg px-3 py-2 hover:bg-[var(--text1)]/10"
             role="menuitem"
           >
             {t("userMenu.profile")}
@@ -90,7 +90,7 @@ export default function UserMenu({ onNavigate }: UserMenuProps) {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full text-left block rounded-lg px-3 py-2 hover:bg-white/5"
+            className="w-full text-left block rounded-lg px-3 py-2 hover:bg-[var(--text1)]/10"
             role="menuitem"
           >
             {t("userMenu.logout")}

@@ -429,16 +429,17 @@ const Post = ({
           </div>
         )}
 
-        <button
-          type="button"
-          onClick={handleSharePost}
-          aria-label={t("post.aria.shareJoke")}
-          title={t("post.aria.shareJoke")}
-          className="hover:bg-[var(--bg)] py-1 rounded-full px-2"
-        >
-          <FiShare2 className="mt-0.5" />
-        </button>
-
+        {!published ? null : (
+          <button
+            type="button"
+            onClick={handleSharePost}
+            aria-label={t("post.aria.shareJoke")}
+            title={t("post.aria.shareJoke")}
+            className="hover:bg-[var(--bg)] py-1 rounded-full px-2"
+          >
+            <FiShare2 className="mt-0.5" />
+          </button>
+        )}
         {!published ? null : (
           <div className="group">
             <button
@@ -446,7 +447,7 @@ const Post = ({
               title={t("post.aria.likeJoke")}
               type="button"
               onClick={handleToggleLike}
-              className="flex cursor-pointer px-2.5 pt-1 min-w-14 rounded-full transition-colors duration-200 bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text3)] hover:bg-[var(--button1)] hover:text-[var(--text2)] text-md"
+              className="flex cursor-pointer px-2.5 pt-1 min-w-14 rounded-full transition-colors duration-200 bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text3)] text-md hover:bg-[var(--bg)]"
               style={{ color: hasLiked ? "var(--button3)" : "var(--text3)" }}
             >
               {hasLiked ?
@@ -612,7 +613,7 @@ const Post = ({
             type="button"
             aria-label={t("post.aria.editMessage")}
             title={t("post.aria.editMessage")}
-            className="absolute bottom-2 right-2 p-2 rounded-full hover:bg-[var(--primary)] text-[var(--button3)]"
+            className="absolute bottom-2 right-2 p-2 rounded-full hover:bg-[var(--bg)] text-[var(--button3)]"
             onClick={() => {
               handleEditPost(
                 post.id,
@@ -625,7 +626,7 @@ const Post = ({
             <IoSend size={20} />
           </button>
         : <Button
-            className="w-full xl:w-auto xl:min-w-[180px] max-h-10 mt-auto"
+            className="w-full xl:w-auto xl:min-w-[180px] max-h-10 mt-auto hover:bg-[var(--bg)]! hover:text-[var(--text1)]!"
             onClick={toggleComments}
             size="sm"
             variant="outline"
