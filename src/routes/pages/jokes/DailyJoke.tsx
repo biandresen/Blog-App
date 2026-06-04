@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { type PostType } from "../../../types/post.types";
 import Post from "../../../components/organisms/Post";
 import Spinner from "../../../components/atoms/Spinner";
+import Button from "../../../components/atoms/Button";
 
 import { getDailyPost, recordDailyJokeView } from "../../../lib/axios";
 import { safeRequest } from "../../../lib/auth";
@@ -16,6 +18,7 @@ const DailyJoke = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const navigate = useNavigate();
   const { setUser } = useUser();
   const { accessToken, setAccessToken } = useAuth();
   const { t } = useLanguage();
@@ -45,11 +48,7 @@ const DailyJoke = () => {
 
     const recordView = async () => {
       try {
-        const res = await safeRequest(
-          recordDailyJokeView,
-          accessToken,
-          setAccessToken
-        );
+        const res = await safeRequest(recordDailyJokeView, accessToken, setAccessToken);
 
         if (!isMounted) return;
 
@@ -82,30 +81,31 @@ const DailyJoke = () => {
   }
 
   if (error) {
-    return (
-      <div className="text-center text-[var(--text1)]">
-        {error}
-      </div>
-    );
+    return <div className="text-center text-[var(--text1)]">{error}</div>;
   }
 
   return (
     <div className="md:mt-8">
       <h2 className="posts-heading">{t("dailyJoke.heading")}</h2>
 
-      <p className="text-center text-[var(--text1)] opacity-70 -mt-4 mb-8">
-        {t("dailyJoke.subtitle")}
-      </p>
+      <p className="text-center text-[var(--text1)] opacity-70 -mt-4 mb-8">{t("dailyJoke.subtitle")}</p>
 
       <section className="posts-section">
-        {!dailyJoke ? (
-          <h3 className="posts-section-heading text-[var(--text1)]">
-            {t("dailyJoke.states.notFound")}
-          </h3>
-        ) : (
-          <Post key={dailyJoke.id} post={dailyJoke} />
-        )}
+        {!dailyJoke ?
+          <h3 className="posts-section-heading text-[var(--text1)]">{t("dailyJoke.states.notFound")}</h3>
+        : <Post key={dailyJoke.id} post={dailyJoke} />}
       </section>
+
+      <div className="mt-8 flex justify-center">
+        <Button
+          type="button"
+          onClick={() => navigate("/jokes/all-jokes")}
+          className="bg-[var(--button3)] text-[var(--text0)]! px-6 py-2 hover:brightness-110"
+          label={t("dailyJoke.actions.goToAllJokes")}
+        >
+          {t("dailyJoke.actions.goToAllJokes")}
+        </Button>
+      </div>
     </div>
   );
 };

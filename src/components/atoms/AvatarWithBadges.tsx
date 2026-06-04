@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Avatar from "../atoms/Avatar";
-import {
-  getStreakTier,
-  pickPrimaryBadgeFromUser,
-  resolveActiveBadgesFromUser,
-} from "../../lib/badges";
+import { getStreakTier, pickPrimaryBadgeFromUser, resolveActiveBadgesFromUser } from "../../lib/badges";
 import type { User } from "../../types/context.types";
 import { useLanguage } from "../../contexts/LanguageContext";
 
@@ -16,13 +12,7 @@ type Props = {
   username?: string;
 };
 
-export default function AvatarWithBadges({
-  user,
-  avatarUrl,
-  username,
-  size,
-  enableMenu = true,
-}: Props) {
+export default function AvatarWithBadges({ user, avatarUrl, username, size, enableMenu = true }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
@@ -47,10 +37,7 @@ export default function AvatarWithBadges({
     const width = 224;
     const padding = 8;
 
-    const left = Math.min(
-      Math.max(padding, r.left),
-      window.innerWidth - width - padding
-    );
+    const left = Math.min(Math.max(padding, r.left), window.innerWidth - width - padding);
 
     const top = r.bottom + 8;
 
@@ -108,7 +95,7 @@ export default function AvatarWithBadges({
     <div ref={rootRef} className="relative inline-block">
       <button
         type="button"
-        className="relative rounded-full"
+        className="relative rounded-full border-1 border-[var(--text1)]/10"
         onClick={(e) => {
           if (!enableMenu) return;
           e.stopPropagation();
@@ -167,10 +154,9 @@ export default function AvatarWithBadges({
           <div className="px-3 pb-2">
             <div className="text-xs opacity-70 mb-2">{t("avatarWithBadges.badges")}</div>
 
-            {activeBadges.length === 0 ? (
+            {activeBadges.length === 0 ?
               <div className="text-xs opacity-70">{t("avatarWithBadges.noBadges")}</div>
-            ) : (
-              <div className="flex flex-wrap gap-2">
+            : <div className="flex flex-wrap gap-2">
                 {activeBadges
                   .slice()
                   .sort((a, b) => a.priority - b.priority)
@@ -190,7 +176,7 @@ export default function AvatarWithBadges({
                     </span>
                   ))}
               </div>
-            )}
+            }
           </div>
         </div>
       )}
