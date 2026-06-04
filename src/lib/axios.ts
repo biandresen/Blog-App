@@ -58,6 +58,26 @@ export const resendVerificationEmail = async ({ email }: { email: string }, lang
   }
 };
 
+type ContactMessagePayload = {
+  name: string;
+  email: string;
+  topic: "BUG" | "FEATURE" | "SUGGESTION" | "FEEDBACK";
+  message: string;
+};
+
+export const sendContactMessage = async (payload: ContactMessagePayload) => {
+  try {
+    const res = await axios.post(`${BLOG_API.BASE}${BLOG_API.CONTACT}`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res.data;
+  } catch (err: any) {
+    throw normalizeApiError(err);
+  }
+};
+
 export const resetPassword = async ({ email }: { email: string }, language?: AppLanguage) => {
   try {
     const res = await axios.post(

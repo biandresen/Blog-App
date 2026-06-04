@@ -25,6 +25,7 @@ const BLOG_API = {
   BADGE_HISTORY_ME: "/badges/me/history",
   CURRENT_BADGES_ME: "/badges/me/current",
   SEARCH: "/search",
+  CONTACT: "/contact",
 };
 
 export default BLOG_API;

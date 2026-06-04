@@ -150,10 +150,10 @@ export const translations = {
       },
 
       subjects: {
-        BUG: "[PUNDAD][BUG]",
-        FEATURE: "[PUNDAD][FEATURE]",
-        SUGGESTION: "[PUNDAD][SUGGESTION]",
-        FEEDBACK: "[PUNDAD][FEEDBACK]",
+        BUG: "BUG",
+        FEATURE: "FEATURE",
+        SUGGESTION: "SUGGESTION",
+        FEEDBACK: "FEEDBACK",
       },
 
       bodies: {
@@ -282,6 +282,26 @@ Page URL:
       paragraph2a: "Send us an email at",
       paragraph2Span: "contact@pundad.app",
       paragraph2b: "and we'll be happy to hear from you. Feedback and dad jokes are welcome.",
+      form: {
+        heading: "Contact us directly",
+        description: "Send your message from this page, or use the email app fallback if needed.",
+        nameLabel: "Your name",
+        namePlaceholder: "Enter your name",
+        emailLabel: "Your email",
+        emailPlaceholder: "Enter your email",
+        topicLabel: "Topic",
+        messageLabel: "Message",
+        messagePlaceholder: "Tell us what you’d like to say.",
+        send: "Send message",
+        openEmailApp: "Open email app",
+        copy: "Copy email text",
+        invalidForm: "Please complete all fields and enter a valid email.",
+        fallbackInfo: "If your email app does not open, copy the message into your email service.",
+        sendSuccess: "Message sent successfully.",
+        sendFail: "Sending failed. Use the email app fallback below.",
+        copySuccess: "Email text copied to clipboard.",
+        copyError: "Could not copy email text.",
+      },
     },
 
     register: {
@@ -1020,6 +1040,10 @@ Page URL:
       heading: "👑 JOKE OF THE DAY",
       subtitle: "The joke selected for today",
 
+      actions: {
+        goToAllJokes: "View all jokes",
+      },
+
       states: {
         notFound: "Joke not found",
         failed: "Failed to fetch daily joke",
@@ -1599,6 +1623,26 @@ Side-URL:
       paragraph2a: "Send oss en e-post på",
       paragraph2Span: "contact@pundad.app",
       paragraph2b: "så hører vi gjerne fra deg. Tilbakemeldinger og dad jokes er velkomne.",
+      form: {
+        heading: "Kontakt oss direkte",
+        description: "Send meldingen din fra denne siden, eller bruk e-postappen om nødvendig.",
+        nameLabel: "Ditt navn",
+        namePlaceholder: "Skriv inn navnet ditt",
+        emailLabel: "Din e-post",
+        emailPlaceholder: "Skriv inn e-posten din",
+        topicLabel: "Tema",
+        messageLabel: "Melding",
+        messagePlaceholder: "Fortell oss hva du vil si.",
+        send: "Send melding",
+        openEmailApp: "Åpne e-postapp",
+        copy: "Kopier e-posttekst",
+        invalidForm: "Fyll ut alle feltene og bruk en gyldig e-postadresse.",
+        fallbackInfo: "Hvis e-postappen ikke åpner, kopier meldingen til din e-posttjeneste.",
+        sendSuccess: "Meldingen ble sendt.",
+        sendFail: "Sending mislyktes. Bruk e-postappen nedenfor.",
+        copySuccess: "E-posttekst kopiert til utklippstavlen.",
+        copyError: "Kunne ikke kopiere e-postteksten.",
+      },
     },
 
     register: {
@@ -2336,6 +2380,10 @@ Side-URL:
     dailyJoke: {
       heading: "👑 DAGENS VITS",
       subtitle: "Vitsen som er valgt for i dag",
+
+      actions: {
+        goToAllJokes: "Se alle vitser",
+      },
 
       states: {
         notFound: "Vits ikke funnet",

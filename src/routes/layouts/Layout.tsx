@@ -7,6 +7,7 @@ import ContactTemplate from "../../components/organisms/ContactTemplate";
 import { type LayoutProps } from "../../types/layout.types";
 import { useLanguage } from "../../contexts/LanguageContext";
 import LanguageRouteGate from "../../components/molecules/LanguageRouteGate";
+import ContactForm from "../../components/molecules/ContactForm";
 
 const Layout = ({ setSidebars, children }: LayoutProps) => {
   const [reportOpen, setReportOpen] = useState(false);
@@ -50,7 +51,7 @@ const Layout = ({ setSidebars, children }: LayoutProps) => {
         onClose={() => setReportOpen(false)}
         variant="custom"
       >
-        <ContactTemplate />
+        <ContactForm />
       </Modal>
     </div>
   );

@@ -75,11 +75,13 @@ const Modal = ({
     >
       <div
         className="bg-[var(--primary-shade)] text-[var(--text2)] rounded-2xl p-6 shadow-2xl
-                   w-[min(92vw,32rem)] max-h-[80vh] overflow-auto"
+                   w-[min(92vw,32rem)] max-h-[95vh] overflow-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4 mb-3">
-          {title ? <h2 className="text-xl font-semibold">{title}</h2> : <span />}
+          {title ?
+            <h2 className="text-xl font-semibold">{title}</h2>
+          : <span />}
           <button
             type="button"
             onClick={close}
@@ -91,7 +93,9 @@ const Modal = ({
           </button>
         </div>
 
-        {message ? <p className="mb-4 whitespace-pre-wrap">{message}</p> : null}
+        {message ?
+          <p className="mb-4 whitespace-pre-wrap">{message}</p>
+        : null}
         {children}
 
         {variant === "confirm" && (
