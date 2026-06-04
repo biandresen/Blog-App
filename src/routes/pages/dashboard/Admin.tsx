@@ -9,11 +9,7 @@ import Button from "../../../components/atoms/Button";
 import Avatar from "../../../components/atoms/Avatar";
 
 import { safeRequest } from "../../../lib/auth";
-import {
-  deactivateUser,
-  getUserByNameOrEmail,
-  reactivateUser,
-} from "../../../lib/axios";
+import { deactivateUser, getUserByNameOrEmail, reactivateUser } from "../../../lib/axios";
 import { getApiErrorMessage, toastApiError } from "../../../lib/apiErrors";
 
 import { type User } from "../../../types/context.types";
@@ -85,12 +81,7 @@ const Admin = () => {
     try {
       setIsFetchingUser(true);
 
-      const res = await safeRequest(
-        getUserByNameOrEmail,
-        accessToken,
-        setAccessToken,
-        trimmedUserInput
-      );
+      const res = await safeRequest(getUserByNameOrEmail, accessToken, setAccessToken, trimmedUserInput);
 
       if (res.statusCode !== 200) {
         throw new Error(res.message || t("admin.toasts.requestFailed"));
@@ -123,21 +114,14 @@ const Admin = () => {
     try {
       setIsActivatingUser(true);
 
-      const res = await safeRequest(
-        reactivateUser,
-        accessToken,
-        setAccessToken,
-        Number(fetchedUser.id)
-      );
+      const res = await safeRequest(reactivateUser, accessToken, setAccessToken, Number(fetchedUser.id));
 
       if (res.statusCode !== 200) {
         throw new Error(res.message || t("admin.toasts.requestFailed"));
       }
 
       setFetchedUser(res.data);
-      toast.success(
-        tf("admin.toasts.userActivated", { username: fetchedUser.username })
-      );
+      toast.success(tf("admin.toasts.userActivated", { username: fetchedUser.username }));
     } catch (err: any) {
       toastApiError(err, t("admin.toasts.activateFailed"));
     } finally {
@@ -156,21 +140,14 @@ const Admin = () => {
     try {
       setIsDeactivatingUser(true);
 
-      const res = await safeRequest(
-        deactivateUser,
-        accessToken,
-        setAccessToken,
-        Number(fetchedUser.id)
-      );
+      const res = await safeRequest(deactivateUser, accessToken, setAccessToken, Number(fetchedUser.id));
 
       if (res.statusCode !== 200) {
         throw new Error(res.message || t("admin.toasts.requestFailed"));
       }
 
       setFetchedUser(res.data);
-      toast.success(
-        tf("admin.toasts.userDeactivated", { username: fetchedUser.username })
-      );
+      toast.success(tf("admin.toasts.userDeactivated", { username: fetchedUser.username }));
     } catch (err: any) {
       toastApiError(err, t("admin.toasts.deactivateFailed"));
     } finally {
@@ -180,16 +157,18 @@ const Admin = () => {
 
   if (!accessToken) {
     return (
-      <div className="text-center text-[var(--text1)] mt-6">
-        {t("moderationAdmin.states.adminRequired")}
-      </div>
+      <div className="text-center text-[var(--text1)] mt-6">{t("moderationAdmin.states.adminRequired")}</div>
     );
   }
 
   return (
-    <div className={`container flex flex-col ${activeSection == "users" ? "sm:flex-row" : ""} gap-6 sm:justify-center sm:gap-0 sm:mt-20!`}>
+    <div
+      className={`container flex flex-col ${activeSection == "users" ? "sm:flex-row" : ""} gap-6 sm:justify-center sm:gap-0 sm:mt-20!`}
+    >
       <div>
-        <div className={`info-container rounded-xl! mb-5 ${activeSection === "users" ? "sm:rounded-r-none!" : ""}`}>
+        <div
+          className={`info-container rounded-xl! mb-5 ${activeSection === "users" ? "sm:rounded-r-none!" : ""}`}
+        >
           <div className="text-center">
             <h2 className="text-2xl md:text-4xl my-4">{t("admin.infoHeading")}</h2>
           </div>
@@ -198,7 +177,8 @@ const Admin = () => {
             <div className="flex flex-wrap gap-3 mb-6 justify-center sm:justify-start">
               <Button
                 type="button"
-                variant={activeSection === "users" ? "tertiary" : "secondary"}
+                variant={activeSection === "users" ? "tertiary" : "secondaryOnDark"}
+                className="text-[var(--text0)]"
                 onClick={() => setActiveSection("users")}
                 label={t("admin.tabs.users")}
               >
@@ -207,7 +187,8 @@ const Admin = () => {
 
               <Button
                 type="button"
-                variant={activeSection === "moderation" ? "tertiary" : "secondary"}
+                variant={activeSection === "moderation" ? "tertiary" : "secondaryOnDark"}
+                className="text-[var(--text0)]"
                 onClick={() => setActiveSection("moderation")}
                 label={t("admin.tabs.moderation")}
               >
@@ -215,30 +196,29 @@ const Admin = () => {
               </Button>
             </div>
 
-            {activeSection === "users" ? (
+            {activeSection === "users" ?
               <ol>
                 {infoListItems.map((item) => (
-                  <li
-                    className="list-decimal list-inside text-xl md:text-2xl mt-2"
-                    key={item}
-                  >
+                  <li className="list-decimal list-inside text-xl md:text-2xl mt-2" key={item}>
                     {item}
                   </li>
                 ))}
               </ol>
-            ) : (
-              <div className="text-lg md:text-xl space-y-2">
+            : <div className="text-lg md:text-xl space-y-2">
                 <p>{t("admin.moderationIntro.paragraph1")}</p>
                 <p>{t("admin.moderationIntro.paragraph2")}</p>
                 <p>{t("admin.moderationIntro.paragraph3")}</p>
               </div>
-            )}
+            }
           </div>
         </div>
       </div>
 
-      <div data-label="input-container" className={`input-container rounded-xl! ${activeSection === "users" ? "sm:rounded-l-none!" : ""}`}>
-        {activeSection === "users" ? (
+      <div
+        data-label="input-container"
+        className={`input-container rounded-xl! ${activeSection === "users" ? "sm:rounded-l-none!" : ""}`}
+      >
+        {activeSection === "users" ?
           <>
             <h2 className="input-heading">{t("admin.userSection.heading")}</h2>
 
@@ -270,9 +250,7 @@ const Admin = () => {
                   <p className="mt-2 font-bold">{fetchedUser.username}</p>
                   <p>
                     {t("admin.userSection.statusLabel")}:{" "}
-                    {fetchedUser.active
-                      ? t("admin.userSection.active")
-                      : t("admin.userSection.inactive")}
+                    {fetchedUser.active ? t("admin.userSection.active") : t("admin.userSection.inactive")}
                   </p>
                 </div>
               )}
@@ -284,9 +262,7 @@ const Admin = () => {
                   label={t("admin.userSection.actions.findUser")}
                   disabled={!canFetchUser}
                 >
-                  {isFetchingUser
-                    ? t("common.loading")
-                    : t("admin.userSection.actions.findUser")}
+                  {isFetchingUser ? t("common.loading") : t("admin.userSection.actions.findUser")}
                 </Button>
 
                 <Button
@@ -297,9 +273,7 @@ const Admin = () => {
                   label={t("admin.userSection.actions.reactivateUser")}
                   disabled={!canReactivateUser}
                 >
-                  {isActivatingUser
-                    ? t("common.loading")
-                    : t("admin.userSection.actions.reactivateUser")}
+                  {isActivatingUser ? t("common.loading") : t("admin.userSection.actions.reactivateUser")}
                 </Button>
 
                 <Button
@@ -310,16 +284,12 @@ const Admin = () => {
                   label={t("admin.userSection.actions.deactivateUser")}
                   disabled={!canDeactivateUser}
                 >
-                  {isDeactivatingUser
-                    ? t("common.loading")
-                    : t("admin.userSection.actions.deactivateUser")}
+                  {isDeactivatingUser ? t("common.loading") : t("admin.userSection.actions.deactivateUser")}
                 </Button>
               </div>
             </form>
           </>
-        ) : (
-          <ModerationPanel />
-        )}
+        : <ModerationPanel />}
       </div>
     </div>
   );

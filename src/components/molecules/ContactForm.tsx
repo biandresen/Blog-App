@@ -21,7 +21,7 @@ const buildMessageBody = (name: string, email: string, message: string, topicLab
   `${topicLabel}\n\nFrom: ${name}\nReply-to: ${email}\n\n${message}`;
 
 const ContactForm = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [topic, setTopic] = useState<Topic>(`FEEDBACK`);
@@ -57,7 +57,10 @@ const ContactForm = () => {
 
     try {
       setIsSubmitting(true);
-      await sendContactMessage({ name: name.trim(), email: email.trim(), topic, message: message.trim() });
+      await sendContactMessage(
+        { name: name.trim(), email: email.trim(), topic, message: message.trim() },
+        language,
+      );
       toast.success(t("contact.form.sendSuccess"));
       setName("");
       setEmail("");
@@ -167,7 +170,7 @@ const ContactForm = () => {
             onChange={(e) => setMessage(e.target.value)}
             placeholder={t("contact.form.messagePlaceholder")}
             required
-            className="w-full min-h-[140px] rounded-3xl border border-transparent bg-[var(--bg)] px-4 py-3 text-lg font-semibold text-[var(--text1)] outline-none transition duration-150 placeholder:text-[0.9rem] focus:border-[var(--text2)] focus:ring-2 focus:ring-[var(--text2)]/20"
+            className="w-full min-h-[140px] rounded-3xl bg-[var(--bg)] px-4 py-3 text-lg font-semibold text-[var(--text1)] outline-none placeholder:text-[0.9rem]"
           />
         </div>
 

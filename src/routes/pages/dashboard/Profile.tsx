@@ -69,6 +69,7 @@ const Profile = () => {
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState<string>("");
+  const [avatarUpdated, setAvatarUpdated] = useState(false);
 
   const [emailPendingVerification, setEmailPendingVerification] = useState(false);
   const [pendingEmail, setPendingEmail] = useState("");
@@ -102,6 +103,7 @@ const Profile = () => {
     setEmail(user?.email || "");
     setPendingEmail("");
     setEmailPendingVerification(false);
+    setAvatarUpdated(false);
   }, [user?.username, user?.email]);
 
   // --------------------------------------------------
@@ -240,6 +242,9 @@ const Profile = () => {
 
       setUser(res.data);
 
+      const avatarWasUpdated = !!avatar;
+      setAvatarUpdated(avatarWasUpdated);
+
       setCurrentPassword("");
       setNewPassword("");
       setPasswordErrors([]);
@@ -305,7 +310,7 @@ const Profile = () => {
 
       <div>
         <div className="info-container flex flex-col">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row md:gap-0 items-center justify-between">
             <h2 className="text-2xl md:text-4xl font-bold">{t("profile.infoHeading")}</h2>
 
             <AvatarWithBadges
@@ -365,7 +370,7 @@ const Profile = () => {
           <div className="mt-auto pt-6 flex flex-col gap-4">
             <Button
               type="button"
-              variant="secondary"
+              variant="secondaryOnDark"
               onClick={handleLogout}
               className="w-full"
               label={t("profile.actions.logout")}
@@ -407,6 +412,7 @@ const Profile = () => {
               onChange={(e) => {
                 const value = e.target.value;
                 setUsername(value);
+                setAvatarUpdated(false);
 
                 const validationKey = usernameValidator(value);
 
@@ -441,6 +447,7 @@ const Profile = () => {
               onChange={(e) => {
                 const value = e.target.value;
                 setEmail(value);
+                setAvatarUpdated(false);
 
                 if (emailPendingVerification) {
                   setEmailPendingVerification(false);
@@ -605,6 +612,7 @@ const Profile = () => {
                 setAvatar(file);
                 setAvatarError("");
                 setAvatarPreview(URL.createObjectURL(file));
+                setAvatarUpdated(false);
               }}
             />
 
@@ -626,6 +634,12 @@ const Profile = () => {
 
             {avatarError && <p className="text-red-500">{avatarError}</p>}
           </div>
+
+          {avatarUpdated && (
+            <p className="text-xs text-[var(--text2)] opacity-80 mt-4 mb-3">
+              {t("profile.avatar.refreshNote")}
+            </p>
+          )}
 
           <Button
             type="submit"

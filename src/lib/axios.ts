@@ -65,11 +65,12 @@ type ContactMessagePayload = {
   message: string;
 };
 
-export const sendContactMessage = async (payload: ContactMessagePayload) => {
+export const sendContactMessage = async (payload: ContactMessagePayload, language?: AppLanguage) => {
   try {
     const res = await axios.post(`${BLOG_API.BASE}${BLOG_API.CONTACT}`, payload, {
       headers: {
         "Content-Type": "application/json",
+        ...languageHeaders(language),
       },
     });
     return res.data;

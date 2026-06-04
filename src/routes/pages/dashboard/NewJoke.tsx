@@ -259,9 +259,9 @@ const NewJoke = () => {
         <div className="flex flex-col pb-3 md:flex-row justify-space-between md:gap-10 md:my-4">
           <Button
             type="button"
-            variant="secondary"
+            variant="secondaryOnDark"
             onClick={handleSaveDraft}
-            className="w-full mt-4"
+            className="w-full mt-4 text-[var(--text0)]"
             disabled={invalidForm || isSavingDraft || isPublishing}
             label={t("newPost.actions.saveDraft")}
           >

@@ -811,6 +811,7 @@ Page URL:
         previewAlt: "Avatar preview",
         invalidType: "Only JPG, PNG or WEBP images are allowed.",
         tooLarge: "Avatar file size exceeds {{size}}MB. Choose a smaller file.",
+        refreshNote: "Refresh the page after updating your avatar to see the new image.",
       },
 
       modal: {
@@ -961,7 +962,7 @@ Page URL:
       matchLabels: {
         title: "title",
         body: "body",
-        comment: "comment",
+        comment: "comments",
         tag: "tag",
       },
 
@@ -2152,6 +2153,7 @@ Side-URL:
         previewAlt: "Forhåndsvisning av profilbilde",
         invalidType: "Kun JPG-, PNG- eller WEBP-bilder er tillatt.",
         tooLarge: "Profilbildet er større enn {{size}}MB. Velg en mindre fil.",
+        refreshNote: "Last inn siden på nytt etter å ha oppdatert profilbildet for å se det nye bildet.",
       },
 
       modal: {
@@ -2302,7 +2304,7 @@ Side-URL:
       matchLabels: {
         title: "tittel",
         body: "innhold",
-        comment: "kommentar",
+        comment: "kommentarer",
         tag: "tag",
       },
 

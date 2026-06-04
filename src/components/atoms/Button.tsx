@@ -6,6 +6,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   shade: "bg-[var(--primary-shade)] text-[var(--text2)] hover:brightness-90",
   primary: "bg-[var(--button1)] button-style",
   secondary: "bg-[var(--button2)] button-style border-1 border-[var(--text3)] text-[var(--text3)]!",
+  secondaryOnDark: "bg-transparent button-style border-1 border-[var(--text2)] text-[var(--text2)]!",
   tertiary: "bg-[var(--button3)] text-[var(--text0)]! button-style",
   outline:
     "bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text1)] hover:bg-[var(--button1)] hover:text-[var(--text2)] transition-colors duration-100",

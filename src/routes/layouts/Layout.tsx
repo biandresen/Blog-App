@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 
 import Header from "../../components/organisms/Header";
 import Modal from "../../components/molecules/Modal";
-import ContactTemplate from "../../components/organisms/ContactTemplate";
-
 import { type LayoutProps } from "../../types/layout.types";
 import { useLanguage } from "../../contexts/LanguageContext";
 import LanguageRouteGate from "../../components/molecules/LanguageRouteGate";

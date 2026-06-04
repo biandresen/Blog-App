@@ -28,7 +28,11 @@ function computeMatches(post: PostType, q: string, filters: SearchFilters): stri
     matches.push("body");
   }
 
-  if (filters.comments) {
+  if (
+    filters.comments &&
+    (post.comments?.some((comment) => comment.body?.toLowerCase().includes(input)) ||
+      (!post.comments?.length && !matches.length))
+  ) {
     matches.push("comment");
   }
 

@@ -2,7 +2,15 @@ import { type ButtonHTMLAttributes, type ReactNode } from "react";
 import { type ChangeEvent } from "react";
 import type { CommentType } from "./post.types";
 
-export type ButtonVariant = "shade" | "primary" | "secondary" | "tertiary" | "outline" | "success" | "error";
+export type ButtonVariant =
+  | "shade"
+  | "primary"
+  | "secondary"
+  | "secondaryOnDark"
+  | "tertiary"
+  | "outline"
+  | "success"
+  | "error";
 export type ButtonSize = "zero" | "sm" | "md" | "lg";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

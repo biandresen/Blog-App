@@ -1,8 +1,14 @@
+//FOR PRODUCTION
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:4001/api/v1";
+const API_ORIGIN = import.meta.env.VITE_API_ORIGIN ?? "http://127.0.0.1:4001";
+
+//FOR DEV on live backend
+// const API_BASE_URL = "https://pundad.app/api/v1";
+// const API_ORIGIN = "https://pundad.app";
+
 const BLOG_API = {
-  BASE: "http://127.0.0.1:4001/api/v1",
-  BASE_AVATAR: "http://127.0.0.1:4001",
-  // BASE: "https://pundad.app/api/v1",
-  // BASE_AVATAR: "https://pundad.app",
+  BASE: API_BASE_URL,
+  BASE_AVATAR: API_ORIGIN,
 
   REGISTER: "/auth/register",
   LOGIN: "/auth/login",

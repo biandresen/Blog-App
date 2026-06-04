@@ -95,7 +95,7 @@ export default function AvatarWithBadges({ user, avatarUrl, username, size, enab
     <div ref={rootRef} className="relative inline-block">
       <button
         type="button"
-        className="relative rounded-full border-1 border-[var(--text1)]/10"
+        className="relative rounded-full"
         onClick={(e) => {
           if (!enableMenu) return;
           e.stopPropagation();
