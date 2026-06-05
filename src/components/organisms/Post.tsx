@@ -67,8 +67,8 @@ const Post = ({
   useEffect(() => {
     const updateSize = () => {
       if (window.innerWidth >= 1280) setAvatarSize(63);
-      else if (window.innerWidth >= 768) setAvatarSize(50);
-      else setAvatarSize(40);
+      else if (window.innerWidth >= 768) setAvatarSize(55);
+      else setAvatarSize(55);
     };
 
     updateSize();
@@ -483,14 +483,14 @@ const Post = ({
         )}
       </div>
 
-      <div className="flex xl:mb-0 md:ml-auto absolute top-3 left-5 xl:left-10">
+      <div className="flex flex-col lg:flex-row xl:mb-0 md:ml-auto absolute top-3 left-5 xl:left-10">
         <AvatarWithBadges
           size={avatarSize}
           avatarUrl={post.user?.avatar}
           username={post.user?.username}
           user={post.user as User}
         />
-        <div className="flex flex-col justify-center ml-2 max-w-[calc(20px+30vw)] mt-2">
+        <div className="flex flex-col justify-center ml-0 lg:ml-2 max-w-[calc(20px+30vw)] mt-0 lg:mt-2">
           <p
             title={t("post.labels.username")}
             className="font-bold text-[0.8rem]/3.5 md:text-[1rem] [overflow-wrap:anywhere] max-w-[calc(5px+30vw)]"
@@ -503,7 +503,7 @@ const Post = ({
         </div>
       </div>
 
-      <hr className="text-[var(--text1)] opacity-10 mt-23" />
+      <hr className="text-[var(--text1)] opacity-10 mt-28 lg:mt-23" />
       <div className="flex flex-col-reverse md:flex-row px-5 xl:px-10 pt-4">
         {isEditing ?
           <div className="bg-[var(--bg)] rounded-lg p-1 w-full relative">

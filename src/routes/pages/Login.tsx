@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaRegCheckCircle } from "react-icons/fa";
+import { RxCrossCircled } from "react-icons/rx";
 
 import { safeRequest } from "../../lib/auth";
 import { getMe, loginUser } from "../../lib/axios";
@@ -89,9 +90,9 @@ const Login = () => {
 
       // Use backend preferred language when available
       const preferred =
-        res.data?.user?.preferredLanguage === "EN" || res.data?.user?.preferredLanguage === "NO"
-          ? res.data.user.preferredLanguage
-          : language;
+        res.data?.user?.preferredLanguage === "EN" || res.data?.user?.preferredLanguage === "NO" ?
+          res.data.user.preferredLanguage
+        : language;
 
       setLanguage(preferred);
 
@@ -113,14 +114,9 @@ const Login = () => {
     } catch (err: any) {
       const message = getApiErrorMessage(err, t("login.loginFailed"));
       const status =
-        err?.status ??
-        err?.statusCode ??
-        err?.response?.status ??
-        err?.response?.data?.statusCode;
+        err?.status ?? err?.statusCode ?? err?.response?.status ?? err?.response?.data?.statusCode;
 
-      const code =
-        err?.response?.data?.code ??
-        err?.code;
+      const code = err?.response?.data?.code ?? err?.code;
 
       console.log("Login error details:", {
         message,
@@ -201,42 +197,73 @@ const Login = () => {
             }}
           />
 
-          <div className="flex relative">
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              label={t("login.passwordLabel")}
-              value={password}
-              errorMsg={errorMsg2}
-              placeholder={t("login.passwordPlaceholder")}
-              required
-              inputValid={input2Valid}
-              onChange={(e) => {
-                const value = e.target.value;
-                setPassword(value);
+          <div>
+            <div className="flex items-center gap-2.5 text-lg font-semibold md:text-2xl my-1">
+              <label htmlFor="password" className="text-[var(--text1)]">
+                {t("login.passwordLabel")}
+              </label>
+              <Button
+                type="button"
+                aria-label={
+                  showPassword ?
+                    t("login.hidePassword", "Hide password")
+                  : t("login.showPassword", "Show password")
+                }
+                label={
+                  showPassword ?
+                    t("login.hidePassword", "Hide password")
+                  : t("login.showPassword", "Show password")
+                }
+                size="zero"
+                className="bg-transparent"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ?
+                  <FaEye size={20} className="text-[var(--text1)]" />
+                : <FaEyeSlash size={20} className="text-[var(--text1)]" />}
+              </Button>
+            </div>
+            <div className={`flex flex-col ${errorMsg2 ? "-mb-1.5" : "mb-3"}`}>
+              <div className="relative flex items-center -mt-0.5">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPassword(value);
 
-                setNeedsVerification(false);
+                    setNeedsVerification(false);
 
-                const validationKey = loginPasswordValidator(value);
-                setInput2Valid(!validationKey);
-                setErrorMsg2(validationKey ? t(validationKey) : "");
-              }}
-            />
-
-            <Button
-              type="button"
-              aria-label={showPassword ? t("login.hidePassword", "Hide password") : t("login.showPassword", "Show password")}
-              label={showPassword ? t("login.hidePassword", "Hide password") : t("login.showPassword", "Show password")}
-              size="zero"
-              className="bg-transparent absolute left-27 top-2"
-              onClick={() => setShowPassword((prev) => !prev)}
-            >
-              {showPassword ? (
-                <FaEye size={20} className="text-[var(--text1)]" />
-              ) : (
-                <FaEyeSlash size={20} className="text-[var(--text1)]" />
-              )}
-            </Button>
+                    const validationKey = loginPasswordValidator(value);
+                    setInput2Valid(!validationKey);
+                    setErrorMsg2(validationKey ? t(validationKey) : "");
+                  }}
+                  placeholder={t("login.passwordPlaceholder")}
+                  required
+                  className={`bg-[var(--bg)] text-[var(--text1)] font-semibold rounded-full w-full text-lg md:text-xl px-3 py-0.5 pr-13
+                    outline-none border
+                    placeholder:text-[0.7rem]
+                    md:placeholder:text-[1rem]
+                    ${input2Valid === false && password?.trim().length ? "border-[var(--error)]" : "border-transparent"}`}
+                />
+                {input2Valid === true && password?.trim().length ?
+                  <FaRegCheckCircle
+                    size={22}
+                    className="absolute right-2 text-[var(--success)]"
+                    aria-hidden
+                  />
+                : null}
+                {input2Valid === false && password?.trim().length ?
+                  <RxCrossCircled size={22} className="absolute right-2 text-[var(--error)]" aria-hidden />
+                : null}
+              </div>
+              {errorMsg2 && password?.trim().length ?
+                <p className="text-[0.9rem] text-[var(--error)] mb-2" role="alert">
+                  {errorMsg2}
+                </p>
+              : null}
+            </div>
           </div>
 
           <Button
@@ -257,13 +284,13 @@ const Login = () => {
               {t("login.forgotPassword")} <span className="font-bold">{t("login.link2")}</span>
             </Link>
             {needsVerification && (
-            <Link
-              to={`/resend-verification${pendingEmail ? `?email=${encodeURIComponent(pendingEmail)}` : ""}`}
-              className="text-[var(--text1)] mt-3 underline font-semibold"
-            >
-              {t("login.resendVerificationLink", "Resend verification email")}
-            </Link>
-          )}
+              <Link
+                to={`/resend-verification${pendingEmail ? `?email=${encodeURIComponent(pendingEmail)}` : ""}`}
+                className="text-[var(--text1)] mt-3 underline font-semibold"
+              >
+                {t("login.resendVerificationLink", "Resend verification email")}
+              </Link>
+            )}
           </div>
         </form>
       </div>

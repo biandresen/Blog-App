@@ -31,15 +31,9 @@ const Comment = ({
   const { user } = useUser();
   const { t } = useLanguage();
 
-  const { ref: textRef, handleInput } = useAutoResizeTextarea(
-    editedComment,
-    isEditing
-  );
+  const { ref: textRef, handleInput } = useAutoResizeTextarea(editedComment, isEditing);
 
-  const isAuthor =
-    authorId != null &&
-    user?.id != null &&
-    authorId.toString() === user.id.toString();
+  const isAuthor = authorId != null && user?.id != null && authorId.toString() === user.id.toString();
 
   const isAdmin = user?.role === "ADMIN";
 
@@ -87,14 +81,12 @@ const Comment = ({
   const handleKeyDown = useSubmitOnEnter(handleSubmit);
 
   return (
-    <div className="px-0 pb-6 mt-3">
+    <div className="px-0 pb-6">
       <div className="text-[var(--text1)]">
         <div className="flex bg-[var(--bg)] w-full px-3 pt-2 xl:w-fit rounded-tl-3xl rounded-tr-3xl">
-          {avatar ? (
+          {avatar ?
             <Avatar size={40} avatarUrl={avatar} />
-          ) : (
-            <CgProfile size={40} />
-          )}
+          : <CgProfile size={40} />}
 
           <div className="ml-2">
             <p className="font-bold text-[0.8rem] md:text-[1rem] mb-[-0.2rem]">
@@ -130,7 +122,7 @@ const Comment = ({
         </div>
 
         <div className="flex bg-[var(--bg)] px-4 py-3 rounded-2xl rounded-tr-none xl:rounded-tr-2xl rounded-tl-none w-full relative">
-          {isEditing ? (
+          {isEditing ?
             <div className="relative w-full">
               <textarea
                 ref={textRef}
@@ -150,12 +142,11 @@ const Comment = ({
                 {getCharactersLeft(editedComment, MAX_CHARS.COMMENT)}
               </span>
             </div>
-          ) : (
-            <LinkifiedText
+          : <LinkifiedText
               className="text-wrap text-sm md:text-lg/6 whitespace-break-spaces"
               text={comment}
             />
-          )}
+          }
 
           {isEditing && (
             <button

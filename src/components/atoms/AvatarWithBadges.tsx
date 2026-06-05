@@ -112,11 +112,12 @@ export default function AvatarWithBadges({ user, avatarUrl, username, size, enab
             className="
               absolute -bottom-1 -right-1
               flex items-center justify-center
-              h-[22px] min-w-[22px] px-1
+              max-h-[22px] min-w-[22px] px-1
               rounded-full
               border border-white/10
               bg-[var(--primary-shade)]
-              text-[0.85rem]
+              text-[0.7rem]
+              md:text-[0.85rem]
               shadow-lg
             "
             title={primary.label}

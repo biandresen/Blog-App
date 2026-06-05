@@ -39,7 +39,7 @@ const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
         md:place-items-end
       `}
     >
-      <ul className="flex flex-col text-[calc(0.85rem+0.25vw)] gap-4 ml-8 md:flex-row md:items-center md:gap-6 md:ml-0 w-25 md:w-auto">
+      <ul className="flex flex-col md:text-[calc(0.85rem+0.25vw)] gap-4 ml-8 md:flex-row md:items-center md:gap-6 md:ml-0 w-25 md:w-auto">
         <li className="pt-3 md:pt-0">
           <NavLink to="/jokes/daily-joke" onClick={closeMobileNav} className={navClass}>
             {t("navbar.links.jokes")}

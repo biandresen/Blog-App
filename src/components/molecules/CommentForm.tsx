@@ -38,10 +38,7 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
       return;
     }
 
-    const moderation = moderateFields(
-    { comment: body},
-    terms
-    );
+    const moderation = moderateFields({ comment: body }, terms);
 
     if (moderation.blocked) {
       toast.error(t("validation.blockedComment"));
@@ -51,13 +48,7 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
     try {
       setLoading(true);
 
-      const res = await safeRequest(
-        addComment,
-        accessToken,
-        setAccessToken,
-        postId,
-        trimmedBody
-      );
+      const res = await safeRequest(addComment, accessToken, setAccessToken, postId, trimmedBody);
 
       if (res.statusCode !== 201) {
         throw new Error(res.message ?? t("commentForm.toasts.requestFailed"));
@@ -102,20 +93,16 @@ const CommentForm = ({ postId, onCommentAdded }: CommentFormProps) => {
           aria-label={t("commentForm.placeholder")}
         />
 
-        <span className="characters-left bottom-5!">
-          {getCharactersLeft(body, MAX_CHARS.BODY)}
-        </span>
+        <span className="characters-left bottom-5!">{getCharactersLeft(body, MAX_CHARS.BODY)}</span>
       </div>
 
       <button
         title={t("commentForm.aria.submitTitle")}
         type="submit"
         disabled={loading}
-        className="ml-auto text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)]/20 text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="ml-auto mt-[-1.2rem] mb-6 text-sm md:text-md xl:text-lg flex rounded-full px-4 py-1 bg-transparent border-1 border-[var(--text2)]/20 text-[var(--text2)] hover:bg-[var(--primary-shade)] transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading
-          ? t("commentForm.actions.posting")
-          : t("commentForm.actions.addComment")}{" "}
+        {loading ? t("commentForm.actions.posting") : t("commentForm.actions.addComment")}{" "}
         <IoSend className="text-[var(--button3)] mt-0.5 lg:mt-1 ml-2" />
       </button>
     </form>

@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
+import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { emailValidator } from "../../validators/auth";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { sendContactMessage } from "../../lib/axios";
@@ -100,6 +101,11 @@ const ContactForm = () => {
     }
   };
 
+  const { ref: messageRef, handleInput: handleMessageInput } = useAutoResizeTextarea<HTMLTextAreaElement>(
+    message,
+    true,
+  );
+
   return (
     <section className="mt-8 w-full max-w-[420px] rounded-xl border border-[var(--text1)]/10 bg-[var(--button1)] p-5 mx-auto">
       <div className="mb-4">
@@ -166,11 +172,15 @@ const ContactForm = () => {
           </label>
           <textarea
             id="contactMessage"
+            ref={messageRef}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              handleMessageInput();
+            }}
             placeholder={t("contact.form.messagePlaceholder")}
             required
-            className="w-full min-h-[140px] rounded-3xl bg-[var(--bg)] px-4 py-3 text-lg font-semibold text-[var(--text1)] outline-none placeholder:text-[0.9rem]"
+            className="w-full min-h-[80px] rounded-3xl bg-[var(--bg)] px-4 py-3 text-lg font-semibold text-[var(--text1)] outline-none placeholder:text-[0.9rem]"
           />
         </div>
 
