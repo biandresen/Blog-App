@@ -284,7 +284,7 @@ refresh token flow
 
 protected route access
 
-post/joke CRUD with language scoping
+joke/joke CRUD with language scoping
 
 comment CRUD with language scoping
 

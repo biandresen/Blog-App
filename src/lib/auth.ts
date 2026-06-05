@@ -1,5 +1,5 @@
 import axios from "axios";
-import BLOG_API from "../api/blog-api";
+import JOKE_API from "../api/joke-api";
 import { type token} from "../types/context.types";
 
 type SetAccessToken = (token: token | null) => void;
@@ -7,7 +7,7 @@ type SetAccessToken = (token: token | null) => void;
 export async function refreshAccessToken(setAccessToken: SetAccessToken) {
   try {
     const res = await axios.post(
-      `${BLOG_API.BASE}${BLOG_API.REFRESH}`,
+      `${JOKE_API.BASE}${JOKE_API.REFRESH}`,
       {},
       { withCredentials: true }
     );
@@ -26,7 +26,7 @@ export async function refreshAccessToken(setAccessToken: SetAccessToken) {
   }
 }
 
-// const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
+// const res = await safeRequest(toggleLike, accessToken, setAccessToken, joke.id);
 
 // Generic API call wrapper that safely refreshes if 401 is returned
 export async function safeRequest<T>(

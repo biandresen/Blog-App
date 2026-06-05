@@ -1,52 +1,52 @@
 import { useEffect, useMemo, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 
-import { usePosts } from "../../../contexts/PostsContext";
+import { useJokes } from "../../../contexts/JokesContext";
 import { useUser } from "../../../contexts/UserContext";
 import { useLanguage } from "../../../contexts/LanguageContext";
 
 import Spinner from "../../../components/atoms/Spinner";
-import Post from "../../../components/organisms/Post";
+import Joke from "../../../components/organisms/Joke";
 
-import { getPost } from "../../../lib/axios";
-import type { PostType } from "../../../types/post.types";
+import { getJoke } from "../../../lib/axios";
+import type { JokeType } from "../../../types/joke.types";
 import { useAuth } from "../../../contexts/AuthContext";
 import Button from "../../../components/atoms/Button";
 import { useAppLanguage } from "../../../hooks/useAppLanguage";
 
 const SingleJoke = () => {
-  const [localPost, setLocalPost] = useState<PostType | null>(null);
+  const [localJoke, setLocalJoke] = useState<JokeType | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notAvailableInLanguage, setNotAvailableInLanguage] = useState(false);
 
-  const { id: postId } = useParams<{ id: string }>();
+  const { id: jokeId } = useParams<{ id: string }>();
   const { accessToken } = useAuth();
-  const { posts } = usePosts();
+  const { jokes } = useJokes();
   const { user } = useUser();
   const { language, t } = useLanguage();
   const { setAppLanguage } = useAppLanguage();
 
-  const parsedPostId = Number(postId);
+  const parsedJokeId = Number(jokeId);
 
-  const contextPost = useMemo(() => {
-    if (Number.isNaN(parsedPostId)) return undefined;
-    return posts.find((p) => p.id === parsedPostId);
-  }, [posts, parsedPostId]);
+  const contextJoke = useMemo(() => {
+    if (Number.isNaN(parsedJokeId)) return undefined;
+    return jokes.find((p) => p.id === parsedJokeId);
+  }, [jokes, parsedJokeId]);
 
   useEffect(() => {
     let cancelled = false;
 
-    const fetchSinglePost = async () => {
-      if (!postId || Number.isNaN(parsedPostId)) {
-        setLocalPost(null);
+    const fetchSingleJoke = async () => {
+      if (!jokeId || Number.isNaN(parsedJokeId)) {
+        setLocalJoke(null);
         setError(t("singleJoke.states.invalidId"));
         setNotAvailableInLanguage(false);
         return;
       }
 
-      if (contextPost) {
-        setLocalPost(contextPost);
+      if (contextJoke) {
+        setLocalJoke(contextJoke);
         setError(null);
         setNotAvailableInLanguage(false);
         return;
@@ -57,14 +57,14 @@ const SingleJoke = () => {
         setError(null);
         setNotAvailableInLanguage(false);
 
-        const res = await getPost(accessToken, parsedPostId, language);
+        const res = await getJoke(accessToken, parsedJokeId, language);
 
         if (cancelled) return;
 
-        const nextPost = res?.data ?? null;
-        setLocalPost(nextPost);
+        const nextJoke = res?.data ?? null;
+        setLocalJoke(nextJoke);
 
-        if (!nextPost) {
+        if (!nextJoke) {
           setNotAvailableInLanguage(true);
         }
       } catch (err: any) {
@@ -73,7 +73,7 @@ const SingleJoke = () => {
         const status = err?.response?.status ?? err?.response?.data?.statusCode;
 
         if (status === 404) {
-          setLocalPost(null);
+          setLocalJoke(null);
           setNotAvailableInLanguage(true);
           setError(null);
         } else {
@@ -89,48 +89,48 @@ const SingleJoke = () => {
       }
     };
 
-    fetchSinglePost();
+    fetchSingleJoke();
 
     return () => {
       cancelled = true;
     };
-  }, [postId, parsedPostId, language, contextPost, t]);
+  }, [jokeId, parsedJokeId, language, contextJoke, t]);
 
-  const post = localPost;
+  const joke = localJoke;
 
-  const isAuthor = post && post.authorId?.toString() === user?.id?.toString();
+  const isAuthor = joke && joke.authorId?.toString() === user?.id?.toString();
 
-  const isDraft = post?.published === false;
+  const isDraft = joke?.published === false;
 
-  const handlePostUpdated = (updated: PostType) => {
-    setLocalPost(updated);
+  const handleJokeUpdated = (updated: JokeType) => {
+    setLocalJoke(updated);
   };
 
-  const handlePostDeleted = () => {
-    setLocalPost(null);
+  const handleJokeDeleted = () => {
+    setLocalJoke(null);
     setError(null);
     setNotAvailableInLanguage(false);
   };
 
-  if (loading && !post) {
+  if (loading && !joke) {
     return <Spinner />;
   }
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{t("singleJoke.heading")}</h2>
+      <h2 className="jokes-heading">{t("singleJoke.heading")}</h2>
 
-      <section className="posts-section">
+      <section className="jokes-section">
         {error && (
           <div className="text-center text-[var(--text1)]">
-            <h3 className="posts-section-heading text-[var(--error)]">{t("singleJoke.states.failed")}</h3>
+            <h3 className="jokes-section-heading text-[var(--error)]">{t("singleJoke.states.failed")}</h3>
             <p className="opacity-70 mt-2">{error}</p>
           </div>
         )}
 
         {!error && notAvailableInLanguage && (
           <div className="text-center text-[var(--text1)]">
-            <h3 className="posts-section-heading">{t("singleJoke.states.notAvailableInLanguage")}</h3>
+            <h3 className="jokes-section-heading">{t("singleJoke.states.notAvailableInLanguage")}</h3>
 
             <p className="opacity-70 mt-2">{t("singleJoke.states.tryAnotherLanguage")}</p>
 
@@ -148,20 +148,20 @@ const SingleJoke = () => {
           </div>
         )}
 
-        {!error && !notAvailableInLanguage && !post && (
-          <h3 className="posts-section-heading text-[var(--text1)]">{t("singleJoke.states.notFound")}</h3>
+        {!error && !notAvailableInLanguage && !joke && (
+          <h3 className="jokes-section-heading text-[var(--text1)]">{t("singleJoke.states.notFound")}</h3>
         )}
 
-        {!error && !notAvailableInLanguage && post && isDraft && !isAuthor && (
-          <h3 className="posts-section-heading text-[var(--text1)]">{t("singleJoke.states.privateDraft")}</h3>
+        {!error && !notAvailableInLanguage && joke && isDraft && !isAuthor && (
+          <h3 className="jokes-section-heading text-[var(--text1)]">{t("singleJoke.states.privateDraft")}</h3>
         )}
 
-        {!error && !notAvailableInLanguage && post && (!isDraft || isAuthor) && (
-          <Post
-            key={`${post.id}-${language}`}
-            post={post}
-            onPostUpdated={handlePostUpdated}
-            onPostDeleted={handlePostDeleted}
+        {!error && !notAvailableInLanguage && joke && (!isDraft || isAuthor) && (
+          <Joke
+            key={`${joke.id}-${language}`}
+            joke={joke}
+            onJokeUpdated={handleJokeUpdated}
+            onJokeDeleted={handleJokeDeleted}
           />
         )}
       </section>

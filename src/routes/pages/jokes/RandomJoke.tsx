@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { type PostType } from "../../../types/post.types";
-import Post from "../../../components/organisms/Post";
+import { type JokeType } from "../../../types/joke.types";
+import Joke from "../../../components/organisms/Joke";
 import Button from "../../../components/atoms/Button";
 import Spinner from "../../../components/atoms/Spinner";
 
-import { getRandomPost } from "../../../lib/axios";
+import { getRandomJoke } from "../../../lib/axios";
 import { useLanguage } from "../../../contexts/LanguageContext";
 
 const RandomJoke = () => {
   const { t } = useLanguage();
 
-  const [randomJoke, setRandomJoke] = useState<PostType | null>(null);
+  const [randomJoke, setRandomJoke] = useState<JokeType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +31,7 @@ const RandomJoke = () => {
       setError(null);
       setRandomJoke(null);
 
-      const res = await getRandomPost();
+      const res = await getRandomJoke();
 
       if (!isMountedRef.current) return;
       setRandomJoke(res.data ?? null);
@@ -55,7 +55,7 @@ const RandomJoke = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{t("randomJoke.heading")}</h2>
+      <h2 className="jokes-heading">{t("randomJoke.heading")}</h2>
 
       <Button
         type="button"
@@ -70,14 +70,14 @@ const RandomJoke = () => {
           : t("randomJoke.actions.newJoke")}
       </Button>
 
-      <section className="posts-section">
+      <section className="jokes-section">
         {!loading && !randomJoke && !error && (
-          <h3 className="posts-section-heading text-[var(--text1)]">
+          <h3 className="jokes-section-heading text-[var(--text1)]">
             {t("randomJoke.states.notFound")}
           </h3>
         )}
 
-        {randomJoke && <Post key={randomJoke.id} post={randomJoke} />}
+        {randomJoke && <Joke key={randomJoke.id} joke={randomJoke} />}
       </section>
 
       {error && (

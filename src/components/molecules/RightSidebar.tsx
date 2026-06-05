@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import JokePreviewCard from "./JokePreviewCard";
 import Button from "../atoms/Button";
 
-import { getPopularPosts } from "../../lib/axios";
-import type { PostType } from "../../types/post.types";
+import { getPopularJokes } from "../../lib/axios";
+import type { JokeType } from "../../types/joke.types";
 
 import { useLanguage } from "../../contexts/LanguageContext";
 
@@ -21,23 +21,23 @@ type RightSidebarProps = {
 const RightSidebar = ({ setSidebars }: RightSidebarProps) => {
   const { language, t } = useLanguage();
 
-  const [posts, setPosts] = useState<PostType[]>([]);
+  const [jokes, setJokes] = useState<JokeType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
 
-    const fetchPopularPosts = async () => {
+    const fetchPopularJokes = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const res = await getPopularPosts(language);
+        const res = await getPopularJokes(language);
 
         if (!isActive) return;
 
-        setPosts(res.data ?? []);
+        setJokes(res.data ?? []);
       } catch (err: any) {
         if (!isActive) return;
 
@@ -51,7 +51,7 @@ const RightSidebar = ({ setSidebars }: RightSidebarProps) => {
       }
     };
 
-    fetchPopularPosts();
+    fetchPopularJokes();
 
     return () => {
       isActive = false;
@@ -65,8 +65,8 @@ const RightSidebar = ({ setSidebars }: RightSidebarProps) => {
     setError(null);
 
     try {
-      const res = await getPopularPosts(language);
-      setPosts(res.data ?? []);
+      const res = await getPopularJokes(language);
+      setJokes(res.data ?? []);
     } catch (err: any) {
       const message = err?.message || t("rightSidebar.loading");
       setError(message);
@@ -82,9 +82,9 @@ const RightSidebar = ({ setSidebars }: RightSidebarProps) => {
     }
   };
 
-  const showInitialLoading = loading && posts.length === 0;
-  const showEmptyState = !loading && posts.length === 0 && !error;
-  const showPosts = posts.length > 0;
+  const showInitialLoading = loading && jokes.length === 0;
+  const showEmptyState = !loading && jokes.length === 0 && !error;
+  const showJokes = jokes.length > 0;
 
   return (
     <aside className="bg-[var(--primary-shade)] absolute right-0 w-full h-[calc(100vh-3.8rem)] md:max-w-55 lg:max-w-65 md:static overflow-y-auto z-40">
@@ -113,13 +113,13 @@ const RightSidebar = ({ setSidebars }: RightSidebarProps) => {
           </div>
         )}
 
-        {showPosts &&
-          posts.map((post) => (
+        {showJokes &&
+          jokes.map((joke) => (
             <JokePreviewCard
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              likes={post.likes.length}
+              key={joke.id}
+              id={joke.id}
+              title={joke.title}
+              likes={joke.likes.length}
               onNavigate={handleSidebarNavigate}
             />
           ))}

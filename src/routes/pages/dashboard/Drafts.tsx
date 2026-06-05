@@ -9,16 +9,16 @@ import { getCurrentUserDrafts } from "../../../lib/axios";
 import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
 import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
-import Post from "../../../components/organisms/Post";
+import Joke from "../../../components/organisms/Joke";
 
-import type { PostType } from "../../../types/post.types";
+import type { JokeType } from "../../../types/joke.types";
 
 const LIMIT = 15;
 
 const Drafts = () => {
   const { accessToken, setAccessToken } = useAuth();
   const { language, t, tf } = useLanguage();
-  const [showMiniPosts, setShowMiniPosts] = useState(true);
+  const [showMiniJokes, setShowMiniJokes] = useState(true);
 
   // If the user is not authenticated, do not initialize pagination requests.
   if (!accessToken) {
@@ -38,7 +38,7 @@ const Drafts = () => {
     reload,
     replaceItem,
     removeItem,
-  } = usePagination<PostType>(getCurrentUserDrafts, {
+  } = usePagination<JokeType>(getCurrentUserDrafts, {
     accessToken,
     setAccessToken,
     limit: LIMIT,
@@ -50,7 +50,7 @@ const Drafts = () => {
   });
 
   const handleTogglePresentation = () => {
-    setShowMiniPosts((prev) => !prev);
+    setShowMiniJokes((prev) => !prev);
   };
 
   // Initial page load only
@@ -71,10 +71,10 @@ const Drafts = () => {
             type="button"
             size="md"
             variant="primary"
-            label={showMiniPosts ? t("drafts.toggleShowTitles") : t("drafts.toggleShowFull")}
+            label={showMiniJokes ? t("drafts.toggleShowTitles") : t("drafts.toggleShowFull")}
             disabled={loading}
           >
-            {showMiniPosts ? t("drafts.toggleShowTitles") : t("drafts.toggleShowFull")}
+            {showMiniJokes ? t("drafts.toggleShowTitles") : t("drafts.toggleShowFull")}
           </Button>
 
           <Button
@@ -96,9 +96,9 @@ const Drafts = () => {
         </div>
       )}
 
-      <section className="posts-section">
+      <section className="jokes-section">
         {drafts.length === 0 && !loading && !error && (
-          <div className="text-center posts-section-heading text-[var(--text1)]">
+          <div className="text-center jokes-section-heading text-[var(--text1)]">
             <p className="text-sm md:text-lg">{t("drafts.empty")}</p>
 
             <Link to="/dashboard" className="inline-block mt-3">
@@ -110,18 +110,18 @@ const Drafts = () => {
         )}
 
         {drafts.map((draft) =>
-          showMiniPosts ?
-            <Post
+          showMiniJokes ?
+            <Joke
               key={draft.id}
-              post={draft}
-              onPostUpdated={(updated) => {
+              joke={draft}
+              onJokeUpdated={(updated) => {
                 if (updated.published) {
                   removeItem(updated.id);
                 } else {
                   replaceItem(updated.id, updated);
                 }
               }}
-              onPostDeleted={(id) => removeItem(id)}
+              onJokeDeleted={(id) => removeItem(id)}
             />
           : <JokePreviewCard key={draft.id} id={draft.id} title={draft.title} />,
         )}

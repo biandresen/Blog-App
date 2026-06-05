@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import Post from "../../../components/organisms/Post";
+import Joke from "../../../components/organisms/Joke";
 import Spinner from "../../../components/atoms/Spinner";
 import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
 import Button from "../../../components/atoms/Button";
@@ -8,13 +8,13 @@ import Button from "../../../components/atoms/Button";
 import { usePagination } from "../../../hooks/usePagination";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useLanguage } from "../../../contexts/LanguageContext";
-import { getAllPosts } from "../../../lib/axios";
-import type { PostType } from "../../../types/post.types";
+import { getAllJokes } from "../../../lib/axios";
+import type { JokeType } from "../../../types/joke.types";
 
 const LIMIT = 15;
 
 const AllJokes = () => {
-  const [showMiniPosts, setShowMiniPosts] = useState(true);
+  const [showMiniJokes, setShowMiniJokes] = useState(true);
 
   const { accessToken, setAccessToken } = useAuth();
   const { language, t, tf } = useLanguage();
@@ -23,7 +23,7 @@ const AllJokes = () => {
   const resetKey = useMemo(() => `all-jokes:${language}`, [language]);
 
   const {
-    items: posts,
+    items: jokes,
     meta,
     loading,
     error,
@@ -33,7 +33,7 @@ const AllJokes = () => {
     reload,
     replaceItem,
     removeItem,
-  } = usePagination<PostType>(getAllPosts, {
+  } = usePagination<JokeType>(getAllJokes, {
     accessToken,
     setAccessToken,
     limit: LIMIT,
@@ -45,17 +45,17 @@ const AllJokes = () => {
   });
 
   const handleTogglePresentation = () => {
-    setShowMiniPosts((prev) => !prev);
+    setShowMiniJokes((prev) => !prev);
   };
 
   // Initial loading state
-  if (loading && posts.length === 0) {
+  if (loading && jokes.length === 0) {
     return <Spinner />;
   }
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{t("allJokes.heading")}</h2>
+      <h2 className="jokes-heading">{t("allJokes.heading")}</h2>
 
       {/* ACTION BUTTONS */}
 
@@ -66,9 +66,9 @@ const AllJokes = () => {
           size="md"
           variant="primary"
           disabled={loading}
-          label={showMiniPosts ? t("allJokes.actions.showTitles") : t("allJokes.actions.showFull")}
+          label={showMiniJokes ? t("allJokes.actions.showTitles") : t("allJokes.actions.showFull")}
         >
-          {showMiniPosts ? t("allJokes.actions.showTitles") : t("allJokes.actions.showFull")}
+          {showMiniJokes ? t("allJokes.actions.showTitles") : t("allJokes.actions.showFull")}
         </Button>
 
         <Button
@@ -91,32 +91,32 @@ const AllJokes = () => {
         </div>
       )}
 
-      <section className="posts-section">
+      <section className="jokes-section">
         {/* EMPTY STATE */}
 
-        {!posts.length && !error && (
+        {!jokes.length && !error && (
           <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">{t("allJokes.states.empty")}</h3>
+            <h3 className="jokes-section-heading text-[var(--text1)]">{t("allJokes.states.empty")}</h3>
           </div>
         )}
 
-        {/* POSTS */}
+        {/* JOKES */}
 
-        {posts.map((post) =>
-          showMiniPosts ?
-            <Post
-              key={post.id}
-              post={post}
-              onPostUpdated={(updated) => {
+        {jokes.map((joke) =>
+          showMiniJokes ?
+            <Joke
+              key={joke.id}
+              joke={joke}
+              onJokeUpdated={(updated) => {
                 if (!updated.published) {
                   removeItem(updated.id);
                 } else {
                   replaceItem(updated.id, updated);
                 }
               }}
-              onPostDeleted={(id) => removeItem(id)}
+              onJokeDeleted={(id) => removeItem(id)}
             />
-          : <JokePreviewCard key={post.id} id={post.id} title={post.title} likes={post.likes.length} />,
+          : <JokePreviewCard key={joke.id} id={joke.id} title={joke.title} likes={joke.likes.length} />,
         )}
 
         {/* INFINITE SCROLL SENTINEL */}
@@ -145,7 +145,7 @@ const AllJokes = () => {
         {meta && (
           <div className="text-center text-sm opacity-70 text-[var(--text1)] w-full">
             {tf("allJokes.states.showing", {
-              shown: String(posts.length),
+              shown: String(jokes.length),
               total: String(meta.total),
             })}
           </div>

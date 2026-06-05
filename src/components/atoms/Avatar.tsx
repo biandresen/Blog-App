@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoIosPerson } from "react-icons/io";
-import BLOG_API from "../../api/blog-api";
+import JOKE_API from "../../api/joke-api";
 
 type AvatarProps = {
   avatarUrl: string | null | undefined;
@@ -20,7 +20,7 @@ const Avatar = ({ avatarUrl, size }: AvatarProps) => {
       className="overflow-hidden rounded-full"
     >
       <img
-        src={`${BLOG_API.BASE_AVATAR}${avatarUrl}`}
+        src={`${JOKE_API.BASE_AVATAR}${avatarUrl}`}
         alt="avatar"
         className="object-cover w-full h-full"
         onError={() => setHasError(true)}

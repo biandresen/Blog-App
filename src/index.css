@@ -187,13 +187,13 @@
   .characters-left {
     @apply absolute bottom-0.5 right-2 opacity-80 text-[0.55rem] md:text-xs;
   }
-  .posts-heading {
+  .jokes-heading {
     @apply text-[var(--text1)] text-center text-4xl md:text-5xl mb-5 md:mb-10;
   }
-  .posts-section {
+  .jokes-section {
     @apply flex flex-wrap gap-4 mt-10 justify-center mx-auto w-full xl:w-[80%];
   }
-  .posts-section-heading {
+  .jokes-section-heading {
     @apply text-2xl font-bold;
   }
 

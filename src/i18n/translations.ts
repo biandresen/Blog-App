@@ -489,16 +489,16 @@ Page URL:
         {
           title: "4. Your content",
           paragraphs: [
-            "You may post jokes and other text content (“User Content”). You retain ownership of your User Content.",
-            "By posting User Content, you grant PunDad a non-exclusive license to host, store, reproduce, and display it for the purpose of operating the Service.",
+            "You may joke jokes and other text content (“User Content”). You retain ownership of your User Content.",
+            "By sharing User Content, you grant PunDad a non-exclusive license to host, store, reproduce, and display it for the purpose of operating the Service.",
             "Content may remain visible even if your account is deactivated, unless we determine removal is necessary.",
           ],
         },
         {
           title: "5. Intellectual property and copyright",
           paragraphs: [
-            "You are responsible for ensuring that any content you post does not infringe the rights of others, including copyright and other intellectual property rights.",
-            "Do not post content that you do not have the right to use or share.",
+            "You are responsible for ensuring that any content you joke does not infringe the rights of others, including copyright and other intellectual property rights.",
+            "Do not joke content that you do not have the right to use or share.",
             "If you believe that content on the Service infringes your rights, you may contact us at contact@pundad.app with sufficient information to identify the content.",
             "We may remove or restrict access to content that we believe violates these Terms or applicable law.",
           ],
@@ -506,7 +506,7 @@ Page URL:
         {
           title: "6. Prohibited behavior",
           paragraphs: [
-            "You must not harass others, post hateful or illegal content, spam, attempt to hack or disrupt the Service, or abuse the like system.",
+            "You must not harass others, joke hateful or illegal content, spam, attempt to hack or disrupt the Service, or abuse the like system.",
             "We may remove content, limit visibility, or restrict accounts to protect the Service and its users.",
           ],
         },
@@ -582,14 +582,14 @@ Page URL:
           bullets: [
             "Account data: username, email, and password hash (never your plain password).",
             "Profile data you choose to add, such as avatar image.",
-            "Content you create: posts, comments, and likes. Such content may be publicly visible.",
+            "Content you create: jokes, comments, and likes. Such content may be publicly visible.",
             "Security data: IP address and user-agent for fraud prevention, rate limiting, and token security.",
           ],
         },
         {
           title: "3. Why we process your data",
           bullets: [
-            "To provide the Service, including account creation, login, posting content, and core functionality.",
+            "To provide the Service, including account creation, login, sharing content, and core functionality.",
             "To keep the Service secure, including abuse prevention, suspicious activity detection, and system protection.",
             "To comply with legal obligations where required.",
           ],
@@ -607,7 +607,7 @@ Page URL:
           bullets: [
             "Account data is retained while your account is active.",
             "If your account is deactivated, we may retain account and related data for security, moderation, legal, and service integrity purposes.",
-            "User-generated content, such as posts, comments, and likes, may remain visible after account deactivation unless removal is necessary.",
+            "User-generated content, such as jokes, comments, and likes, may remain visible after account deactivation unless removal is necessary.",
             "Security and audit logs, such as IP address and user-agent, are retained for a limited period as needed to prevent abuse and ensure system integrity.",
             "Retention periods may vary depending on purpose, security needs, and legal requirements.",
           ],
@@ -708,14 +708,14 @@ Page URL:
           title: "2. Keep it legal and safe",
           bullets: [
             "No illegal content or instructions to carry out illegal acts.",
-            "Do not post copyrighted material you do not have permission to use.",
+            "Do not joke copyrighted material you do not have permission to use.",
             "No malicious links, exploits, or attempts to compromise accounts or systems.",
           ],
         },
         {
           title: "3. No spam or manipulation",
           bullets: [
-            "No spam posts or comments.",
+            "No spam jokes or comments.",
             "No manipulation of likes, fake accounts, or automated behavior.",
             "No attempts to bypass moderation systems or enforcement actions.",
           ],
@@ -878,7 +878,7 @@ Page URL:
         to: "to",
       },
 
-      relatedPost: "Related post",
+      relatedJoke: "Related joke",
       loading: "Loading...",
       page: "Page",
       of: "of",
@@ -902,7 +902,7 @@ Page URL:
       showing: "Showing {{shown}} of {{total}}",
     },
 
-    newPost: {
+    newJoke: {
       heading: "NEW JOKE",
 
       fields: {
@@ -1120,7 +1120,7 @@ Page URL:
 
       actions: {
         addComment: "Add Comment",
-        posting: "Posting...",
+        submitting: "Submitting...",
       },
 
       toasts: {
@@ -1212,7 +1212,7 @@ Page URL:
       close: "Close",
     },
 
-    postCard: {
+    jokeCard: {
       open: "OPEN",
     },
 
@@ -1266,7 +1266,7 @@ Page URL:
       },
     },
 
-    post: {
+    joke: {
       status: {
         draft: "DRAFT",
       },
@@ -1287,8 +1287,8 @@ Page URL:
         mustBeLoggedInToLike: "You must be logged in to like a joke",
         cannotLikeOwn: "You cannot like your own joke",
         toggleLikeFailed: "Failed to toggle like",
-        postEdited: "Post edited!",
-        postDeleted: "Joke deleted!",
+        jokeEdited: "Joke edited!",
+        jokeDeleted: "Joke deleted!",
         commentEdited: "Comment edited!",
         commentDeleted: "Comment deleted!",
         editJokeFailed: "Failed to edit joke",
@@ -1322,7 +1322,7 @@ Page URL:
 
       labels: {
         username: "Username",
-        postDate: "Date of post",
+        jokeDate: "Date of joke",
         comments: "COMMENTS",
         noComments: "No comments yet.",
         beFirstToComment: "Be the first to comment!",
@@ -2220,7 +2220,7 @@ Side-URL:
         to: "til",
       },
 
-      relatedPost: "Relatert innlegg",
+      relatedJoke: "Relatert innlegg",
       loading: "Laster...",
       page: "Side",
       of: "av",
@@ -2244,7 +2244,7 @@ Side-URL:
       showing: "Viser {{shown}} av {{total}}",
     },
 
-    newPost: {
+    newJoke: {
       heading: "NY VITS",
 
       fields: {
@@ -2462,7 +2462,7 @@ Side-URL:
 
       actions: {
         addComment: "Legg til kommentar",
-        posting: "Publiserer...",
+        submitting: "Sender...",
       },
 
       toasts: {
@@ -2555,7 +2555,7 @@ Side-URL:
       close: "Lukk",
     },
 
-    postCard: {
+    jokeCard: {
       open: "ÅPNE",
     },
 
@@ -2609,7 +2609,7 @@ Side-URL:
       },
     },
 
-    post: {
+    joke: {
       status: {
         draft: "UTKAST",
       },
@@ -2631,8 +2631,8 @@ Side-URL:
         mustBeLoggedInToLike: "Du må være logget inn for å like en vits",
         cannotLikeOwn: "Du kan ikke like din egen vits",
         toggleLikeFailed: "Kunne ikke bytte like",
-        postEdited: "Innlegg redigert!",
-        postDeleted: "Vits slettet!",
+        jokeEdited: "Innlegg redigert!",
+        jokeDeleted: "Vits slettet!",
         commentEdited: "Kommentar redigert!",
         commentDeleted: "Kommentar slettet!",
         editJokeFailed: "Kunne ikke redigere vits",
@@ -2666,7 +2666,7 @@ Side-URL:
 
       labels: {
         username: "Brukernavn",
-        postDate: "Dato for innlegg",
+        jokeDate: "Dato for innlegg",
         comments: "KOMMENTARER",
         noComments: "Ingen kommentarer ennå.",
         beFirstToComment: "Bli den første som kommenterer!",

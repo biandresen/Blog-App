@@ -32,7 +32,7 @@ Database / backend language architecture:
 - routes under /api/v1 use language middleware
 - services/controllers were updated to respect language
 - language isolation is important: NO content should not leak into EN and vice versa
-- featured posts, tags, hall of fame, comments, likes, etc. were updated for language scoping
+- featured jokes, tags, hall of fame, comments, likes, etc. were updated for language scoping
 - streak remains global
 
 Frontend language architecture:
@@ -68,7 +68,7 @@ Frontend language architecture:
   - Layout report modal/button
   - CommentForm
   - Comment
-  - PostCard
+  - JokeCard
   - AvatarWithBadges
   - Modal
   - legal pages (terms/privacy/cookies/rules)
@@ -77,7 +77,7 @@ Frontend language architecture:
 Current likely risk areas:
 - frontend/backend contract mismatches after language changes
 - places where old hardcoded text still exists
-- language-specific filtering bugs in posts/comments/tags/featured/hall-of-fame
+- language-specific filtering bugs in jokes/comments/tags/featured/hall-of-fame
 - user update/getMe behavior around preferredLanguage and currentBadges
 - mobile/desktop nav interactions
 - refresh token / access token flows after recent changes
@@ -97,7 +97,7 @@ I want help with:
 Recommended testing priorities:
 1. smoke test app boot, login, register, getMe, logout, refresh/session
 2. verify NO/EN language separation for all content
-3. test CRUD for posts, drafts, comments, profile
+3. test CRUD for jokes, drafts, comments, profile
 4. test rankings/featured/badges/hall of fame
 5. test admin permissions and unauthorized access
 6. test UX states, mobile behavior, untranslated text, edge cases

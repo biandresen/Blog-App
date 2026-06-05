@@ -15,7 +15,7 @@ The platform includes multilingual content support (Norwegian/English), JWT-base
 
 ## 🚀 Live Demo
 
-**URL:** https://bloggy-app.dev  
+**URL:** https://pundad.app
 *(Hosted on Raspberry Pi with Cloudflare, Nginx, and PM2)*
 
 ---
@@ -42,7 +42,7 @@ DadJokes supports language-scoped content for Norwegian and English.
 
 This includes:
 
-- Posts
+- Jokes
 - Tags
 - Featured rankings
 - Hall of Fame calculations
@@ -135,7 +135,7 @@ DadJokes includes a deterministic + database-backed feature system.
 Each feature:
 
 - Is computed server-side
-- Persisted in `FeaturedPost`
+- Persisted in `FeaturedJoke`
 - Awards badges via idempotent upsert logic
 - Is concurrency-safe
 - Can be triggered manually or via cron
@@ -152,7 +152,7 @@ Two-layer architecture:
 Supports:
 
 - Valid time windows
-- Context (e.g., related postId)
+- Context (e.g., related jokeId)
 - Priority-based primary badge display
 - Badge stacking
 - Streak tiers
@@ -173,7 +173,7 @@ Ranking based on weighted score:
 - Likes received
 - Daily streak
 
-Spam-resistant (does not reward raw post count).
+Spam-resistant (does not reward raw joke count).
 
 Includes:
 
@@ -275,7 +275,7 @@ DadJokes includes a moderation layer for safer community use.
 - Database-backed moderation system
 - In-memory moderation cache
 - Language-scoped content architecture
-  
+
 ---
 
 ### Infrastructure / DevOps
@@ -338,7 +338,7 @@ Designed to scale toward queue-based processing if needed.
 - Search/filter system design
 - Production deployment on constrained hardware
 - Security-focused development
-  
+
 ---
 
 ## 📌 Possible Future Improvements
@@ -355,8 +355,8 @@ Designed to scale toward queue-based processing if needed.
 
 ## 👤 Author
 
-**Birger**  
-Full-Stack Developer  
+**Birger**
+Full-Stack Developer
 
-**Stack:**  
+**Stack:**
 JavaScript · TypeScript · Node.js · Express · React · PostgreSQL · Prisma · Nginx · PM2 · Cloudflare

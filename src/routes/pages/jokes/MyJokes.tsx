@@ -3,13 +3,13 @@ import { Link, NavLink } from "react-router-dom";
 
 import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
-import Post from "../../../components/organisms/Post";
+import Joke from "../../../components/organisms/Joke";
 import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
 
 import { usePagination } from "../../../hooks/usePagination";
-import { getAllUserPosts } from "../../../lib/axios";
+import { getAllUserJokes } from "../../../lib/axios";
 
-import type { PostType } from "../../../types/post.types";
+import type { JokeType } from "../../../types/joke.types";
 
 import { useUser } from "../../../contexts/UserContext";
 import { useLanguage } from "../../../contexts/LanguageContext";
@@ -20,7 +20,7 @@ const MyJokes = () => {
   const { user } = useUser();
   const { language, t, tf } = useLanguage();
 
-  const [showMiniPosts, setShowMiniPosts] = useState(false);
+  const [showMiniJokes, setShowMiniJokes] = useState(false);
 
   const userId = user?.id ? Number(user.id) : null;
 
@@ -31,7 +31,7 @@ const MyJokes = () => {
   const resetKey = useMemo(() => `my-jokes:${userId ?? "anon"}:${language}`, [userId, language]);
 
   const {
-    items: posts,
+    items: jokes,
     meta,
     loading,
     error,
@@ -41,7 +41,7 @@ const MyJokes = () => {
     reload,
     replaceItem,
     removeItem,
-  } = usePagination<PostType>(getAllUserPosts, {
+  } = usePagination<JokeType>(getAllUserJokes, {
     accessToken: null,
     setAccessToken: noopSetAccessToken,
     limit: LIMIT,
@@ -54,13 +54,13 @@ const MyJokes = () => {
   });
 
   const handleTogglePresentation = () => {
-    setShowMiniPosts((prev) => !prev);
+    setShowMiniJokes((prev) => !prev);
   };
 
   if (!userId) {
     return (
       <div className="text-center text-[var(--text1)]">
-        <p className="posts-section-heading">{t("myJokes.authRequired")}</p>
+        <p className="jokes-section-heading">{t("myJokes.authRequired")}</p>
 
         <NavLink
           to="/login"
@@ -72,15 +72,15 @@ const MyJokes = () => {
     );
   }
 
-  if (loading && posts.length === 0) {
+  if (loading && jokes.length === 0) {
     return <Spinner />;
   }
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{t("myJokes.heading")}</h2>
+      <h2 className="jokes-heading">{t("myJokes.heading")}</h2>
 
-      {posts.length > 0 && (
+      {jokes.length > 0 && (
         <div className="flex gap-3 justify-center">
           <Button
             onClick={handleTogglePresentation}
@@ -88,9 +88,9 @@ const MyJokes = () => {
             size="md"
             variant="primary"
             disabled={loading}
-            label={showMiniPosts ? t("myJokes.toggleShowFull") : t("myJokes.toggleShowTitles")}
+            label={showMiniJokes ? t("myJokes.toggleShowFull") : t("myJokes.toggleShowTitles")}
           >
-            {showMiniPosts ? t("myJokes.toggleShowFull") : t("myJokes.toggleShowTitles")}
+            {showMiniJokes ? t("myJokes.toggleShowFull") : t("myJokes.toggleShowTitles")}
           </Button>
 
           <Button
@@ -110,13 +110,13 @@ const MyJokes = () => {
 
       <section
         className={
-          showMiniPosts ? "posts-section flex-col" : (
-            "posts-section grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+          showMiniJokes ? "jokes-section flex-col" : (
+            "jokes-section grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
           )
         }
       >
-        {posts.length === 0 && !loading && !error && (
-          <div className="text-center posts-section-heading text-[var(--text1)]">
+        {jokes.length === 0 && !loading && !error && (
+          <div className="text-center jokes-section-heading text-[var(--text1)]">
             <p className="text-sm md:text-lg">{t("myJokes.empty")}</p>
 
             <Link to="/dashboard" className="inline-block mt-3">
@@ -127,20 +127,20 @@ const MyJokes = () => {
           </div>
         )}
 
-        {posts.map((post) =>
-          showMiniPosts ?
-            <JokePreviewCard key={post.id} id={post.id} title={post.title} likes={post.likes.length} />
-          : <Post
-              key={post.id}
-              post={post}
-              onPostUpdated={(updated) => {
+        {jokes.map((joke) =>
+          showMiniJokes ?
+            <JokePreviewCard key={joke.id} id={joke.id} title={joke.title} likes={joke.likes.length} />
+          : <Joke
+              key={joke.id}
+              joke={joke}
+              onJokeUpdated={(updated) => {
                 if (!updated.published) {
                   removeItem(updated.id);
                 } else {
                   replaceItem(updated.id, updated);
                 }
               }}
-              onPostDeleted={(id) => removeItem(id)}
+              onJokeDeleted={(id) => removeItem(id)}
             />,
         )}
 
@@ -164,7 +164,7 @@ const MyJokes = () => {
         {meta && (
           <div className="text-center text-sm opacity-70 text-[var(--text1)]">
             {tf("myJokes.showing", {
-              shown: String(posts.length),
+              shown: String(jokes.length),
               total: String(meta.total),
             })}
           </div>

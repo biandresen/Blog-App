@@ -1,38 +1,38 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import type { PostType } from "../../../types/post.types";
+import type { JokeType } from "../../../types/joke.types";
 import JokePreviewCard from "../../../components/molecules/JokePreviewCard";
-import Post from "../../../components/organisms/Post";
+import Joke from "../../../components/organisms/Joke";
 import Button from "../../../components/atoms/Button";
 import Spinner from "../../../components/atoms/Spinner";
 
-import { getPopularPosts } from "../../../lib/axios";
+import { getPopularJokes } from "../../../lib/axios";
 import { useLanguage } from "../../../contexts/LanguageContext";
 
 const Popular = () => {
   const { language, t } = useLanguage();
 
-  const [posts, setPosts] = useState<PostType[]>([]);
-  const [showMiniPosts, setShowMiniPosts] = useState(false);
+  const [jokes, setJokes] = useState<JokeType[]>([]);
+  const [showMiniJokes, setShowMiniJokes] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const postPresentation = showMiniPosts ? t("popular.actions.showFull") : t("popular.actions.showTitles");
+  const jokePresentation = showMiniJokes ? t("popular.actions.showFull") : t("popular.actions.showTitles");
 
   useEffect(() => {
     let isActive = true;
 
-    const fetchPopularPosts = async () => {
+    const fetchPopularJokes = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const res = await getPopularPosts(language);
+        const res = await getPopularJokes(language);
 
         if (!isActive) return;
 
-        setPosts(res.data ?? []);
+        setJokes(res.data ?? []);
       } catch (err: any) {
         if (!isActive) return;
 
@@ -46,7 +46,7 @@ const Popular = () => {
       }
     };
 
-    fetchPopularPosts();
+    fetchPopularJokes();
 
     return () => {
       isActive = false;
@@ -55,18 +55,18 @@ const Popular = () => {
 
   const handleTogglePresentation = () => {
     if (loading) return;
-    setShowMiniPosts((prev) => !prev);
+    setShowMiniJokes((prev) => !prev);
   };
 
-  const handlePostDeleted = (deletedPostId: number) => {
-    setPosts((prev) => prev.filter((post) => post.id !== deletedPostId));
+  const handleJokeDeleted = (deletedJokeId: number) => {
+    setJokes((prev) => prev.filter((joke) => joke.id !== deletedJokeId));
   };
 
-  const handlePostUpdated = (updatedPost: PostType) => {
-    setPosts((prev) =>
+  const handleJokeUpdated = (updatedJoke: JokeType) => {
+    setJokes((prev) =>
       prev
-        .map((post) => (post.id === updatedPost.id ? updatedPost : post))
-        .filter((post) => post.published !== false),
+        .map((joke) => (joke.id === updatedJoke.id ? updatedJoke : joke))
+        .filter((joke) => joke.published !== false),
     );
   };
 
@@ -80,43 +80,43 @@ const Popular = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{t("popular.heading")}</h2>
+      <h2 className="jokes-heading">{t("popular.heading")}</h2>
 
       <p className="text-center text-[var(--text1)] opacity-70 -mt-6 mb-8">{t("popular.subtitle")}</p>
 
-      {posts.length > 0 && (
+      {jokes.length > 0 && (
         <Button
           className="block mx-auto"
           onClick={handleTogglePresentation}
           type="button"
           size="md"
           variant="primary"
-          label={postPresentation}
+          label={jokePresentation}
           disabled={loading}
         >
-          {postPresentation}
+          {jokePresentation}
         </Button>
       )}
 
       <section
         className={
-          showMiniPosts ?
-            "posts-section grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4"
-          : "posts-section"
+          showMiniJokes ?
+            "jokes-section grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4"
+          : "jokes-section"
         }
       >
-        {!posts.length ?
+        {!jokes.length ?
           <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">{t("popular.states.empty")}</h3>
+            <h3 className="jokes-section-heading text-[var(--text1)]">{t("popular.states.empty")}</h3>
           </div>
-        : posts.map((post) =>
-            showMiniPosts ?
-              <JokePreviewCard key={post.id} id={post.id} title={post.title} likes={post.likes.length} />
-            : <Post
-                key={post.id}
-                post={post}
-                onPostUpdated={handlePostUpdated}
-                onPostDeleted={handlePostDeleted}
+        : jokes.map((joke) =>
+            showMiniJokes ?
+              <JokePreviewCard key={joke.id} id={joke.id} title={joke.title} likes={joke.likes.length} />
+            : <Joke
+                key={joke.id}
+                joke={joke}
+                onJokeUpdated={handleJokeUpdated}
+                onJokeDeleted={handleJokeDeleted}
               />,
           )
         }

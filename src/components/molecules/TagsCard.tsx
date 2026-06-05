@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaHashtag } from "react-icons/fa";
-import type { TagType } from "../../types/post.types";
+import type { TagType } from "../../types/joke.types";
 import { useColorTheme } from "../../contexts/ColorThemeContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 

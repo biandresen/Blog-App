@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 
-import { type CommentType, type PostType } from "../../types/post.types";
+import { type CommentType, type JokeType } from "../../types/joke.types";
 import Button from "../../components/atoms/Button";
 import Comment from "../molecules/Comment";
 import CommentForm from "../molecules/CommentForm";
@@ -9,10 +9,10 @@ import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
 import {
   deleteComment,
-  deletePost,
+  deleteJoke,
   editComment,
-  editPost,
-  getPostComments,
+  editJoke,
+  getJokeComments,
   toggleLike,
 } from "../../lib/axios";
 import { toast } from "react-toastify";
@@ -33,27 +33,27 @@ import type { User } from "../../types/context.types";
 import { usePagination } from "../../hooks/usePagination";
 import { useLanguage } from "../../contexts/LanguageContext";
 import Spinner from "../atoms/Spinner";
-import { postDeletedEvent } from "../../lib/events";
+import { jokeDeletedEvent } from "../../lib/events";
 import { moderateFields } from "../../lib/moderation";
 import { getApiErrorMessage } from "../../lib/apiErrors";
 import { useModeration } from "../../contexts/ModerationContext";
 
-const Post = ({
-  post,
-  onPostUpdated,
-  onPostDeleted,
+const Joke = ({
+  joke,
+  onJokeUpdated,
+  onJokeDeleted,
 }: {
-  post: PostType;
-  onPostUpdated?: (updated: PostType) => void;
-  onPostDeleted?: (id: number) => void;
+  joke: JokeType;
+  onJokeUpdated?: (updated: JokeType) => void;
+  onJokeDeleted?: (id: number) => void;
 }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState<boolean>(false);
-  // const [comments, setComments] = useState(post.comments);
+  // const [comments, setComments] = useState(joke.comments);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(post.title);
-  const [editedBody, setEditedBody] = useState(post.body);
-  const [editedTags, setEditedTags] = useState(post.tags.map((tag) => tag.name).join(", "));
-  const [published, setPublished] = useState(post.published);
+  const [editedTitle, setEditedTitle] = useState(joke.title);
+  const [editedBody, setEditedBody] = useState(joke.body);
+  const [editedTags, setEditedTags] = useState(joke.tags.map((tag) => tag.name).join(", "));
+  const [published, setPublished] = useState(joke.published);
   const [hasLiked, setHasLiked] = useState(false);
   const [likedList, setLikedList] = useState<string[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -82,7 +82,7 @@ const Post = ({
 
   const COMMENTS_LIMIT = 10;
 
-  const args = useMemo<any[]>(() => [post.id, "desc", language], [post.id, language]);
+  const args = useMemo<any[]>(() => [joke.id, "desc", language], [joke.id, language]);
   const noopSetAccessToken = useMemo(() => () => {}, []);
 
   const {
@@ -92,12 +92,12 @@ const Post = ({
     canNext,
     next: loadMoreComments,
     reload: reloadComments,
-  } = usePagination<CommentType>(getPostComments, {
+  } = usePagination<CommentType>(getJokeComments, {
     accessToken: null,
     setAccessToken: noopSetAccessToken,
     limit: COMMENTS_LIMIT,
     args,
-    resetKey: `comments:${post.id}:${language}`,
+    resetKey: `comments:${joke.id}:${language}`,
     enabled: commentsIsOpen,
     mode: "infinite",
     autoLoadMore: false,
@@ -105,29 +105,29 @@ const Post = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isAuthor = user?.id != null && post.authorId === Number(user.id);
+  const isAuthor = user?.id != null && joke.authorId === Number(user.id);
   const isAdmin = user?.role === "ADMIN";
   const canEdit = isAuthor || isAdmin;
-  const buttonText = commentsIsOpen ? t("post.actions.closeComments") : t("post.actions.openComments");
+  const buttonText = commentsIsOpen ? t("joke.actions.closeComments") : t("joke.actions.openComments");
 
   const BODY_PREVIEW_LIMIT = 600;
-  const bodyIsLong = post.body.length > BODY_PREVIEW_LIMIT;
+  const bodyIsLong = joke.body.length > BODY_PREVIEW_LIMIT;
 
   const displayedBody =
-    bodyIsLong && !isBodyExpanded ? post.body.slice(0, BODY_PREVIEW_LIMIT) + "..." : post.body;
+    bodyIsLong && !isBodyExpanded ? joke.body.slice(0, BODY_PREVIEW_LIMIT) + "..." : joke.body;
 
   useEffect(() => {
-    // reset when post changes
+    // reset when joke changes
     setIsBodyExpanded(false);
-  }, [post.id]);
+  }, [joke.id]);
 
   useEffect(() => {
-    if (!post) return;
+    if (!joke) return;
 
-    const liked = user ? post.likes.some((like) => like.userId === Number(user.id)) : false;
-    setLikedList(post.likes.map((like) => like.user.username));
+    const liked = user ? joke.likes.some((like) => like.userId === Number(user.id)) : false;
+    setLikedList(joke.likes.map((like) => like.user.username));
     setHasLiked(liked);
-  }, [post, user]);
+  }, [joke, user]);
 
   useEffect(() => {
     if (isEditing) {
@@ -140,8 +140,8 @@ const Post = ({
   };
 
   const handleTitleEnter = useSubmitOnEnter(() =>
-    handleEditPost(
-      post.id,
+    handleEditJoke(
+      joke.id,
       editedTitle,
       editedBody,
       editedTags.split(",").map((t) => t.trim()),
@@ -149,8 +149,8 @@ const Post = ({
   );
 
   const handleBodyEnter = useSubmitOnEnter(() =>
-    handleEditPost(
-      post.id,
+    handleEditJoke(
+      joke.id,
       editedTitle,
       editedBody,
       editedTags.split(",").map((t) => t.trim()),
@@ -158,8 +158,8 @@ const Post = ({
   );
 
   const handleTagsEnter = useSubmitOnEnter(() =>
-    handleEditPost(
-      post.id,
+    handleEditJoke(
+      joke.id,
       editedTitle,
       editedBody,
       editedTags.split(",").map((t) => t.trim()),
@@ -169,52 +169,52 @@ const Post = ({
   const handleEditInput = () => {
     setCommentsIsOpen(false);
     setIsEditing((prev) => !prev);
-    setEditedBody(post.body);
-    setEditedTitle(post.title);
-    setEditedTags(post.tags.map((tag) => tag.name).join(", "));
+    setEditedBody(joke.body);
+    setEditedTitle(joke.title);
+    setEditedTags(joke.tags.map((tag) => tag.name).join(", "));
   };
 
   const handleOpenEditMenu = () => {
     setShowEditMenu(!showEditMenu);
   };
 
-  const handleSharePost = async () => {
-    const shareUrl = `${window.location.origin}/jokes/${post.id}?lang=${language.toLowerCase()}`;
+  const handleShareJoke = async () => {
+    const shareUrl = `${window.location.origin}/jokes/${joke.id}?lang=${language.toLowerCase()}`;
 
     try {
       if (navigator.share) {
         await navigator.share({
-          title: post.title,
-          text: post.body?.slice(0, 120) || post.title,
+          title: joke.title,
+          text: joke.body?.slice(0, 120) || joke.title,
           url: shareUrl,
         });
         return;
       }
 
       await navigator.clipboard.writeText(shareUrl);
-      toast.success(t("post.toasts.linkCopied"));
+      toast.success(t("joke.toasts.linkCopied"));
     } catch (err: any) {
       // Ignore cancelled native share
       if (err?.name === "AbortError") return;
 
-      toast.error(t("post.toasts.shareFailed"));
+      toast.error(t("joke.toasts.shareFailed"));
       console.error("Failed to share joke", err);
     }
   };
 
   const handleToggleLike = async () => {
     if (!accessToken || !user) {
-      toast.error(t("post.toasts.mustBeLoggedInToLike"));
+      toast.error(t("joke.toasts.mustBeLoggedInToLike"));
       return;
     }
 
-    if (Number(user.id) == Number(post.authorId)) {
-      toast.error(t("post.toasts.cannotLikeOwn"));
+    if (Number(user.id) == Number(joke.authorId)) {
+      toast.error(t("joke.toasts.cannotLikeOwn"));
       return;
     }
 
     try {
-      const res = await safeRequest(toggleLike, accessToken, setAccessToken, post.id);
+      const res = await safeRequest(toggleLike, accessToken, setAccessToken, joke.id);
       if (res.statusCode === 200 || res.statusCode === 201) {
         setLikedList((prev) => {
           if (hasLiked) {
@@ -228,14 +228,14 @@ const Post = ({
         throw new Error();
       }
 
-      // await refreshPosts();
+      // await refreshJokes();
     } catch (err: any) {
-      toast.error(t("post.toasts.toggleLikeFailed"));
+      toast.error(t("joke.toasts.toggleLikeFailed"));
       console.error("Failed to toggle like", err.message);
     }
   };
 
-  const handleEditPost = async (postId: number, newTitle: string, newBody: string, editedTags: string[]) => {
+  const handleEditJoke = async (jokeId: number, newTitle: string, newBody: string, editedTags: string[]) => {
     try {
       if (!accessToken) return;
 
@@ -254,10 +254,10 @@ const Post = ({
       }
 
       const res = await safeRequest(
-        editPost,
+        editJoke,
         accessToken,
         setAccessToken,
-        postId,
+        jokeId,
         newTitle,
         newBody,
         published,
@@ -266,22 +266,22 @@ const Post = ({
       );
 
       if (res.statusCode !== 200) {
-        throw new Error(res.message || t("post.toasts.editJokeFailed"));
+        throw new Error(res.message || t("joke.toasts.editJokeFailed"));
       }
 
-      const updatedPost: PostType = res.data;
+      const updatedJoke: JokeType = res.data;
 
       setIsEditing(false);
-      setEditedTitle(updatedPost.title);
-      setEditedBody(updatedPost.body);
-      setEditedTags(updatedPost.tags.map((t) => t.name).join(", "));
-      setPublished(updatedPost.published);
+      setEditedTitle(updatedJoke.title);
+      setEditedBody(updatedJoke.body);
+      setEditedTags(updatedJoke.tags.map((t) => t.name).join(", "));
+      setPublished(updatedJoke.published);
 
-      onPostUpdated?.(updatedPost);
+      onJokeUpdated?.(updatedJoke);
 
       toast.success(
-        `${t("post.toasts.postEdited")} ${
-          updatedPost.published ? t("post.toasts.published") : t("post.toasts.unpublished")
+        `${t("joke.toasts.jokeEdited")} ${
+          updatedJoke.published ? t("joke.toasts.published") : t("joke.toasts.unpublished")
         }`,
       );
     } catch (err: any) {
@@ -292,34 +292,34 @@ const Post = ({
         : null;
 
       const message =
-        blockedContentError?.message || getApiErrorMessage(err, t("post.toasts.editJokeFailed"));
+        blockedContentError?.message || getApiErrorMessage(err, t("joke.toasts.editJokeFailed"));
 
       toast.error(message);
       console.error("Failed to edit joke", err?.response?.data || err?.message);
     }
   };
 
-  const handleDeletePost = async (postId: number) => {
+  const handleDeleteJoke = async (jokeId: number) => {
     try {
       if (!accessToken) return;
-      console.log("Deleting post with ID:", postId);
+      console.log("Deleting joke with ID:", jokeId);
 
-      const res = await safeRequest(deletePost, accessToken, setAccessToken, postId, language);
+      const res = await safeRequest(deleteJoke, accessToken, setAccessToken, jokeId, language);
       if (res.statusCode !== 200) throw new Error("Request failed");
 
       setShowModal(false);
-      toast.success(t("post.toasts.postDeleted"));
+      toast.success(t("joke.toasts.jokeDeleted"));
 
       // ✅ Tell parent to remove it from its list
-      onPostDeleted?.(postId);
+      onJokeDeleted?.(jokeId);
 
       window.dispatchEvent(
-        new CustomEvent(postDeletedEvent, {
-          detail: { postId },
+        new CustomEvent(jokeDeletedEvent, {
+          detail: { jokeId },
         }),
       );
     } catch (err: any) {
-      toast.error(t("post.toasts.deleteJokeFailed"));
+      toast.error(t("joke.toasts.deleteJokeFailed"));
       console.error("Failed to delete joke", err.message);
     }
   };
@@ -338,10 +338,10 @@ const Post = ({
       const res = await safeRequest(editComment, accessToken, setAccessToken, commentId, newBody);
 
       if (res.statusCode !== 200) {
-        throw new Error(res.message || t("post.toasts.editCommentFailed"));
+        throw new Error(res.message || t("joke.toasts.editCommentFailed"));
       }
 
-      toast.success(t("post.toasts.commentEdited"));
+      toast.success(t("joke.toasts.commentEdited"));
       reloadComments();
     } catch (err: any) {
       const backendFieldErrors = err?.response?.data?.errors;
@@ -351,7 +351,7 @@ const Post = ({
         : null;
 
       const message =
-        blockedCommentError?.message || getApiErrorMessage(err, t("post.toasts.editCommentFailed"));
+        blockedCommentError?.message || getApiErrorMessage(err, t("joke.toasts.editCommentFailed"));
 
       toast.error(message);
       console.error("Failed to edit comment", err?.response?.data || err?.message);
@@ -365,10 +365,10 @@ const Post = ({
       const res = await safeRequest(deleteComment, accessToken, setAccessToken, commentId);
       if (res.statusCode !== 200) throw new Error("Request failed");
 
-      toast.success(t("post.toasts.commentDeleted"));
+      toast.success(t("joke.toasts.commentDeleted"));
       reloadComments(); // ✅ refresh list
     } catch (err: any) {
-      toast.error(t("post.toasts.deleteCommentFailed"));
+      toast.error(t("joke.toasts.deleteCommentFailed"));
       console.error("Failed to delete comment", err.message);
     }
   };
@@ -379,16 +379,16 @@ const Post = ({
     >
       <Modal
         isOpen={showModal}
-        title={t("post.modal.deleteTitle")}
-        message={t("post.modal.deleteMessage")}
-        confirmText={t("post.modal.deleteConfirm")}
-        cancelText={t("post.modal.cancel")}
-        onConfirm={() => handleDeletePost(post.id)}
+        title={t("joke.modal.deleteTitle")}
+        message={t("joke.modal.deleteMessage")}
+        confirmText={t("joke.modal.deleteConfirm")}
+        cancelText={t("joke.modal.cancel")}
+        onConfirm={() => handleDeleteJoke(joke.id)}
         onCancel={() => setShowModal(false)}
       />
       {published ? null : (
         <div className="text-[var(--text1)] absolute top-5 md:top-4.5 right-14 xl:right-19 text-sm md:text-lg">
-          {t("post.status.draft")}
+          {t("joke.status.draft")}
         </div>
       )}
       <div className="flex absolute gap-2 top-4 right-5 xl:right-10">
@@ -396,7 +396,7 @@ const Post = ({
           <button
             onClick={handleOpenEditMenu}
             type="button"
-            title={t("post.aria.editJoke")}
+            title={t("joke.aria.editJoke")}
             className="hover:bg-[var(--bg)] py-1 rounded-full px-1 mr-[-6px]"
           >
             <BsThreeDotsVertical size={20} color="var(--text3)" />
@@ -409,7 +409,7 @@ const Post = ({
               <button
                 onClick={handleEditInput}
                 type="button"
-                title={t("post.aria.editJoke")}
+                title={t("joke.aria.editJoke")}
                 className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
               >
                 <MdEdit size={15} color="var(--text3)" />
@@ -420,7 +420,7 @@ const Post = ({
               <button
                 onClick={() => setShowModal(true)}
                 type="button"
-                title={t("post.aria.deleteJoke")}
+                title={t("joke.aria.deleteJoke")}
                 className="hover:bg-[var(--bg)] py-1 rounded-full px-1"
               >
                 <MdDelete size={15} color="var(--text3)" />
@@ -432,9 +432,9 @@ const Post = ({
         {!published ? null : (
           <button
             type="button"
-            onClick={handleSharePost}
-            aria-label={t("post.aria.shareJoke")}
-            title={t("post.aria.shareJoke")}
+            onClick={handleShareJoke}
+            aria-label={t("joke.aria.shareJoke")}
+            title={t("joke.aria.shareJoke")}
             className="hover:bg-[var(--bg)] py-1 rounded-full px-2"
           >
             <FiShare2 className="mt-0.5" />
@@ -443,8 +443,8 @@ const Post = ({
         {!published ? null : (
           <div className="group">
             <button
-              aria-label={t("post.aria.likeJoke")}
-              title={t("post.aria.likeJoke")}
+              aria-label={t("joke.aria.likeJoke")}
+              title={t("joke.aria.likeJoke")}
               type="button"
               onClick={handleToggleLike}
               className="flex cursor-pointer px-2.5 pt-1 min-w-14 rounded-full transition-colors duration-200 bg-transparent border-1 border-[var(--text1)]/20 text-[var(--text3)] text-md hover:bg-[var(--bg)]"
@@ -486,19 +486,19 @@ const Post = ({
       <div className="flex flex-col lg:flex-row xl:mb-0 md:ml-auto absolute top-3 left-5 xl:left-10">
         <AvatarWithBadges
           size={avatarSize}
-          avatarUrl={post.user?.avatar}
-          username={post.user?.username}
-          user={post.user as User}
+          avatarUrl={joke.user?.avatar}
+          username={joke.user?.username}
+          user={joke.user as User}
         />
         <div className="flex flex-col justify-center ml-0 lg:ml-2 max-w-[calc(20px+30vw)] mt-0 lg:mt-2">
           <p
-            title={t("post.labels.username")}
+            title={t("joke.labels.username")}
             className="font-bold text-[0.8rem]/3.5 md:text-[1rem] [overflow-wrap:anywhere] max-w-[calc(5px+30vw)]"
           >
-            {capitalizeFirstLetter(post.user.username)}
+            {capitalizeFirstLetter(joke.user.username)}
           </p>
-          <p title={t("post.labels.postDate")} className="text-[0.7rem] mt-0 opacity-80">
-            {formatDate(post.createdAt)}
+          <p title={t("joke.labels.jokeDate")} className="text-[0.7rem] mt-0 opacity-80">
+            {formatDate(joke.createdAt)}
           </p>
         </div>
       </div>
@@ -509,7 +509,7 @@ const Post = ({
           <div className="bg-[var(--bg)] rounded-lg p-1 w-full relative">
             <input
               ref={inputRef}
-              title={t("post.aria.editJokeTitle")}
+              title={t("joke.aria.editJokeTitle")}
               type="text"
               value={editedTitle}
               maxLength={MAX_CHARS.TITLE}
@@ -521,12 +521,12 @@ const Post = ({
             />
             <span className="characters-left">{getCharactersLeft(editedTitle, MAX_CHARS.TITLE)}</span>
           </div>
-        : <NavLink aria-label="Go to joke" to={`/jokes/${post.id}`}>
+        : <NavLink aria-label="Go to joke" to={`/jokes/${joke.id}`}>
             <h3
               title="Joke title"
               className="text-xl/5 xl:text-3xl md:text-3xl/8 mt-autom mr-22 [overflow-wrap:anywhere]"
             >
-              {post.title}
+              {joke.title}
             </h3>
           </NavLink>
         }
@@ -536,8 +536,8 @@ const Post = ({
         <div className="mx-5 xl:mx-10 my-4 w-auto bg-[var(--bg)] rounded-lg relative">
           <textarea
             ref={textRef}
-            aria-label={t("post.aria.editJokeBody")}
-            title={t("post.aria.editJokeBody")}
+            aria-label={t("joke.aria.editJokeBody")}
+            title={t("joke.aria.editJokeBody")}
             value={editedBody}
             maxLength={MAX_CHARS.BODY}
             onKeyDown={handleBodyEnter}
@@ -566,7 +566,7 @@ const Post = ({
               className="mt-2 text-sm md:text-lg opacity-80 hover:opacity-100 underline"
               aria-expanded={isBodyExpanded}
             >
-              {isBodyExpanded ? t("post.actions.showLess") : t("post.actions.readMore")}
+              {isBodyExpanded ? t("joke.actions.showLess") : t("joke.actions.readMore")}
             </button>
           )}
         </div>
@@ -577,8 +577,8 @@ const Post = ({
           <div className="mb-8 w-full bg-[var(--bg)] rounded-lg relative">
             <input
               type="text"
-              aria-label={t("post.aria.editJokeTags")}
-              title={t("post.aria.editJokeTags")}
+              aria-label={t("joke.aria.editJokeTags")}
+              title={t("joke.aria.editJokeTags")}
               value={editedTags}
               maxLength={MAX_CHARS.TAGS}
               onKeyDown={handleTagsEnter}
@@ -589,20 +589,20 @@ const Post = ({
             />
             <span className="characters-left">{getCharactersLeft(editedTags, MAX_CHARS.TAGS)}</span>
           </div>
-        : post.tags[0]?.name.length >= 1 ?
-          <TagsCard tags={post?.tags} />
+        : joke.tags[0]?.name.length >= 1 ?
+          <TagsCard tags={joke?.tags} />
         : <p className="opacity-0 mb-[-10px]"></p>}
 
         {isEditing && (
           <div className="flex items-center absolute bottom-3.5 right-15">
             <label htmlFor="publish/unpublish" className="mr-2">
-              <b>{t("post.actions.publish")}</b>
+              <b>{t("joke.actions.publish")}</b>
             </label>
             <input
               className="w-4 h-4 cursor-pointer accent-[var(--text1)]"
               onChange={() => setPublished((prev) => !prev)}
               id="publish/unpublish"
-              aria-label={t("post.aria.publishUnpublish")}
+              aria-label={t("joke.aria.publishUnpublish")}
               type="checkbox"
               checked={published}
             />
@@ -611,12 +611,12 @@ const Post = ({
         {isEditing ?
           <button
             type="button"
-            aria-label={t("post.aria.editMessage")}
-            title={t("post.aria.editMessage")}
+            aria-label={t("joke.aria.editMessage")}
+            title={t("joke.aria.editMessage")}
             className="absolute bottom-2 right-2 p-2 rounded-full hover:bg-[var(--bg)] text-[var(--button3)]"
             onClick={() => {
-              handleEditPost(
-                post.id,
+              handleEditJoke(
+                joke.id,
                 editedTitle,
                 editedBody,
                 editedTags.split(",").map((tag) => tag.trim()),
@@ -639,31 +639,31 @@ const Post = ({
       </div>
       {commentsIsOpen && (
         <div className={`bg-[var(--primary)] text-[var(--text2)] p-6 rounded-b-2xl`}>
-          <h3 className="text-lg md:text-2xl mb-0">{t("post.labels.comments")}</h3>
+          <h3 className="text-lg md:text-2xl mb-0">{t("joke.labels.comments")}</h3>
 
           {user && published ?
-            <CommentForm postId={post.id} onCommentAdded={() => reloadComments()} />
+            <CommentForm jokeId={joke.id} onCommentAdded={() => reloadComments()} />
           : null}
 
           {commentsLoading && comments.length === 0 && <Spinner />}
 
           {commentsError && (
             <p className="text-center text-sm text-red-400 mt-2">
-              {typeof commentsError === "string" ? commentsError : t("post.labels.failedToLoadComments")}
+              {typeof commentsError === "string" ? commentsError : t("joke.labels.failedToLoadComments")}
             </p>
           )}
 
           {!commentsLoading && comments.length === 0 && (
             <div className="text-xs md:text-sm opacity-70">
               <p>
-                {t("post.labels.noComments")}
-                {published && user ? ` ${t("post.labels.beFirstToComment")}` : ""}
-                {published && !user ? ` ${t("post.labels.logInToComment")}` : ""}
+                {t("joke.labels.noComments")}
+                {published && user ? ` ${t("joke.labels.beFirstToComment")}` : ""}
+                {published && !user ? ` ${t("joke.labels.logInToComment")}` : ""}
               </p>
 
               {published && !user && (
                 <NavLink to="/login" className="inline-block mt-2 underline text-[var(--text2)] opacity-100">
-                  {t("post.actions.goToLogin")}
+                  {t("joke.actions.goToLogin")}
                 </NavLink>
               )}
             </div>
@@ -686,13 +686,13 @@ const Post = ({
           {canNext && (
             <div className="mt-5 flex justify-center">
               <Button
-                label={t("post.actions.loadMoreComments")}
+                label={t("joke.actions.loadMoreComments")}
                 onClick={loadMoreComments}
                 size="sm"
                 variant="secondary"
                 disabled={commentsLoading}
               >
-                {commentsLoading ? t("post.actions.loading") : t("post.actions.loadMoreComments")}
+                {commentsLoading ? t("joke.actions.loading") : t("joke.actions.loadMoreComments")}
               </Button>
             </div>
           )}
@@ -702,4 +702,4 @@ const Post = ({
   );
 };
 
-export default Post;
+export default Joke;

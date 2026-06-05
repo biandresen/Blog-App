@@ -21,7 +21,7 @@ const JokePreviewCard = ({ id, title, likes, to, onNavigate }: JokePreviewCardPr
     <Link
       to={href}
       onClick={onNavigate}
-      aria-label={`${t("postCard.open")}: ${displayTitle}`}
+      aria-label={`${t("jokeCard.open")}: ${displayTitle}`}
       className="
         group block w-full rounded-xl bg-[var(--primary)] p-3 shadow-sm
         transition-all duration-150 hover:-translate-y-0.5 hover:brightness-105

@@ -6,7 +6,7 @@ export type CommentType = {
   changedAt: string;
   createdAt: string;
   id: number;
-  postId: number;
+  jokeId: number;
   user: User;
 };
 
@@ -17,7 +17,7 @@ export type TagType = {
   createdAt: string;
 };
 
-export interface PostType {
+export interface JokeType {
   authorId: number;
   title: string;
   body: string;
@@ -25,14 +25,14 @@ export interface PostType {
   createdAt: string;
   id: number;
   published: boolean;
-  likes: PostLike[];
+  likes: JokeLike[];
   comments: CommentType[];
   tags: TagType[];
   user: User;
 }
 
-export interface PostLike {
-  postId: number;
+export interface JokeLike {
+  jokeId: number;
   userId: number;
   user: {
     id: number;

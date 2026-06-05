@@ -21,7 +21,7 @@ export interface LayoutProps {
   >;
 }
 
-export interface PostsLayoutProps {
+export interface JokesLayoutProps {
   sidebars: {
     left: boolean;
     right: boolean;

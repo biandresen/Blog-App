@@ -1,6 +1,6 @@
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
 import { type ChangeEvent } from "react";
-import type { CommentType } from "./post.types";
+import type { CommentType } from "./joke.types";
 
 export type ButtonVariant =
   | "shade"
@@ -58,7 +58,7 @@ export interface LeftSidebarProps {
   >;
 }
 
-export interface PostCardProps {
+export interface JokeCardProps {
   id: number;
   title: string;
   likes?: number;
@@ -79,6 +79,6 @@ export interface NavbarProps {
 }
 
 export interface CommentFormProps {
-  postId: number;
+  jokeId: number;
   onCommentAdded: (comment: CommentType) => void;
 }

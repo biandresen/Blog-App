@@ -121,14 +121,14 @@ const Badges = () => {
                     </div>
                   </div>
 
-                  {b.context?.postId && (
+                  {b.context?.jokeId && (
                     <div className="text-sm mt-2 opacity-80 text-[var(--text1)]">
-                      {t("badges.relatedPost")}:{" "}
+                      {t("badges.relatedJoke")}:{" "}
                       <Link
-                        to={`/jokes/${b.context.postId}`}
+                        to={`/jokes/${b.context.jokeId}`}
                         className="underline font-semibold hover:opacity-90"
                       >
-                        #{b.context.postId}
+                        #{b.context.jokeId}
                       </Link>
                     </div>
                   )}
@@ -194,14 +194,14 @@ const Badges = () => {
                       </div>
                     )}
 
-                    {a.context?.postId && (
+                    {a.context?.jokeId && (
                       <div className="text-sm mt-2 opacity-80 text-[var(--text1)]">
-                        {t("badges.relatedPost")}:{" "}
+                        {t("badges.relatedJoke")}:{" "}
                         <Link
-                          to={`/jokes/${a.context.postId}`}
+                          to={`/jokes/${a.context.jokeId}`}
                           className="underline font-semibold hover:opacity-90"
                         >
-                          #{a.context.postId}
+                          #{a.context.jokeId}
                         </Link>
                       </div>
                     )}

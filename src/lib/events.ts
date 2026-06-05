@@ -1,1 +1,1 @@
-  export const postDeletedEvent = "post-deleted";
+  export const jokeDeletedEvent = "joke-deleted";

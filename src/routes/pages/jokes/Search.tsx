@@ -6,37 +6,37 @@ import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
 
 import { usePagination } from "../../../hooks/usePagination";
-import { searchPosts, type SearchFilters } from "../../../lib/axios";
-import type { PostType } from "../../../types/post.types";
+import { searchJokes, type SearchFilters } from "../../../lib/axios";
+import type { JokeType } from "../../../types/joke.types";
 import { useLanguage } from "../../../contexts/LanguageContext";
 
-type FilteredPostType = PostType & { matches?: string[] };
+type FilteredJokeType = JokeType & { matches?: string[] };
 
 const LIMIT = 15;
 
-function computeMatches(post: PostType, q: string, filters: SearchFilters): string[] {
+function computeMatches(joke: JokeType, q: string, filters: SearchFilters): string[] {
   const input = q.trim().toLowerCase();
   if (!input) return [];
 
   const matches: string[] = [];
 
-  if (filters.title && post.title?.toLowerCase().includes(input)) {
+  if (filters.title && joke.title?.toLowerCase().includes(input)) {
     matches.push("title");
   }
 
-  if (filters.body && post.body?.toLowerCase().includes(input)) {
+  if (filters.body && joke.body?.toLowerCase().includes(input)) {
     matches.push("body");
   }
 
   if (
     filters.comments &&
-    (post.comments?.some((comment) => comment.body?.toLowerCase().includes(input)) ||
-      (!post.comments?.length && !matches.length))
+    (joke.comments?.some((comment) => comment.body?.toLowerCase().includes(input)) ||
+      (!joke.comments?.length && !matches.length))
   ) {
     matches.push("comment");
   }
 
-  if (filters.tags && post.tags?.some((tag) => tag.name?.toLowerCase().includes(input))) {
+  if (filters.tags && joke.tags?.some((tag) => tag.name?.toLowerCase().includes(input))) {
     matches.push("tag");
   }
 
@@ -92,7 +92,7 @@ const Search = () => {
     next: loadMore,
     sentinelRef,
     reload,
-  } = usePagination<PostType>(searchPosts, {
+  } = usePagination<JokeType>(searchJokes, {
     accessToken: null,
     setAccessToken: noopSetAccessToken,
     limit: LIMIT,
@@ -104,12 +104,12 @@ const Search = () => {
     rootMargin: "700px",
   });
 
-  const postsToShow: FilteredPostType[] = useMemo(() => {
+  const jokesToShow: FilteredJokeType[] = useMemo(() => {
     if (!searchEnabled) return [];
 
-    return (items ?? []).map((post) => ({
-      ...post,
-      matches: computeMatches(post, debouncedQuery, filters),
+    return (items ?? []).map((joke) => ({
+      ...joke,
+      matches: computeMatches(joke, debouncedQuery, filters),
     }));
   }, [items, debouncedQuery, filters, searchEnabled]);
 
@@ -126,12 +126,12 @@ const Search = () => {
     if (!searchEnabled) return;
     if (loading) return;
     if (error) return;
-    if (postsToShow.length === 0) return;
+    if (jokesToShow.length === 0) return;
     if (lastBlurredQueryRef.current === debouncedQuery) return;
 
     lastBlurredQueryRef.current = debouncedQuery;
     setBlurSignal((prev) => prev + 1);
-  }, [searchEnabled, loading, error, postsToShow.length, debouncedQuery]);
+  }, [searchEnabled, loading, error, jokesToShow.length, debouncedQuery]);
 
   const filterEntries: Array<{ key: keyof SearchFilters; label: string }> = [
     { key: "title", label: t("search.filters.title") },
@@ -159,7 +159,7 @@ const Search = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{t("search.heading")}</h2>
+      <h2 className="jokes-heading">{t("search.heading")}</h2>
 
       <div className="flex justify-center gap-2 md:gap-4 my-4 flex-wrap text-[var(--text1)]">
         <b>{t("search.filters.heading")}</b>
@@ -206,24 +206,24 @@ const Search = () => {
 
       {error && <div className="mt-4 text-center text-[var(--error)]">{error}</div>}
 
-      <section className="posts-section flex-col items-center">
-        {loading && postsToShow.length === 0 && <Spinner />}
+      <section className="jokes-section flex-col items-center">
+        {loading && jokesToShow.length === 0 && <Spinner />}
 
-        {!loading && searchEnabled && postsToShow.length === 0 && !error && (
+        {!loading && searchEnabled && jokesToShow.length === 0 && !error && (
           <div>
-            <h3 className="posts-section-heading text-[var(--text1)]">{t("search.states.noResults")}</h3>
+            <h3 className="jokes-section-heading text-[var(--text1)]">{t("search.states.noResults")}</h3>
           </div>
         )}
 
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-          {postsToShow.map((post) => (
-            <div key={post.id} className="flex flex-col">
-              <JokePreviewCard id={post.id} title={post.title} likes={post.likes.length} />
+          {jokesToShow.map((joke) => (
+            <div key={joke.id} className="flex flex-col">
+              <JokePreviewCard id={joke.id} title={joke.title} likes={joke.likes.length} />
 
-              {post.matches?.length ?
+              {joke.matches?.length ?
                 <p className="mt-2 text-sm text-[var(--text1)] opacity-70">
                   {t("search.states.foundIn")}:{" "}
-                  {post.matches.map((match) => t(`search.matchLabels.${match}`, match)).join(", ")}
+                  {joke.matches.map((match) => t(`search.matchLabels.${match}`, match)).join(", ")}
                 </p>
               : null}
             </div>
@@ -250,7 +250,7 @@ const Search = () => {
         {meta && searchEnabled && (
           <div className="text-center text-sm opacity-70 text-[var(--text1)] w-full">
             {tf("search.states.showing", {
-              shown: String(postsToShow.length),
+              shown: String(jokesToShow.length),
               total: String(meta.total),
             })}
           </div>

@@ -5,7 +5,7 @@ import { UserProvider } from "./contexts/UserContext.tsx";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
 import "./index.css";
 import App from "./App.tsx";
-import { PostsProvider } from "./contexts/PostsContext.tsx";
+import { JokesProvider } from "./contexts/JokesContext.tsx";
 import { LanguageProvider } from "./contexts/LanguageContext.tsx";
 import { ToastContainer } from "react-toastify";
 import { ModerationProvider } from "./contexts/ModerationContext.tsx";
@@ -16,7 +16,7 @@ createRoot(document.getElementById("root")!).render(
     <AuthProvider>
       <UserProvider>
         <LanguageProvider>
-          <PostsProvider>
+          <JokesProvider>
             <ModerationProvider>
               <App />
               <ToastContainer
@@ -29,7 +29,7 @@ createRoot(document.getElementById("root")!).render(
                 theme="colored"
               />
             </ModerationProvider>
-          </PostsProvider>
+          </JokesProvider>
         </LanguageProvider>
       </UserProvider>
     </AuthProvider>

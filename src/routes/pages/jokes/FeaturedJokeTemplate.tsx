@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { PostType } from "../../../types/post.types";
+import type { JokeType } from "../../../types/joke.types";
 import Spinner from "../../../components/atoms/Spinner";
-import Post from "../../../components/organisms/Post";
-import { getFeaturedPost } from "../../../lib/axios";
+import Joke from "../../../components/organisms/Joke";
+import { getFeaturedJoke } from "../../../lib/axios";
 import { useLanguage } from "../../../contexts/LanguageContext";
 
 type Props = {
@@ -16,8 +16,8 @@ type Props = {
   subtitle?: string;
 };
 
-export default function FeaturedPostTemplate({ slug, title, subtitle }: Props) {
-  const [post, setPost] = useState<PostType | null>(null);
+export default function FeaturedJokeTemplate({ slug, title, subtitle }: Props) {
+  const [joke, setJoke] = useState<JokeType | null>(null);
   const [date, setDate] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,25 +27,25 @@ export default function FeaturedPostTemplate({ slug, title, subtitle }: Props) {
   useEffect(() => {
     let isActive = true;
 
-    setPost(null);
+    setJoke(null);
     setDate(null);
     setLoading(true);
     setError(null);
 
     const run = async () => {
       try {
-        const res = await getFeaturedPost(slug, language);
+        const res = await getFeaturedJoke(slug, language);
         const payload = res.data;
 
         if (!isActive) return;
 
-        if (!payload?.post) {
-          setPost(null);
+        if (!payload?.joke) {
+          setJoke(null);
           setDate(null);
           return;
         }
 
-        setPost(payload.post);
+        setJoke(payload.joke);
         setDate(payload.date ?? null);
       } catch (err: any) {
         if (!isActive) return;
@@ -74,7 +74,7 @@ export default function FeaturedPostTemplate({ slug, title, subtitle }: Props) {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{title}</h2>
+      <h2 className="jokes-heading">{title}</h2>
 
       {subtitle && (
         <p className="text-center text-[var(--text1)] opacity-70 -mt-3 mb-8">
@@ -88,13 +88,13 @@ export default function FeaturedPostTemplate({ slug, title, subtitle }: Props) {
         </p>
       )}
 
-      {!post ? (
+      {!joke ? (
         <div className="text-center text-[var(--text1)] opacity-70">
           {t("featured.noJoke")}
         </div>
       ) : (
-        <div className="posts-section">
-          <Post key={`${post.id}-${language}`} post={post} />
+        <div className="jokes-section">
+          <Joke key={`${joke.id}-${language}`} joke={joke} />
         </div>
       )}
     </div>

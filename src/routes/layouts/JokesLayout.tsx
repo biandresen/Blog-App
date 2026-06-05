@@ -4,11 +4,11 @@ import { useLanguage } from "../../contexts/LanguageContext";
 
 import LeftSidebar2 from "../../components/molecules/LeftSidebar2";
 import RightSidebar from "../../components/molecules/RightSidebar";
-import { type PostsLayoutProps } from "../../types/layout.types";
+import { type JokesLayoutProps } from "../../types/layout.types";
 
 const SCROLL_THRESHOLD = 150;
 
-const JokesLayout = ({ setSidebars, sidebars }: PostsLayoutProps) => {
+const JokesLayout = ({ setSidebars, sidebars }: JokesLayoutProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
 

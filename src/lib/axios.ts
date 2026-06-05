@@ -1,8 +1,8 @@
 import axios from "axios";
-import BLOG_API from "../api/blog-api";
+import JOKE_API from "../api/joke-api";
 import type { token } from "../types/context.types";
 import type { PaginatedResponse } from "../types/pagination.types";
-import type { CommentType, PostType } from "../types/post.types";
+import type { CommentType, JokeType } from "../types/joke.types";
 import type { LeaderboardRow } from "../types/leaderboard.types";
 import type { AppLanguage } from "../i18n/translations";
 import { languageHeaders } from "../lib/utils";
@@ -31,7 +31,7 @@ type ApiSuccessResponse<T> = {
 
 export const verifyEmail = async (token: string) => {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.VERIFY_EMAIL}`, {
+    const res = await axios.get(`${JOKE_API.BASE}${JOKE_API.VERIFY_EMAIL}`, {
       params: { token },
     });
     return res.data;
@@ -43,7 +43,7 @@ export const verifyEmail = async (token: string) => {
 export const resendVerificationEmail = async ({ email }: { email: string }, language?: AppLanguage) => {
   try {
     const res = await axios.post(
-      `${BLOG_API.BASE}${BLOG_API.RESEND_VERIFICATION}`,
+      `${JOKE_API.BASE}${JOKE_API.RESEND_VERIFICATION}`,
       { email },
       {
         headers: {
@@ -67,7 +67,7 @@ type ContactMessagePayload = {
 
 export const sendContactMessage = async (payload: ContactMessagePayload, language?: AppLanguage) => {
   try {
-    const res = await axios.post(`${BLOG_API.BASE}${BLOG_API.CONTACT}`, payload, {
+    const res = await axios.post(`${JOKE_API.BASE}${JOKE_API.CONTACT}`, payload, {
       headers: {
         "Content-Type": "application/json",
         ...languageHeaders(language),
@@ -82,7 +82,7 @@ export const sendContactMessage = async (payload: ContactMessagePayload, languag
 export const resetPassword = async ({ email }: { email: string }, language?: AppLanguage) => {
   try {
     const res = await axios.post(
-      BLOG_API.BASE + BLOG_API.RESETPASSWORD,
+      JOKE_API.BASE + JOKE_API.RESETPASSWORD,
       { email },
       {
         headers: {
@@ -100,7 +100,7 @@ export const resetPassword = async ({ email }: { email: string }, language?: App
 export const newPassword = async (token: token | undefined, password: string) => {
   try {
     const res = await axios.post(
-      BLOG_API.BASE + BLOG_API.NEWPASSWORD,
+      JOKE_API.BASE + JOKE_API.NEWPASSWORD,
       {
         token,
         password,
@@ -125,7 +125,7 @@ export const registerUser = async ({
   acceptedTerms,
 }: RegisterUser) => {
   try {
-    const res = await axios.post(BLOG_API.BASE + BLOG_API.REGISTER, {
+    const res = await axios.post(JOKE_API.BASE + JOKE_API.REGISTER, {
       username,
       email,
       password,
@@ -141,7 +141,7 @@ export const registerUser = async ({
 export const loginUser = async ({ userInput, password }: LoginUser, language?: AppLanguage) => {
   try {
     const res = await axios.post(
-      BLOG_API.BASE + BLOG_API.LOGIN,
+      JOKE_API.BASE + JOKE_API.LOGIN,
       { userInput, password },
       {
         withCredentials: true,
@@ -158,7 +158,7 @@ export const loginUser = async ({ userInput, password }: LoginUser, language?: A
 
 export const logoutUser = async () => {
   try {
-    const res = await axios.post(BLOG_API.BASE + BLOG_API.LOGOUT, {}, { withCredentials: true });
+    const res = await axios.post(JOKE_API.BASE + JOKE_API.LOGOUT, {}, { withCredentials: true });
     return res.data;
   } catch (err: any) {
     throw normalizeApiError(err);
@@ -167,7 +167,7 @@ export const logoutUser = async () => {
 
 export const deleteUser = async (accessToken: token, id: number | string) => {
   try {
-    const res = await axios.delete(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
+    const res = await axios.delete(JOKE_API.BASE + JOKE_API.USER + `/${id}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
@@ -192,7 +192,7 @@ export const updateUser = async (
   });
 
   try {
-    const res = await axios.patch(`${BLOG_API.BASE}${BLOG_API.USER}/${id}`, formData, {
+    const res = await axios.patch(`${JOKE_API.BASE}${JOKE_API.USER}/${id}`, formData, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
@@ -203,7 +203,7 @@ export const updateUser = async (
 
 export const getUserByNameOrEmail = async (accessToken: token, userInput: string) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.USERINPUT + `/${userInput}`, {
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.USERINPUT + `/${userInput}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
@@ -214,7 +214,7 @@ export const getUserByNameOrEmail = async (accessToken: token, userInput: string
 
 export const getMe = async (accessToken: token, language?: AppLanguage) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.USER + `/me`, {
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.USER + `/me`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ...languageHeaders(language),
@@ -228,7 +228,7 @@ export const getMe = async (accessToken: token, language?: AppLanguage) => {
 
 export const getUserById = async (accessToken: token, id: number) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.USER + `/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -242,7 +242,7 @@ export const getUserById = async (accessToken: token, id: number) => {
 export const reactivateUser = async (accessToken: token, id: number | string) => {
   try {
     const res = await axios.patch(
-      BLOG_API.BASE + BLOG_API.USER + `/${id}/reactivate`,
+      JOKE_API.BASE + JOKE_API.USER + `/${id}/reactivate`,
       {},
       { headers: { Authorization: `Bearer ${accessToken}` } },
     );
@@ -254,7 +254,7 @@ export const reactivateUser = async (accessToken: token, id: number | string) =>
 
 export const deactivateUser = async (accessToken: token, id: number | string) => {
   try {
-    const res = await axios.delete(BLOG_API.BASE + BLOG_API.USER + `/${id}`, {
+    const res = await axios.delete(JOKE_API.BASE + JOKE_API.USER + `/${id}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     return res.data;
@@ -268,10 +268,10 @@ export const getCurrentUserDrafts = async (
   page = 1,
   limit = 15,
   language?: AppLanguage,
-): Promise<PaginatedResponse<PostType>> => {
+): Promise<PaginatedResponse<JokeType>> => {
   try {
     const res = await axios.get(
-      BLOG_API.BASE + BLOG_API.GCU_DRAFTS + `?page=${page}&limit=${limit}&sort=desc`,
+      JOKE_API.BASE + JOKE_API.GCU_DRAFTS + `?page=${page}&limit=${limit}&sort=desc`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -285,14 +285,14 @@ export const getCurrentUserDrafts = async (
   }
 };
 
-export const getAllPosts = async (
+export const getAllJokes = async (
   _accessToken: token,
   page = 1,
   limit = 15,
   language?: AppLanguage,
-): Promise<PaginatedResponse<PostType>> => {
+): Promise<PaginatedResponse<JokeType>> => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `?page=${page}&limit=${limit}&sort=desc`, {
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.JOKES + `?page=${page}&limit=${limit}&sort=desc`, {
       headers: { ...languageHeaders(language) },
     });
     return res.data;
@@ -301,9 +301,9 @@ export const getAllPosts = async (
   }
 };
 
-export const getPost = async (accessToken: token, postId: number, language?: AppLanguage) => {
+export const getJoke = async (accessToken: token, jokeId: number, language?: AppLanguage) => {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}/${postId}`, {
+    const res = await axios.get(`${JOKE_API.BASE}${JOKE_API.JOKES}/${jokeId}`, {
       headers: { Authorization: `Bearer ${accessToken}`, ...languageHeaders(language) },
     });
     return res.data;
@@ -312,9 +312,9 @@ export const getPost = async (accessToken: token, postId: number, language?: App
   }
 };
 
-export const getPopularPosts = async (language?: AppLanguage): Promise<ApiSuccessResponse<PostType[]>> => {
+export const getPopularJokes = async (language?: AppLanguage): Promise<ApiSuccessResponse<JokeType[]>> => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.POPULAR, {
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.JOKES + JOKE_API.POPULAR, {
       headers: { ...languageHeaders(language) },
     });
 
@@ -324,9 +324,9 @@ export const getPopularPosts = async (language?: AppLanguage): Promise<ApiSucces
   }
 };
 
-export const getRandomPost = async (language?: AppLanguage) => {
+export const getRandomJoke = async (language?: AppLanguage) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.RANDOM, {
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.JOKES + JOKE_API.RANDOM, {
       headers: { ...languageHeaders(language) },
     });
     return res.data;
@@ -335,9 +335,9 @@ export const getRandomPost = async (language?: AppLanguage) => {
   }
 };
 
-export const getDailyPost = async (language?: AppLanguage) => {
+export const getDailyJoke = async (language?: AppLanguage) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.DAILY, {
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.JOKES + JOKE_API.DAILY, {
       headers: { ...languageHeaders(language) },
     });
     return res.data;
@@ -355,7 +355,7 @@ export const saveDraft = async (
 ) => {
   try {
     const res = await axios.post(
-      BLOG_API.BASE + BLOG_API.POSTS,
+      JOKE_API.BASE + JOKE_API.JOKES,
       { title, body, published: false, tags },
       {
         headers: {
@@ -370,7 +370,7 @@ export const saveDraft = async (
   }
 };
 
-export const publishPost = async (
+export const publishJoke = async (
   accessToken: token,
   title: string,
   body: string,
@@ -379,7 +379,7 @@ export const publishPost = async (
 ) => {
   try {
     const res = await axios.post(
-      BLOG_API.BASE + BLOG_API.POSTS,
+      JOKE_API.BASE + JOKE_API.JOKES,
       { title, body, published: true, tags },
       {
         headers: {
@@ -394,9 +394,9 @@ export const publishPost = async (
   }
 };
 
-export const editPost = async (
+export const editJoke = async (
   accessToken: token,
-  postId: number,
+  jokeId: number,
   title: string,
   body: string,
   published: boolean,
@@ -405,7 +405,7 @@ export const editPost = async (
 ) => {
   try {
     const res = await axios.patch(
-      BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`,
+      JOKE_API.BASE + JOKE_API.JOKES + `/${jokeId}`,
       { title, body, published, tags },
       {
         headers: {
@@ -420,10 +420,10 @@ export const editPost = async (
   }
 };
 
-export const deletePost = async (accessToken: token, postId: number, language?: AppLanguage) => {
+export const deleteJoke = async (accessToken: token, jokeId: number, language?: AppLanguage) => {
   try {
-    console.log("Axios deletePost:, ", postId);
-    const res = await axios.delete(BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`, {
+    console.log("Axios deleteJoke:, ", jokeId);
+    const res = await axios.delete(JOKE_API.BASE + JOKE_API.JOKES + `/${jokeId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ...languageHeaders(language),
@@ -435,10 +435,10 @@ export const deletePost = async (accessToken: token, postId: number, language?: 
   }
 };
 
-export const toggleLike = async (accessToken: token, postId: number, language?: AppLanguage) => {
+export const toggleLike = async (accessToken: token, jokeId: number, language?: AppLanguage) => {
   try {
     const res = await axios.post(
-      BLOG_API.BASE + BLOG_API.POSTS + `/${postId}/like`,
+      JOKE_API.BASE + JOKE_API.JOKES + `/${jokeId}/like`,
       {},
       {
         headers: {
@@ -454,18 +454,18 @@ export const toggleLike = async (accessToken: token, postId: number, language?: 
   }
 };
 
-export const getPostComments = async (
+export const getJokeComments = async (
   _accessToken: token,
   page = 1,
   limit = 10,
-  postId?: number,
+  jokeId?: number,
   sort: "asc" | "desc" = "desc",
   language?: AppLanguage,
 ): Promise<PaginatedResponse<CommentType>> => {
-  if (!postId) throw normalizeApiError(new Error("Missing postId for comments request"));
+  if (!jokeId) throw normalizeApiError(new Error("Missing jokeId for comments request"));
 
   try {
-    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.COMMENTS}/${postId}`, {
+    const res = await axios.get(`${JOKE_API.BASE}${JOKE_API.COMMENTS}/${jokeId}`, {
       params: { page, limit, sort },
       headers: { ...languageHeaders(language) },
     });
@@ -477,13 +477,13 @@ export const getPostComments = async (
 
 export const addComment = async (
   accessToken: token,
-  authorId: number,
+  jokeId: number,
   comment: string,
   language?: AppLanguage,
 ) => {
   try {
     const res = await axios.post(
-      BLOG_API.BASE + BLOG_API.POSTS + `/${authorId}` + BLOG_API.COMMENTS,
+      JOKE_API.BASE + JOKE_API.JOKES + `/${jokeId}` + JOKE_API.COMMENTS,
       { comment },
       {
         headers: {
@@ -506,7 +506,7 @@ export const editComment = async (
 ) => {
   try {
     const res = await axios.patch(
-      BLOG_API.BASE + BLOG_API.COMMENTS + `/${commentId}`,
+      JOKE_API.BASE + JOKE_API.COMMENTS + `/${commentId}`,
       { comment },
       {
         headers: {
@@ -523,7 +523,7 @@ export const editComment = async (
 
 export const deleteComment = async (accessToken: token, commentId: number, language?: AppLanguage) => {
   try {
-    const res = await axios.delete(BLOG_API.BASE + BLOG_API.COMMENTS + `/${commentId}`, {
+    const res = await axios.delete(JOKE_API.BASE + JOKE_API.COMMENTS + `/${commentId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ...languageHeaders(language),
@@ -535,18 +535,18 @@ export const deleteComment = async (accessToken: token, commentId: number, langu
   }
 };
 
-export const getAllUserPosts = async (
+export const getAllUserJokes = async (
   _accessToken: token,
   page = 1,
   limit = 15,
   userId?: number,
   language?: AppLanguage,
-): Promise<PaginatedResponse<PostType>> => {
+): Promise<PaginatedResponse<JokeType>> => {
   if (!userId) throw normalizeApiError(new Error("Missing userId"));
 
   try {
     const res = await axios.get(
-      `${BLOG_API.BASE}${BLOG_API.USER}/${userId}/posts?page=${page}&limit=${limit}&sort=desc`,
+      `${JOKE_API.BASE}${JOKE_API.USER}/${userId}/jokes?page=${page}&limit=${limit}&sort=desc`,
       {
         headers: {
           ...languageHeaders(language),
@@ -560,9 +560,9 @@ export const getAllUserPosts = async (
   }
 };
 
-export const getPostByIdPublic = async (postId: number) => {
+export const getJokeByIdPublic = async (jokeId: number) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.POSTS + `/${postId}`);
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.JOKES + `/${jokeId}`);
     return res.data;
   } catch (err: any) {
     throw normalizeApiError(err);
@@ -572,7 +572,7 @@ export const getPostByIdPublic = async (postId: number) => {
 export const recordDailyJokeView = async (accessToken: token) => {
   try {
     const res = await axios.post(
-      BLOG_API.BASE + BLOG_API.POSTS + BLOG_API.DAILY_VIEW,
+      JOKE_API.BASE + JOKE_API.JOKES + JOKE_API.DAILY_VIEW,
       {},
       {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -587,7 +587,7 @@ export const recordDailyJokeView = async (accessToken: token) => {
 
 export const getMyBadgeHistory = async (accessToken: token, page = 1, limit = 15, language?: AppLanguage) => {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.BADGE_HISTORY_ME}?page=${page}&limit=${limit}`, {
+    const res = await axios.get(`${JOKE_API.BASE}${JOKE_API.BADGE_HISTORY_ME}?page=${page}&limit=${limit}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ...languageHeaders(language),
@@ -601,7 +601,7 @@ export const getMyBadgeHistory = async (accessToken: token, page = 1, limit = 15
 
 export const getMyCurrentBadges = async (accessToken: token, language?: AppLanguage) => {
   try {
-    const res = await axios.get(BLOG_API.BASE + BLOG_API.CURRENT_BADGES_ME, {
+    const res = await axios.get(JOKE_API.BASE + JOKE_API.CURRENT_BADGES_ME, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ...languageHeaders(language),
@@ -616,12 +616,12 @@ export const getMyCurrentBadges = async (accessToken: token, language?: AppLangu
 export type FeaturedPayload = {
   type: string;
   date: string;
-  post: PostType;
+  joke: JokeType;
 };
 
-export async function getFeaturedPost(slug: string, language?: AppLanguage) {
+export async function getFeaturedJoke(slug: string, language?: AppLanguage) {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}/featured/${slug}`, {
+    const res = await axios.get(`${JOKE_API.BASE}/featured/${slug}`, {
       headers: { ...languageHeaders(language) },
     });
     return res.data;
@@ -636,7 +636,7 @@ export const getLeaderboardUsers = async (
   language?: AppLanguage,
 ) => {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}/leaderboard/users?period=${period}&limit=${limit}`, {
+    const res = await axios.get(`${JOKE_API.BASE}/leaderboard/users?period=${period}&limit=${limit}`, {
       headers: { ...languageHeaders(language) },
     });
 
@@ -658,7 +658,7 @@ export type SearchFilters = {
   tags: boolean;
 };
 
-export const searchPosts = async (
+export const searchJokes = async (
   _accessToken: token,
   page = 1,
   limit = 15,
@@ -666,7 +666,7 @@ export const searchPosts = async (
   filters?: SearchFilters,
   sort: "asc" | "desc" = "desc",
   language?: AppLanguage,
-): Promise<PaginatedResponse<PostType>> => {
+): Promise<PaginatedResponse<JokeType>> => {
   const params = new URLSearchParams();
 
   params.set("page", String(page));
@@ -685,7 +685,7 @@ export const searchPosts = async (
   }
 
   try {
-    const res = await axios.get(`${BLOG_API.BASE}${BLOG_API.POSTS}${BLOG_API.SEARCH}?${params.toString()}`, {
+    const res = await axios.get(`${JOKE_API.BASE}${JOKE_API.JOKES}${JOKE_API.SEARCH}?${params.toString()}`, {
       headers: { ...languageHeaders(language) },
     });
 
@@ -700,7 +700,7 @@ export const resendEmailChangeVerification = async (accessToken: string | null) 
 
   try {
     const res = await axios.post(
-      `${BLOG_API.BASE}${BLOG_API.USER}/resend-email-change-verification`,
+      `${JOKE_API.BASE}${JOKE_API.USER}/resend-email-change-verification`,
       {},
       {
         headers: {

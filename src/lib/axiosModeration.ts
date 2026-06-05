@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { token } from "../types/context.types";
-import BLOG_API from "../api/blog-api";
+import JOKE_API from "../api/joke-api";
 import { normalizeApiError } from "./normalizeApiError";
 
 export type ModerationCategory =
@@ -29,7 +29,7 @@ export const getModerationTerms = async (
   accessToken: token
 ) => {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}/moderation`, {
+    const res = await axios.get(`${JOKE_API.BASE}/moderation`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -46,7 +46,7 @@ export const getModerationCacheMeta = async (
   accessToken: token
 ) => {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}/moderation/cache`, {
+    const res = await axios.get(`${JOKE_API.BASE}/moderation/cache`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -68,7 +68,7 @@ export const createModerationTerm = async (
   }
 ) => {
   try {
-    const res = await axios.post(`${BLOG_API.BASE}/moderation`, payload, {
+    const res = await axios.post(`${JOKE_API.BASE}/moderation`, payload, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -91,7 +91,7 @@ export const updateModerationTerm = async (
   }
 ) => {
   try {
-    const res = await axios.patch(`${BLOG_API.BASE}/moderation/${id}`, payload, {
+    const res = await axios.patch(`${JOKE_API.BASE}/moderation/${id}`, payload, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -109,7 +109,7 @@ export const deleteModerationTerm = async (
   id: number
 ) => {
   try {
-    const res = await axios.delete(`${BLOG_API.BASE}/moderation/${id}`, {
+    const res = await axios.delete(`${JOKE_API.BASE}/moderation/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -127,7 +127,7 @@ export const reloadModerationCache = async (
 ) => {
   try {
     const res = await axios.post(
-      `${BLOG_API.BASE}/moderation/reload`,
+      `${JOKE_API.BASE}/moderation/reload`,
       {},
       {
         headers: {
@@ -145,7 +145,7 @@ export const reloadModerationCache = async (
 
 export const getPublicModerationTerms = async (): Promise<string[]> => {
   try {
-    const res = await axios.get(`${BLOG_API.BASE}/moderation/public-terms`, {
+    const res = await axios.get(`${JOKE_API.BASE}/moderation/public-terms`, {
       withCredentials: true,
     });
 

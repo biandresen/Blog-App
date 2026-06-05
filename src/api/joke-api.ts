@@ -6,7 +6,7 @@ const API_ORIGIN = import.meta.env.VITE_API_ORIGIN ?? "http://127.0.0.1:4001";
 // const API_BASE_URL = "https://pundad.app/api/v1";
 // const API_ORIGIN = "https://pundad.app";
 
-const BLOG_API = {
+const JOKE_API = {
   BASE: API_BASE_URL,
   BASE_AVATAR: API_ORIGIN,
 
@@ -18,10 +18,10 @@ const BLOG_API = {
   RESEND_VERIFICATION: "/auth/resend-verification",
   RESETPASSWORD: "/auth/reset-password",
   NEWPASSWORD: "/auth/new-password",
-  GCU_DRAFTS: "/posts/drafts",
+  GCU_DRAFTS: "/jokes/drafts",
   USER: "/user",
   USERINPUT: "/user/input",
-  POSTS: "/posts",
+  JOKES: "/jokes",
   COMMENTS: "/comments",
   PUBLISH: "/publish",
   POPULAR: "/popular",
@@ -34,4 +34,4 @@ const BLOG_API = {
   CONTACT: "/contact",
 };
 
-export default BLOG_API;
+export default JOKE_API;

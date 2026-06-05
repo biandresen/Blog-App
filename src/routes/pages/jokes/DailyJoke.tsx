@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { type PostType } from "../../../types/post.types";
-import Post from "../../../components/organisms/Post";
+import { type JokeType } from "../../../types/joke.types";
+import Joke from "../../../components/organisms/Joke";
 import Spinner from "../../../components/atoms/Spinner";
 import Button from "../../../components/atoms/Button";
 
-import { getDailyPost, recordDailyJokeView } from "../../../lib/axios";
+import { getDailyJoke, recordDailyJokeView } from "../../../lib/axios";
 import { safeRequest } from "../../../lib/auth";
 
 import { useUser } from "../../../contexts/UserContext";
@@ -14,7 +14,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { useLanguage } from "../../../contexts/LanguageContext";
 
 const DailyJoke = () => {
-  const [dailyJoke, setDailyJoke] = useState<PostType | null>(null);
+  const [dailyJoke, setDailyJoke] = useState<JokeType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,7 +28,7 @@ const DailyJoke = () => {
       setLoading(true);
       setError(null);
 
-      const res = await getDailyPost();
+      const res = await getDailyJoke();
       setDailyJoke(res.data ?? null);
     } catch (err: any) {
       setError(err?.message ?? t("dailyJoke.states.failed"));
@@ -86,14 +86,14 @@ const DailyJoke = () => {
 
   return (
     <div className="md:mt-8">
-      <h2 className="posts-heading">{t("dailyJoke.heading")}</h2>
+      <h2 className="jokes-heading">{t("dailyJoke.heading")}</h2>
 
       <p className="text-center text-[var(--text1)] opacity-70 -mt-4 mb-8">{t("dailyJoke.subtitle")}</p>
 
-      <section className="posts-section">
+      <section className="jokes-section">
         {!dailyJoke ?
-          <h3 className="posts-section-heading text-[var(--text1)]">{t("dailyJoke.states.notFound")}</h3>
-        : <Post key={dailyJoke.id} post={dailyJoke} />}
+          <h3 className="jokes-section-heading text-[var(--text1)]">{t("dailyJoke.states.notFound")}</h3>
+        : <Joke key={dailyJoke.id} joke={dailyJoke} />}
       </section>
 
       <div className="mt-8 flex justify-center">
