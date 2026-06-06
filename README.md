@@ -1,362 +1,344 @@
-# 🎭 DadJokes — Full-Stack Social Humor Platform
+# Pundad
 
-A production-ready full-stack dad joke platform built with:
+Pundad is a full-stack social dad-joke platform where users can browse, publish, search, like, comment on, and compete around jokes in Norwegian and English.
 
-- **React + TypeScript** (Frontend)
-- **Node.js + Express + PostgreSQL (Prisma)** (Backend)
+The project is built as a JAMstack-style application with separate frontend and backend repositories:
 
-Deployed on a **Raspberry Pi**, fronted by **Nginx**, managed with **PM2**, and secured via **Cloudflare**.
+- Frontend: React, TypeScript, Vite, Tailwind CSS
+- Backend: Node.js, Express, Prisma
+- Database: PostgreSQL
+- Runtime: Nginx, PM2, Cloudflare, Raspberry Pi hosting
 
-This project demonstrates real-world full-stack architecture, feature computation systems, badge/leaderboard mechanics, and production deployment.
+Live app: https://pundad.app
 
-The platform includes multilingual content support (Norwegian/English), JWT-based authentication, drafts and publishing workflows, featured ranking systems, badges, a Hall of Fame leaderboard, search with field-specific filters, avatar uploads, and an admin moderation dashboard backed by a database-driven moderation cache.
+API documentation: https://documenter.getpostman.com/view/44451419/2sB2qgeJBS
 
----
+## Project Purpose
 
-## 🚀 Live Demo
+This project was built as a capstone full-stack application. It demonstrates practical frontend engineering, REST API design, authentication, relational data modeling, background jobs, moderation workflows, multilingual content handling, and production deployment.
 
-**URL:** https://pundad.app
-*(Hosted on Raspberry Pi with Cloudflare, Nginx, and PM2)*
+At a high level, Pundad is a community platform with three main areas:
 
----
+- Public joke discovery for visitors
+- Authenticated creation and profile tools for users
+- Admin tools for user management, moderation, and operational control
 
-## 🧠 Project Goals
+## Core Features
 
-- Build a community-driven joke platform
-- Implement deterministic + computed feature ranking systems
-- Design a badge and leaderboard architecture
-- Apply production-grade security practices
-- Operate a full-stack application on real infrastructure
-- Demonstrate scalable backend service design
-- Support multiple content languages with language-scoped data
-- Build moderation workflows for both users and content
-- Create admin tooling for operational control
+### Public Users
 
----
-
-## ✨ Core Features
-
-## 🌐 Multilingual Content System
-
-DadJokes supports language-scoped content for Norwegian and English.
-
-This includes:
-
-- Jokes
-- Tags
-- Featured rankings
-- Hall of Fame calculations
-- Daily joke selection
-- Search results
-- UI translations
-
-The app separates content by language so users browse and interact with the currently selected language version of the platform.
-
-### 🌍 Public Users
-
-- Browse language specific dad jokes
-- View:
-  - 👑 Joke of the Day
-  - ⚡ Trending This Week
-  - 🎭 Most Commented This Week
-  - 🚀 Fastest Growing (likes in 24h)
-  - 🏆 Top Creator This Month
-  - All jokes
-  - Single joke pages
-  - Browse random jokes
-  - Search jokes with filters for:
-    - Title
-    - Body
-    - Comments
-    - Tags
-- View **Hall of Fame (Leaderboard)**
-- View user badges and streaks (🔥)
-- Switch between Norwegian and English content
-
----
-
-### 🔐 Registered Users (USER role)
-
-- Register / Login
-- Acceptance of terms required
-- JWT Authentication:
-  - Short-lived access token
-  - HTTP-only refresh token
-- Create jokes in the selected language
-- Create comments on published jokes
-- Edit / Delete own jokes and comments
-- Save jokes as drafts
-- View own drafts
-- View own unpublished draft pages
-- Publish / Unpublish existing jokes
-- Like jokes
-- Build a **Daily Joke Streak**
-- Earn badges:
+- Browse published jokes
+- View a single joke page
+- Search jokes by title, body, comments, and tags
+- Browse popular jokes
+- Get a random joke
+- View the daily joke
+- View featured joke categories:
   - Joke of the Day
-  - Top Creator of the Month
-  - Trending Week
-  - Most Commented Week
+  - Trending This Week
+  - Most Commented This Week
   - Fastest Growing
-  - Streak tiers
-- View badge history
-- Update profile:
-  - Username
-  - Email
-  - Password
-  - Avatar upload
-  - Preferred language
----
+  - Top Creator This Month
+- View the Hall of Fame leaderboard
+- Switch between Norwegian and English
+- Read legal pages and community rules
+- Submit contact messages
 
-### 👑 Admin Users
+### Registered Users
 
-- Recompute featured rankings
-- Activate / deactivate users (soft delete)
+- Register with terms acceptance
+- Verify email before logging in
+- Log in with JWT-based authentication
+- Stay signed in through refresh-token cookies
+- Reset password by email
+- Create jokes
+- Save jokes as drafts
+- Publish and unpublish jokes
+- Edit and delete owned jokes
+- Comment on jokes
+- Edit and delete owned comments
+- Like and unlike jokes
+- View personal jokes and drafts
+- Track daily joke streaks
+- Earn and view badges
+- Update profile details
+- Upload one profile avatar; when a new avatar is uploaded, the previous avatar file is deleted from the uploads directory
+- Request an email change verification
+- Deactivate own account through soft deletion, which marks the account inactive and prevents future login
+
+### Admin Users
+
 - Search users by username or email
-- Manage moderation terms through an admin dashboard
-- Create / edit / activate / deactivate / delete moderation terms
-- Reload moderation cache
-- Secure admin-only feature endpoints
----
+- Deactivate and reactivate users through soft deletion
+- Manage moderation terms
+- Activate, deactivate, edit, and delete moderation terms
+- Reload the moderation cache
+- Access admin-only backend operations through role-based authorization
 
-## 🏆 Gamification System
+## Multilingual Design
 
-DadJokes includes a deterministic + database-backed feature system.
+Pundad supports Norwegian and English as separate content spaces inside one application.
 
-### Featured Systems
+User accounts are shared globally, but content is language-scoped:
 
-| Feature | Logic |
-|----------|-------|
-| 👑 Joke of the Day | Deterministic daily selection (no repeat two days in a row) |
-| ⚡ Trending Week | Most likes in last 7 days |
-| 🎭 Most Commented Week | Most comments in last 7 days |
-| 🚀 Fastest Growing | Most likes in last 24 hours |
-| 🏆 Top Creator Month | Most published jokes in current month |
+- Jokes belong to a language
+- Tags are unique per language
+- Featured jokes are computed per language
+- Badge awards are tracked per language
+- Leaderboard calculations are filtered per language
+- The frontend sends the active language to the backend with `X-App-Language`
 
-Each feature:
+This makes the app behave like two community spaces sharing the same account system.
 
-- Is computed server-side
-- Persisted in `FeaturedJoke`
-- Awards badges via idempotent upsert logic
-- Is concurrency-safe
-- Can be triggered manually or via cron
+## Gamification
 
----
+The backend computes and stores featured results instead of calculating everything only in the browser.
 
-### 🎖 Badge System
+| Feature | Backend logic |
+| --- | --- |
+| Joke of the Day | Deterministic daily selection per language |
+| Trending This Week | Most likes during the current week |
+| Most Commented This Week | Most comments during the current week |
+| Fastest Growing | Most likes during the last 24 hours |
+| Top Creator This Month | User with the most published jokes this month |
 
-Two-layer architecture:
+Winning a featured category can award badges. The badge system stores both historical awards and currently active badges, which lets the UI show recent achievements while preserving long-term history.
 
-1. **BadgeAward** → historical record
-2. **CurrentUserBadge** → currently active badges
+The Hall of Fame leaderboard combines feature wins, likes received, comments received, and streak data into a weighted ranking.
 
-Supports:
+## Authentication and Session Persistence
 
-- Valid time windows
-- Context (e.g., related jokeId)
-- Priority-based primary badge display
-- Badge stacking
-- Streak tiers
+Pundad uses a short-lived access token together with a refresh token stored in an HTTP-only cookie.
 
----
+When the app loads, the frontend attempts to restore the user's session by calling the backend refresh endpoint. If the refresh token is still valid, the backend issues a new access token, the frontend fetches the current user with `/user/me`, and the user remains logged in after a page reload.
 
-### 🏛 Hall of Fame (Leaderboard)
+Protected API calls are wrapped in a safe request helper. If a protected request fails because the access token has expired, the frontend asks the backend for a fresh access token and retries the original request once. If refresh fails, the app clears the local auth state and requires the user to log in again.
 
-Dynamic ranking system with selectable period:
+## Architecture Overview
 
-- This week
-- This month
-- All-time
+```text
+Browser
+  -> React/Vite frontend
+  -> Axios REST calls
+  -> Express API
+  -> Prisma ORM
+  -> PostgreSQL
 
-Ranking based on weighted score:
+Background worker
+  -> Scheduled featured computations
+  -> Badge awards
+  -> Product/job logs
+```
 
-- Featured wins
-- Likes received
-- Daily streak
+Production traffic is served through Cloudflare and Nginx. The frontend is served as static assets, API traffic is proxied to the Express backend, and uploaded avatars are served from the backend/uploads path.
 
-Spam-resistant (does not reward raw joke count).
+For the full system explanation, see [docs/SYSTEM_DESIGN.md](docs/SYSTEM_DESIGN.md).
 
-Includes:
-
-- Avatar with primary badge
-- Streak indicator
-- Likes received
-- Wins count
-
----
-
-## 🛡 Security & Best Practices
-
-### Backend Security
-
-- Helmet (security headers)
-- Strict CORS policy
-- Rate limiting
-- Input validation and sanitization
-- Soft deletes
-- Secure password hashing
-- Expiring password reset tokens
-- Image validation (byte-level)
-- Image compression (Sharp)
-- Database-backed moderation term system
-- Server-side moderation cache
-- Frontend + backend blocked-language checks
----
-
-### Authentication & Authorization
-
-- Role-based access control (USER / ADMIN)
-- Ownership checks
-- Secure refresh-token cookies
-- Protected admin feature endpoints
-
----
-
-## 🚨 Moderation System
-
-DadJokes includes a moderation layer for safer community use.
-
-### Content Moderation
-
-- Frontend pre-submit moderation checks
-- Backend moderation enforcement
-- Obfuscation-aware blocked-term matching
-- Moderation applied to:
-  - Usernames
-  - Joke titles
-  - Joke bodies
-  - Tags
-  - Comments
-
-### Moderation Operations
-
-- Database-backed moderation terms
-- Server-side moderation cache for performance
-- Public client-safe moderation term loading
-- Admin CRUD panel for moderation term management
-- Manual cache reload support
-
-## 🖼 Media Handling
-
-- Multer (memory storage)
-- Sharp (resize + WebP compression)
-- Static file serving via Nginx
-- Canonical public path: `/uploads/avatars/<filename>.webp`
-
----
-
-## 🧱 Tech Stack
+## Tech Stack
 
 ### Frontend
 
-- React
+- React 19
 - TypeScript
-- Axios
+- Vite
+- Tailwind CSS
 - React Router
-- Custom infinite-scroll pagination hook
-- Component-based architecture
+- Axios
 - React Toastify
 - React Icons
-- Context-based state for auth, user, language, and moderation
-- i18n / translation-driven UI
-- Responsive admin moderation dashboard
-
----
+- Context-based state for auth, user, language, theme, jokes, and moderation
+- Custom pagination hook supporting paged and infinite-loading views
+- Translation-driven UI for Norwegian and English
 
 ### Backend
 
 - Node.js
-- Express
+- Express 5
 - Prisma ORM
 - PostgreSQL
-- JWT authentication
-- Service-layer architecture
-- Deterministic ranking algorithms
-- Idempotent upsert patterns
-- Database-backed moderation system
-- In-memory moderation cache
-- Language-scoped content architecture
+- JWT access tokens
+- HTTP-only refresh-token cookies
+- Bcrypt password hashing
+- Express Validator
+- Helmet
+- CORS
+- HPP protection
+- Rate limiting
+- Multer and Sharp for avatar upload processing
+- Nodemailer/Resend email delivery
+- Pino structured logging
+- Node Cron background jobs
 
----
+### Infrastructure
 
-### Infrastructure / DevOps
+- Raspberry Pi hosting
+- Nginx reverse proxy and static file serving
+- PM2 process management
+- Cloudflare DNS/TLS/protection
+- Separate PM2 processes for API server and background worker
 
-- Raspberry Pi (self-hosted production)
-- PM2 (API + background processes)
-- Nginx (reverse proxy + static serving)
-- Cloudflare
+## Repository Structure
 
----
+```text
+pundad-app/
+  src/
+    api/              API endpoint constants
+    components/       Reusable UI components
+    contexts/         Auth, user, language, jokes, theme, moderation state
+    hooks/            Pagination, autosave, safe requests, UX helpers
+    i18n/             Norwegian and English translations
+    lib/              API clients, auth helpers, moderation helpers
+    routes/           Page and layout routes
+    types/            TypeScript domain types
+    validators/       Frontend validation helpers
+  docs/
+    SYSTEM_DESIGN.md  Full project architecture notes
+    testing/          Testing strategy and manual regression notes
+```
 
-## 🗂 Architecture Overview
-- **Browser**
-  - ↓
-- **Cloudflare** (DNS, TLS, protection)
-  - ↓
-- **Nginx** (reverse proxy)
-  - Serves React frontend
-  - Serves `/uploads`
-  - Proxies `/api` → Node.js
-    - ↓
-- **Express API**
-  - ↓
-- **PostgreSQL** (Prisma)
+The backend lives in a separate repository, `pundad-api`, with this shape:
 
----
+```text
+pundad-api/
+  prisma/
+    schema.prisma     Database schema
+    migrations/       Database migration history
+  src/
+    app.js            Express app setup and middleware
+    server.js         API process entry point
+    controllers/      HTTP request handlers
+    services/         Business logic and Prisma access
+    routes/           REST route definitions
+    middleware/       Auth, role, validation, upload, language, logging middleware
+    jobs/             Scheduled featured computations
+    validation/       Express Validator rules
+```
 
-## ⚙ Background Jobs
+## Local Development
 
-Featured computations are:
+Run the frontend and backend in separate terminals.
 
-- Idempotent
-- Concurrency-safe
-- Database-backed
-- Cron-ready
-- Admin-triggerable
+### Backend
 
-Designed to scale toward queue-based processing if needed.
+From the backend repository:
 
----
+```bash
+npm install
+npx prisma migrate dev
+npm run dev
+```
 
-## 🧪 Observability & Operations
+Optional worker process for scheduled feature computations:
 
-- PM2 process monitoring
-- Centralized logs (PM2 + Nginx)
-- Health endpoints
-- Structured error handling
-- Cloudflare analytics
+```bash
+npm run dev:worker
+```
 
----
+Backend development server:
 
-## 📚 What This Project Demonstrates
+```text
+http://127.0.0.1:4001/api/v1
+```
 
-- Full-stack ownership (frontend → backend → infrastructure)
-- Authentication architecture
-- Gamification systems design
-- Badge + leaderboard architecture
-- Multi-language application architecture
-- Admin tooling and moderation workflows
-- Search/filter system design
-- Production deployment on constrained hardware
-- Security-focused development
+Required backend environment variables:
 
----
+```text
+DATABASE_URL
+JWT_ACCESS_SECRET
+JWT_REFRESH_SECRET
+RESEND_API_KEY
+EMAIL_FROM
+EMAIL_REPLY_TO
+CONTACT_ADMIN_EMAIL
+CONTACT_BUG_EMAIL
+CONTACT_FEATURE_EMAIL
+CONTACT_SUGGESTION_EMAIL
+CONTACT_FEEDBACK_EMAIL
+```
 
-## 📌 Possible Future Improvements
+### Frontend
 
-- Redis or edge caching
-- WebSocket live leaderboard updates and live chat
-- Admin audit logs
-- Moderation reports / flagged content workflow
-- Email verification
-- Smarter moderation categories and severity levels
-- Queue-based background job processing
+From this frontend repository:
 
----
+```bash
+npm install
+npm run dev
+```
 
-## 👤 Author
+Frontend development server:
 
-**Birger**
-Full-Stack Developer
+```text
+http://127.0.0.1:5173
+```
 
-**Stack:**
-JavaScript · TypeScript · Node.js · Express · React · PostgreSQL · Prisma · Nginx · PM2 · Cloudflare
+Frontend environment variables:
+
+```text
+VITE_API_BASE_URL=http://127.0.0.1:4001/api/v1
+VITE_API_ORIGIN=http://127.0.0.1:4001
+```
+
+## Available Frontend Scripts
+
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
+```
+
+## Backend Processes
+
+The backend PM2 ecosystem defines two production processes:
+
+- `pundad-api`: Express HTTP API
+- `pundad-worker`: scheduled background jobs for featured rankings
+
+The API handles user requests. The worker computes daily jokes, weekly rankings, fastest-growing jokes, top creators, and related badge awards for each supported language.
+
+## Security Highlights
+
+- Access-token and refresh-token authentication
+- Refresh tokens stored in HTTP-only cookies
+- Session restore on page load through refresh-token validation
+- Automatic access-token refresh and one-time retry for expired protected requests
+- Passwords hashed with bcrypt
+- Email verification before login
+- Expiring password reset tokens
+- Role-based authorization for admin routes
+- Ownership middleware for user, joke, and comment updates
+- Backend validation with Express Validator
+- Frontend validation for faster feedback
+- Database-backed moderation terms
+- Backend moderation enforcement
+- Rate limiting for auth, contact, profile, uploads, and read-heavy routes
+- CORS allowlist
+- Helmet security headers
+- Avatar file type and size validation
+- Sharp image processing and WebP output
+- One-avatar-per-user storage: replacing an avatar removes the old file to keep the uploads directory small
+
+## What This Project Demonstrates
+
+- Full-stack feature ownership from UI to database
+- REST API design with service-layer separation
+- JWT authentication with refresh-token rotation
+- Relational data modeling with Prisma
+- Language-scoped data architecture
+- Background job design
+- Computed rankings and badge systems
+- Admin and moderation workflows
+- Production deployment with reverse proxy and process management
+- Practical security and validation patterns
+
+## Future Improvements
+
+- Automated backend integration tests
+- Frontend component and route tests
+- End-to-end tests for auth, language separation, joke CRUD, and admin flows
+- Redis cache for high-read ranking data
+- Queue-based background processing
+- Admin audit-log UI
+- User content reporting workflow
+- Live leaderboard updates
+- More advanced moderation categories and severity levels

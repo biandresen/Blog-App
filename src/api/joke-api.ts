@@ -9,7 +9,6 @@ const API_ORIGIN = import.meta.env.VITE_API_ORIGIN ?? "http://127.0.0.1:4001";
 const JOKE_API = {
   BASE: API_BASE_URL,
   BASE_AVATAR: API_ORIGIN,
-
   REGISTER: "/auth/register",
   LOGIN: "/auth/login",
   LOGOUT: "/auth/logout",
