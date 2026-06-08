@@ -11,7 +11,7 @@ The project is built as a JAMstack-style application with separate frontend and 
 
 Live app: https://pundad.app
 
-API documentation: https://documenter.getpostman.com/view/44451419/2sB2qgeJBS
+API documentation: https://documenter.getpostman.com/view/44451419/2sBXwqsAym
 
 ## Project Purpose
 
@@ -94,13 +94,13 @@ This makes the app behave like two community spaces sharing the same account sys
 
 The backend computes and stores featured results instead of calculating everything only in the browser.
 
-| Feature | Backend logic |
-| --- | --- |
-| Joke of the Day | Deterministic daily selection per language |
-| Trending This Week | Most likes during the current week |
-| Most Commented This Week | Most comments during the current week |
-| Fastest Growing | Most likes during the last 24 hours |
-| Top Creator This Month | User with the most published jokes this month |
+| Feature                  | Backend logic                                 |
+| ------------------------ | --------------------------------------------- |
+| Joke of the Day          | Deterministic daily selection per language    |
+| Trending This Week       | Most likes during the current week            |
+| Most Commented This Week | Most comments during the current week         |
+| Fastest Growing          | Most likes during the last 24 hours           |
+| Top Creator This Month   | User with the most published jokes this month |
 
 Winning a featured category can award badges. The badge system stores both historical awards and currently active badges, which lets the UI show recent achievements while preserving long-term history.
 
