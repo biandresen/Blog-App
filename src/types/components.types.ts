@@ -58,12 +58,6 @@ export interface LeftSidebarProps {
   >;
 }
 
-export interface JokeCardProps {
-  id: number;
-  title: string;
-  likes?: number;
-}
-
 export interface HeaderProps {
   setSidebars: React.Dispatch<
     React.SetStateAction<{

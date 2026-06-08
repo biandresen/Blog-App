@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import type { AppLanguage } from "../i18n/translations"
+import type { AppLanguage } from "../i18n/translations";
 
 export type ColorTheme = "light" | "dark";
 
@@ -11,7 +11,7 @@ export interface ColorThemeContextType {
 //--------------------------------------------
 export type UserRole = "USER" | "ADMIN";
 
-export const BADGE = {
+const BADGE = {
   ADMIN: "ADMIN",
   TOP_CREATOR_MONTH: "TOP_CREATOR_MONTH",
   JOKE_OF_DAY: "JOKE_OF_DAY",
@@ -28,13 +28,6 @@ export type Badge = {
   label: string;
   icon: string;
   priority: number; // lower = higher priority
-};
-
-export type UserStatus = {
-  role: UserRole;
-  streak?: number;
-  bestStreak?: number;
-  badges?: BadgeKey[]; // active badges (backend)
 };
 
 export type CurrentUserBadge = {
@@ -81,7 +74,7 @@ export interface UserContextType {
 }
 //--------------------------------------------
 
-export type token = string | null
+export type token = string | null;
 
 export interface AuthContextType {
   accessToken: string | null;

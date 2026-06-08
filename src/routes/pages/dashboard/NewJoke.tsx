@@ -57,68 +57,27 @@ const NewJoke = () => {
   const hasUnsavedContent = Boolean(title || body || tags);
   useUnsavedChangesWarning(hasUnsavedContent);
 
-  const handleSaveDraft = async () => {
-    if (invalidForm || isSavingDraft || isPublishing) return;
-
-    if (!accessToken) {
-      toast.error(t("newJoke.toasts.mustBeLoggedInDraft"));
-      return;
-    }
-    const moderation = moderateFields(
-      {
-        title,
-        body,
-        tags: parsedTags.join(" "),
-      },
-      terms,
-    );
-
-    if (moderation.blocked) {
-      toast.error(t("validation.blockedContent"));
-      return;
-    }
-
-    try {
-      setIsSavingDraft(true);
-      setJokeErrors([]);
-
-      const res = await safeRequest(
-        saveDraft,
-        accessToken,
-        setAccessToken,
-        title.trim(),
-        body.trim(),
-        parsedTags,
-        language,
-      );
-
-      if (res.statusCode !== 200) {
-        throw new Error(res.message ?? t("newJoke.toasts.requestFailed"));
-      }
-
-      toast.success(t("newJoke.toasts.draftSaved"));
-
-      await refreshJokes();
-      resetDraft();
-      setJokeErrors([]);
-      navigate("/dashboard/drafts");
-    } catch (err: any) {
-      if (err?.message?.includes("token")) {
-        toast.error(t("newJoke.toasts.sessionExpired"));
-      }
-
-      console.error("Failed to save draft", err);
-      setJokeErrors(setInputErrors(err?.response?.data?.errors));
-    } finally {
-      setIsSavingDraft(false);
-    }
+  type SubmitJokeOptions = {
+    request: typeof saveDraft;
+    setLoading: (isLoading: boolean) => void;
+    mustBeLoggedInMessage: string;
+    successMessage: string;
+    errorLabel: string;
+    redirectTo: string;
   };
 
-  const handlePublishJoke = async () => {
+  const submitJoke = async ({
+    request,
+    setLoading,
+    mustBeLoggedInMessage,
+    successMessage,
+    errorLabel,
+    redirectTo,
+  }: SubmitJokeOptions) => {
     if (invalidForm || isSavingDraft || isPublishing) return;
 
     if (!accessToken) {
-      toast.error(t("newJoke.toasts.mustBeLoggedInPublish"));
+      toast.error(mustBeLoggedInMessage);
       return;
     }
 
@@ -137,11 +96,11 @@ const NewJoke = () => {
     }
 
     try {
-      setIsPublishing(true);
+      setLoading(true);
       setJokeErrors([]);
 
       const res = await safeRequest(
-        publishJoke,
+        request,
         accessToken,
         setAccessToken,
         title.trim(),
@@ -154,23 +113,43 @@ const NewJoke = () => {
         throw new Error(res.message ?? t("newJoke.toasts.requestFailed"));
       }
 
-      toast.success(t("newJoke.toasts.jokePublished"));
+      toast.success(successMessage);
 
       await refreshJokes();
       resetDraft();
       setJokeErrors([]);
-      navigate("/jokes");
+      navigate(redirectTo);
     } catch (err: any) {
       if (err?.message?.includes("token")) {
         toast.error(t("newJoke.toasts.sessionExpired"));
       }
 
-      console.error("Failed to publish joke", err);
+      console.error(errorLabel, err);
       setJokeErrors(setInputErrors(err?.response?.data?.errors));
     } finally {
-      setIsPublishing(false);
+      setLoading(false);
     }
   };
+
+  const handleSaveDraft = () =>
+    submitJoke({
+      request: saveDraft,
+      setLoading: setIsSavingDraft,
+      mustBeLoggedInMessage: t("newJoke.toasts.mustBeLoggedInDraft"),
+      successMessage: t("newJoke.toasts.draftSaved"),
+      errorLabel: "Failed to save draft",
+      redirectTo: "/dashboard/drafts",
+    });
+
+  const handlePublishJoke = () =>
+    submitJoke({
+      request: publishJoke,
+      setLoading: setIsPublishing,
+      mustBeLoggedInMessage: t("newJoke.toasts.mustBeLoggedInPublish"),
+      successMessage: t("newJoke.toasts.jokePublished"),
+      errorLabel: "Failed to publish joke",
+      redirectTo: "/jokes",
+    });
 
   return (
     <div className="bg-[var(--primary)] p-3 md:p-8 rounded-2xl max-w-120 md:min-w-1/2 mx-auto md:mt-10">

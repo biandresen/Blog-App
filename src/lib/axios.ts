@@ -226,19 +226,6 @@ export const getMe = async (accessToken: token, language?: AppLanguage) => {
   }
 };
 
-export const getUserById = async (accessToken: token, id: number) => {
-  try {
-    const res = await axios.get(JOKE_API.BASE + JOKE_API.USER + `/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return res.data;
-  } catch (err: any) {
-    throw normalizeApiError(err);
-  }
-};
-
 export const reactivateUser = async (accessToken: token, id: number | string) => {
   try {
     const res = await axios.patch(
@@ -560,15 +547,6 @@ export const getAllUserJokes = async (
   }
 };
 
-export const getJokeByIdPublic = async (jokeId: number) => {
-  try {
-    const res = await axios.get(JOKE_API.BASE + JOKE_API.JOKES + `/${jokeId}`);
-    return res.data;
-  } catch (err: any) {
-    throw normalizeApiError(err);
-  }
-};
-
 export const recordDailyJokeView = async (accessToken: token) => {
   try {
     const res = await axios.post(
@@ -611,12 +589,6 @@ export const getMyCurrentBadges = async (accessToken: token, language?: AppLangu
   } catch (err: any) {
     throw normalizeApiError(err);
   }
-};
-
-export type FeaturedPayload = {
-  type: string;
-  date: string;
-  joke: JokeType;
 };
 
 export async function getFeaturedJoke(slug: string, language?: AppLanguage) {

@@ -1,39 +1,12 @@
 import { toast } from "react-toastify";
 
-export type AppApiError = Error & {
-  status?: number;
-  statusCode?: number;
-  retryAfter?: number;
-  code?: string;
-  isNetworkError?: boolean;
-  response?: {
-    status?: number;
-    data?: {
-      status?: string;
-      statusCode?: number;
-      message?: string;
-      retryAfter?: number;
-      errors?: unknown;
-    };
-    headers?: Record<string, string>;
-  };
-};
-
 export function getApiErrorMessage(err: any, fallback = "Something went wrong") {
-  const status =
-    err?.status ??
-    err?.statusCode ??
-    err?.response?.status ??
-    err?.response?.data?.statusCode;
+  const status = err?.status ?? err?.statusCode ?? err?.response?.status ?? err?.response?.data?.statusCode;
 
   const retryAfter =
-    err?.retryAfter ??
-    err?.response?.data?.retryAfter ??
-    err?.response?.headers?.["retry-after"];
+    err?.retryAfter ?? err?.response?.data?.retryAfter ?? err?.response?.headers?.["retry-after"];
 
-  const message =
-    err?.response?.data?.message ??
-    err?.message;
+  const message = err?.response?.data?.message ?? err?.message;
 
   if (status === 429) {
     const retrySeconds = Number(retryAfter);

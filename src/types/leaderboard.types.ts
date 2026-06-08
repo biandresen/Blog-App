@@ -10,5 +10,3 @@ export type LeaderboardRow = {
   dailyStreak: number;
   bestStreak: number;
 };
-
-export type HallOfFameRow = LeaderboardRow;

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import type { AppLanguage } from "../i18n/translations"
+import type { AppLanguage } from "../i18n/translations";
 
 export const formatDate = (date: string) => {
   const year = date.split("-")[0];
@@ -13,7 +13,6 @@ export const formatDateProfile = (iso?: string | null) => {
   if (!iso) return "N/A";
   return new Date(iso).toLocaleDateString();
 };
-
 
 export const override: CSSProperties = {
   color: "var(--text1)",
@@ -29,19 +28,17 @@ export const setInputErrors = (errors: { message: string }[] | undefined) => {
     }
   }
 
-  return errorList.length
-    ? errorList
-    : ["Failed to save draft. Please try again."];
+  return errorList.length ? errorList : ["Failed to save draft. Please try again."];
 };
 
 export const getCharactersLeft = (input: string, maxCharacters: number) => {
-  return `${input.length} / ${maxCharacters}`
-}
+  return `${input.length} / ${maxCharacters}`;
+};
 
 export const capitalizeFirstLetter = (string: string) => {
   if (!string) return string; // Handle empty strings
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
 
 /**
  * Convert plain text into render-safe segments where URLs become hyperlinks.
@@ -49,9 +46,7 @@ export const capitalizeFirstLetter = (string: string) => {
  * so you can render without dangerouslySetInnerHTML (prevents XSS).
  */
 
-export type TextPart =
-  | { type: "text"; value: string }
-  | { type: "link"; value: string; href: string };
+export type TextPart = { type: "text"; value: string } | { type: "link"; value: string; href: string };
 
 type LinkifyOptions = {
   /**
@@ -84,9 +79,8 @@ function buildUrlRegex(linkifyBareDomains: boolean) {
   const bare = String.raw`(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}(?:\/[^\s<]*)?`;
 
   // We will later trim trailing punctuation.
-  const pattern = linkifyBareDomains
-    ? String.raw`(${scheme}|${www}|${bare})`
-    : String.raw`(${scheme}|${www})`;
+  const pattern =
+    linkifyBareDomains ? String.raw`(${scheme}|${www}|${bare})` : String.raw`(${scheme}|${www})`;
 
   return new RegExp(pattern, "gi");
 }
@@ -105,7 +99,7 @@ const TRAILING_PUNCT = /[)\],.!?:;]+$/;
  */
 function normalizeUrlToken(
   rawToken: string,
-  defaultProtocol: "https://" | "http://"
+  defaultProtocol: "https://" | "http://",
 ): { display: string; href: string } {
   const trimmed = rawToken.replace(TRAILING_PUNCT, "");
   // const removed = rawToken.slice(trimmed.length); // trailing punctuation removed
@@ -230,7 +224,7 @@ export function normalizeLanguage(input?: string | null): AppLanguage {
   return v === "EN" ? "EN" : "NO";
 }
 
-export function getStoredLanguage(): AppLanguage {
+function getStoredLanguage(): AppLanguage {
   return normalizeLanguage(localStorage.getItem("appLanguage"));
 }
 

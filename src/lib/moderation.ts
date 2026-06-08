@@ -12,7 +12,7 @@ const LEET_MAP: Record<string, string> = {
   "5": "s",
   "7": "t",
   "@": "a",
-  "$": "s",
+  $: "s",
 };
 
 function escapeRegex(str: string) {
@@ -20,10 +20,7 @@ function escapeRegex(str: string) {
 }
 
 function normalizeUnicode(input = "") {
-  return input
-    .normalize("NFKD")
-    .replace(DIACRITICS_REGEX, "")
-    .replace(ZERO_WIDTH_REGEX, "");
+  return input.normalize("NFKD").replace(DIACRITICS_REGEX, "").replace(ZERO_WIDTH_REGEX, "");
 }
 
 function basicNormalize(input = "") {
@@ -35,9 +32,7 @@ function basicNormalize(input = "") {
 }
 
 function joinedNormalize(input = "") {
-  return normalizeUnicode(input)
-    .toLowerCase()
-    .replace(NON_ALNUM_NO_SPACE_REGEX, "");
+  return normalizeUnicode(input).toLowerCase().replace(NON_ALNUM_NO_SPACE_REGEX, "");
 }
 
 function applyLeetMap(input = "") {
@@ -62,9 +57,7 @@ function buildTermVariants(term: string) {
   const leet = joinedNormalize(applyLeetMap(term));
   const collapsed = collapseRepeatedChars(joined);
 
-  return Array.from(
-    new Set([normalized, joined, leet, collapsed].filter(Boolean))
-  );
+  return Array.from(new Set([normalized, joined, leet, collapsed].filter(Boolean)));
 }
 
 function buildInputVariants(input: string) {
@@ -86,7 +79,7 @@ function buildInputVariants(input: string) {
 function matchesBlockedTerm(
   input: string,
   term: string,
-  { aggressive = false }: { aggressive?: boolean } = {}
+  { aggressive = false }: { aggressive?: boolean } = {},
 ) {
   const variants = buildInputVariants(input);
   const termVariants = buildTermVariants(term);
@@ -118,29 +111,18 @@ function matchesBlockedTerm(
   return false;
 }
 
-export function findBlockedTerms(
+function findBlockedTerms(
   input: string,
   blockedTerms: string[],
-  { aggressive = false }: { aggressive?: boolean } = {}
+  { aggressive = false }: { aggressive?: boolean } = {},
 ) {
-  return blockedTerms.filter((term) =>
-    matchesBlockedTerm(input, term, { aggressive })
-  );
+  return blockedTerms.filter((term) => matchesBlockedTerm(input, term, { aggressive }));
 }
 
-export function moderateFields(
-  fields: Record<string, string>,
-  blockedTerms: string[]
-) {
+export function moderateFields(fields: Record<string, string>, blockedTerms: string[]) {
   const result: Record<string, string[]> = {};
 
-  const aggressiveFields = new Set([
-    "username",
-    "title",
-    "body",
-    "comment",
-    "tags",
-  ]);
+  const aggressiveFields = new Set(["username", "title", "body", "comment", "tags"]);
 
   for (const [field, value] of Object.entries(fields)) {
     if (!value?.trim()) continue;
